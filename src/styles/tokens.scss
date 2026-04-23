@@ -1,0 +1,77 @@
+:root {
+  // Brand
+  --color-primary:          #0A6E52;
+  --color-primary-500:      #0D9268;
+  --color-accent:           #34D399;
+  --color-navy:             #0F2D4A;
+  --color-navy-deep:        #071A2E;
+  --color-bg:               #0A0E1A;
+  --color-surface:          #071A2E;
+  --color-border:           rgba(255, 255, 255, 0.07);
+  --color-text:             rgba(255, 255, 255, 0.85);
+  --color-text-secondary:   rgba(255, 255, 255, 0.45);
+  --color-text-muted:       rgba(255, 255, 255, 0.25);
+
+  // Semantic
+  --color-error:            #EF4444;
+  --color-warning:          #F59E0B;
+  --color-success:          #34D399;
+
+  // Role accent defaults (patient; overridden per portal class)
+  --color-role-accent:      #34D399;
+  --color-role-surface:     rgba(52, 211, 153, 0.08);
+  --color-role-border:      rgba(52, 211, 153, 0.25);
+
+  // Typography
+  --font-family:            'DM Sans', sans-serif;
+  --text-xs:                11px;
+  --text-sm:                12px;
+  --text-base:              14px;
+  --text-md:                16px;
+  --text-lg:                20px;
+  --text-xl:                24px;
+  --text-2xl:               30px;
+  --text-3xl:               36px;
+  --font-regular:           400;
+  --font-medium:            500;
+  --font-semibold:          600;
+  --font-bold:              700;
+  --font-extrabold:         800;
+  --tracking-tight:         -0.8px;
+  --tracking-normal:        0px;
+  --tracking-wide:          0.5px;
+  --tracking-wider:         1.2px;
+
+  // Spacing
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 48px;
+
+  // Radius
+  --radius-sm:   6px;
+  --radius-md:   8px;
+  --radius-lg:   10px;
+  --radius-xl:   12px;
+  --radius-full: 9999px;
+
+  // Component tokens
+  --btn-primary-bg:         var(--color-role-accent);
+  --btn-primary-text:       var(--color-navy);
+  --btn-secondary-bg:       transparent;
+  --btn-secondary-border:   var(--color-role-accent);
+  --btn-secondary-text:     var(--color-role-accent);
+  --card-bg:                var(--color-surface);
+  --card-border:            var(--color-border);
+  --card-radius:            var(--radius-lg);
+  --card-padding:           var(--space-4);
+  --sidebar-width:          200px;
+  --sidebar-bg:             var(--color-surface);
+  --sidebar-active-bg:      var(--color-role-surface);
+  --sidebar-active-border:  var(--color-role-accent);
+}

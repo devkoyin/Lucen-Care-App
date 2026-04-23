@@ -1,0 +1,26 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-family);
+  font-size: var(--text-base);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a { color: inherit; text-decoration: none; }
+
+button { font-family: var(--font-family); cursor: pointer; border: none; background: none; }
+
+input, textarea, select { font-family: var(--font-family); }
+
+:focus-visible {
+  outline: 2px solid var(--color-role-accent);
+  outline-offset: 2px;
+}
