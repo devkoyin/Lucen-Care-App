@@ -1,0 +1,24 @@
+<div class="shell">
+  <nav class="nav">
+    <a class="nav__brand" routerLink="/">LUCEN CARE</a>
+    <div class="nav__links">
+      <a class="nav__link" routerLink="/about">About</a>
+      <a class="nav__link" routerLink="/contact">Contact</a>
+      <a class="nav__link nav__link--outline" routerLink="/auth/patient/login">Sign In</a>
+      <a class="nav__link nav__link--filled" routerLink="/select-role">Get Started</a>
+    </div>
+  </nav>
+
+  <main class="shell__content">
+    <router-outlet />
+  </main>
+
+  <footer class="footer">
+    <span class="footer__brand">LUCEN CARE</span>
+    <div class="footer__links">
+      <a routerLink="/privacy-policy">Privacy Policy</a>
+      <a routerLink="/terms">Terms</a>
+      <a routerLink="/contact">Contact</a>
+    </div>
+  </footer>
+</div>
