@@ -1,6 +1,6 @@
-@import 'styles/tokens';
-@import 'styles/tokens-patient';
-@import 'styles/tokens-ngo';
-@import 'styles/tokens-hmo';
-@import 'styles/tokens-researcher';
-@import 'styles/global';
+@use 'styles/tokens';
+@use 'styles/tokens-patient';
+@use 'styles/tokens-ngo';
+@use 'styles/tokens-hmo';
+@use 'styles/tokens-researcher';
+@use 'styles/global';

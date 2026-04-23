@@ -17,7 +17,9 @@
   --color-warning:          #F59E0B;
   --color-success:          #34D399;
 
-  // Role accent defaults (patient; overridden per portal class)
+  // Role accent defaults — fallback when no .portal-* class is applied.
+  // These match the patient palette intentionally; .portal-patient still
+  // overrides them so the class-based API remains complete and consistent.
   --color-role-accent:      #34D399;
   --color-role-surface:     rgba(52, 211, 153, 0.08);
   --color-role-border:      rgba(52, 211, 153, 0.25);
