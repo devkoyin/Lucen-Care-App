@@ -1,12 +1,11 @@
 import { Component, Input } from '@angular/core';
-import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'lc-card',
   standalone: true,
-  imports: [NgClass],
+  imports: [],
   template: `
-    <div [ngClass]="['card', bordered ? 'card--bordered' : '']">
+    <div class="card" [class.card--bordered]="bordered">
       <ng-content />
     </div>
   `,

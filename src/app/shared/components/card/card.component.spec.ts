@@ -21,4 +21,9 @@ describe('CardComponent', () => {
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('.card').classList).toContain('card--bordered');
   });
+
+  it('does not add card--bordered class by default', () => {
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('.card').classList).not.toContain('card--bordered');
+  });
 });
