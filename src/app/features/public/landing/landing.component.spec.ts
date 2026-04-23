@@ -30,4 +30,12 @@ describe('LandingComponent', () => {
     const cta = fixture.nativeElement.querySelector('[data-testid="cta-find-path"]');
     expect(cta).toBeTruthy();
   });
+
+  it('routes each role card to the correct signup path', () => {
+    const cards: NodeListOf<HTMLAnchorElement> = fixture.nativeElement.querySelectorAll('.role-card');
+    const expected = ['/auth/patient/signup', '/auth/ngo/signup', '/auth/hmo/signup', '/auth/researcher/signup'];
+    cards.forEach((card, i) => {
+      expect(card.getAttribute('href')).toBe(expected[i]);
+    });
+  });
 });
