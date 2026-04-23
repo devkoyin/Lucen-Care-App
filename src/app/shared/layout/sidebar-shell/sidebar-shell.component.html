@@ -1,4 +1,4 @@
-<div class="shell" [class]="portalClass">
+<div class="shell" [ngClass]="portalClass">
   <aside class="sidebar" aria-label="Portal navigation">
     <!-- Brand -->
     <div class="sidebar__brand">
@@ -22,7 +22,6 @@
           class="nav-item"
           [routerLink]="item.route"
           routerLinkActive="nav-item--active"
-          [attr.aria-label]="item.label"
         >
           <span class="nav-item__icon" aria-hidden="true">{{ item.icon }}</span>
           <span class="nav-item__label">{{ item.label }}</span>
@@ -36,7 +35,7 @@
         <span class="nav-item__icon" aria-hidden="true">⚙️</span>
         <span class="nav-item__label">Settings</span>
       </a>
-      <button class="nav-item nav-item--signout" type="button" aria-label="Sign out">
+      <button class="nav-item nav-item--signout" type="button" aria-label="Sign out" (click)="signOut.emit()">
         <span class="nav-item__icon" aria-hidden="true">🚪</span>
         <span class="nav-item__label">Sign out</span>
       </button>

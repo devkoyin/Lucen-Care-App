@@ -41,4 +41,9 @@ describe('SidebarShellComponent', () => {
     expect(fixture.nativeElement.querySelector('.sidebar__user-name').textContent.trim())
       .toBe('Ada Okonkwo');
   });
+
+  it('applies the portalClass to the shell wrapper', () => {
+    const shell: HTMLElement = fixture.nativeElement.querySelector('.shell');
+    expect(shell.classList).toContain('portal-patient');
+  });
 });
