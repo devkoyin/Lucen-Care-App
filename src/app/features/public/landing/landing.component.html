@@ -1,0 +1,67 @@
+<div class="landing">
+
+  <!-- HERO -->
+  <section class="hero">
+    <!-- Left panel -->
+    <div class="hero__left">
+      <span class="hero__eyebrow">Healthcare Access Platform</span>
+      <h1 class="hero__headline">
+        Connecting care.<br>
+        <span class="hero__headline--accent">Enabling outcomes.</span>
+      </h1>
+      <p class="hero__subtext">
+        One platform bridging healthcare access, NGO funding, HMO care management,
+        and clinical research — for every role in the ecosystem.
+      </p>
+      <div class="hero__actions">
+        <a class="btn btn--cta" routerLink="/select-role" data-testid="cta-find-path">
+          Find My Path →
+        </a>
+        <a class="btn btn--ghost" routerLink="/about">Learn how it works</a>
+      </div>
+      <div class="hero__trust">
+        <div class="trust-item">
+          <span class="trust-item__value">Multi-region</span>
+          <span class="trust-item__label">GDPR + HIPAA ready</span>
+        </div>
+        <div class="trust-item">
+          <span class="trust-item__value">AI-powered</span>
+          <span class="trust-item__label">Health guidance</span>
+        </div>
+        <div class="trust-item">
+          <span class="trust-item__value">4</span>
+          <span class="trust-item__label">User types served</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right panel: role cards -->
+    <div class="hero__right">
+      <span class="hero__right-label">Who are you?</span>
+      @for (card of roleCards; track card.role) {
+        <a class="role-card role-card--{{ card.role }}" [routerLink]="card.signupRoute">
+          <div class="role-card__icon">{{ card.emoji }}</div>
+          <div class="role-card__content">
+            <span class="role-card__label">{{ card.label }}</span>
+            <span class="role-card__desc">{{ card.description }}</span>
+          </div>
+        </a>
+      }
+    </div>
+  </section>
+
+  <!-- FEATURES STRIP -->
+  <section class="features">
+    <span class="features__label">Platform capabilities</span>
+    <div class="features__grid">
+      @for (feature of features; track feature.title) {
+        <div class="feature-item">
+          <span class="feature-item__emoji">{{ feature.emoji }}</span>
+          <span class="feature-item__title">{{ feature.title }}</span>
+          <span class="feature-item__desc">{{ feature.description }}</span>
+        </div>
+      }
+    </div>
+  </section>
+
+</div>
