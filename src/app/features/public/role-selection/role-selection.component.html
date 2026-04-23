@@ -12,6 +12,7 @@
           [class.role-option--ngo]="role.id === 'ngo'"
           [class.role-option--hmo]="role.id === 'hmo'"
           [class.role-option--researcher]="role.id === 'researcher'"
+          [attr.aria-pressed]="selectedRole === role.id"
           (click)="selectRole(role.id)"
           type="button"
         >
@@ -39,7 +40,7 @@
 
     <p class="role-selection__signin">
       Already have an account?
-      <a routerLink="/auth/patient/login">Sign in</a>
+      <a routerLink="/auth/login">Sign in</a>
     </p>
   </div>
 </div>

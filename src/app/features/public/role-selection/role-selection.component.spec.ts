@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { Router, provideRouter } from '@angular/router';
 import { RoleSelectionComponent } from './role-selection.component';
 
 describe('RoleSelectionComponent', () => {
@@ -41,5 +41,20 @@ describe('RoleSelectionComponent', () => {
   it('CTA is disabled when no role is selected', () => {
     const cta: HTMLButtonElement = fixture.nativeElement.querySelector('[data-testid="role-cta"]');
     expect(cta.disabled).toBeTrue();
+  });
+
+  it('navigates to the correct signup route when continue() is called', () => {
+    const router = TestBed.inject(Router);
+    const spy = spyOn(router, 'navigate');
+    component.selectRole('hmo');
+    component.continue();
+    expect(spy).toHaveBeenCalledWith(['/auth', 'hmo', 'signup']);
+  });
+
+  it('does not navigate when continue() is called with no role selected', () => {
+    const router = TestBed.inject(Router);
+    const spy = spyOn(router, 'navigate');
+    component.continue();
+    expect(spy).not.toHaveBeenCalled();
   });
 });

@@ -1,6 +1,5 @@
 import { Component, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { NgClass } from '@angular/common';
 
 type Role = 'patient' | 'ngo' | 'hmo' | 'researcher';
 
@@ -14,7 +13,7 @@ interface RoleOption {
 @Component({
   selector: 'lc-role-selection',
   standalone: true,
-  imports: [NgClass, RouterLink],
+  imports: [RouterLink],
   templateUrl: './role-selection.component.html',
   styleUrl: './role-selection.component.scss',
 })
@@ -32,8 +31,8 @@ export class RoleSelectionComponent {
 
   get ctaLabel(): string {
     if (!this.selectedRole) return 'Select a role to continue';
-    const role = this.roles.find(r => r.id === this.selectedRole);
-    return `Continue as ${role?.label} →`;
+    const role = this.roles.find(r => r.id === this.selectedRole)!;
+    return `Continue as ${role.label} →`;
   }
 
   selectRole(role: Role): void {
