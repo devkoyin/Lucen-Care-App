@@ -1,0 +1,45 @@
+<div class="role-selection">
+  <div class="role-selection__inner">
+    <h1 class="role-selection__title">I am a...</h1>
+    <p class="role-selection__subtitle">Select your role to continue</p>
+
+    <div class="role-list">
+      @for (role of roles; track role.id) {
+        <button
+          class="role-option"
+          [class.role-option--selected]="selectedRole === role.id"
+          [class.role-option--patient]="role.id === 'patient'"
+          [class.role-option--ngo]="role.id === 'ngo'"
+          [class.role-option--hmo]="role.id === 'hmo'"
+          [class.role-option--researcher]="role.id === 'researcher'"
+          (click)="selectRole(role.id)"
+          type="button"
+        >
+          <div class="role-option__icon">{{ role.emoji }}</div>
+          <div class="role-option__content">
+            <span class="role-option__label">{{ role.label }}</span>
+            <span class="role-option__desc">{{ role.description }}</span>
+          </div>
+          <div class="role-option__radio" [class.role-option__radio--checked]="selectedRole === role.id">
+            @if (selectedRole === role.id) { ✓ }
+          </div>
+        </button>
+      }
+    </div>
+
+    <button
+      class="role-cta"
+      [disabled]="!selectedRole"
+      (click)="continue()"
+      data-testid="role-cta"
+      type="button"
+    >
+      {{ ctaLabel }}
+    </button>
+
+    <p class="role-selection__signin">
+      Already have an account?
+      <a routerLink="/auth/patient/login">Sign in</a>
+    </p>
+  </div>
+</div>
