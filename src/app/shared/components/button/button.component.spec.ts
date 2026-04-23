@@ -36,4 +36,18 @@ describe('ButtonComponent', () => {
     const btn: HTMLButtonElement = fixture.nativeElement.querySelector('button');
     expect(btn.disabled).toBeTrue();
   });
+
+  it('applies btn--accent class when variant is accent', () => {
+    component.variant = 'accent';
+    fixture.detectChanges();
+    const btn: HTMLButtonElement = fixture.nativeElement.querySelector('button');
+    expect(btn.classList).toContain('btn--accent');
+  });
+
+  it('sets the type attribute to submit when type is submit', () => {
+    component.type = 'submit';
+    fixture.detectChanges();
+    const btn: HTMLButtonElement = fixture.nativeElement.querySelector('button');
+    expect(btn.type).toBe('submit');
+  });
 });
