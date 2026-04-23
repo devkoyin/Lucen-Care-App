@@ -29,4 +29,16 @@ describe('BadgeComponent', () => {
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('span').classList).toContain('badge--error');
   });
+
+  it('applies badge--neutral class when color is neutral', () => {
+    component.color = 'neutral';
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('span').classList).toContain('badge--neutral');
+  });
+
+  it('applies badge--role class when color is role', () => {
+    component.color = 'role';
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('span').classList).toContain('badge--role');
+  });
 });
