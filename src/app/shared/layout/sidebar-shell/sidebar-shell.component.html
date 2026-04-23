@@ -1,0 +1,49 @@
+<div class="shell" [class]="portalClass">
+  <aside class="sidebar" aria-label="Portal navigation">
+    <!-- Brand -->
+    <div class="sidebar__brand">
+      <span class="sidebar__brand-name">LUCEN CARE</span>
+      <span class="sidebar__role-label">{{ portalLabel }}</span>
+    </div>
+
+    <!-- User -->
+    <div class="sidebar__user">
+      <div class="sidebar__avatar" aria-hidden="true">{{ userInitial || userName.charAt(0) }}</div>
+      <div>
+        <div class="sidebar__user-name">{{ userName }}</div>
+        <div class="sidebar__user-role">{{ userRole }}</div>
+      </div>
+    </div>
+
+    <!-- Nav -->
+    <nav class="sidebar__nav" aria-label="Main">
+      @for (item of navItems; track item.route) {
+        <a
+          class="nav-item"
+          [routerLink]="item.route"
+          routerLinkActive="nav-item--active"
+          [attr.aria-label]="item.label"
+        >
+          <span class="nav-item__icon" aria-hidden="true">{{ item.icon }}</span>
+          <span class="nav-item__label">{{ item.label }}</span>
+        </a>
+      }
+    </nav>
+
+    <!-- Bottom -->
+    <div class="sidebar__bottom">
+      <a class="nav-item" routerLink="./settings" aria-label="Settings">
+        <span class="nav-item__icon" aria-hidden="true">⚙️</span>
+        <span class="nav-item__label">Settings</span>
+      </a>
+      <button class="nav-item nav-item--signout" type="button" aria-label="Sign out">
+        <span class="nav-item__icon" aria-hidden="true">🚪</span>
+        <span class="nav-item__label">Sign out</span>
+      </button>
+    </div>
+  </aside>
+
+  <div class="shell__main">
+    <router-outlet />
+  </div>
+</div>

@@ -1,0 +1,124 @@
+.shell {
+  display: grid;
+  grid-template-columns: var(--sidebar-width) 1fr;
+  min-height: 100vh;
+  background: var(--color-bg);
+}
+
+.sidebar {
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+
+  &__brand {
+    padding: 16px 18px 12px;
+    border-bottom: 1px solid var(--color-border);
+    flex-shrink: 0;
+  }
+
+  &__brand-name {
+    display: block;
+    color: var(--color-role-accent);
+    font-weight: var(--font-extrabold);
+    font-size: var(--text-sm);
+    letter-spacing: var(--tracking-wide);
+  }
+
+  &__role-label {
+    display: block;
+    color: var(--color-text-muted);
+    font-size: var(--text-xs);
+    margin-top: 2px;
+  }
+
+  &__user {
+    padding: 12px 18px;
+    border-bottom: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+
+  &__avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: var(--radius-full);
+    background: var(--color-role-surface);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-role-accent);
+    font-size: var(--text-sm);
+    font-weight: var(--font-bold);
+    flex-shrink: 0;
+  }
+
+  &__user-name {
+    color: var(--color-text);
+    font-size: var(--text-xs);
+    font-weight: var(--font-semibold);
+  }
+
+  &__user-role {
+    color: var(--color-text-muted);
+    font-size: var(--text-xs);
+    margin-top: 1px;
+  }
+
+  &__nav {
+    flex: 1;
+    padding: 10px 0;
+  }
+
+  &__bottom {
+    padding: 10px 0;
+    border-top: 1px solid var(--color-border);
+    flex-shrink: 0;
+  }
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 18px;
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+  transition: color 0.15s, background 0.15s;
+  width: 100%;
+  border: none;
+  background: none;
+  font-family: var(--font-family);
+  cursor: pointer;
+  text-decoration: none;
+
+  &:hover {
+    color: var(--color-text);
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  &--active {
+    color: var(--color-role-accent);
+    background: var(--sidebar-active-bg);
+    border-right: 2px solid var(--sidebar-active-border);
+    font-weight: var(--font-semibold);
+  }
+
+  &--signout {
+    color: var(--color-text-muted);
+  }
+
+  &__icon { font-size: var(--text-base); }
+  &__label { font-size: var(--text-sm); }
+}
+
+.shell__main {
+  background: var(--color-bg);
+  overflow-y: auto;
+}
