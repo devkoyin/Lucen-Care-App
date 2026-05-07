@@ -1,0 +1,63 @@
+<div class="onboarding" [ngClass]="'portal-' + role">
+
+  <!-- Left sidebar -->
+  <aside class="onboarding__sidebar">
+    <a class="onboarding__brand" routerLink="/">LUCEN CARE</a>
+    <p class="onboarding__sidebar-label">Setting up your account</p>
+    <nav class="step-list" aria-label="Setup progress">
+      @for (label of stepLabels; track label; let i = $index) {
+        <div
+          class="step-list__item"
+          [class.step-list__item--done]="i + 1 < currentStep"
+          [class.step-list__item--active]="i + 1 === currentStep"
+        >
+          <span class="step-list__dot" aria-hidden="true">
+            @if (i + 1 < currentStep) { ✓ } @else { {{ i + 1 }} }
+          </span>
+          <span class="step-list__label">{{ label }}</span>
+        </div>
+      }
+    </nav>
+  </aside>
+
+  <!-- Right main area -->
+  <main class="onboarding__main">
+
+    <!-- Progress bar -->
+    <div class="onboarding__progress-track" role="progressbar"
+         [attr.aria-valuenow]="currentStep"
+         [attr.aria-valuemin]="1"
+         [attr.aria-valuemax]="totalSteps"
+         [attr.aria-label]="'Step ' + currentStep + ' of ' + totalSteps">
+      <div class="onboarding__progress-fill" [style.width.%]="progress"></div>
+    </div>
+
+    <!-- Content -->
+    <div class="onboarding__content">
+      <p class="onboarding__step-num">Step {{ currentStep }} of {{ totalSteps }}</p>
+      <h1 class="onboarding__step-title">{{ stepTitle }}</h1>
+      <ng-content />
+    </div>
+
+    <!-- Navigation -->
+    <footer class="onboarding__nav">
+      @if (currentStep > 1) {
+        <button type="button" class="onboarding__back-btn" (click)="back.emit()">
+          ← Back
+        </button>
+      } @else {
+        <span></span>
+      }
+      <button
+        type="button"
+        class="onboarding__continue-btn"
+        [disabled]="!canContinue"
+        (click)="continue.emit()"
+      >
+        {{ continueLabel }}
+      </button>
+    </footer>
+
+  </main>
+
+</div>
