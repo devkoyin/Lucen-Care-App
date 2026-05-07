@@ -1,0 +1,90 @@
+<lc-onboarding-shell
+  [currentStep]="currentStep"
+  [totalSteps]="totalSteps"
+  [stepLabels]="stepLabels"
+  [stepTitle]="stepTitle"
+  [canContinue]="canContinue"
+  [continueLabel]="continueLabel"
+  role="researcher"
+  (back)="back()"
+  (continue)="next()">
+
+  @switch (currentStep) {
+    @case (1) {
+      <div class="step-content" [formGroup]="step1Form">
+        <lc-form-field label="Title / credentials" id="res-title" hint="e.g. Dr., Prof., MD, PhD">
+          <input id="res-title" type="text" formControlName="title" placeholder="Dr." />
+        </lc-form-field>
+        <lc-form-field label="Institution" id="res-institution">
+          <input id="res-institution" type="text" formControlName="institution" placeholder="University or research body" />
+        </lc-form-field>
+        <lc-form-field label="Department (optional)" id="res-dept">
+          <input id="res-dept" type="text" formControlName="department" placeholder="e.g. Department of Epidemiology" />
+        </lc-form-field>
+        <lc-form-field label="ORCID iD (optional)" id="res-orcid" hint="16-digit identifier — orcid.org">
+          <input id="res-orcid" type="text" formControlName="orcidId" placeholder="0000-0000-0000-0000" />
+        </lc-form-field>
+      </div>
+    }
+    @case (2) {
+      <div class="step-content" [formGroup]="step2Form">
+        <lc-form-field label="Research areas" id="res-areas" hint="e.g. Oncology, Infectious disease, Maternal health">
+          <input id="res-areas" type="text" formControlName="researchAreas" placeholder="Health domains you study" />
+        </lc-form-field>
+        <lc-form-field label="IRB / ethics board affiliation (optional)" id="res-irb">
+          <input id="res-irb" type="text" formControlName="irbAffiliation" placeholder="e.g. University IRB Committee" />
+        </lc-form-field>
+        <lc-form-field label="IRB protocol number (optional)" id="res-irb-num">
+          <input id="res-irb-num" type="text" formControlName="irbNumber" placeholder="Protocol number if applicable" />
+        </lc-form-field>
+      </div>
+    }
+    @case (3) {
+      <div class="step-content" [formGroup]="step3Form">
+        <div class="disclaimer-notice">
+          <span class="disclaimer-notice__icon" aria-hidden="true">🔬</span>
+          <div class="disclaimer-notice__text">
+            <strong>Platform liability disclaimer</strong>
+            <p>Lucen Care facilitates connection between researchers and willing patient participants. The platform does not endorse, review, or validate individual research studies. Researchers are solely responsible for obtaining appropriate ethics board approval, maintaining data privacy compliance, and ensuring participant safety.</p>
+          </div>
+        </div>
+        <div class="consent-list">
+          <label class="consent-item">
+            <input type="checkbox" formControlName="disclaimerAcknowledgement" />
+            <div class="consent-item__text">
+              <span class="consent-item__label">
+                Platform disclaimer
+                <span class="consent-item__req">Required</span>
+              </span>
+              <span class="consent-item__desc">I acknowledge the platform liability disclaimer above and confirm that all research conducted through this platform will comply with applicable ethics requirements and data protection law.</span>
+            </div>
+          </label>
+          <label class="consent-item">
+            <input type="checkbox" formControlName="termsConsent" />
+            <div class="consent-item__text">
+              <span class="consent-item__label">
+                Terms of Service
+                <span class="consent-item__req">Required</span>
+              </span>
+              <span class="consent-item__desc">I agree to the Lucen Care Terms of Service and Researcher Data Use Policy.</span>
+            </div>
+          </label>
+        </div>
+      </div>
+    }
+    @case (4) {
+      <div class="step-content step-content--pending">
+        <div class="pending-icon" aria-hidden="true">⏳</div>
+        <p class="pending-title">Application submitted</p>
+        <p class="pending-desc">Thank you, <strong>{{ userName }}</strong>. Our team will verify your credentials and institution affiliation within 48 hours. You'll receive an email once your account is activated.</p>
+        <div class="pending-info">
+          <span class="pending-info__item">✓ Professional details captured</span>
+          <span class="pending-info__item">✓ Research focus recorded</span>
+          <span class="pending-info__item">✓ Platform disclaimer acknowledged</span>
+          <span class="pending-info__item">◎ Credential verification pending</span>
+        </div>
+      </div>
+    }
+  }
+
+</lc-onboarding-shell>
