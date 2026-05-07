@@ -1,0 +1,102 @@
+<lc-onboarding-shell
+  [currentStep]="currentStep"
+  [totalSteps]="totalSteps"
+  [stepLabels]="stepLabels"
+  [stepTitle]="stepTitle"
+  [canContinue]="canContinue"
+  [continueLabel]="continueLabel"
+  role="hmo"
+  (back)="back()"
+  (continue)="next()">
+
+  @switch (currentStep) {
+    @case (1) {
+      <div class="step-content" [formGroup]="step1Form">
+        <lc-form-field label="HMO / insurer name" id="hmo-name">
+          <input id="hmo-name" type="text" formControlName="orgName" placeholder="Full registered name" />
+        </lc-form-field>
+        <lc-form-field label="Licence number" id="hmo-licence">
+          <input id="hmo-licence" type="text" formControlName="licenceNumber" placeholder="Regulatory licence number" />
+        </lc-form-field>
+        <lc-form-field label="Contact phone" id="hmo-phone">
+          <input id="hmo-phone" type="tel" formControlName="contactPhone" placeholder="+1 (555) 000-0000" />
+        </lc-form-field>
+      </div>
+    }
+    @case (2) {
+      <div class="step-content" [formGroup]="step2Form">
+        <lc-form-field label="Primary coverage region" id="hmo-region">
+          <select id="hmo-region" formControlName="coverageRegion">
+            <option value="">Select...</option>
+            <option value="NG">Nigeria</option>
+            <option value="GH">Ghana</option>
+            <option value="KE">Kenya</option>
+            <option value="ZA">South Africa</option>
+            <option value="GB">United Kingdom</option>
+            <option value="US">United States</option>
+            <option value="other">Other</option>
+          </select>
+        </lc-form-field>
+        <lc-form-field label="Approximate enrolled patient count" id="hmo-count">
+          <select id="hmo-count" formControlName="enrolledPatientCount">
+            <option value="">Select...</option>
+            <option value="lt500">Under 500</option>
+            <option value="500-2000">500 – 2,000</option>
+            <option value="2000-10000">2,000 – 10,000</option>
+            <option value="gt10000">Over 10,000</option>
+          </select>
+        </lc-form-field>
+        <lc-form-field label="Specialty focus (optional)" id="hmo-specialty" hint="e.g. Chronic disease, Maternal care">
+          <input id="hmo-specialty" type="text" formControlName="specialtyFocus" placeholder="Leave blank if general" />
+        </lc-form-field>
+      </div>
+    }
+    @case (3) {
+      <div class="step-content" [formGroup]="step3Form">
+        <div class="baa-notice">
+          <span class="baa-notice__icon" aria-hidden="true">⚖️</span>
+          <div class="baa-notice__text">
+            <strong>HIPAA Business Associate Agreement</strong>
+            <p>As an HMO accessing patient health data through Lucen Care, your organisation must execute a Business Associate Agreement (BAA) as required by HIPAA. By checking the box below, your authorised representative acknowledges and agrees to the terms of the Lucen Care BAA.</p>
+          </div>
+        </div>
+        <div class="consent-list">
+          <label class="consent-item">
+            <input type="checkbox" formControlName="baaAcknowledgement" />
+            <div class="consent-item__text">
+              <span class="consent-item__label">
+                BAA acknowledgement
+                <span class="consent-item__req">Required</span>
+              </span>
+              <span class="consent-item__desc">I am an authorised representative of this organisation and I acknowledge and agree to the terms of the Lucen Care Business Associate Agreement (HIPAA).</span>
+            </div>
+          </label>
+          <label class="consent-item">
+            <input type="checkbox" formControlName="termsConsent" />
+            <div class="consent-item__text">
+              <span class="consent-item__label">
+                Terms of Service
+                <span class="consent-item__req">Required</span>
+              </span>
+              <span class="consent-item__desc">I agree to the Lucen Care Terms of Service on behalf of my organisation.</span>
+            </div>
+          </label>
+        </div>
+      </div>
+    }
+    @case (4) {
+      <div class="step-content step-content--pending">
+        <div class="pending-icon" aria-hidden="true">⏳</div>
+        <p class="pending-title">Application submitted</p>
+        <p class="pending-desc">Thank you. Our team will review <strong>{{ orgName }}</strong>'s application within 48 hours. You'll receive an activation email once approved.</p>
+        <div class="pending-info">
+          <span class="pending-info__item">✓ Organisation details captured</span>
+          <span class="pending-info__item">✓ Coverage scope recorded</span>
+          <span class="pending-info__item">✓ BAA acknowledged</span>
+          <span class="pending-info__item">◎ Admin review pending</span>
+        </div>
+      </div>
+    }
+  }
+
+</lc-onboarding-shell>
