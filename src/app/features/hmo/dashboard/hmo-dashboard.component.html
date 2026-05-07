@@ -1,0 +1,106 @@
+<div class="dashboard">
+
+  <!-- Header -->
+  <div class="dash-header">
+    <div>
+      <h1 class="dash-header__title">Dashboard</h1>
+      <p class="dash-header__sub">Patient roster for {{ orgName }}</p>
+    </div>
+    <a class="dash-primary-btn" routerLink="/hmo/patients">+ New Profile</a>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-row">
+    @for (stat of stats; track stat.label) {
+      <div class="stat-card" [class.stat-card--warning]="stat.variant === 'warning'">
+        <span class="stat-card__label">{{ stat.label }}</span>
+        <span class="stat-card__value">{{ stat.value }}</span>
+        @if (stat.sub) {
+          <span class="stat-card__sub">{{ stat.sub }}</span>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- Content row -->
+  <div class="content-row">
+
+    <!-- Recent activity -->
+    <div class="panel">
+      <div class="panel__header">
+        <span class="panel__title">Recent Patient Activity</span>
+        <a class="panel__link" routerLink="/hmo/patients">View roster</a>
+      </div>
+      <div class="activity-list">
+        @for (patient of recentActivity; track patient.name) {
+          <div class="activity-item">
+            <div class="activity-item__avatar">{{ patient.name.charAt(0) }}</div>
+            <div class="activity-item__info">
+              <span class="activity-item__name">{{ patient.name }}</span>
+              <span class="activity-item__action">{{ patient.activity }}</span>
+            </div>
+            <div class="activity-item__right">
+              <span class="activity-item__time">{{ patient.timeAgo }}</span>
+              <div class="completeness">
+                <div class="completeness__bar">
+                  <div
+                    class="completeness__fill"
+                    [style.width.%]="patient.completeness"
+                    [style.background]="completenessColor(patient.completeness)">
+                  </div>
+                </div>
+                <span class="completeness__pct">{{ patient.completeness }}%</span>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Completeness overview -->
+    <div class="panel">
+      <div class="panel__header">
+        <span class="panel__title">Profile Health</span>
+      </div>
+      <div class="completeness-overview">
+        <div class="ring-chart">
+          <svg viewBox="0 0 100 100" class="ring-chart__svg" aria-label="73% average profile completeness">
+            <circle cx="50" cy="50" r="38" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="10"/>
+            <circle
+              cx="50" cy="50" r="38"
+              fill="none"
+              stroke="#3B82F6"
+              stroke-width="10"
+              stroke-linecap="round"
+              stroke-dasharray="239"
+              stroke-dashoffset="64"
+              transform="rotate(-90 50 50)"/>
+          </svg>
+          <div class="ring-chart__label">
+            <span class="ring-chart__value">73%</span>
+            <span class="ring-chart__sub">avg complete</span>
+          </div>
+        </div>
+        <div class="completeness-legend">
+          <div class="legend-item">
+            <span class="legend-item__dot" style="background:#34D399"></span>
+            <span class="legend-item__label">80–100% complete</span>
+            <span class="legend-item__count">412</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-item__dot" style="background:#F59E0B"></span>
+            <span class="legend-item__label">50–79% complete</span>
+            <span class="legend-item__count">627</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-item__dot" style="background:#EF4444"></span>
+            <span class="legend-item__label">Under 50%</span>
+            <span class="legend-item__count">245</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>

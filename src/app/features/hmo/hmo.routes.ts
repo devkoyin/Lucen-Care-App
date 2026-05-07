@@ -1,8 +1,17 @@
 import { Routes } from '@angular/router';
-import { PlaceholderComponent } from '../../shared/components/placeholder/placeholder.component';
+import { HmoPortalComponent } from './hmo-portal.component';
 
 export const HMO_ROUTES: Routes = [
-  { path: '',          redirectTo: 'dashboard', pathMatch: 'full' },
-  { path: 'dashboard', component: PlaceholderComponent, data: { title: 'HMO Dashboard — Plan 5' } },
-  { path: '**',        component: PlaceholderComponent },
+  {
+    path: '',
+    component: HmoPortalComponent,
+    children: [
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      {
+        path: 'dashboard',
+        loadComponent: () =>
+          import('./dashboard/hmo-dashboard.component').then(m => m.HmoDashboardComponent),
+      },
+    ],
+  },
 ];
