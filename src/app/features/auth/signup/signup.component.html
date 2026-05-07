@@ -1,0 +1,59 @@
+<div class="auth-page" [ngClass]="'portal-' + role">
+  <div class="auth-card">
+    <div class="auth-card__accent"></div>
+    <div class="auth-card__body">
+      <div class="auth-card__header">
+        <span class="auth-card__role-badge">{{ roleName }}</span>
+        <h1 class="auth-card__title">Create your account</h1>
+        <p class="auth-card__subtitle">Get started with Lucen Care</p>
+      </div>
+      <form [formGroup]="form" (ngSubmit)="submit()" class="auth-form" novalidate>
+        <lc-form-field label="Full name" id="signup-name" [error]="fieldError('name')">
+          <input
+            id="signup-name"
+            type="text"
+            formControlName="name"
+            placeholder="Your full name"
+            autocomplete="name"
+          />
+        </lc-form-field>
+        <lc-form-field label="Email" id="signup-email" [error]="fieldError('email')">
+          <input
+            id="signup-email"
+            type="email"
+            formControlName="email"
+            placeholder="you@example.com"
+            autocomplete="email"
+          />
+        </lc-form-field>
+        <lc-form-field label="Password" id="signup-password" [error]="fieldError('password')">
+          <input
+            id="signup-password"
+            type="password"
+            formControlName="password"
+            placeholder="Min. 8 characters"
+            autocomplete="new-password"
+          />
+        </lc-form-field>
+        <lc-form-field label="Confirm password" id="signup-confirm" [error]="confirmPasswordError">
+          <input
+            id="signup-confirm"
+            type="password"
+            formControlName="confirmPassword"
+            placeholder="Repeat your password"
+            autocomplete="new-password"
+          />
+        </lc-form-field>
+        @if (serverError) {
+          <p class="auth-form__server-error" role="alert">{{ serverError }}</p>
+        }
+        <button type="submit" class="auth-btn" [disabled]="loading">
+          @if (loading) { Creating account… } @else { Continue }
+        </button>
+      </form>
+      <p class="auth-card__footer">
+        Already have an account? <a [routerLink]="'/auth/' + role + '/login'">Sign in</a>
+      </p>
+    </div>
+  </div>
+</div>
