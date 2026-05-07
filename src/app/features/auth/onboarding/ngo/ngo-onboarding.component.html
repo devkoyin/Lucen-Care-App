@@ -1,0 +1,96 @@
+<lc-onboarding-shell
+  [currentStep]="currentStep"
+  [totalSteps]="totalSteps"
+  [stepLabels]="stepLabels"
+  [stepTitle]="stepTitle"
+  [canContinue]="canContinue"
+  [continueLabel]="continueLabel"
+  role="ngo"
+  (back)="back()"
+  (continue)="next()">
+
+  @switch (currentStep) {
+    @case (1) {
+      <div class="step-content" [formGroup]="step1Form">
+        <lc-form-field label="Organisation name" id="ngo-org-name">
+          <input id="ngo-org-name" type="text" formControlName="orgName" placeholder="Full registered name" />
+        </lc-form-field>
+        <lc-form-field label="Registration / charity number" id="ngo-reg">
+          <input id="ngo-reg" type="text" formControlName="registrationNumber" placeholder="Official registration number" />
+        </lc-form-field>
+        <lc-form-field label="Focus areas" id="ngo-focus" hint="e.g. Maternal health, HIV/AIDS, Mental health">
+          <input id="ngo-focus" type="text" formControlName="focusAreas" placeholder="Health areas your programs address" />
+        </lc-form-field>
+        <lc-form-field label="Website (optional)" id="ngo-web">
+          <input id="ngo-web" type="url" formControlName="website" placeholder="https://yourorg.org" />
+        </lc-form-field>
+      </div>
+    }
+    @case (2) {
+      <div class="step-content" [formGroup]="step2Form">
+        <lc-form-field label="Countries / regions of operation" id="ngo-regions">
+          <input id="ngo-regions" type="text" formControlName="operatingRegions" placeholder="e.g. Nigeria, Ghana, Kenya" />
+        </lc-form-field>
+        <lc-form-field label="Head office country" id="ngo-hq">
+          <select id="ngo-hq" formControlName="headOfficeCountry">
+            <option value="">Select...</option>
+            <option value="NG">Nigeria</option>
+            <option value="GH">Ghana</option>
+            <option value="KE">Kenya</option>
+            <option value="ZA">South Africa</option>
+            <option value="GB">United Kingdom</option>
+            <option value="US">United States</option>
+            <option value="other">Other</option>
+          </select>
+        </lc-form-field>
+        <lc-form-field label="Program description" id="ngo-desc" hint="Briefly describe the programs you run">
+          <textarea id="ngo-desc" formControlName="programDescription" rows="4" placeholder="Describe how your programs benefit patients..."></textarea>
+        </lc-form-field>
+      </div>
+    }
+    @case (3) {
+      <div class="step-content" [formGroup]="step3Form">
+        <div class="consent-list">
+          <label class="consent-item">
+            <input type="checkbox" formControlName="termsConsent" />
+            <div class="consent-item__text">
+              <span class="consent-item__label">
+                Terms of Service
+                <span class="consent-item__req">Required</span>
+              </span>
+              <span class="consent-item__desc">I agree to the Lucen Care Terms of Service and confirm that my organisation is a legitimate registered entity.</span>
+            </div>
+          </label>
+          <label class="consent-item">
+            <input type="checkbox" formControlName="dataProcessingConsent" />
+            <div class="consent-item__text">
+              <span class="consent-item__label">
+                Data processing agreement
+                <span class="consent-item__req">Required</span>
+              </span>
+              <span class="consent-item__desc">I agree that Lucen Care may process patient profile data on behalf of my organisation for the purpose of funding program matching, in accordance with GDPR and applicable data protection laws.</span>
+            </div>
+          </label>
+        </div>
+        <p class="upload-note">
+          <span class="upload-note__icon" aria-hidden="true">📎</span>
+          You will be asked to upload your registration certificate during admin review. Our team will contact you by email.
+        </p>
+      </div>
+    }
+    @case (4) {
+      <div class="step-content step-content--pending">
+        <div class="pending-icon" aria-hidden="true">⏳</div>
+        <p class="pending-title">Application submitted</p>
+        <p class="pending-desc">Thank you, <strong>{{ orgName }}</strong>. Our team will review your application within 48 hours. You'll receive an activation email once approved.</p>
+        <div class="pending-info">
+          <span class="pending-info__item">✓ Organisation details captured</span>
+          <span class="pending-info__item">✓ Geographic scope recorded</span>
+          <span class="pending-info__item">✓ Terms agreed</span>
+          <span class="pending-info__item">◎ Admin review pending</span>
+        </div>
+      </div>
+    }
+  }
+
+</lc-onboarding-shell>
