@@ -1,0 +1,10 @@
+<div class="field" [class.field--error]="error">
+  <label class="field__label" [for]="id">{{ label }}</label>
+  <ng-content />
+  @if (error) {
+    <span class="field__error" role="alert">{{ error }}</span>
+  }
+  @if (hint && !error) {
+    <span class="field__hint">{{ hint }}</span>
+  }
+</div>
