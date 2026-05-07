@@ -1,0 +1,82 @@
+<div class="dashboard">
+
+  <!-- Header -->
+  <div class="dash-header">
+    <div>
+      <h1 class="dash-header__title">Dashboard</h1>
+      <p class="dash-header__sub">Welcome back, {{ researcherName }}</p>
+    </div>
+    <a class="dash-primary-btn" routerLink="/researcher/studies/create">+ Post Study</a>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-row">
+    @for (stat of stats; track stat.label) {
+      <div class="stat-card">
+        <span class="stat-card__label">{{ stat.label }}</span>
+        <span class="stat-card__value">{{ stat.value }}</span>
+        @if (stat.sub) {
+          <span class="stat-card__sub">{{ stat.sub }}</span>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- Content row -->
+  <div class="content-row">
+
+    <!-- Active studies -->
+    <div class="panel">
+      <div class="panel__header">
+        <span class="panel__title">Active Studies</span>
+        <a class="panel__link" routerLink="/researcher/studies">View all</a>
+      </div>
+      <div class="study-list">
+        @for (study of studies; track study.title) {
+          <div class="study-item">
+            <div class="study-item__top">
+              <div>
+                <span class="study-item__title">{{ study.title }}</span>
+                <span class="study-item__condition">{{ study.condition }}</span>
+              </div>
+              <span class="study-badge study-badge--{{ study.status }}">{{ statusLabel(study.status) }}</span>
+            </div>
+            <div class="study-item__progress">
+              <div class="enrol-bar">
+                <div class="enrol-bar__fill" [style.width.%]="enrollPercent(study)"></div>
+              </div>
+              <span class="study-item__count">{{ study.enrolled }}/{{ study.target }} enrolled</span>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Recent interest -->
+    <div class="panel">
+      <div class="panel__header">
+        <span class="panel__title">Recent Interest</span>
+        <a class="panel__link" routerLink="/researcher/recruitment">View all</a>
+      </div>
+      <div class="interest-list">
+        @for (item of recentInterest; track item.patientId) {
+          <div class="interest-item">
+            <div class="interest-item__id">{{ item.patientId }}</div>
+            <div class="interest-item__study">{{ item.studyTitle }}</div>
+            <div class="interest-item__meta">
+              <span class="interest-badge interest-badge--{{ item.status }}">
+                {{ item.status === 'connected' ? 'Connected' : 'Pending' }}
+              </span>
+              <span class="interest-item__time">{{ item.daysAgo === 1 ? '1 day ago' : item.daysAgo + ' days ago' }}</span>
+            </div>
+          </div>
+        }
+        <p class="interest-list__privacy-note">
+          🔒 Patient names are hidden until mutual connection is confirmed.
+        </p>
+      </div>
+    </div>
+
+  </div>
+
+</div>

@@ -1,8 +1,17 @@
 import { Routes } from '@angular/router';
-import { PlaceholderComponent } from '../../shared/components/placeholder/placeholder.component';
+import { ResearcherPortalComponent } from './researcher-portal.component';
 
 export const RESEARCHER_ROUTES: Routes = [
-  { path: '',          redirectTo: 'dashboard', pathMatch: 'full' },
-  { path: 'dashboard', component: PlaceholderComponent, data: { title: 'Researcher Dashboard — Plan 6' } },
-  { path: '**',        component: PlaceholderComponent },
+  {
+    path: '',
+    component: ResearcherPortalComponent,
+    children: [
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      {
+        path: 'dashboard',
+        loadComponent: () =>
+          import('./dashboard/researcher-dashboard.component').then(m => m.ResearcherDashboardComponent),
+      },
+    ],
+  },
 ];
