@@ -1,0 +1,133 @@
+<lc-onboarding-shell
+  [currentStep]="currentStep"
+  [totalSteps]="totalSteps"
+  [stepLabels]="stepLabels"
+  [stepTitle]="stepTitle"
+  [canContinue]="canContinue"
+  [continueLabel]="continueLabel"
+  role="patient"
+  (back)="back()"
+  (continue)="next()">
+
+  @switch (currentStep) {
+    @case (1) {
+      <div class="step-content" [formGroup]="step1Form">
+        <div class="account-type">
+          <button
+            type="button"
+            class="account-type__option"
+            [class.account-type__option--selected]="step1Form.value.accountType === 'patient'"
+            (click)="step1Form.get('accountType')!.setValue('patient')"
+            [attr.aria-pressed]="step1Form.value.accountType === 'patient'"
+          >
+            <span class="account-type__icon" aria-hidden="true">🏥</span>
+            <span class="account-type__content">
+              <span class="account-type__label">Patient</span>
+              <span class="account-type__desc">I'm managing my own health</span>
+            </span>
+          </button>
+          <button
+            type="button"
+            class="account-type__option"
+            [class.account-type__option--selected]="step1Form.value.accountType === 'caregiver'"
+            (click)="step1Form.get('accountType')!.setValue('caregiver')"
+            [attr.aria-pressed]="step1Form.value.accountType === 'caregiver'"
+          >
+            <span class="account-type__icon" aria-hidden="true">🫂</span>
+            <span class="account-type__content">
+              <span class="account-type__label">Caregiver</span>
+              <span class="account-type__desc">I'm supporting someone else's health</span>
+            </span>
+          </button>
+        </div>
+      </div>
+    }
+    @case (2) {
+      <div class="step-content" [formGroup]="step2Form">
+        <lc-form-field label="Date of birth" id="ob-dob">
+          <input id="ob-dob" type="date" formControlName="dateOfBirth" />
+        </lc-form-field>
+        <lc-form-field label="Biological sex" id="ob-sex">
+          <select id="ob-sex" formControlName="biologicalSex">
+            <option value="">Select...</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other / Prefer not to say</option>
+          </select>
+        </lc-form-field>
+        <lc-form-field label="Country / Region" id="ob-country">
+          <select id="ob-country" formControlName="country">
+            <option value="">Select...</option>
+            <option value="NG">Nigeria</option>
+            <option value="GH">Ghana</option>
+            <option value="KE">Kenya</option>
+            <option value="ZA">South Africa</option>
+            <option value="GB">United Kingdom</option>
+            <option value="US">United States</option>
+            <option value="other">Other</option>
+          </select>
+        </lc-form-field>
+        <lc-form-field label="Known conditions (optional)" id="ob-conditions" hint="e.g. Diabetes, Hypertension">
+          <input id="ob-conditions" type="text" formControlName="conditions" placeholder="Leave blank if none" />
+        </lc-form-field>
+        <lc-form-field label="Primary language" id="ob-lang">
+          <select id="ob-lang" formControlName="primaryLanguage">
+            <option value="">Select...</option>
+            <option value="en">English</option>
+            <option value="fr">French</option>
+            <option value="ar">Arabic</option>
+            <option value="yo">Yoruba</option>
+            <option value="ha">Hausa</option>
+            <option value="ig">Igbo</option>
+            <option value="sw">Swahili</option>
+            <option value="pt">Portuguese</option>
+          </select>
+        </lc-form-field>
+      </div>
+    }
+    @case (3) {
+      <div class="step-content" [formGroup]="step3Form">
+        <div class="consent-list">
+          <label class="consent-item">
+            <input type="checkbox" formControlName="termsConsent" />
+            <div class="consent-item__text">
+              <span class="consent-item__label">
+                Terms &amp; privacy policy
+                <span class="consent-item__req">Required</span>
+              </span>
+              <span class="consent-item__desc">I agree to the Lucen Care Terms of Service and Privacy Policy, and consent to the processing of my health data as described therein.</span>
+            </div>
+          </label>
+          <label class="consent-item">
+            <input type="checkbox" formControlName="ngoConsent" />
+            <div class="consent-item__text">
+              <span class="consent-item__label">
+                NGO funding matching
+                <span class="consent-item__opt">Optional</span>
+              </span>
+              <span class="consent-item__desc">Allow NGOs on the platform to see my profile for funding and program matching.</span>
+            </div>
+          </label>
+          <label class="consent-item">
+            <input type="checkbox" formControlName="researchConsent" />
+            <div class="consent-item__text">
+              <span class="consent-item__label">
+                Research participation
+                <span class="consent-item__opt">Optional</span>
+              </span>
+              <span class="consent-item__desc">Allow clinical researchers to contact me about relevant studies I may be eligible for.</span>
+            </div>
+          </label>
+        </div>
+      </div>
+    }
+    @case (4) {
+      <div class="step-content step-content--welcome">
+        <div class="welcome-icon" aria-hidden="true">🎉</div>
+        <p class="welcome-name">Welcome, {{ userName }}!</p>
+        <p class="welcome-desc">Your Lucen Care account is ready. You can now access your health dashboard, track medications and appointments, and explore funding and research opportunities.</p>
+      </div>
+    }
+  }
+
+</lc-onboarding-shell>
