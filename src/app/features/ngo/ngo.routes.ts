@@ -1,8 +1,17 @@
 import { Routes } from '@angular/router';
-import { PlaceholderComponent } from '../../shared/components/placeholder/placeholder.component';
+import { NgoPortalComponent } from './ngo-portal.component';
 
 export const NGO_ROUTES: Routes = [
-  { path: '',          redirectTo: 'dashboard', pathMatch: 'full' },
-  { path: 'dashboard', component: PlaceholderComponent, data: { title: 'NGO Dashboard — Plan 4' } },
-  { path: '**',        component: PlaceholderComponent },
+  {
+    path: '',
+    component: NgoPortalComponent,
+    children: [
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      {
+        path: 'dashboard',
+        loadComponent: () =>
+          import('./dashboard/ngo-dashboard.component').then(m => m.NgoDashboardComponent),
+      },
+    ],
+  },
 ];
