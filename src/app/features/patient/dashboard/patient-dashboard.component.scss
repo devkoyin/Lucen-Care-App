@@ -1,0 +1,252 @@
+.dashboard {
+  padding: var(--space-8) var(--space-10);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  max-width: 1100px;
+}
+
+// Header
+.dash-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  &__greeting {
+    color: white;
+    font-size: var(--text-2xl);
+    font-weight: var(--font-extrabold);
+    letter-spacing: var(--tracking-tight);
+    margin-bottom: var(--space-1);
+  }
+
+  &__date {
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+  }
+}
+
+.dash-primary-btn {
+  padding: 9px var(--space-5);
+  background: var(--color-role-accent);
+  color: var(--color-navy);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-weight: var(--font-extrabold);
+  transition: opacity 0.15s;
+  flex-shrink: 0;
+
+  &:hover { opacity: 0.9; }
+}
+
+// Quick actions
+.quick-actions {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-4);
+}
+
+.quick-action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-5);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  transition: border-color 0.15s, background 0.15s;
+  text-align: center;
+
+  &:hover {
+    border-color: var(--color-role-border);
+    background: var(--color-role-surface);
+  }
+
+  &__icon { font-size: 24px; }
+
+  &__label {
+    color: var(--color-text-secondary);
+    font-size: var(--text-xs);
+    font-weight: var(--font-semibold);
+  }
+}
+
+// Widget row
+.widget-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-6);
+}
+
+// Widget
+.widget {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+
+  &--accent {
+    border-color: var(--color-role-border);
+    background: var(--color-role-surface);
+  }
+
+  &--highlight {
+    border-color: rgba(245, 158, 11, 0.25);
+    background: rgba(245, 158, 11, 0.05);
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-4) var(--space-5);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  &__title {
+    color: var(--color-text);
+    font-size: var(--text-sm);
+    font-weight: var(--font-semibold);
+  }
+
+  &__link {
+    color: var(--color-role-accent);
+    font-size: var(--text-xs);
+    font-weight: var(--font-semibold);
+    transition: opacity 0.15s;
+    &:hover { opacity: 0.8; }
+  }
+
+  &__body {
+    padding: var(--space-2) 0;
+  }
+}
+
+// Appointment items
+.appt-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-3) var(--space-5);
+  border-bottom: 1px solid var(--color-border);
+
+  &:last-child { border-bottom: none; }
+
+  &__date {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 32px;
+    flex-shrink: 0;
+  }
+
+  &__day {
+    color: var(--color-role-accent);
+    font-size: var(--text-lg);
+    font-weight: var(--font-extrabold);
+    line-height: 1;
+  }
+
+  &__month {
+    color: var(--color-text-muted);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  &__detail { display: flex; flex-direction: column; gap: 2px; }
+
+  &__provider {
+    color: var(--color-text);
+    font-size: var(--text-sm);
+    font-weight: var(--font-semibold);
+  }
+
+  &__meta {
+    color: var(--color-text-muted);
+    font-size: var(--text-xs);
+  }
+}
+
+// Medication items
+.med-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-5);
+  border-bottom: 1px solid var(--color-border);
+
+  &:last-child { border-bottom: none; }
+
+  &__info { display: flex; flex-direction: column; gap: 2px; }
+  &__name { color: var(--color-text); font-size: var(--text-sm); font-weight: var(--font-semibold); }
+  &__meta { color: var(--color-text-muted); font-size: var(--text-xs); }
+}
+
+.med-badge {
+  font-size: var(--text-xs);
+  font-weight: var(--font-semibold);
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+
+  &--taken {
+    background: rgba(52, 211, 153, 0.12);
+    color: #34D399;
+    border: 1px solid rgba(52, 211, 153, 0.25);
+  }
+
+  &--pending {
+    background: rgba(245, 158, 11, 0.12);
+    color: #F59E0B;
+    border: 1px solid rgba(245, 158, 11, 0.25);
+  }
+
+  &--later {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border);
+  }
+}
+
+// Nudge cards
+.nudge {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-5);
+
+  &__icon { font-size: 28px; flex-shrink: 0; }
+
+  &__text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  &__title {
+    color: var(--color-text);
+    font-size: var(--text-sm);
+    font-weight: var(--font-semibold);
+  }
+
+  &__desc {
+    color: var(--color-text-secondary);
+    font-size: var(--text-xs);
+    line-height: 1.5;
+  }
+
+  &__btn {
+    padding: 7px 14px;
+    border-radius: var(--radius-md);
+    background: var(--color-role-accent);
+    color: var(--color-navy);
+    font-size: var(--text-xs);
+    font-weight: var(--font-extrabold);
+    flex-shrink: 0;
+    transition: opacity 0.15s;
+
+    &:hover { opacity: 0.9; }
+  }
+}

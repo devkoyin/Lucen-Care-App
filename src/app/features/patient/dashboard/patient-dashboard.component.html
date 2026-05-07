@@ -1,0 +1,97 @@
+<div class="dashboard">
+
+  <!-- Header -->
+  <div class="dash-header">
+    <div>
+      <h1 class="dash-header__greeting">Good morning, {{ greeting }}</h1>
+      <p class="dash-header__date">{{ today }}</p>
+    </div>
+    <a class="dash-primary-btn" routerLink="/patient/medications">+ Add Medication</a>
+  </div>
+
+  <!-- Quick actions -->
+  <div class="quick-actions">
+    @for (action of quickActions; track action.label) {
+      <a class="quick-action" [routerLink]="action.route">
+        <span class="quick-action__icon" aria-hidden="true">{{ action.icon }}</span>
+        <span class="quick-action__label">{{ action.label }}</span>
+      </a>
+    }
+  </div>
+
+  <!-- Widget row 1 -->
+  <div class="widget-row">
+
+    <!-- Upcoming appointments -->
+    <div class="widget">
+      <div class="widget__header">
+        <span class="widget__title">Upcoming Appointments</span>
+        <a class="widget__link" routerLink="/patient/appointments">View all</a>
+      </div>
+      <div class="widget__body">
+        @for (appt of appointments; track appt.date) {
+          <div class="appt-item">
+            <div class="appt-item__date">
+              <span class="appt-item__day">{{ appt.date.split(' ')[1] }}</span>
+              <span class="appt-item__month">{{ appt.date.split(' ')[2] }}</span>
+            </div>
+            <div class="appt-item__detail">
+              <span class="appt-item__provider">{{ appt.provider }}</span>
+              <span class="appt-item__meta">{{ appt.type }} · {{ appt.time }}</span>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Today's medications -->
+    <div class="widget">
+      <div class="widget__header">
+        <span class="widget__title">Today's Medications</span>
+        <a class="widget__link" routerLink="/patient/medications">View all</a>
+      </div>
+      <div class="widget__body">
+        @for (med of medications; track med.name) {
+          <div class="med-item">
+            <div class="med-item__info">
+              <span class="med-item__name">{{ med.name }}</span>
+              <span class="med-item__meta">{{ med.dosage }} · {{ med.nextDue }}</span>
+            </div>
+            <span class="med-badge med-badge--{{ med.status }}">{{ statusLabel(med.status) }}</span>
+          </div>
+        }
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Widget row 2 -->
+  <div class="widget-row">
+
+    <!-- AI nudge -->
+    <div class="widget widget--accent">
+      <div class="nudge">
+        <span class="nudge__icon" aria-hidden="true">🤖</span>
+        <div class="nudge__text">
+          <span class="nudge__title">Ask your health assistant</span>
+          <span class="nudge__desc">Get answers about your medications, symptoms, or upcoming appointments.</span>
+        </div>
+        <a class="nudge__btn" routerLink="/patient/ai-chat">Chat now</a>
+      </div>
+    </div>
+
+    <!-- Funding match -->
+    <div class="widget widget--highlight">
+      <div class="nudge">
+        <span class="nudge__icon" aria-hidden="true">💰</span>
+        <div class="nudge__text">
+          <span class="nudge__title">{{ fundingMatches }} new funding matches</span>
+          <span class="nudge__desc">NGO programs that match your health profile are now available.</span>
+        </div>
+        <a class="nudge__btn" routerLink="/patient/funding">View matches</a>
+      </div>
+    </div>
+
+  </div>
+
+</div>
