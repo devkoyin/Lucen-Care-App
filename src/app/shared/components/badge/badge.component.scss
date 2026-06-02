@@ -9,22 +9,22 @@
   text-transform: uppercase;
 
   &--success {
-    background: rgba(52, 211, 153, 0.15);
-    color: #34D399;
+    background: rgba(58, 176, 161, 0.12);
+    color: #2A8A7D;
   }
 
   &--warning {
-    background: rgba(245, 158, 11, 0.15);
-    color: #F59E0B;
+    background: rgba(244, 162, 97, 0.12);
+    color: #C4700A;
   }
 
   &--error {
-    background: rgba(239, 68, 68, 0.15);
-    color: #EF4444;
+    background: rgba(220, 38, 38, 0.10);
+    color: #DC2626;
   }
 
   &--neutral {
-    background: rgba(255, 255, 255, 0.07);
+    background: rgba(74, 74, 122, 0.08);
     color: var(--color-text-secondary);
   }
 
