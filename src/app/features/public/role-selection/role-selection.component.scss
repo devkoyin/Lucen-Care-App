@@ -12,7 +12,7 @@
   }
 
   &__title {
-    color: white;
+    color: var(--color-text);
     font-size: var(--text-2xl);
     font-weight: var(--font-extrabold);
     letter-spacing: var(--tracking-tight);
@@ -33,7 +33,7 @@
     text-align: center;
     margin-top: var(--space-4);
 
-    a { color: var(--color-accent); }
+    a { color: #3AB0A1; font-weight: var(--font-semibold); }
   }
 }
 
@@ -50,8 +50,8 @@
   gap: 14px;
   padding: 14px 18px;
   border-radius: var(--radius-xl);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
   cursor: pointer;
   transition: background 0.15s, border-color 0.15s;
   width: 100%;
@@ -66,7 +66,7 @@
     justify-content: center;
     font-size: 18px;
     flex-shrink: 0;
-    background: rgba(255, 255, 255, 0.06);
+    background: var(--color-surface-2);
   }
 
   &__content {
@@ -91,7 +91,7 @@
     width: 20px;
     height: 20px;
     border-radius: var(--radius-full);
-    border: 1.5px solid rgba(255, 255, 255, 0.2);
+    border: 1.5px solid var(--color-border);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -100,42 +100,42 @@
     flex-shrink: 0;
 
     &--checked {
-      background: var(--color-accent);
-      border-color: var(--color-accent);
-      color: var(--color-navy);
+      background: #3AB0A1;
+      border-color: #3AB0A1;
+      color: #FFFFFF;
     }
   }
 
   &--selected {
-    background: var(--color-role-surface);
-    border-color: var(--color-role-border);
+    background: rgba(58, 176, 161, 0.06);
+    border-color: rgba(58, 176, 161, 0.35);
   }
 
   &--patient.role-option--selected {
-    background: rgba(52, 211, 153, 0.08);
-    border-color: rgba(52, 211, 153, 0.4);
-    .role-option__label { color: #34D399; }
+    background: rgba(58, 176, 161, 0.06);
+    border-color: rgba(58, 176, 161, 0.35);
+    .role-option__label { color: #2A8A7D; }
   }
 
   &--ngo.role-option--selected {
-    background: rgba(245, 158, 11, 0.08);
-    border-color: rgba(245, 158, 11, 0.4);
-    .role-option__label { color: #F59E0B; }
-    .role-option__radio--checked { background: #F59E0B; border-color: #F59E0B; }
+    background: rgba(244, 162, 97, 0.06);
+    border-color: rgba(244, 162, 97, 0.35);
+    .role-option__label { color: #C4700A; }
+    .role-option__radio--checked { background: #F4A261; border-color: #F4A261; color: #12122A; }
   }
 
   &--hmo.role-option--selected {
-    background: rgba(59, 130, 246, 0.08);
-    border-color: rgba(59, 130, 246, 0.4);
-    .role-option__label { color: #3B82F6; }
-    .role-option__radio--checked { background: #3B82F6; border-color: #3B82F6; }
+    background: rgba(53, 53, 168, 0.06);
+    border-color: rgba(53, 53, 168, 0.35);
+    .role-option__label { color: #3535A8; }
+    .role-option__radio--checked { background: #3535A8; border-color: #3535A8; color: #FFFFFF; }
   }
 
   &--researcher.role-option--selected {
-    background: rgba(139, 92, 246, 0.08);
-    border-color: rgba(139, 92, 246, 0.4);
-    .role-option__label { color: #8B5CF6; }
-    .role-option__radio--checked { background: #8B5CF6; border-color: #8B5CF6; }
+    background: rgba(139, 92, 246, 0.06);
+    border-color: rgba(139, 92, 246, 0.35);
+    .role-option__label { color: #7C3AED; }
+    .role-option__radio--checked { background: #8B5CF6; border-color: #8B5CF6; color: #FFFFFF; }
   }
 }
 
@@ -143,19 +143,22 @@
   width: 100%;
   padding: 13px;
   border-radius: var(--radius-lg);
-  background: var(--color-accent);
-  color: var(--color-navy);
+  background: #3535A8;
+  color: #FFFFFF;
   font-size: var(--text-base);
   font-weight: var(--font-extrabold);
   font-family: var(--font-family);
   cursor: pointer;
   border: none;
-  transition: opacity 0.15s;
+  transition: opacity 0.15s, box-shadow 0.15s;
 
-  &:hover:not(:disabled) { opacity: 0.9; }
+  &:hover:not(:disabled) {
+    opacity: 0.9;
+    box-shadow: 0 4px 16px rgba(53, 53, 168, 0.30);
+  }
 
   &:disabled {
-    background: rgba(255, 255, 255, 0.08);
+    background: var(--color-surface-2);
     color: var(--color-text-muted);
     cursor: not-allowed;
   }
