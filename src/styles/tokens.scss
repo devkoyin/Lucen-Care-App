@@ -1,28 +1,41 @@
 :root {
   // Brand
-  --color-primary:          #0A6E52;
-  --color-primary-500:      #0D9268;
-  --color-accent:           #34D399;
-  --color-navy:             #0F2D4A;
-  --color-navy-deep:        #071A2E;
-  --color-bg:               #0A0E1A;
-  --color-surface:          #071A2E;
-  --color-border:           rgba(255, 255, 255, 0.07);
-  --color-text:             rgba(255, 255, 255, 0.85);
-  --color-text-secondary:   rgba(255, 255, 255, 0.45);
-  --color-text-muted:       rgba(255, 255, 255, 0.25);
+  --color-primary:          #3535A8;
+  --color-primary-dark:     #2929A0;
+  --color-teal:             #3AB0A1;
+  --color-amber:            #F4A261;
+
+  // Backgrounds
+  --color-bg:               #F4F5F8;
+  --color-surface:          #FFFFFF;
+  --color-surface-2:        #ECEDF5;
+  --color-border:           rgba(53, 53, 168, 0.12);
+
+  // Text
+  --color-text:             #12122A;
+  --color-text-secondary:   #4A4A7A;
+  --color-text-muted:       #8A8AAF;
 
   // Semantic
-  --color-error:            #EF4444;
-  --color-warning:          #F59E0B;
-  --color-success:          #34D399;
+  --color-error:            #DC2626;
+  --color-warning:          #F4A261;
+  --color-success:          #3AB0A1;
 
-  // Role accent defaults — fallback when no .portal-* class is applied.
-  // These match the patient palette intentionally; .portal-patient still
-  // overrides them so the class-based API remains complete and consistent.
-  --color-role-accent:      #34D399;
-  --color-role-surface:     rgba(52, 211, 153, 0.08);
-  --color-role-border:      rgba(52, 211, 153, 0.25);
+  // Role accent — default teal, overridden per portal
+  --color-role-accent:      #3AB0A1;
+  --color-role-surface:     rgba(58, 176, 161, 0.08);
+  --color-role-border:      rgba(58, 176, 161, 0.20);
+
+  // Sidebar — indigo
+  --sidebar-width:          220px;
+  --sidebar-bg:             #3535A8;
+  --sidebar-active-bg:      rgba(58, 176, 161, 0.15);
+  --sidebar-active-border:  #3AB0A1;
+  --sidebar-hover-bg:       rgba(255, 255, 255, 0.07);
+  --sidebar-text:           rgba(255, 255, 255, 0.90);
+  --sidebar-text-secondary: rgba(255, 255, 255, 0.55);
+  --sidebar-text-muted:     rgba(255, 255, 255, 0.30);
+  --sidebar-border-color:   rgba(255, 255, 255, 0.10);
 
   // Typography
   --font-family:            'DM Sans', sans-serif;
@@ -44,9 +57,9 @@
   --tracking-wide:          0.5px;
   --tracking-wider:         1.2px;
 
-  // Spacing
-  --space-1:  4px;
-  --space-2:  8px;
+  // Spacing — 4px grid
+  --space-1:   4px;
+  --space-2:   8px;
   --space-3:  12px;
   --space-4:  16px;
   --space-5:  20px;
@@ -55,28 +68,32 @@
   --space-10: 40px;
   --space-12: 48px;
 
-  // Radius
+  // Border radius
+  --radius-xs:   4px;
   --radius-sm:   6px;
   --radius-md:   8px;
-  --radius-lg:   10px;
-  --radius-xl:   12px;
+  --radius-lg:  12px;
+  --radius-xl:  16px;
+  --radius-2xl: 24px;
   --radius-full: 9999px;
 
-  // Component tokens
+  // Shadows — indigo-tinted
+  --shadow-sm: 0 1px 3px rgba(53, 53, 168, 0.06), 0 1px 2px rgba(53, 53, 168, 0.04);
+  --shadow-md: 0 4px 12px rgba(53, 53, 168, 0.10), 0 2px 4px rgba(53, 53, 168, 0.06);
+  --shadow-lg: 0 8px 32px rgba(53, 53, 168, 0.12), 0 4px 8px rgba(53, 53, 168, 0.08);
+
+  // Button tokens
   --btn-primary-bg:         var(--color-role-accent);
-  --btn-primary-text:       var(--color-navy);
+  --btn-primary-text:       #FFFFFF;
   --btn-secondary-bg:       transparent;
   --btn-secondary-border:   var(--color-role-accent);
   --btn-secondary-text:     var(--color-role-accent);
-  --btn-accent-bg:          var(--color-accent);
-  --btn-accent-text:        var(--color-navy);
+  --btn-accent-bg:          var(--color-role-accent);
+  --btn-accent-text:        #FFFFFF;
+
+  // Card tokens
   --card-bg:                var(--color-surface);
   --card-border:            var(--color-border);
   --card-radius:            var(--radius-lg);
   --card-padding:           var(--space-4);
-  --sidebar-width:          200px;
-  --sidebar-bg:             var(--color-surface);
-  --sidebar-active-bg:      var(--color-role-surface);
-  --sidebar-active-border:  var(--color-role-accent);
-  --sidebar-hover-bg:       rgba(255, 255, 255, 0.03);
 }
