@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lucen Care — Final Design</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: #E8ECF2; color: #0F172A; -webkit-font-smoothing: antialiased; padding: 32px; }
+
+/* ── Layout ── */
+h1.page-title { font-size: 22px; font-weight: 800; color: #0F172A; margin-bottom: 4px; letter-spacing: -0.5px; }
+p.page-sub { font-size: 13px; color: #64748B; margin-bottom: 32px; }
+.section { margin-bottom: 36px; }
+.section-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: #94A3B8; margin-bottom: 12px; }
+.two-up { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.three-up { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+.four-up { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
+
+/* ── Token card ── */
+.tok-card { background: #fff; border-radius: 12px; border: 1px solid #E2E8F0; box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 0 1px rgba(0,0,0,.04); overflow: hidden; }
+.tok-head { padding: 14px 16px; border-bottom: 1px solid #F1F5F9; }
+.tok-head h3 { font-size: 13px; font-weight: 700; color: #0F172A; }
+.tok-head p  { font-size: 11px; color: #94A3B8; margin-top: 2px; }
+.tok-body { padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; }
+
+/* swatch row */
+.sw-row { display: flex; align-items: center; gap: 10px; }
+.sw { width: 32px; height: 32px; border-radius: 6px; flex-shrink: 0; border: 1px solid rgba(0,0,0,.07); }
+.sw-info { flex: 1; }
+.sw-name { font-size: 11px; font-weight: 600; color: #334155; }
+.sw-val  { font-size: 10px; color: #94A3B8; font-family: monospace; }
+.sw-tag  { font-size: 9px; padding: 1px 6px; border-radius: 3px; font-weight: 600; margin-left: 4px; }
+.tag-new     { background: #ECFDF5; color: #059669; }
+.tag-changed { background: #FEF3C7; color: #B45309; }
+.tag-kept    { background: #EFF6FF; color: #1D4ED8; }
+
+/* shadow demo */
+.shad-demo { background: #fff; border-radius: 8px; padding: 12px 14px; }
+.shad-name { font-size: 11px; font-weight: 700; color: #334155; margin-bottom: 2px; }
+.shad-val  { font-size: 10px; color: #94A3B8; font-family: monospace; line-height: 1.4; }
+.shad-use  { font-size: 10px; color: #64748B; margin-top: 4px; }
+
+/* ── App shell preview ── */
+.shell-preview { border-radius: 14px; overflow: hidden; border: 1px solid #E2E8F0; box-shadow: 0 8px 24px rgba(0,0,0,.1); }
+.shell-inner { display: flex; height: 360px; font-size: 12px; }
+
+.sidebar { width: 200px; background: #fff; border-right: 1px solid #E8ECF2; display: flex; flex-direction: column; flex-shrink: 0; }
+.sb-brand { padding: 16px; border-bottom: 1px solid #F1F5F9; }
+.sb-brand-name { font-size: 12px; font-weight: 800; color: #0D9488; letter-spacing: 1px; }
+.sb-brand-role { font-size: 10px; color: #94A3B8; margin-top: 2px; }
+.sb-user { padding: 12px 16px; border-bottom: 1px solid #F1F5F9; display: flex; align-items: center; gap: 8px; }
+.sb-avatar { width: 28px; height: 28px; border-radius: 50%; background: rgba(13,148,136,.1); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #0D9488; flex-shrink: 0; }
+.sb-uname { font-size: 11px; font-weight: 600; color: #334155; }
+.sb-urole { font-size: 10px; color: #94A3B8; }
+.sb-nav { flex: 1; padding: 8px 0; }
+.nav-item { display: flex; align-items: center; gap: 8px; padding: 8px 16px; font-size: 12px; color: #64748B; cursor: pointer; transition: background .15s; border-right: 2px solid transparent; }
+.nav-item.active { background: rgba(13,148,136,.07); color: #0D9488; border-right-color: #0D9488; font-weight: 600; }
+.nav-item:hover:not(.active) { background: #F8FAFC; color: #334155; }
+.nav-icon { font-size: 14px; }
+.sb-bottom { padding: 8px 0; border-top: 1px solid #F1F5F9; }
+
+.shell-main { flex: 1; background: #F2F5F9; display: flex; flex-direction: column; overflow: hidden; }
+.topbar { height: 52px; background: #fff; border-bottom: 1px solid #E8ECF2; display: flex; align-items: center; padding: 0 20px; gap: 12px; flex-shrink: 0; }
+.tb-heading { font-size: 15px; font-weight: 700; color: #0F172A; }
+.tb-spacer { flex: 1; }
+.tb-btn { height: 30px; background: #0D9488; color: #fff; border-radius: 6px; padding: 0 14px; font-size: 11px; font-weight: 700; display: flex; align-items: center; gap: 5px; cursor: pointer; }
+.tb-avatar { width: 28px; height: 28px; border-radius: 50%; background: rgba(13,148,136,.1); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #0D9488; }
+
+.page-content { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 14px; }
+
+.stat-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; }
+.stat-card { background: #fff; border-radius: 10px; border: 1px solid #E8ECF2; box-shadow: 0 1px 3px rgba(0,0,0,.05); padding: 14px; }
+.stat-val { font-size: 20px; font-weight: 800; color: #0F172A; letter-spacing: -0.5px; }
+.stat-lbl { font-size: 10px; color: #94A3B8; margin-top: 2px; font-weight: 500; text-transform: uppercase; letter-spacing: .5px; }
+.stat-delta { font-size: 10px; font-weight: 600; color: #0D9488; margin-top: 6px; }
+
+.data-card { background: #fff; border-radius: 10px; border: 1px solid #E8ECF2; box-shadow: 0 1px 3px rgba(0,0,0,.05); padding: 14px; }
+.data-card-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.data-card-title { font-size: 12px; font-weight: 700; color: #0F172A; }
+.data-card-link { font-size: 10px; color: #0D9488; font-weight: 600; cursor: pointer; }
+.data-row { display: flex; align-items: center; gap: 10px; padding: 6px 0; border-bottom: 1px solid #F8FAFC; }
+.data-row:last-child { border-bottom: none; }
+.data-badge { height: 18px; padding: 0 8px; border-radius: 4px; font-size: 9px; font-weight: 700; display: flex; align-items: center; flex-shrink: 0; }
+.badge-teal   { background: rgba(13,148,136,.1); color: #0D9488; }
+.badge-amber  { background: rgba(217,119,6,.1);  color: #B45309; }
+.badge-blue   { background: rgba(37,99,235,.1);  color: #1D4ED8; }
+.badge-violet { background: rgba(124,58,237,.1); color: #6D28D9; }
+.data-name { font-size: 11px; color: #334155; font-weight: 500; flex: 1; }
+.data-val  { font-size: 11px; color: #94A3B8; }
+
+/* ── Landing hero preview ── */
+.hero-preview { border-radius: 14px; overflow: hidden; border: 1px solid #E2E8F0; box-shadow: 0 8px 24px rgba(0,0,0,.1); }
+.hero-nav { background: rgba(255,255,255,.95); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,.2); height: 52px; display: flex; align-items: center; padding: 0 32px; gap: 20px; }
+.hero-nav-logo { font-size: 13px; font-weight: 800; color: #0D9488; letter-spacing: 1px; flex: 1; }
+.hero-nav-link { font-size: 12px; color: rgba(255,255,255,.7); cursor: pointer; }
+.hero-nav-btn { height: 28px; border-radius: 5px; padding: 0 14px; font-size: 11px; font-weight: 700; display: flex; align-items: center; cursor: pointer; }
+.hero-body { background: linear-gradient(135deg, #F2F5F9 0%, #E8EEF5 40%, #EDF3F0 100%); padding: 56px 48px; display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; min-height: 280px; position: relative; overflow: hidden; }
+.hero-orb-1 { position: absolute; width: 300px; height: 300px; border-radius: 50%; background: radial-gradient(ellipse, rgba(13,148,136,.09) 0%, transparent 65%); top: -80px; left: 20%; filter: blur(40px); }
+.hero-orb-2 { position: absolute; width: 200px; height: 200px; border-radius: 50%; background: radial-gradient(ellipse, rgba(45,212,191,.07) 0%, transparent 65%); bottom: -40px; right: 10%; filter: blur(30px); }
+.hero-copy { display: flex; flex-direction: column; gap: 16px; position: relative; z-index: 1; }
+.hero-eyebrow { display: inline-flex; align-items: center; gap: 7px; background: rgba(13,148,136,.07); border: 1px solid rgba(13,148,136,.15); border-radius: 999px; padding: 5px 14px; color: #0D9488; font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; width: fit-content; }
+.hero-dot { width: 5px; height: 5px; border-radius: 50%; background: #0D9488; }
+.hero-h1 { font-size: 40px; font-weight: 300; color: #0F172A; line-height: 1.1; letter-spacing: -1.5px; }
+.hero-h1 strong { font-weight: 800; color: #0D9488; }
+.hero-sub { font-size: 13px; color: #64748B; line-height: 1.7; max-width: 340px; }
+.hero-btns { display: flex; gap: 10px; }
+.hero-btn-p { height: 38px; background: #0D9488; color: #fff; border-radius: 7px; padding: 0 20px; font-size: 12px; font-weight: 700; display: flex; align-items: center; box-shadow: 0 4px 12px rgba(13,148,136,.3); }
+.hero-btn-g { height: 38px; background: #fff; color: #475569; border-radius: 7px; padding: 0 20px; font-size: 12px; font-weight: 600; display: flex; align-items: center; border: 1px solid #E2E8F0; box-shadow: 0 1px 3px rgba(0,0,0,.05); }
+.hero-card { background: #fff; border-radius: 12px; border: 1px solid #E2E8F0; box-shadow: 0 8px 24px rgba(0,0,0,.08); padding: 18px; position: relative; z-index: 1; }
+.hc-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+.hc-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #94A3B8; }
+.hc-live { display: flex; align-items: center; gap: 5px; font-size: 10px; font-weight: 600; color: #0D9488; }
+.hc-dot { width: 5px; height: 5px; border-radius: 50%; background: #0D9488; }
+.hc-stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 6px; margin-bottom: 14px; }
+.hc-stat { background: #F8FAFC; border-radius: 7px; padding: 8px 6px; text-align: center; }
+.hc-stat-n { font-size: 13px; font-weight: 800; color: #0D9488; letter-spacing: -0.5px; }
+.hc-stat-l { font-size: 8px; color: #94A3B8; font-weight: 500; margin-top: 1px; }
+.hc-rule { height: 1px; background: #F1F5F9; margin-bottom: 12px; }
+.hc-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.hc-row:last-child { margin-bottom: 0; }
+.hc-icon { width: 24px; height: 24px; border-radius: 5px; background: #F8FAFC; display: flex; align-items: center; justify-content: center; font-size: 11px; flex-shrink: 0; }
+.hc-bar-wrap { flex: 1; }
+.hc-bar-head { display: flex; justify-content: space-between; margin-bottom: 3px; }
+.hc-bar-name { font-size: 10px; color: #475569; font-weight: 500; }
+.hc-bar-pct  { font-size: 10px; color: #94A3B8; }
+.hc-track { height: 3px; background: #F1F5F9; border-radius: 999px; overflow: hidden; }
+.hc-fill  { height: 100%; border-radius: 999px; }
+
+/* ── Role tokens preview ── */
+.role-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
+.role-card { border-radius: 10px; overflow: hidden; border: 1px solid #E2E8F0; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.05); }
+.role-banner { height: 6px; }
+.role-body { padding: 12px; }
+.role-title { font-size: 12px; font-weight: 700; color: #0F172A; margin-bottom: 8px; }
+.role-chip { display: inline-flex; align-items: center; gap: 5px; height: 20px; padding: 0 9px; border-radius: 4px; font-size: 9px; font-weight: 700; margin-bottom: 4px; }
+.role-sb-demo { border-radius: 6px; padding: 8px; margin-top: 8px; }
+.role-sb-brand { font-size: 9px; font-weight: 800; letter-spacing: .5px; margin-bottom: 6px; }
+.role-sb-item { height: 16px; border-radius: 4px; display: flex; align-items: center; padding: 0 6px; gap: 4px; margin-bottom: 3px; font-size: 8px; font-weight: 600; }
+.role-sb-dot { width: 4px; height: 4px; border-radius: 1px; flex-shrink: 0; }
+
+/* divider */
+.divider { height: 1px; background: #E2E8F0; margin: 4px 0 16px; }
+</style>
+</head>
+<body>
+
+<h1 class="page-title">Lucen Care — Final Design System</h1>
+<p class="page-sub">Fully light. Light-gray canvas (#F2F5F9). White surfaces. Teal as the brand accent. Approve each section below.</p>
+
+<!-- ══ SECTION 1: Token palette ══ -->
+<div class="section">
+  <div class="section-label">Section 1 — Colour tokens</div>
+  <div class="two-up">
+
+    <div class="tok-card">
+      <div class="tok-head"><h3>Backgrounds & Surfaces</h3><p>The "landscape" is cool light gray — white reads as elevated above it</p></div>
+      <div class="tok-body">
+        <div class="sw-row"><div class="sw" style="background:#F2F5F9"></div><div class="sw-info"><div class="sw-name">--color-bg <span class="sw-tag tag-changed">changed</span></div><div class="sw-val">#F2F5F9 — cool light gray canvas</div></div></div>
+        <div class="sw-row"><div class="sw" style="background:#FFFFFF;box-shadow:0 1px 3px rgba(0,0,0,.08)"></div><div class="sw-info"><div class="sw-name">--color-surface <span class="sw-tag tag-kept">kept</span></div><div class="sw-val">#FFFFFF — cards, sidebar, topbar</div></div></div>
+        <div class="sw-row"><div class="sw" style="background:#EDF0F5"></div><div class="sw-info"><div class="sw-name">--color-surface-2 <span class="sw-tag tag-changed">changed</span></div><div class="sw-val">#EDF0F5 — nested panels, inactive tabs</div></div></div>
+        <div class="sw-row"><div class="sw" style="background:#E2E8F0"></div><div class="sw-info"><div class="sw-name">--color-border <span class="sw-tag tag-changed">changed</span></div><div class="sw-val">#E2E8F0 — all borders, rules</div></div></div>
+        <div class="divider"></div>
+        <div class="sw-row"><div class="sw" style="background:#0F172A"></div><div class="sw-info"><div class="sw-name">--color-text <span class="sw-tag tag-changed">changed</span></div><div class="sw-val">#0F172A — darker, inkier</div></div></div>
+        <div class="sw-row"><div class="sw" style="background:#475569"></div><div class="sw-info"><div class="sw-name">--color-text-secondary <span class="sw-tag tag-changed">changed</span></div><div class="sw-val">#475569 — body copy, labels</div></div></div>
+        <div class="sw-row"><div class="sw" style="background:#94A3B8"></div><div class="sw-info"><div class="sw-name">--color-text-muted <span class="sw-tag tag-changed">changed</span></div><div class="sw-val">#94A3B8 — placeholders, metadata</div></div></div>
+      </div>
+    </div>
+
+    <div class="tok-card">
+      <div class="tok-head"><h3>Brand & Shadows</h3><p>Teal stays. Shadows are new — these fix the flat look.</p></div>
+      <div class="tok-body">
+        <div class="sw-row"><div class="sw" style="background:#0D9488"></div><div class="sw-info"><div class="sw-name">--color-primary <span class="sw-tag tag-kept">kept</span></div><div class="sw-val">#0D9488 — buttons, active states, links</div></div></div>
+        <div class="sw-row"><div class="sw" style="background:#0F766E"></div><div class="sw-info"><div class="sw-name">--color-primary-dark <span class="sw-tag tag-kept">kept</span></div><div class="sw-val">#0F766E — hover state</div></div></div>
+        <div class="sw-row"><div class="sw" style="background:#2DD4BF"></div><div class="sw-info"><div class="sw-name">--color-accent <span class="sw-tag tag-kept">kept</span></div><div class="sw-val">#2DD4BF — highlights, gradients</div></div></div>
+        <div class="divider"></div>
+        <div class="shad-demo" style="box-shadow:0 1px 2px rgba(0,0,0,.05)">
+          <div class="shad-name">--shadow-xs <span class="sw-tag tag-new">new</span></div>
+          <div class="shad-use">badges, chips</div>
+        </div>
+        <div class="shad-demo" style="box-shadow:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.04)">
+          <div class="shad-name">--shadow-sm <span class="sw-tag tag-new">new</span></div>
+          <div class="shad-use">cards, inputs on focus — default for all cards</div>
+        </div>
+        <div class="shad-demo" style="box-shadow:0 4px 8px rgba(0,0,0,.07),0 2px 4px rgba(0,0,0,.04)">
+          <div class="shad-name">--shadow-md <span class="sw-tag tag-new">new</span></div>
+          <div class="shad-use">dropdowns, popovers</div>
+        </div>
+        <div class="shad-demo" style="box-shadow:0 10px 20px rgba(0,0,0,.08),0 4px 8px rgba(0,0,0,.04)">
+          <div class="shad-name">--shadow-lg <span class="sw-tag tag-new">new</span></div>
+          <div class="shad-use">modals, floating sheets</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SECTION 2: App shell ══ -->
+<div class="section">
+  <div class="section-label">Section 2 — Authenticated app shell (dashboard)</div>
+  <div class="shell-preview">
+    <div class="shell-inner">
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <div class="sb-brand">
+          <div class="sb-brand-name">LUCEN CARE</div>
+          <div class="sb-brand-role">Patient Portal</div>
+        </div>
+        <div class="sb-user">
+          <div class="sb-avatar">A</div>
+          <div>
+            <div class="sb-uname">Amara Osei</div>
+            <div class="sb-urole">Patient</div>
+          </div>
+        </div>
+        <div class="sb-nav">
+          <div class="nav-item active"><span class="nav-icon">⊡</span> Dashboard</div>
+          <div class="nav-item"><span class="nav-icon">📋</span> Health Records</div>
+          <div class="nav-item"><span class="nav-icon">💬</span> Messages</div>
+          <div class="nav-item"><span class="nav-icon">📅</span> Appointments</div>
+          <div class="nav-item"><span class="nav-icon">🔬</span> Lab Results</div>
+        </div>
+        <div class="sb-bottom">
+          <div class="nav-item"><span class="nav-icon">⚙️</span> Settings</div>
+        </div>
+      </div>
+
+      <!-- Main -->
+      <div class="shell-main">
+        <div class="topbar">
+          <div class="tb-heading">Dashboard</div>
+          <div class="tb-spacer"></div>
+          <div class="tb-btn">+ New Request</div>
+          <div class="tb-avatar">A</div>
+        </div>
+        <div class="page-content">
+          <div class="stat-grid">
+            <div class="stat-card">
+              <div class="stat-val">3</div>
+              <div class="stat-lbl">Upcoming</div>
+              <div class="stat-delta">↑ Next: Mon 2 Jun</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-val">12</div>
+              <div class="stat-lbl">Lab Results</div>
+              <div class="stat-delta">2 new this week</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-val">94%</div>
+              <div class="stat-lbl">Adherence</div>
+              <div class="stat-delta">↑ +4% vs last month</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-val">5</div>
+              <div class="stat-lbl">Messages</div>
+              <div class="stat-delta">2 unread</div>
+            </div>
+          </div>
+          <div class="data-card">
+            <div class="data-card-head">
+              <div class="data-card-title">Recent Activity</div>
+              <div class="data-card-link">View all →</div>
+            </div>
+            <div class="data-row"><span class="data-badge badge-teal">Appt</span><span class="data-name">Dr. Mensah — Cardiology follow-up</span><span class="data-val">Tomorrow 10am</span></div>
+            <div class="data-row"><span class="data-badge badge-blue">Lab</span><span class="data-name">Blood panel results ready</span><span class="data-val">Yesterday</span></div>
+            <div class="data-row"><span class="data-badge badge-amber">NGO</span><span class="data-name">Diabetes support program enrolled</span><span class="data-val">3 days ago</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SECTION 3: Landing hero ══ -->
+<div class="section">
+  <div class="section-label">Section 3 — Landing page hero (light version)</div>
+  <div class="hero-preview">
+    <div class="hero-nav" style="background:rgba(242,245,249,.95);border-bottom:1px solid #E2E8F0;">
+      <div class="hero-nav-logo">LUCEN CARE</div>
+      <div class="hero-nav-link" style="color:#475569;">Features</div>
+      <div class="hero-nav-link" style="color:#475569;">About</div>
+      <div class="hero-btn-g" style="font-size:11px;">Sign in</div>
+      <div class="hero-btn-p" style="height:28px;font-size:11px;margin-left:4px;">Get started</div>
+    </div>
+    <div class="hero-body">
+      <div class="hero-orb-1"></div>
+      <div class="hero-orb-2"></div>
+      <div class="hero-copy">
+        <div class="hero-eyebrow"><div class="hero-dot"></div>Healthcare Access Platform</div>
+        <div class="hero-h1">The platform that<br>connects <strong>every voice</strong><br>in healthcare.</div>
+        <div class="hero-sub">Patients, NGOs, HMOs, and researchers — all on one unified platform built for real-world health outcomes.</div>
+        <div class="hero-btns">
+          <div class="hero-btn-p">Get started free →</div>
+          <div class="hero-btn-g">See how it works</div>
+        </div>
+      </div>
+      <div class="hero-card">
+        <div class="hc-head">
+          <div class="hc-label">Platform Overview</div>
+          <div class="hc-live"><div class="hc-dot"></div>Live</div>
+        </div>
+        <div class="hc-stats">
+          <div class="hc-stat"><div class="hc-stat-n">2.4k</div><div class="hc-stat-l">Patients</div></div>
+          <div class="hc-stat"><div class="hc-stat-n">340</div><div class="hc-stat-l">NGOs</div></div>
+          <div class="hc-stat"><div class="hc-stat-n">18k</div><div class="hc-stat-l">HMO</div></div>
+          <div class="hc-stat"><div class="hc-stat-n">62</div><div class="hc-stat-l">Studies</div></div>
+        </div>
+        <div class="hc-rule"></div>
+        <div class="hc-row">
+          <div class="hc-icon">🏥</div>
+          <div class="hc-bar-wrap">
+            <div class="hc-bar-head"><span class="hc-bar-name">Patient & Caregiver</span><span class="hc-bar-pct">88%</span></div>
+            <div class="hc-track"><div class="hc-fill" style="width:88%;background:linear-gradient(90deg,#0D9488,#2DD4BF)"></div></div>
+          </div>
+        </div>
+        <div class="hc-row">
+          <div class="hc-icon">🤝</div>
+          <div class="hc-bar-wrap">
+            <div class="hc-bar-head"><span class="hc-bar-name">NGO Programs</span><span class="hc-bar-pct">72%</span></div>
+            <div class="hc-track"><div class="hc-fill" style="width:72%;background:linear-gradient(90deg,#D97706,#F59E0B)"></div></div>
+          </div>
+        </div>
+        <div class="hc-row">
+          <div class="hc-icon">🏦</div>
+          <div class="hc-bar-wrap">
+            <div class="hc-bar-head"><span class="hc-bar-name">HMO Management</span><span class="hc-bar-pct">94%</span></div>
+            <div class="hc-track"><div class="hc-fill" style="width:94%;background:linear-gradient(90deg,#2563EB,#60A5FA)"></div></div>
+          </div>
+        </div>
+        <div class="hc-row">
+          <div class="hc-icon">🔬</div>
+          <div class="hc-bar-wrap">
+            <div class="hc-bar-head"><span class="hc-bar-name">Clinical Research</span><span class="hc-bar-pct">61%</span></div>
+            <div class="hc-track"><div class="hc-fill" style="width:61%;background:linear-gradient(90deg,#7C3AED,#A78BFA)"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SECTION 4: Role tokens ══ -->
+<div class="section">
+  <div class="section-label">Section 4 — Role token implementations</div>
+  <div class="role-grid">
+
+    <div class="role-card">
+      <div class="role-banner" style="background:linear-gradient(90deg,#0D9488,#2DD4BF)"></div>
+      <div class="role-body">
+        <div class="role-title">Patient / Caregiver</div>
+        <div><span class="role-chip" style="background:rgba(13,148,136,.1);color:#0D9488;">● Teal #0D9488</span></div>
+        <div><span class="role-chip" style="background:rgba(45,212,191,.1);color:#0F766E;">● Bright #2DD4BF</span></div>
+        <div class="role-sb-demo" style="background:#F2F5F9;">
+          <div class="role-sb-brand" style="color:#0D9488;">LUCEN CARE</div>
+          <div class="role-sb-item" style="background:rgba(13,148,136,.08);color:#0D9488;border-left:2px solid #0D9488;"><div class="role-sb-dot" style="background:#0D9488;"></div>Dashboard</div>
+          <div class="role-sb-item" style="color:#94A3B8;"><div class="role-sb-dot" style="background:#E2E8F0;"></div>Records</div>
+          <div class="role-sb-item" style="color:#94A3B8;"><div class="role-sb-dot" style="background:#E2E8F0;"></div>Messages</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="role-card">
+      <div class="role-banner" style="background:linear-gradient(90deg,#D97706,#F59E0B)"></div>
+      <div class="role-body">
+        <div class="role-title">NGO</div>
+        <div><span class="role-chip" style="background:rgba(217,119,6,.1);color:#B45309;">● Amber #D97706</span></div>
+        <div><span class="role-chip" style="background:rgba(245,158,11,.1);color:#92400E;">● Bright #F59E0B</span></div>
+        <div class="role-sb-demo" style="background:#F2F5F9;">
+          <div class="role-sb-brand" style="color:#D97706;">LUCEN CARE</div>
+          <div class="role-sb-item" style="background:rgba(217,119,6,.08);color:#B45309;border-left:2px solid #D97706;"><div class="role-sb-dot" style="background:#D97706;"></div>Dashboard</div>
+          <div class="role-sb-item" style="color:#94A3B8;"><div class="role-sb-dot" style="background:#E2E8F0;"></div>Programs</div>
+          <div class="role-sb-item" style="color:#94A3B8;"><div class="role-sb-dot" style="background:#E2E8F0;"></div>Patients</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="role-card">
+      <div class="role-banner" style="background:linear-gradient(90deg,#2563EB,#60A5FA)"></div>
+      <div class="role-body">
+        <div class="role-title">HMO</div>
+        <div><span class="role-chip" style="background:rgba(37,99,235,.1);color:#1D4ED8;">● Blue #2563EB</span></div>
+        <div><span class="role-chip" style="background:rgba(96,165,250,.1);color:#1E40AF;">● Bright #60A5FA</span></div>
+        <div class="role-sb-demo" style="background:#F2F5F9;">
+          <div class="role-sb-brand" style="color:#2563EB;">LUCEN CARE</div>
+          <div class="role-sb-item" style="background:rgba(37,99,235,.08);color:#1D4ED8;border-left:2px solid #2563EB;"><div class="role-sb-dot" style="background:#2563EB;"></div>Dashboard</div>
+          <div class="role-sb-item" style="color:#94A3B8;"><div class="role-sb-dot" style="background:#E2E8F0;"></div>Members</div>
+          <div class="role-sb-item" style="color:#94A3B8;"><div class="role-sb-dot" style="background:#E2E8F0;"></div>Claims</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="role-card">
+      <div class="role-banner" style="background:linear-gradient(90deg,#7C3AED,#A78BFA)"></div>
+      <div class="role-body">
+        <div class="role-title">Clinical Researcher</div>
+        <div><span class="role-chip" style="background:rgba(124,58,237,.1);color:#6D28D9;">● Violet #7C3AED</span></div>
+        <div><span class="role-chip" style="background:rgba(167,139,250,.1);color:#5B21B6;">● Bright #A78BFA</span></div>
+        <div class="role-sb-demo" style="background:#F2F5F9;">
+          <div class="role-sb-brand" style="color:#7C3AED;">LUCEN CARE</div>
+          <div class="role-sb-item" style="background:rgba(124,58,237,.08);color:#6D28D9;border-left:2px solid #7C3AED;"><div class="role-sb-dot" style="background:#7C3AED;"></div>Dashboard</div>
+          <div class="role-sb-item" style="color:#94A3B8;"><div class="role-sb-dot" style="background:#E2E8F0;"></div>Studies</div>
+          <div class="role-sb-item" style="color:#94A3B8;"><div class="role-sb-dot" style="background:#E2E8F0;"></div>Cohorts</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div style="background:#fff;border-radius:12px;border:1px solid #E2E8F0;padding:16px 20px;font-size:12px;color:#475569;line-height:1.7;box-shadow:0 1px 3px rgba(0,0,0,.05);">
+  <strong style="color:#0F172A;">What changes in the code:</strong> tokens.scss (backgrounds, text, borders, 4 shadow levels) · tokens-patient/ngo/hmo/researcher.scss (implemented for the first time) · global.scss (card default gets shadow-sm) · sidebar-shell.scss (white bg, gray borders, role-accent active states) · landing.scss (hero becomes light, hardcoded hex replaced with CSS vars). All component SCSS that uses the current teal-grey tokens updates automatically via the cascade.
+</div>
+
+</body>
+</html>

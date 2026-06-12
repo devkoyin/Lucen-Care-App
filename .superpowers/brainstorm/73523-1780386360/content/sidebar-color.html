@@ -1,0 +1,256 @@
+<h2>Which sidebar tone feels right?</h2>
+<p class="subtitle">You noticed the Uizard reference uses an indigo-blue (~#3535A8) — richer and more purple than your logo's navy. Here's how each reads in context with your actual logo.</p>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap');
+
+  .sidebars-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 24px;
+  }
+
+  .sb-option {
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.2s;
+    background: white;
+  }
+  .sb-option.selected {
+    border-color: #F2C94C;
+    box-shadow: 0 0 0 4px rgba(242,201,76,0.2);
+  }
+  .sb-option:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+
+  .sb-preview {
+    display: flex;
+    height: 220px;
+    overflow: hidden;
+  }
+
+  /* SIDEBAR PANEL */
+  .side-panel {
+    width: 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 0 10px;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+
+  .logo-mark {
+    width: 34px;
+    height: 34px;
+    margin-bottom: 10px;
+    flex-shrink: 0;
+  }
+
+  .nav-icon {
+    width: 32px;
+    height: 28px;
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+  }
+  .nav-icon.active-teal { background: rgba(58,176,161,0.25); border: 1px solid rgba(58,176,161,0.5); }
+  .nav-icon.inactive { background: transparent; opacity: 0.4; }
+
+  /* CONTENT PANEL */
+  .content-panel {
+    flex: 1;
+    background: #F4F7FB;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+  .cp-title { font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 700; color: #1A2E3B; }
+  .cp-cards { display: flex; gap: 6px; }
+  .cp-card { flex: 1; background: white; border-radius: 6px; padding: 8px 7px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+  .cp-val { font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 800; color: #1A2E3B; }
+  .cp-lbl { font-size: 7px; color: #9CA3AF; font-family: 'DM Sans', sans-serif; }
+  .cp-bar-line { height: 2px; border-radius: 1px; margin-top: 5px; }
+  .cp-big-card { background: white; border-radius: 6px; padding: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); flex: 1; }
+  .cp-big-lbl { font-size: 8px; color: #9CA3AF; font-family: 'DM Sans', sans-serif; margin-bottom: 6px; }
+  .mini-bars { display: flex; align-items: flex-end; gap: 3px; height: 36px; }
+  .mbar { width: 9px; border-radius: 2px; }
+
+  /* Meta */
+  .sb-meta { padding: 14px 16px; border-top: 1px solid #F3F4F6; }
+  .sb-name { font-size: 13px; font-weight: 700; color: #111; margin-bottom: 3px; }
+  .sb-desc { font-size: 11px; color: #6B7280; line-height: 1.5; margin-bottom: 8px; }
+  .sb-hex { display: inline-block; font-family: monospace; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px; color: white; }
+  .tag-rec { display: inline-block; font-size: 9px; font-weight: 700; color: #D97706; background: #FEF3C7; border-radius: 4px; padding: 2px 6px; margin-left: 6px; }
+  .select-hint { font-size: 10px; color: #9CA3AF; margin-top: 6px; }
+
+  /* Uizard callout */
+  .uizard-note {
+    background: linear-gradient(135deg, #1E1B4B, #312E81);
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .uizard-swatch { width: 48px; height: 48px; border-radius: 8px; background: #3535A8; flex-shrink: 0; border: 2px solid rgba(255,255,255,0.15); }
+  .uizard-text { color: rgba(255,255,255,0.9); font-size: 12px; line-height: 1.6; }
+  .uizard-text strong { color: #A5B4FC; }
+</style>
+
+<div class="sidebars-grid">
+
+  <!-- Option A: Logo Navy -->
+  <div class="sb-option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="sb-preview">
+      <div class="side-panel" style="background:#1D4E89;">
+        <!-- Logo icon mark SVG inline -->
+        <div class="logo-mark">
+          <svg viewBox="20 25 120 110" xmlns="http://www.w3.org/2000/svg" width="34" height="34">
+            <path d="M 58 90 C 40 70, 40 50, 58 38 C 62 35, 66 34, 70 34" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="5" stroke-linecap="round"/>
+            <path d="M 98 90 C 116 70, 116 50, 98 38 C 94 35, 90 34, 86 34" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="5" stroke-linecap="round"/>
+            <path d="M 62 88 C 50 72, 50 54, 62 44 C 66 41, 70 40, 78 40 C 86 40, 90 41, 94 44 C 106 54, 106 72, 94 88" fill="none" stroke="#3AB0A1" stroke-width="3.5" stroke-linecap="round"/>
+            <path d="M 78 82 C 78 82, 68 74, 68 67 C 68 62, 72 59, 78 64 C 84 59, 88 62, 88 67 C 88 74, 78 82, 78 82 Z" fill="#3AB0A1" opacity="0.9"/>
+            <circle cx="78" cy="52" r="7" fill="#F2C94C" opacity="0.95"/>
+            <circle cx="78" cy="52" r="3.5" fill="#FFE08A"/>
+          </svg>
+        </div>
+        <div class="nav-icon active-teal">🏥</div>
+        <div class="nav-icon inactive">📋</div>
+        <div class="nav-icon inactive">📊</div>
+        <div class="nav-icon inactive">⚙️</div>
+      </div>
+      <div class="content-panel">
+        <div class="cp-title">Dashboard</div>
+        <div class="cp-cards">
+          <div class="cp-card"><div class="cp-val">2.4k</div><div class="cp-lbl">Patients</div><div class="cp-bar-line" style="background:#3AB0A1"></div></div>
+          <div class="cp-card"><div class="cp-val">340</div><div class="cp-lbl">NGOs</div><div class="cp-bar-line" style="background:#F2C94C"></div></div>
+          <div class="cp-card"><div class="cp-val">18k</div><div class="cp-lbl">HMOs</div><div class="cp-bar-line" style="background:#1D4E89"></div></div>
+        </div>
+        <div class="cp-big-card">
+          <div class="cp-big-lbl">Weekly Activity</div>
+          <div class="mini-bars">
+            <div class="mbar" style="height:60%;background:#3AB0A1"></div>
+            <div class="mbar" style="height:80%;background:#1D4E89"></div>
+            <div class="mbar" style="height:45%;background:#F2C94C"></div>
+            <div class="mbar" style="height:90%;background:#3AB0A1"></div>
+            <div class="mbar" style="height:65%;background:#1D4E89"></div>
+            <div class="mbar" style="height:75%;background:#3AB0A1"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="sb-meta">
+      <div class="sb-name">A — Logo Navy <span class="sb-hex" style="background:#1D4E89;">#1D4E89</span></div>
+      <div class="sb-desc">Exact colour from your logo. True to brand, grounded and trustworthy. Classic navy — the safe, correct choice.</div>
+      <div class="select-hint">Click to select</div>
+    </div>
+  </div>
+
+  <!-- Option B: Rich Indigo (Uizard-inspired) -->
+  <div class="sb-option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="sb-preview">
+      <div class="side-panel" style="background:#2B3FA0;">
+        <div class="logo-mark">
+          <svg viewBox="20 25 120 110" xmlns="http://www.w3.org/2000/svg" width="34" height="34">
+            <path d="M 58 90 C 40 70, 40 50, 58 38 C 62 35, 66 34, 70 34" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="5" stroke-linecap="round"/>
+            <path d="M 98 90 C 116 70, 116 50, 98 38 C 94 35, 90 34, 86 34" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="5" stroke-linecap="round"/>
+            <path d="M 62 88 C 50 72, 50 54, 62 44 C 66 41, 70 40, 78 40 C 86 40, 90 41, 94 44 C 106 54, 106 72, 94 88" fill="none" stroke="#3AB0A1" stroke-width="3.5" stroke-linecap="round"/>
+            <path d="M 78 82 C 78 82, 68 74, 68 67 C 68 62, 72 59, 78 64 C 84 59, 88 62, 88 67 C 88 74, 78 82, 78 82 Z" fill="#3AB0A1" opacity="0.9"/>
+            <circle cx="78" cy="52" r="7" fill="#F2C94C" opacity="0.95"/>
+            <circle cx="78" cy="52" r="3.5" fill="#FFE08A"/>
+          </svg>
+        </div>
+        <div class="nav-icon active-teal">🏥</div>
+        <div class="nav-icon inactive">📋</div>
+        <div class="nav-icon inactive">📊</div>
+        <div class="nav-icon inactive">⚙️</div>
+      </div>
+      <div class="content-panel">
+        <div class="cp-title">Dashboard</div>
+        <div class="cp-cards">
+          <div class="cp-card"><div class="cp-val">2.4k</div><div class="cp-lbl">Patients</div><div class="cp-bar-line" style="background:#3AB0A1"></div></div>
+          <div class="cp-card"><div class="cp-val">340</div><div class="cp-lbl">NGOs</div><div class="cp-bar-line" style="background:#F2C94C"></div></div>
+          <div class="cp-card"><div class="cp-val">18k</div><div class="cp-lbl">HMOs</div><div class="cp-bar-line" style="background:#2B3FA0"></div></div>
+        </div>
+        <div class="cp-big-card">
+          <div class="cp-big-lbl">Weekly Activity</div>
+          <div class="mini-bars">
+            <div class="mbar" style="height:60%;background:#3AB0A1"></div>
+            <div class="mbar" style="height:80%;background:#2B3FA0"></div>
+            <div class="mbar" style="height:45%;background:#F2C94C"></div>
+            <div class="mbar" style="height:90%;background:#3AB0A1"></div>
+            <div class="mbar" style="height:65%;background:#2B3FA0"></div>
+            <div class="mbar" style="height:75%;background:#3AB0A1"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="sb-meta">
+      <div class="sb-name">B — Rich Indigo <span class="sb-hex" style="background:#2B3FA0;">#2B3FA0</span></div>
+      <div class="sb-desc">The Uizard-inspired tone — more blue-purple than pure navy. Energetic and modern, but drifts from your logo's exact brand colour.</div>
+      <div class="select-hint">Click to select</div>
+    </div>
+  </div>
+
+  <!-- Option C: Deep Midnight -->
+  <div class="sb-option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="sb-preview">
+      <div class="side-panel" style="background:#0F2545;">
+        <div class="logo-mark">
+          <svg viewBox="20 25 120 110" xmlns="http://www.w3.org/2000/svg" width="34" height="34">
+            <path d="M 58 90 C 40 70, 40 50, 58 38 C 62 35, 66 34, 70 34" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="5" stroke-linecap="round"/>
+            <path d="M 98 90 C 116 70, 116 50, 98 38 C 94 35, 90 34, 86 34" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="5" stroke-linecap="round"/>
+            <path d="M 62 88 C 50 72, 50 54, 62 44 C 66 41, 70 40, 78 40 C 86 40, 90 41, 94 44 C 106 54, 106 72, 94 88" fill="none" stroke="#3AB0A1" stroke-width="3.5" stroke-linecap="round"/>
+            <path d="M 78 82 C 78 82, 68 74, 68 67 C 68 62, 72 59, 78 64 C 84 59, 88 62, 88 67 C 88 74, 78 82, 78 82 Z" fill="#3AB0A1" opacity="0.9"/>
+            <circle cx="78" cy="52" r="7" fill="#F2C94C" opacity="0.95"/>
+            <circle cx="78" cy="52" r="3.5" fill="#FFE08A"/>
+          </svg>
+        </div>
+        <div class="nav-icon active-teal">🏥</div>
+        <div class="nav-icon inactive">📋</div>
+        <div class="nav-icon inactive">📊</div>
+        <div class="nav-icon inactive">⚙️</div>
+      </div>
+      <div class="content-panel">
+        <div class="cp-title">Dashboard</div>
+        <div class="cp-cards">
+          <div class="cp-card"><div class="cp-val">2.4k</div><div class="cp-lbl">Patients</div><div class="cp-bar-line" style="background:#3AB0A1"></div></div>
+          <div class="cp-card"><div class="cp-val">340</div><div class="cp-lbl">HMOs</div><div class="cp-bar-line" style="background:#F2C94C"></div></div>
+          <div class="cp-card"><div class="cp-val">18k</div><div class="cp-lbl">NGOs</div><div class="cp-bar-line" style="background:#0F2545"></div></div>
+        </div>
+        <div class="cp-big-card">
+          <div class="cp-big-lbl">Weekly Activity</div>
+          <div class="mini-bars">
+            <div class="mbar" style="height:60%;background:#3AB0A1"></div>
+            <div class="mbar" style="height:80%;background:#0F2545"></div>
+            <div class="mbar" style="height:45%;background:#F2C94C"></div>
+            <div class="mbar" style="height:90%;background:#3AB0A1"></div>
+            <div class="mbar" style="height:65%;background:#0F2545"></div>
+            <div class="mbar" style="height:75%;background:#3AB0A1"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="sb-meta">
+      <div class="sb-name">C — Deep Midnight <span class="sb-hex" style="background:#0F2545;">#0F2545</span></div>
+      <div class="sb-desc">Darker and more dramatic. Premium, near-black. The gold spark and teal pop strongly against it — high contrast, very elegant.</div>
+      <div class="select-hint">Click to select</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Uizard colour explanation -->
+<div class="uizard-note">
+  <div class="uizard-swatch"></div>
+  <div class="uizard-text">
+    <strong>About the Uizard colour (~#3535A8):</strong> That template uses a medium-saturation indigo — noticeably more blue-purple than your logo's navy. Option B above is the closest equivalent. It's energetic and modern, but it's a deviation from your brand. Option A stays true to your logo. Option C goes darker and more premium.
+  </div>
+</div>

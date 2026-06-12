@@ -1,0 +1,166 @@
+<h2>Information Architecture</h2>
+<p class="subtitle">Full site map across all user journeys. Confirm the hierarchy looks right — flag anything missing or misplaced.</p>
+
+<style>
+  .ia-tree { font-family: 'Arial', sans-serif; font-size: 13px; }
+  .ia-level0 { background: #0F2D4A; color: white; border-radius: 10px; padding: 10px 18px; font-weight: 700; font-size: 15px; display: inline-block; margin-bottom: 6px; }
+  .ia-level1 { background: #0A6E52; color: white; border-radius: 8px; padding: 8px 14px; font-weight: 600; font-size: 13px; display: inline-block; margin: 4px 2px; }
+  .ia-level2 { background: white; border: 1.5px solid #C6EEE0; color: #0F2D4A; border-radius: 6px; padding: 6px 11px; font-size: 12px; font-weight: 500; display: inline-block; margin: 3px 2px; }
+  .ia-role { border-radius: 8px; padding: 12px 14px; margin: 10px 0; }
+  .ia-patient { background: #F0FAF7; border: 1.5px solid #34D399; }
+  .ia-ngo { background: #FFFBEB; border: 1.5px solid #F59E0B; }
+  .ia-hmo { background: #EFF6FF; border: 1.5px solid #3B82F6; }
+  .ia-researcher { background: #F5F3FF; border: 1.5px solid #8B5CF6; }
+  .ia-role-label { font-weight: 700; font-size: 13px; margin-bottom: 8px; }
+  .ia-shared { background: #F8FAFB; border: 1.5px solid #E2E8F0; border-radius: 8px; padding: 12px 14px; margin: 10px 0; }
+  .connector { color: #94A3B8; font-size: 11px; margin: 2px 0 2px 8px; }
+</style>
+
+<div class="ia-tree">
+
+  <!-- Public Layer -->
+  <div class="ia-shared">
+    <div class="ia-role-label" style="color: #374151;">Public / Unauthenticated</div>
+    <div>
+      <span class="ia-level1">Landing Page</span>
+      <span class="ia-level1">User Selection</span>
+    </div>
+    <div style="margin-top: 6px;">
+      <span class="ia-level2">/ (root)</span>
+      <span class="ia-level2">/select-role</span>
+      <span class="ia-level2">/about</span>
+      <span class="ia-level2">/contact</span>
+      <span class="ia-level2">/privacy-policy</span>
+      <span class="ia-level2">/terms</span>
+    </div>
+  </div>
+
+  <!-- Auth Layer -->
+  <div class="ia-shared">
+    <div class="ia-role-label" style="color: #374151;">Authentication (separate flows per role)</div>
+    <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px;">
+      <div style="background: #F0FAF7; border: 1px solid #34D399; border-radius: 6px; padding: 6px 10px; font-size: 12px;">/auth/patient/login &amp; /signup</div>
+      <div style="background: #FFFBEB; border: 1px solid #F59E0B; border-radius: 6px; padding: 6px 10px; font-size: 12px;">/auth/ngo/login &amp; /signup</div>
+      <div style="background: #EFF6FF; border: 1px solid #3B82F6; border-radius: 6px; padding: 6px 10px; font-size: 12px;">/auth/hmo/login &amp; /signup</div>
+      <div style="background: #F5F3FF; border: 1px solid #8B5CF6; border-radius: 6px; padding: 6px 10px; font-size: 12px;">/auth/researcher/login &amp; /signup</div>
+    </div>
+    <div style="margin-top: 8px;">
+      <span class="ia-level2">/auth/forgot-password/:role</span>
+      <span class="ia-level2">/auth/verify-email</span>
+      <span class="ia-level2">/auth/onboarding/:role</span>
+    </div>
+  </div>
+
+  <!-- Patient Portal -->
+  <div class="ia-role ia-patient">
+    <div class="ia-role-label" style="color: #0A6E52;">Patient &amp; Caregiver Portal — /patient/*</div>
+    <div>
+      <span class="ia-level2">/patient/dashboard</span>
+      <span class="ia-level2">/patient/medications</span>
+      <span class="ia-level2">/patient/medications/add</span>
+      <span class="ia-level2">/patient/appointments</span>
+      <span class="ia-level2">/patient/appointments/schedule</span>
+    </div>
+    <div style="margin-top: 4px;">
+      <span class="ia-level2">/patient/ai-chat</span>
+      <span class="ia-level2">/patient/community</span>
+      <span class="ia-level2">/patient/community/:groupId</span>
+      <span class="ia-level2">/patient/community/create</span>
+    </div>
+    <div style="margin-top: 4px;">
+      <span class="ia-level2">/patient/funding</span>
+      <span class="ia-level2">/patient/funding/:programId</span>
+      <span class="ia-level2">/patient/funding/apply/:programId</span>
+      <span class="ia-level2">/patient/research</span>
+      <span class="ia-level2">/patient/research/:studyId</span>
+    </div>
+    <div style="margin-top: 4px;">
+      <span class="ia-level2">/patient/profile</span>
+      <span class="ia-level2">/patient/settings</span>
+      <span class="ia-level2">/patient/notifications</span>
+    </div>
+  </div>
+
+  <!-- NGO Portal -->
+  <div class="ia-role ia-ngo">
+    <div class="ia-role-label" style="color: #B45309;">NGO Portal — /ngo/*</div>
+    <div>
+      <span class="ia-level2">/ngo/dashboard</span>
+      <span class="ia-level2">/ngo/programs</span>
+      <span class="ia-level2">/ngo/programs/create</span>
+      <span class="ia-level2">/ngo/programs/:programId</span>
+      <span class="ia-level2">/ngo/programs/:programId/edit</span>
+    </div>
+    <div style="margin-top: 4px;">
+      <span class="ia-level2">/ngo/applicants</span>
+      <span class="ia-level2">/ngo/applicants/:patientId</span>
+      <span class="ia-level2">/ngo/selections</span>
+      <span class="ia-level2">/ngo/selections/map</span>
+    </div>
+    <div style="margin-top: 4px;">
+      <span class="ia-level2">/ngo/profile</span>
+      <span class="ia-level2">/ngo/settings</span>
+      <span class="ia-level2">/ngo/notifications</span>
+    </div>
+  </div>
+
+  <!-- HMO Portal -->
+  <div class="ia-role ia-hmo">
+    <div class="ia-role-label" style="color: #1D4ED8;">HMO Portal — /hmo/*</div>
+    <div>
+      <span class="ia-level2">/hmo/dashboard</span>
+      <span class="ia-level2">/hmo/patients</span>
+      <span class="ia-level2">/hmo/patients/:patientId</span>
+      <span class="ia-level2">/hmo/patients/:patientId/timeline</span>
+    </div>
+    <div style="margin-top: 4px;">
+      <span class="ia-level2">/hmo/profiles/create</span>
+      <span class="ia-level2">/hmo/profiles/:profileId</span>
+      <span class="ia-level2">/hmo/profiles/:profileId/edit</span>
+      <span class="ia-level2">/hmo/analytics</span>
+    </div>
+    <div style="margin-top: 4px;">
+      <span class="ia-level2">/hmo/profile</span>
+      <span class="ia-level2">/hmo/settings</span>
+      <span class="ia-level2">/hmo/notifications</span>
+    </div>
+  </div>
+
+  <!-- Researcher Portal -->
+  <div class="ia-role ia-researcher">
+    <div class="ia-role-label" style="color: #6D28D9;">Clinical Researcher Portal — /researcher/*</div>
+    <div>
+      <span class="ia-level2">/researcher/dashboard</span>
+      <span class="ia-level2">/researcher/studies</span>
+      <span class="ia-level2">/researcher/studies/create</span>
+      <span class="ia-level2">/researcher/studies/:studyId</span>
+      <span class="ia-level2">/researcher/studies/:studyId/edit</span>
+    </div>
+    <div style="margin-top: 4px;">
+      <span class="ia-level2">/researcher/participants</span>
+      <span class="ia-level2">/researcher/participants/:patientId</span>
+      <span class="ia-level2">/researcher/recruitment</span>
+      <span class="ia-level2">/researcher/recruitment/:studyId</span>
+    </div>
+    <div style="margin-top: 4px;">
+      <span class="ia-level2">/researcher/profile</span>
+      <span class="ia-level2">/researcher/settings</span>
+      <span class="ia-level2">/researcher/notifications</span>
+    </div>
+  </div>
+
+  <!-- Shared/Error -->
+  <div class="ia-shared">
+    <div class="ia-role-label" style="color: #374151;">System / Error States</div>
+    <div>
+      <span class="ia-level2">/404</span>
+      <span class="ia-level2">/403 (unauthorized)</span>
+      <span class="ia-level2">/500</span>
+      <span class="ia-level2">/maintenance</span>
+      <span class="ia-level2">/consent (GDPR/cookie)</span>
+    </div>
+  </div>
+
+</div>
+
+<p class="subtitle" style="margin-top: 20px;">Does this hierarchy look right? Anything missing, misnamed, or that needs a different nesting level? Reply in the terminal.</p>

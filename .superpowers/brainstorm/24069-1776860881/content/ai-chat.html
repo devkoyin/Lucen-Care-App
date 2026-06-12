@@ -1,0 +1,120 @@
+<h2>AI Health Chat — /patient/ai-chat</h2>
+<p class="subtitle">The chat interface lives in the patient portal's sidebar shell. Key design decisions: persistent disclaimer, conversation history in sidebar, clear AI identity.</p>
+
+<div class="mockup" style="max-width:860px; margin:0 auto;">
+  <div class="mockup-header">AI Health Chat — Full Page Layout</div>
+  <div class="mockup-body" style="padding:0; background:#0A0E1A; font-family:'DM Sans',Arial,sans-serif; overflow:hidden; border-radius:0 0 8px 8px;">
+
+    <div style="display:grid; grid-template-columns:200px 1fr 220px; min-height:460px;">
+
+      <!-- LEFT: Portal sidebar (collapsed state) -->
+      <div style="background:#071A2E; border-right:1px solid rgba(255,255,255,0.06); padding:14px 0;">
+        <div style="padding:0 14px 10px; border-bottom:1px solid rgba(255,255,255,0.06); margin-bottom:8px;">
+          <div style="color:#34D399;font-size:11px;font-weight:800;">LUCEN CARE</div>
+          <div style="color:rgba(255,255,255,0.3);font-size:9px;">Patient Portal</div>
+        </div>
+        <div style="padding:7px 14px;display:flex;align-items:center;gap:8px;"><span style="font-size:11px;">🏠</span><span style="color:rgba(255,255,255,0.4);font-size:11px;">Dashboard</span></div>
+        <div style="padding:7px 14px;display:flex;align-items:center;gap:8px;"><span style="font-size:11px;">💊</span><span style="color:rgba(255,255,255,0.4);font-size:11px;">Medications</span></div>
+        <div style="padding:7px 14px;display:flex;align-items:center;gap:8px;"><span style="font-size:11px;">📅</span><span style="color:rgba(255,255,255,0.4);font-size:11px;">Appointments</span></div>
+        <div style="padding:7px 14px;display:flex;align-items:center;gap:8px;background:rgba(52,211,153,0.08);border-right:2px solid #34D399;">
+          <span style="font-size:11px;">🤖</span><span style="color:#34D399;font-size:11px;font-weight:600;">AI Health Chat</span>
+        </div>
+        <div style="padding:7px 14px;display:flex;align-items:center;gap:8px;"><span style="font-size:11px;">👥</span><span style="color:rgba(255,255,255,0.4);font-size:11px;">Community</span></div>
+        <div style="padding:7px 14px;display:flex;align-items:center;gap:8px;"><span style="font-size:11px;">💰</span><span style="color:rgba(255,255,255,0.4);font-size:11px;">Funding</span></div>
+        <div style="padding:7px 14px;display:flex;align-items:center;gap:8px;"><span style="font-size:11px;">🔬</span><span style="color:rgba(255,255,255,0.4);font-size:11px;">Research</span></div>
+      </div>
+
+      <!-- CENTRE: Chat window -->
+      <div style="display:flex;flex-direction:column;background:#0A0E1A;border-right:1px solid rgba(255,255,255,0.06);">
+
+        <!-- Chat header -->
+        <div style="padding:12px 18px;border-bottom:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;gap:10px;">
+          <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#0A6E52,#34D399);display:flex;align-items:center;justify-content:center;font-size:14px;">🤖</div>
+          <div>
+            <div style="color:white;font-size:13px;font-weight:700;">Lucen Health Assistant</div>
+            <div style="display:flex;align-items:center;gap:5px;"><div style="width:6px;height:6px;border-radius:50%;background:#34D399;"></div><span style="color:#34D399;font-size:10px;">Online</span></div>
+          </div>
+        </div>
+
+        <!-- Disclaimer banner -->
+        <div style="background:rgba(245,158,11,0.08);border-bottom:1px solid rgba(245,158,11,0.15);padding:8px 18px;display:flex;gap:8px;align-items:flex-start;">
+          <span style="font-size:12px;flex-shrink:0;">⚠️</span>
+          <div style="color:rgba(245,158,11,0.9);font-size:10px;line-height:1.5;">This assistant provides general health information only. It is not a substitute for professional medical advice, diagnosis, or treatment. Always consult a qualified healthcare professional.</div>
+        </div>
+
+        <!-- Messages -->
+        <div style="flex:1;padding:16px 18px;display:flex;flex-direction:column;gap:12px;overflow:hidden;">
+
+          <!-- AI message -->
+          <div style="display:flex;gap:10px;align-items:flex-start;">
+            <div style="width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#0A6E52,#34D399);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;">🤖</div>
+            <div style="background:#071A2E;border:1px solid rgba(255,255,255,0.08);border-radius:0 10px 10px 10px;padding:10px 14px;max-width:80%;">
+              <div style="color:rgba(255,255,255,0.85);font-size:12px;line-height:1.6;">Hello Ada! I'm here to help with health questions, medication information, or preparing for your upcoming appointments. What's on your mind today?</div>
+              <div style="color:rgba(255,255,255,0.25);font-size:9px;margin-top:5px;">Lucen Assistant · 10:02 AM</div>
+            </div>
+          </div>
+
+          <!-- User message -->
+          <div style="display:flex;gap:10px;align-items:flex-start;flex-direction:row-reverse;">
+            <div style="width:26px;height:26px;border-radius:50%;background:rgba(52,211,153,0.2);display:flex;align-items:center;justify-content:center;color:#34D399;font-size:10px;font-weight:700;flex-shrink:0;">A</div>
+            <div style="background:rgba(52,211,153,0.12);border:1px solid rgba(52,211,153,0.2);border-radius:10px 0 10px 10px;padding:10px 14px;max-width:80%;">
+              <div style="color:rgba(255,255,255,0.85);font-size:12px;line-height:1.6;">I just started taking Metformin last week and I've been feeling nauseous after meals. Is that normal?</div>
+              <div style="color:rgba(255,255,255,0.25);font-size:9px;margin-top:5px;text-align:right;">Ada · 10:04 AM</div>
+            </div>
+          </div>
+
+          <!-- AI response -->
+          <div style="display:flex;gap:10px;align-items:flex-start;">
+            <div style="width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#0A6E52,#34D399);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;">🤖</div>
+            <div style="background:#071A2E;border:1px solid rgba(255,255,255,0.08);border-radius:0 10px 10px 10px;padding:10px 14px;max-width:85%;">
+              <div style="color:rgba(255,255,255,0.85);font-size:12px;line-height:1.6;">Nausea is one of the most common side effects when starting Metformin, and it typically improves within 2–3 weeks as your body adjusts. Taking it with food and starting at a lower dose can help reduce discomfort.</div>
+              <div style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.15);border-radius:6px;padding:7px 10px;margin-top:8px;">
+                <div style="color:rgba(245,158,11,0.9);font-size:10px;line-height:1.5;">⚠️ If nausea persists beyond 3 weeks or is severe, please speak with your prescribing doctor before making any changes to your medication.</div>
+              </div>
+              <div style="color:rgba(255,255,255,0.25);font-size:9px;margin-top:5px;">Lucen Assistant · 10:04 AM</div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Input area -->
+        <div style="padding:12px 18px;border-top:1px solid rgba(255,255,255,0.07);">
+          <div style="display:flex;gap:8px;align-items:center;">
+            <div style="flex:1;background:#071A2E;border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:10px 14px;color:rgba(255,255,255,0.35);font-size:12px;">Ask a health question...</div>
+            <div style="width:36px;height:36px;background:#34D399;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;cursor:pointer;">↑</div>
+          </div>
+          <div style="color:rgba(255,255,255,0.2);font-size:9px;text-align:center;margin-top:7px;">Conversations are private and encrypted. Not stored beyond 30 days.</div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Conversation history panel -->
+      <div style="background:#071A2E;padding:14px 0;">
+        <div style="padding:0 14px 10px;border-bottom:1px solid rgba(255,255,255,0.06);margin-bottom:8px;">
+          <div style="color:rgba(255,255,255,0.5);font-size:10px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;">Recent Chats</div>
+        </div>
+        <div style="padding:8px 14px;background:rgba(52,211,153,0.06);border-right:2px solid #34D399;cursor:pointer;">
+          <div style="color:rgba(255,255,255,0.8);font-size:11px;font-weight:600;">Metformin side effects</div>
+          <div style="color:rgba(255,255,255,0.3);font-size:10px;margin-top:2px;">Today</div>
+        </div>
+        <div style="padding:8px 14px;cursor:pointer;">
+          <div style="color:rgba(255,255,255,0.5);font-size:11px;">Upcoming cardiology appt</div>
+          <div style="color:rgba(255,255,255,0.25);font-size:10px;margin-top:2px;">Apr 20</div>
+        </div>
+        <div style="padding:8px 14px;cursor:pointer;">
+          <div style="color:rgba(255,255,255,0.5);font-size:11px;">Blood pressure ranges</div>
+          <div style="color:rgba(255,255,255,0.25);font-size:10px;margin-top:2px;">Apr 17</div>
+        </div>
+        <div style="padding:8px 14px;cursor:pointer;">
+          <div style="color:rgba(255,255,255,0.5);font-size:11px;">Diet and Lisinopril</div>
+          <div style="color:rgba(255,255,255,0.25);font-size:10px;margin-top:2px;">Apr 12</div>
+        </div>
+        <div style="padding:10px 14px;margin-top:6px;border-top:1px solid rgba(255,255,255,0.06);">
+          <div style="color:rgba(255,255,255,0.25);font-size:10px;line-height:1.5;">Chat history retained for 30 days. <span style="color:#34D399;cursor:pointer;">Manage in Settings.</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<p class="subtitle" style="margin-top:20px;">Key decisions baked in: persistent disclaimer banner (non-dismissible), per-response safety callouts for medication advice, conversation history panel, 30-day retention cap surfaced in the UI. Does this layout feel right?</p>

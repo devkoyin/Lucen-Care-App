@@ -1,0 +1,278 @@
+<h2>NGO · HMO · Researcher Dashboards</h2>
+<p class="subtitle">Same sidebar shell, same top bar pattern — different content priorities per role. Condensed to show what's unique about each.</p>
+
+<style>
+  .dash-shell { background:#0A0E1A; border-radius:10px; overflow:hidden; border:1px solid rgba(255,255,255,0.08); font-family:'DM Sans',Arial,sans-serif; margin-bottom:20px; }
+  .dash-sidebar { background:#071A2E; border-right:1px solid rgba(255,255,255,0.06); padding:14px 0; width:160px; flex-shrink:0; }
+  .dash-body { display:flex; min-height:260px; }
+  .dash-main { flex:1; background:#0A0E1A; padding:16px; }
+  .dash-topbar { padding:10px 16px; border-bottom:1px solid rgba(255,255,255,0.06); display:flex; justify-content:space-between; align-items:center; }
+  .nav-item-active { padding:7px 14px; display:flex; align-items:center; gap:8px; border-right-width:2px; border-right-style:solid; }
+  .nav-item { padding:7px 14px; display:flex; align-items:center; gap:8px; }
+  .stat-card { border-radius:8px; padding:12px; flex:1; }
+  .widget { background:#071A2E; border-radius:8px; padding:12px; border:1px solid rgba(255,255,255,0.07); }
+</style>
+
+<!-- NGO Dashboard -->
+<div class="dash-shell">
+  <div style="background:rgba(245,158,11,0.1); padding:8px 16px; border-bottom:1px solid rgba(245,158,11,0.2); display:flex; align-items:center; gap:8px;">
+    <div style="width:8px;height:8px;border-radius:50%;background:#F59E0B;"></div>
+    <div style="color:#F59E0B;font-size:12px;font-weight:700;font-family:Arial;">NGO Portal — /ngo/dashboard</div>
+  </div>
+  <div class="dash-body">
+    <div class="dash-sidebar">
+      <div style="padding:0 14px 10px; border-bottom:1px solid rgba(255,255,255,0.06); margin-bottom:8px;">
+        <div style="color:#F59E0B;font-size:11px;font-weight:800;">LUCEN CARE</div>
+        <div style="color:rgba(255,255,255,0.3);font-size:9px;margin-top:1px;">NGO Portal</div>
+      </div>
+      <div class="nav-item-active" style="border-right-color:#F59E0B; background:rgba(245,158,11,0.08);">
+        <span style="font-size:11px;">🏠</span><span style="color:#F59E0B;font-size:11px;font-weight:600;">Dashboard</span>
+      </div>
+      <div class="nav-item"><span style="font-size:11px;">📋</span><span style="color:rgba(255,255,255,0.5);font-size:11px;">Programs</span></div>
+      <div class="nav-item"><span style="font-size:11px;">👥</span><span style="color:rgba(255,255,255,0.5);font-size:11px;">Applicants</span></div>
+      <div class="nav-item"><span style="font-size:11px;">🗺️</span><span style="color:rgba(255,255,255,0.5);font-size:11px;">Patient Map</span></div>
+      <div class="nav-item"><span style="font-size:11px;">⚙️</span><span style="color:rgba(255,255,255,0.4);font-size:11px;">Settings</span></div>
+    </div>
+    <div style="flex:1; background:#0A0E1A;">
+      <div class="dash-topbar">
+        <div style="color:white;font-size:13px;font-weight:700;font-family:Arial;">Welcome, HealthBridge NGO</div>
+        <div style="background:#F59E0B;color:#0F2D4A;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;">+ New Program</div>
+      </div>
+      <div style="padding:14px;">
+        <!-- Stats row -->
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px;">
+          <div class="stat-card" style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);">
+            <div style="color:#F59E0B;font-size:18px;font-weight:800;font-family:Arial;">3</div>
+            <div style="color:rgba(255,255,255,0.5);font-size:10px;margin-top:2px;">Active Programs</div>
+          </div>
+          <div class="stat-card" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);">
+            <div style="color:white;font-size:18px;font-weight:800;font-family:Arial;">47</div>
+            <div style="color:rgba(255,255,255,0.5);font-size:10px;margin-top:2px;">Total Applicants</div>
+          </div>
+          <div class="stat-card" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);">
+            <div style="color:white;font-size:18px;font-weight:800;font-family:Arial;">12</div>
+            <div style="color:rgba(255,255,255,0.5);font-size:10px;margin-top:2px;">Selected Patients</div>
+          </div>
+          <div class="stat-card" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);">
+            <div style="color:white;font-size:18px;font-weight:800;font-family:Arial;">8</div>
+            <div style="color:rgba(255,255,255,0.5);font-size:10px;margin-top:2px;">Pending Review</div>
+          </div>
+        </div>
+        <!-- Two col -->
+        <div style="display:grid;grid-template-columns:1.2fr 0.8fr;gap:10px;">
+          <div class="widget">
+            <div style="color:white;font-size:11px;font-weight:700;margin-bottom:10px;font-family:Arial;">Recent Applicants</div>
+            <div style="display:flex;flex-direction:column;gap:7px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <div style="color:rgba(255,255,255,0.7);font-size:11px;">Emeka Nwachukwu</div>
+                <div style="background:rgba(245,158,11,0.15);color:#F59E0B;padding:2px 7px;border-radius:4px;font-size:9px;font-weight:700;">REVIEW</div>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <div style="color:rgba(255,255,255,0.7);font-size:11px;">Fatima Al-Hassan</div>
+                <div style="background:rgba(52,211,153,0.15);color:#34D399;padding:2px 7px;border-radius:4px;font-size:9px;font-weight:700;">SELECTED</div>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <div style="color:rgba(255,255,255,0.7);font-size:11px;">James Oduya</div>
+                <div style="background:rgba(245,158,11,0.15);color:#F59E0B;padding:2px 7px;border-radius:4px;font-size:9px;font-weight:700;">REVIEW</div>
+              </div>
+            </div>
+          </div>
+          <div class="widget">
+            <div style="color:white;font-size:11px;font-weight:700;margin-bottom:10px;font-family:Arial;">Programs at a Glance</div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <div>
+                <div style="display:flex;justify-content:space-between;margin-bottom:3px;">
+                  <div style="color:rgba(255,255,255,0.6);font-size:10px;">Dialysis Support</div>
+                  <div style="color:rgba(255,255,255,0.4);font-size:10px;">8/10</div>
+                </div>
+                <div style="background:rgba(255,255,255,0.08);border-radius:4px;height:4px;"><div style="background:#F59E0B;width:80%;height:100%;border-radius:4px;"></div></div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;margin-bottom:3px;">
+                  <div style="color:rgba(255,255,255,0.6);font-size:10px;">Cancer Treatment</div>
+                  <div style="color:rgba(255,255,255,0.4);font-size:10px;">3/15</div>
+                </div>
+                <div style="background:rgba(255,255,255,0.08);border-radius:4px;height:4px;"><div style="background:#F59E0B;width:20%;height:100%;border-radius:4px;"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HMO Dashboard -->
+<div class="dash-shell">
+  <div style="background:rgba(59,130,246,0.1); padding:8px 16px; border-bottom:1px solid rgba(59,130,246,0.2); display:flex; align-items:center; gap:8px;">
+    <div style="width:8px;height:8px;border-radius:50%;background:#3B82F6;"></div>
+    <div style="color:#3B82F6;font-size:12px;font-weight:700;font-family:Arial;">HMO Portal — /hmo/dashboard</div>
+  </div>
+  <div class="dash-body">
+    <div class="dash-sidebar">
+      <div style="padding:0 14px 10px; border-bottom:1px solid rgba(255,255,255,0.06); margin-bottom:8px;">
+        <div style="color:#3B82F6;font-size:11px;font-weight:800;">LUCEN CARE</div>
+        <div style="color:rgba(255,255,255,0.3);font-size:9px;margin-top:1px;">HMO Portal</div>
+      </div>
+      <div class="nav-item-active" style="border-right-color:#3B82F6; background:rgba(59,130,246,0.08);">
+        <span style="font-size:11px;">🏠</span><span style="color:#3B82F6;font-size:11px;font-weight:600;">Dashboard</span>
+      </div>
+      <div class="nav-item"><span style="font-size:11px;">👤</span><span style="color:rgba(255,255,255,0.5);font-size:11px;">Patients</span></div>
+      <div class="nav-item"><span style="font-size:11px;">📂</span><span style="color:rgba(255,255,255,0.5);font-size:11px;">Profiles</span></div>
+      <div class="nav-item"><span style="font-size:11px;">📊</span><span style="color:rgba(255,255,255,0.5);font-size:11px;">Analytics</span></div>
+      <div class="nav-item"><span style="font-size:11px;">⚙️</span><span style="color:rgba(255,255,255,0.4);font-size:11px;">Settings</span></div>
+    </div>
+    <div style="flex:1; background:#0A0E1A;">
+      <div class="dash-topbar">
+        <div style="color:white;font-size:13px;font-weight:700;font-family:Arial;">Zenith Health HMO</div>
+        <div style="background:#3B82F6;color:white;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;">+ New Profile</div>
+      </div>
+      <div style="padding:14px;">
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px;">
+          <div class="stat-card" style="background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.2);">
+            <div style="color:#3B82F6;font-size:18px;font-weight:800;font-family:Arial;">214</div>
+            <div style="color:rgba(255,255,255,0.5);font-size:10px;margin-top:2px;">Enrolled Patients</div>
+          </div>
+          <div class="stat-card" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);">
+            <div style="color:white;font-size:18px;font-weight:800;font-family:Arial;">18</div>
+            <div style="color:rgba(255,255,255,0.5);font-size:10px;margin-top:2px;">New This Month</div>
+          </div>
+          <div class="stat-card" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);">
+            <div style="color:white;font-size:18px;font-weight:800;font-family:Arial;">97%</div>
+            <div style="color:rgba(255,255,255,0.5);font-size:10px;margin-top:2px;">Profile Completeness</div>
+          </div>
+          <div class="stat-card" style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);">
+            <div style="color:#EF4444;font-size:18px;font-weight:800;font-family:Arial;">5</div>
+            <div style="color:rgba(255,255,255,0.5);font-size:10px;margin-top:2px;">Flagged for Review</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1.4fr 0.6fr;gap:10px;">
+          <div class="widget">
+            <div style="color:white;font-size:11px;font-weight:700;margin-bottom:10px;font-family:Arial;">Recent Patient Activity</div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <div>
+                  <div style="color:rgba(255,255,255,0.8);font-size:11px;font-weight:600;">Chukwudi Eze</div>
+                  <div style="color:rgba(255,255,255,0.35);font-size:10px;">Profile updated · 2h ago</div>
+                </div>
+                <div style="color:#3B82F6;font-size:10px;font-weight:600;cursor:pointer;">View →</div>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <div>
+                  <div style="color:rgba(255,255,255,0.8);font-size:11px;font-weight:600;">Ngozi Obi</div>
+                  <div style="color:rgba(255,255,255,0.35);font-size:10px;">New appointment logged · 5h ago</div>
+                </div>
+                <div style="color:#3B82F6;font-size:10px;font-weight:600;cursor:pointer;">View →</div>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <div>
+                  <div style="color:rgba(255,255,255,0.8);font-size:11px;font-weight:600;">Tunde Badmus</div>
+                  <div style="color:rgba(239,68,68,0.9);font-size:10px;font-weight:600;">⚠ Flagged — missing lab records</div>
+                </div>
+                <div style="color:#3B82F6;font-size:10px;font-weight:600;cursor:pointer;">View →</div>
+              </div>
+            </div>
+          </div>
+          <div class="widget" style="display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;">
+            <div style="color:#3B82F6;font-size:28px;font-weight:800;font-family:Arial;">214</div>
+            <div style="color:rgba(255,255,255,0.4);font-size:10px;margin-bottom:8px;">Managed patients</div>
+            <div style="width:100%;background:rgba(255,255,255,0.06);border-radius:20px;height:6px;">
+              <div style="background:#3B82F6;width:97%;height:100%;border-radius:20px;"></div>
+            </div>
+            <div style="color:rgba(255,255,255,0.3);font-size:9px;margin-top:5px;">97% profiles complete</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Researcher Dashboard -->
+<div class="dash-shell">
+  <div style="background:rgba(139,92,246,0.1); padding:8px 16px; border-bottom:1px solid rgba(139,92,246,0.2); display:flex; align-items:center; gap:8px;">
+    <div style="width:8px;height:8px;border-radius:50%;background:#8B5CF6;"></div>
+    <div style="color:#8B5CF6;font-size:12px;font-weight:700;font-family:Arial;">Clinical Researcher Portal — /researcher/dashboard</div>
+  </div>
+  <div class="dash-body">
+    <div class="dash-sidebar">
+      <div style="padding:0 14px 10px; border-bottom:1px solid rgba(255,255,255,0.06); margin-bottom:8px;">
+        <div style="color:#8B5CF6;font-size:11px;font-weight:800;">LUCEN CARE</div>
+        <div style="color:rgba(255,255,255,0.3);font-size:9px;margin-top:1px;">Researcher Portal</div>
+      </div>
+      <div class="nav-item-active" style="border-right-color:#8B5CF6; background:rgba(139,92,246,0.08);">
+        <span style="font-size:11px;">🏠</span><span style="color:#8B5CF6;font-size:11px;font-weight:600;">Dashboard</span>
+      </div>
+      <div class="nav-item"><span style="font-size:11px;">🔬</span><span style="color:rgba(255,255,255,0.5);font-size:11px;">My Studies</span></div>
+      <div class="nav-item"><span style="font-size:11px;">👥</span><span style="color:rgba(255,255,255,0.5);font-size:11px;">Participants</span></div>
+      <div class="nav-item"><span style="font-size:11px;">📣</span><span style="color:rgba(255,255,255,0.5);font-size:11px;">Recruitment</span></div>
+      <div class="nav-item"><span style="font-size:11px;">⚙️</span><span style="color:rgba(255,255,255,0.4);font-size:11px;">Settings</span></div>
+    </div>
+    <div style="flex:1; background:#0A0E1A;">
+      <div class="dash-topbar">
+        <div style="color:white;font-size:13px;font-weight:700;font-family:Arial;">Dr. Amara Nwosu</div>
+        <div style="background:#8B5CF6;color:white;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;">+ Post Study</div>
+      </div>
+      <div style="padding:14px;">
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px;">
+          <div class="stat-card" style="background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.2);">
+            <div style="color:#8B5CF6;font-size:18px;font-weight:800;font-family:Arial;">2</div>
+            <div style="color:rgba(255,255,255,0.5);font-size:10px;margin-top:2px;">Active Studies</div>
+          </div>
+          <div class="stat-card" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);">
+            <div style="color:white;font-size:18px;font-weight:800;font-family:Arial;">34</div>
+            <div style="color:rgba(255,255,255,0.5);font-size:10px;margin-top:2px;">Interested Patients</div>
+          </div>
+          <div class="stat-card" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);">
+            <div style="color:white;font-size:18px;font-weight:800;font-family:Arial;">11</div>
+            <div style="color:rgba(255,255,255,0.5);font-size:10px;margin-top:2px;">Enrolled</div>
+          </div>
+          <div class="stat-card" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);">
+            <div style="color:white;font-size:18px;font-weight:800;font-family:Arial;">1</div>
+            <div style="color:rgba(255,255,255,0.5);font-size:10px;margin-top:2px;">Recruiting</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div class="widget">
+            <div style="color:white;font-size:11px;font-weight:700;margin-bottom:10px;font-family:Arial;">Active Studies</div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <div>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
+                  <div style="color:rgba(255,255,255,0.8);font-size:11px;font-weight:600;">T2 Diabetes Biomarker Study</div>
+                  <div style="background:rgba(52,211,153,0.15);color:#34D399;padding:2px 6px;border-radius:4px;font-size:9px;font-weight:700;">ACTIVE</div>
+                </div>
+                <div style="color:rgba(255,255,255,0.35);font-size:10px;">8/20 enrolled · Closes Jun 2026</div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
+                  <div style="color:rgba(255,255,255,0.8);font-size:11px;font-weight:600;">Hypertension Management RCT</div>
+                  <div style="background:rgba(139,92,246,0.15);color:#8B5CF6;padding:2px 6px;border-radius:4px;font-size:9px;font-weight:700;">RECRUITING</div>
+                </div>
+                <div style="color:rgba(255,255,255,0.35);font-size:10px;">3/30 enrolled · Open now</div>
+              </div>
+            </div>
+          </div>
+          <div class="widget">
+            <div style="color:white;font-size:11px;font-weight:700;margin-bottom:10px;font-family:Arial;">Recent Interest</div>
+            <div style="display:flex;flex-direction:column;gap:7px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <div style="color:rgba(255,255,255,0.65);font-size:11px;">Patient #4471</div>
+                <div style="color:rgba(255,255,255,0.3);font-size:10px;">Hypertension RCT</div>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <div style="color:rgba(255,255,255,0.65);font-size:11px;">Patient #3892</div>
+                <div style="color:rgba(255,255,255,0.3);font-size:10px;">Diabetes Study</div>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <div style="color:rgba(255,255,255,0.65);font-size:11px;">Patient #5104</div>
+                <div style="color:rgba(255,255,255,0.3);font-size:10px;">Hypertension RCT</div>
+              </div>
+            </div>
+            <div style="margin-top:8px; background:rgba(139,92,246,0.1); border-radius:6px; padding:7px 10px; color:rgba(139,92,246,0.8); font-size:10px;">Note: patient names are anonymised until mutual consent is confirmed</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p class="subtitle">One thing to note in the Researcher portal: participants are shown as anonymised IDs until both sides confirm intent — this protects patient identity and limits the platform's liability exposure. Confirm this is the right privacy model before we lock it.</p>

@@ -1,0 +1,125 @@
+<h2>User Selection Page — /select-role</h2>
+<p class="subtitle">How should users choose their path? Two structural approaches.</p>
+
+<div class="split">
+
+  <!-- Option A: Full-screen card grid -->
+  <div class="mockup">
+    <div class="mockup-header">A — Immersive Card Grid</div>
+    <div class="mockup-body" style="padding:0; background: #071A2E; font-family: 'DM Sans', Arial, sans-serif; overflow:hidden;">
+      <!-- Nav -->
+      <div style="padding: 12px 24px; display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid rgba(255,255,255,0.07);">
+        <div style="color: #34D399; font-weight: 800; font-size: 13px;">LUCEN CARE</div>
+        <div style="color: rgba(255,255,255,0.4); font-size: 11px;">← Back</div>
+      </div>
+      <!-- Header -->
+      <div style="text-align:center; padding: 24px 20px 16px;">
+        <div style="color: white; font-size: 20px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 6px;">Who are you joining as?</div>
+        <div style="color: rgba(255,255,255,0.45); font-size: 12px;">Choose your role to get started. You can always sign in later.</div>
+      </div>
+      <!-- 2x2 Card Grid -->
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; padding: 0 16px 20px;">
+        <div style="background: rgba(52,211,153,0.07); border: 1.5px solid rgba(52,211,153,0.3); border-radius:12px; padding:18px 14px; cursor:pointer;">
+          <div style="font-size:24px; margin-bottom:10px;">🏥</div>
+          <div style="color:#34D399; font-size:13px; font-weight:700; margin-bottom:4px;">Patient &amp; Caregiver</div>
+          <div style="color:rgba(255,255,255,0.5); font-size:11px; line-height:1.5;">Track medications, schedule appointments, find support groups and funding.</div>
+          <div style="margin-top:12px; color:#34D399; font-size:11px; font-weight:600;">Get started →</div>
+        </div>
+        <div style="background: rgba(245,158,11,0.07); border: 1.5px solid rgba(245,158,11,0.3); border-radius:12px; padding:18px 14px; cursor:pointer;">
+          <div style="font-size:24px; margin-bottom:10px;">🤝</div>
+          <div style="color:#F59E0B; font-size:13px; font-weight:700; margin-bottom:4px;">NGO</div>
+          <div style="color:rgba(255,255,255,0.5); font-size:11px; line-height:1.5;">Post funding programs, select and map patients to treatment initiatives.</div>
+          <div style="margin-top:12px; color:#F59E0B; font-size:11px; font-weight:600;">Get started →</div>
+        </div>
+        <div style="background: rgba(59,130,246,0.07); border: 1.5px solid rgba(59,130,246,0.3); border-radius:12px; padding:18px 14px; cursor:pointer;">
+          <div style="font-size:24px; margin-bottom:10px;">🏦</div>
+          <div style="color:#3B82F6; font-size:13px; font-weight:700; margin-bottom:4px;">HMO</div>
+          <div style="color:rgba(255,255,255,0.5); font-size:11px; line-height:1.5;">Build and manage integrated longitudinal health profiles across patient care journeys.</div>
+          <div style="margin-top:12px; color:#3B82F6; font-size:11px; font-weight:600;">Get started →</div>
+        </div>
+        <div style="background: rgba(139,92,246,0.07); border: 1.5px solid rgba(139,92,246,0.3); border-radius:12px; padding:18px 14px; cursor:pointer;">
+          <div style="font-size:24px; margin-bottom:10px;">🔬</div>
+          <div style="color:#8B5CF6; font-size:13px; font-weight:700; margin-bottom:4px;">Clinical Researcher</div>
+          <div style="color:rgba(255,255,255,0.5); font-size:11px; line-height:1.5;">Post research studies and connect with willing patient participants.</div>
+          <div style="margin-top:12px; color:#8B5CF6; font-size:11px; font-weight:600;">Get started →</div>
+        </div>
+      </div>
+      <div style="text-align:center; padding-bottom:14px;">
+        <div style="color:rgba(255,255,255,0.25); font-size:11px;">Already have an account? <span style="color:#34D399;">Sign in</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Option B: Focused spotlight -->
+  <div class="mockup">
+    <div class="mockup-header">B — Spotlight Selection</div>
+    <div class="mockup-body" style="padding:0; background: #0F2D4A; font-family: 'DM Sans', Arial, sans-serif; overflow:hidden;">
+      <!-- Nav -->
+      <div style="padding: 12px 24px; display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid rgba(255,255,255,0.07);">
+        <div style="color: #34D399; font-weight: 800; font-size: 13px;">LUCEN CARE</div>
+        <div style="color: rgba(255,255,255,0.4); font-size: 11px;">← Back</div>
+      </div>
+      <!-- Header -->
+      <div style="text-align:center; padding: 24px 20px 20px;">
+        <div style="color: white; font-size: 20px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 6px;">I am a...</div>
+        <div style="color: rgba(255,255,255,0.4); font-size: 12px;">Select your role to continue</div>
+      </div>
+      <!-- Vertical list with hover state simulation -->
+      <div style="display:flex; flex-direction:column; gap:8px; padding:0 20px 20px;">
+        <!-- Active state example -->
+        <div style="background: linear-gradient(135deg, rgba(52,211,153,0.15) 0%, rgba(52,211,153,0.05) 100%); border: 1.5px solid #34D399; border-radius:12px; padding:14px 18px; cursor:pointer; display:flex; justify-content:space-between; align-items:center;">
+          <div style="display:flex; align-items:center; gap:14px;">
+            <div style="width:38px; height:38px; background:rgba(52,211,153,0.2); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px;">🏥</div>
+            <div>
+              <div style="color:#34D399; font-size:13px; font-weight:700;">Patient &amp; Caregiver</div>
+              <div style="color:rgba(255,255,255,0.5); font-size:11px; margin-top:2px;">Health tracking, support &amp; funding access</div>
+            </div>
+          </div>
+          <div style="width:20px; height:20px; border-radius:50%; background:#34D399; display:flex; align-items:center; justify-content:center; color:#0F2D4A; font-size:11px; font-weight:800;">✓</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(245,158,11,0.2); border-radius:12px; padding:14px 18px; cursor:pointer; display:flex; justify-content:space-between; align-items:center;">
+          <div style="display:flex; align-items:center; gap:14px;">
+            <div style="width:38px; height:38px; background:rgba(245,158,11,0.12); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px;">🤝</div>
+            <div>
+              <div style="color:rgba(255,255,255,0.8); font-size:13px; font-weight:600;">NGO</div>
+              <div style="color:rgba(255,255,255,0.4); font-size:11px; margin-top:2px;">Funding programs &amp; patient matching</div>
+            </div>
+          </div>
+          <div style="width:20px; height:20px; border-radius:50%; border:1.5px solid rgba(255,255,255,0.15);"></div>
+        </div>
+        <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(59,130,246,0.2); border-radius:12px; padding:14px 18px; cursor:pointer; display:flex; justify-content:space-between; align-items:center;">
+          <div style="display:flex; align-items:center; gap:14px;">
+            <div style="width:38px; height:38px; background:rgba(59,130,246,0.12); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px;">🏦</div>
+            <div>
+              <div style="color:rgba(255,255,255,0.8); font-size:13px; font-weight:600;">HMO</div>
+              <div style="color:rgba(255,255,255,0.4); font-size:11px; margin-top:2px;">Longitudinal care management</div>
+            </div>
+          </div>
+          <div style="width:20px; height:20px; border-radius:50%; border:1.5px solid rgba(255,255,255,0.15);"></div>
+        </div>
+        <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(139,92,246,0.2); border-radius:12px; padding:14px 18px; cursor:pointer; display:flex; justify-content:space-between; align-items:center;">
+          <div style="display:flex; align-items:center; gap:14px;">
+            <div style="width:38px; height:38px; background:rgba(139,92,246,0.12); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px;">🔬</div>
+            <div>
+              <div style="color:rgba(255,255,255,0.8); font-size:13px; font-weight:600;">Clinical Researcher</div>
+              <div style="color:rgba(255,255,255,0.4); font-size:11px; margin-top:2px;">Study posting &amp; participant recruitment</div>
+            </div>
+          </div>
+          <div style="width:20px; height:20px; border-radius:50%; border:1.5px solid rgba(255,255,255,0.15);"></div>
+        </div>
+        <!-- CTA -->
+        <div style="background:#34D399; color:#0F2D4A; text-align:center; padding:12px; border-radius:10px; font-size:14px; font-weight:800; margin-top:4px; cursor:pointer;">Continue as Patient →</div>
+      </div>
+      <div style="text-align:center; padding-bottom:14px;">
+        <div style="color:rgba(255,255,255,0.25); font-size:11px;">Already have an account? <span style="color:#34D399;">Sign in</span></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<p class="subtitle" style="margin-top:20px;">
+  <strong>A</strong> — 2×2 grid, users see all four roles at once, each card is self-contained and clickable. Clean, parallel, fast.<br>
+  <strong>B</strong> — Vertical list with radio-select interaction. One clear CTA updates as you select. More guided, clearer affordance, better for users who hesitate.<br>
+  My recommendation: <strong>B</strong> — the confirmation step ("Continue as Patient →") reduces accidental wrong-role sign-ups which are annoying to recover from.
+</p>

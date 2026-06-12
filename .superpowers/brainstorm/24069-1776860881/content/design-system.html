@@ -1,0 +1,96 @@
+<h2>Design System Direction</h2>
+<p class="subtitle">Color tokens, typography, and a key open decision — should user types have distinct accent colors?</p>
+
+<div class="section">
+  <h3>Core Brand Palette</h3>
+  <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 12px;">
+    <div style="text-align: center;">
+      <div style="width: 72px; height: 72px; border-radius: 10px; background: #0A6E52; box-shadow: 0 2px 8px rgba(10,110,82,0.3);"></div>
+      <div style="font-size: 11px; margin-top: 6px; color: #444; font-family: monospace;">Primary<br>#0A6E52</div>
+    </div>
+    <div style="text-align: center;">
+      <div style="width: 72px; height: 72px; border-radius: 10px; background: #0D9268; box-shadow: 0 2px 8px rgba(13,146,104,0.25);"></div>
+      <div style="font-size: 11px; margin-top: 6px; color: #444; font-family: monospace;">Primary-500<br>#0D9268</div>
+    </div>
+    <div style="text-align: center;">
+      <div style="width: 72px; height: 72px; border-radius: 10px; background: #34D399; box-shadow: 0 2px 8px rgba(52,211,153,0.3);"></div>
+      <div style="font-size: 11px; margin-top: 6px; color: #444; font-family: monospace;">Accent<br>#34D399</div>
+    </div>
+    <div style="text-align: center;">
+      <div style="width: 72px; height: 72px; border-radius: 10px; background: #0F2D4A;"></div>
+      <div style="font-size: 11px; margin-top: 6px; color: #444; font-family: monospace;">Deep Navy<br>#0F2D4A</div>
+    </div>
+    <div style="text-align: center;">
+      <div style="width: 72px; height: 72px; border-radius: 10px; background: #F0FAF7; border: 1px solid #C6EEE0;"></div>
+      <div style="font-size: 11px; margin-top: 6px; color: #444; font-family: monospace;">Surface<br>#F0FAF7</div>
+    </div>
+    <div style="text-align: center;">
+      <div style="width: 72px; height: 72px; border-radius: 10px; background: #F8FAFB; border: 1px solid #E2E8F0;"></div>
+      <div style="font-size: 11px; margin-top: 6px; color: #444; font-family: monospace;">Background<br>#F8FAFB</div>
+    </div>
+    <div style="text-align: center;">
+      <div style="width: 72px; height: 72px; border-radius: 10px; background: #EF4444;"></div>
+      <div style="font-size: 11px; margin-top: 6px; color: #444; font-family: monospace;">Error<br>#EF4444</div>
+    </div>
+    <div style="text-align: center;">
+      <div style="width: 72px; height: 72px; border-radius: 10px; background: #F59E0B;"></div>
+      <div style="font-size: 11px; margin-top: 6px; color: #444; font-family: monospace;">Warning<br>#F59E0B</div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>Typography — DM Sans</h3>
+  <div style="background: white; border: 1px solid #E2E8F0; border-radius: 10px; padding: 24px; font-family: 'DM Sans', 'Arial', sans-serif;">
+    <div style="font-size: 36px; font-weight: 700; color: #0F2D4A; letter-spacing: -0.8px; line-height: 1.2; margin-bottom: 8px;">Connecting care. Enabling outcomes.</div>
+    <div style="font-size: 20px; font-weight: 600; color: #0A6E52; margin-bottom: 8px;">Section heading — your health dashboard</div>
+    <div style="font-size: 16px; font-weight: 400; color: #374151; line-height: 1.6; margin-bottom: 8px;">Body text: Lucen Care bridges healthcare access, funding, research, and community support across all your care touchpoints.</div>
+    <div style="font-size: 13px; font-weight: 500; color: #6B7280; letter-spacing: 0.8px; text-transform: uppercase;">Label / meta text</div>
+    <div style="margin-top: 16px; display: flex; gap: 10px; flex-wrap: wrap;">
+      <button style="background: #0A6E52; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit;">Primary Action</button>
+      <button style="background: transparent; color: #0A6E52; border: 2px solid #0A6E52; padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit;">Secondary</button>
+      <button style="background: #34D399; color: #0F2D4A; border: none; padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit;">CTA Accent</button>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>Open Decision: Per-User-Type Accent Colors?</h3>
+  <p style="font-size: 14px; color: #555; margin-bottom: 14px;">Each user type could share the exact same palette (one brand) — or get a subtle accent shift that makes their portal feel tailored to their context. Both are defensible.</p>
+
+  <div class="options">
+    <div class="option" data-choice="unified" onclick="toggleSelect(this)">
+      <div class="letter">A</div>
+      <div class="content">
+        <h3>One Unified Palette</h3>
+        <p>All four user types share teal + navy. Differentiation comes from layout density and content, not color. Stronger brand coherence, simpler design system to maintain.</p>
+      </div>
+    </div>
+    <div class="option" data-choice="accented" onclick="toggleSelect(this)">
+      <div class="letter">B</div>
+      <div class="content">
+        <h3>Shared Core + Role Accents</h3>
+        <p>Core teal/navy brand is constant. Each role gets a secondary accent: Patient (warm teal), NGO (amber), HMO (cool blue), Researcher (violet). Users immediately feel "this portal is mine."</p>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top: 16px; display: flex; gap: 10px; flex-wrap: wrap;">
+    <div style="display: flex; align-items: center; gap: 8px; background: white; border: 1px solid #E2E8F0; border-radius: 8px; padding: 10px 14px;">
+      <div style="width: 16px; height: 16px; border-radius: 50%; background: #34D399;"></div>
+      <span style="font-size: 13px; color: #374151; font-family: 'Arial', sans-serif;">Patient — Warm Teal</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 8px; background: white; border: 1px solid #E2E8F0; border-radius: 8px; padding: 10px 14px;">
+      <div style="width: 16px; height: 16px; border-radius: 50%; background: #F59E0B;"></div>
+      <span style="font-size: 13px; color: #374151; font-family: 'Arial', sans-serif;">NGO — Amber</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 8px; background: white; border: 1px solid #E2E8F0; border-radius: 8px; padding: 10px 14px;">
+      <div style="width: 16px; height: 16px; border-radius: 50%; background: #3B82F6;"></div>
+      <span style="font-size: 13px; color: #374151; font-family: 'Arial', sans-serif;">HMO — Cool Blue</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 8px; background: white; border: 1px solid #E2E8F0; border-radius: 8px; padding: 10px 14px;">
+      <div style="width: 16px; height: 16px; border-radius: 50%; background: #8B5CF6;"></div>
+      <span style="font-size: 13px; color: #374151; font-family: 'Arial', sans-serif;">Researcher — Violet</span>
+    </div>
+  </div>
+</div>

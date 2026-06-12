@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Lucen Care — Illustration Options</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, sans-serif; background: #f0faf8; padding: 40px; }
+    h1 { color: #2A8A7D; font-size: 18px; margin-bottom: 32px; letter-spacing: -0.3px; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 900px; }
+    .card {
+      background: #EAF7F5;
+      border: 1.5px solid rgba(58,176,161,0.22);
+      border-radius: 20px;
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+    .card h2 { color: #2A8A7D; font-size: 15px; font-weight: 700; }
+    .card p { color: #3D6B67; font-size: 12px; text-align: center; line-height: 1.6; max-width: 240px; }
+    svg { display: block; }
+  </style>
+</head>
+<body>
+  <h1>Lucen Care — Illustration Options (right panel)</h1>
+  <div class="grid">
+
+    <!-- A: Connected nodes -->
+    <div class="card">
+      <h2>A — Connected Nodes</h2>
+      <svg width="220" height="180" viewBox="0 0 220 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- connecting lines -->
+        <line x1="110" y1="90" x2="50"  y2="44"  stroke="#3AB0A1" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.5"/>
+        <line x1="110" y1="90" x2="170" y2="44"  stroke="#3AB0A1" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.5"/>
+        <line x1="110" y1="90" x2="50"  y2="136" stroke="#3AB0A1" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.5"/>
+        <line x1="110" y1="90" x2="170" y2="136" stroke="#3AB0A1" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.5"/>
+        <!-- center hub -->
+        <circle cx="110" cy="90" r="22" fill="#3AB0A1" opacity="0.15"/>
+        <circle cx="110" cy="90" r="14" fill="#3AB0A1" opacity="0.35"/>
+        <circle cx="110" cy="90" r="7"  fill="#2A8A7D"/>
+        <!-- satellite nodes -->
+        <circle cx="50"  cy="44"  r="16" fill="#5ECFC0" opacity="0.20"/>
+        <circle cx="50"  cy="44"  r="10" fill="#3AB0A1" opacity="0.55"/>
+        <text x="50"  y="48"  text-anchor="middle" font-size="9" fill="white" font-weight="600">P</text>
+        <circle cx="170" cy="44"  r="16" fill="#5ECFC0" opacity="0.20"/>
+        <circle cx="170" cy="44"  r="10" fill="#3AB0A1" opacity="0.55"/>
+        <text x="170" y="48"  text-anchor="middle" font-size="9" fill="white" font-weight="600">N</text>
+        <circle cx="50"  cy="136" r="16" fill="#5ECFC0" opacity="0.20"/>
+        <circle cx="50"  cy="136" r="10" fill="#3AB0A1" opacity="0.55"/>
+        <text x="50"  y="140" text-anchor="middle" font-size="9" fill="white" font-weight="600">H</text>
+        <circle cx="170" cy="136" r="16" fill="#5ECFC0" opacity="0.20"/>
+        <circle cx="170" cy="136" r="10" fill="#F4A261" opacity="0.70"/>
+        <text x="170" y="140" text-anchor="middle" font-size="9" fill="white" font-weight="600">+</text>
+        <!-- labels -->
+        <text x="50"  y="24"  text-anchor="middle" font-size="8" fill="#2A8A7D" font-weight="600">Patient</text>
+        <text x="170" y="24"  text-anchor="middle" font-size="8" fill="#2A8A7D" font-weight="600">NGO</text>
+        <text x="50"  y="164" text-anchor="middle" font-size="8" fill="#2A8A7D" font-weight="600">HMO</text>
+        <text x="170" y="164" text-anchor="middle" font-size="8" fill="#2A8A7D" font-weight="600">Care</text>
+      </svg>
+      <p>Patient, NGO and HMO nodes radiating from a central hub — represents the platform connecting all stakeholders.</p>
+    </div>
+
+    <!-- B: Heartbeat ECG -->
+    <div class="card">
+      <h2>B — Heartbeat / ECG</h2>
+      <svg width="220" height="180" viewBox="0 0 220 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- subtle grid lines -->
+        <line x1="0" y1="60"  x2="220" y2="60"  stroke="#3AB0A1" stroke-width="0.5" opacity="0.20"/>
+        <line x1="0" y1="90"  x2="220" y2="90"  stroke="#3AB0A1" stroke-width="0.5" opacity="0.20"/>
+        <line x1="0" y1="120" x2="220" y2="120" stroke="#3AB0A1" stroke-width="0.5" opacity="0.20"/>
+        <line x1="55"  y1="0" x2="55"  y2="180" stroke="#3AB0A1" stroke-width="0.5" opacity="0.20"/>
+        <line x1="110" y1="0" x2="110" y2="180" stroke="#3AB0A1" stroke-width="0.5" opacity="0.20"/>
+        <line x1="165" y1="0" x2="165" y2="180" stroke="#3AB0A1" stroke-width="0.5" opacity="0.20"/>
+        <!-- ECG path -->
+        <path d="M0,90 L30,90 L40,90 L50,60 L60,130 L70,30 L80,120 L90,90 L110,90 L120,90 L130,60 L140,130 L150,30 L160,120 L170,90 L220,90"
+              stroke="#3AB0A1" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- glow under line -->
+        <path d="M0,90 L30,90 L40,90 L50,60 L60,130 L70,30 L80,120 L90,90 L110,90 L120,90 L130,60 L140,130 L150,30 L160,120 L170,90 L220,90"
+              stroke="#5ECFC0" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.15"/>
+        <!-- heart icon -->
+        <path d="M104,154 C104,154 95,146 95,140 C95,136.5 97.5,134 101,134 C102.5,134 104,135 104,135 C104,135 105.5,134 107,134 C110.5,134 113,136.5 113,140 C113,146 104,154 104,154Z"
+              fill="#3AB0A1" opacity="0.7"/>
+      </svg>
+      <p>A clean ECG heartbeat line — the universal symbol of health monitoring, keeps it clinical and focused.</p>
+    </div>
+
+    <!-- C: Abstract human figures -->
+    <div class="card">
+      <h2>C — Community Figures</h2>
+      <svg width="220" height="180" viewBox="0 0 220 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- ground line -->
+        <line x1="20" y1="150" x2="200" y2="150" stroke="#3AB0A1" stroke-width="1" opacity="0.25"/>
+        <!-- figure 1 (patient, left) -->
+        <circle cx="65" cy="64" r="16" fill="#3AB0A1" opacity="0.25"/>
+        <circle cx="65" cy="64" r="10" fill="#3AB0A1" opacity="0.55"/>
+        <line x1="65" y1="74" x2="65" y2="118" stroke="#3AB0A1" stroke-width="2.5" stroke-linecap="round" opacity="0.6"/>
+        <line x1="65" y1="88" x2="45" y2="105" stroke="#3AB0A1" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+        <line x1="65" y1="88" x2="85" y2="105" stroke="#3AB0A1" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+        <line x1="65" y1="118" x2="50" y2="148" stroke="#3AB0A1" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+        <line x1="65" y1="118" x2="80" y2="148" stroke="#3AB0A1" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+        <text x="65" y="165" text-anchor="middle" font-size="8" fill="#2A8A7D" font-weight="600">Patient</text>
+        <!-- figure 2 (center, taller = NGO) -->
+        <circle cx="110" cy="54" r="18" fill="#5ECFC0" opacity="0.20"/>
+        <circle cx="110" cy="54" r="12" fill="#2A8A7D" opacity="0.65"/>
+        <line x1="110" y1="66" x2="110" y2="118" stroke="#2A8A7D" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+        <line x1="110" y1="84" x2="88"  y2="100" stroke="#2A8A7D" stroke-width="2.5" stroke-linecap="round" opacity="0.6"/>
+        <line x1="110" y1="84" x2="132" y2="100" stroke="#2A8A7D" stroke-width="2.5" stroke-linecap="round" opacity="0.6"/>
+        <line x1="110" y1="118" x2="95"  y2="148" stroke="#2A8A7D" stroke-width="2.5" stroke-linecap="round" opacity="0.6"/>
+        <line x1="110" y1="118" x2="125" y2="148" stroke="#2A8A7D" stroke-width="2.5" stroke-linecap="round" opacity="0.6"/>
+        <text x="110" y="165" text-anchor="middle" font-size="8" fill="#2A8A7D" font-weight="600">NGO</text>
+        <!-- figure 3 (HMO, right) -->
+        <circle cx="155" cy="64" r="16" fill="#3AB0A1" opacity="0.25"/>
+        <circle cx="155" cy="64" r="10" fill="#3AB0A1" opacity="0.55"/>
+        <line x1="155" y1="74" x2="155" y2="118" stroke="#3AB0A1" stroke-width="2.5" stroke-linecap="round" opacity="0.6"/>
+        <line x1="155" y1="88" x2="135" y2="105" stroke="#3AB0A1" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+        <line x1="155" y1="88" x2="175" y2="105" stroke="#3AB0A1" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+        <line x1="155" y1="118" x2="140" y2="148" stroke="#3AB0A1" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+        <line x1="155" y1="118" x2="170" y2="148" stroke="#3AB0A1" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+        <text x="155" y="165" text-anchor="middle" font-size="8" fill="#2A8A7D" font-weight="600">HMO</text>
+        <!-- connecting arc -->
+        <path d="M65,74 Q110,30 155,74" stroke="#3AB0A1" stroke-width="1.5" fill="none" stroke-dasharray="3 3" opacity="0.4"/>
+      </svg>
+      <p>Three simplified figures — Patient, NGO, HMO — connected above by a soft arc. Community and human-centred.</p>
+    </div>
+
+    <!-- D: Shield with heart -->
+    <div class="card">
+      <h2>D — Shield &amp; Heart</h2>
+      <svg width="220" height="180" viewBox="0 0 220 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- outer ring glow -->
+        <circle cx="110" cy="88" r="62" fill="#3AB0A1" opacity="0.06"/>
+        <circle cx="110" cy="88" r="48" fill="#3AB0A1" opacity="0.08"/>
+        <!-- shield body -->
+        <path d="M110,28 L148,44 L148,92 C148,116 110,134 110,134 C110,134 72,116 72,92 L72,44 Z"
+              fill="#3AB0A1" opacity="0.15"/>
+        <path d="M110,28 L148,44 L148,92 C148,116 110,134 110,134 C110,134 72,116 72,92 L72,44 Z"
+              stroke="#3AB0A1" stroke-width="2" fill="none" opacity="0.6"/>
+        <!-- inner shield line -->
+        <path d="M110,36 L142,50 L142,92 C142,112 110,128 110,128 C110,128 78,112 78,92 L78,50 Z"
+              stroke="#3AB0A1" stroke-width="1" fill="none" opacity="0.3"/>
+        <!-- heart -->
+        <path d="M110,100 C110,100 94,88 94,79 C94,73.5 98,70 103,70 C106,70 108.5,71.5 110,73 C111.5,71.5 114,70 117,70 C122,70 126,73.5 126,79 C126,88 110,100 110,100Z"
+              fill="#2A8A7D" opacity="0.80"/>
+        <!-- cross on shield top -->
+        <line x1="110" y1="44" x2="110" y2="60" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.6"/>
+        <line x1="102" y1="52" x2="118" y2="52" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.6"/>
+        <!-- label -->
+        <text x="110" y="155" text-anchor="middle" font-size="8" fill="#2A8A7D" font-weight="600">Health Protection</text>
+      </svg>
+      <p>A shield containing a heart with a medical cross — represents protection, coverage and care. Strong and trustworthy.</p>
+    </div>
+
+  </div>
+</body>
+</html>

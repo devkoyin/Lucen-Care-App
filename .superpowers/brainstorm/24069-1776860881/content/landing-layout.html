@@ -1,0 +1,139 @@
+<h2>Landing Page Layout</h2>
+<p class="subtitle">Three structural approaches to the hero and user-pathway section — the two most consequential layout decisions on the page.</p>
+
+<div class="cards">
+
+  <!-- Option A -->
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image" style="background: #0F2D4A; padding: 0; overflow: hidden; border-radius: 8px 8px 0 0;">
+      <!-- Nav -->
+      <div style="display:flex; justify-content:space-between; align-items:center; padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.1);">
+        <div style="color: #34D399; font-weight: 800; font-size: 13px; letter-spacing: 0.5px;">LUCEN CARE</div>
+        <div style="display:flex; gap:12px;">
+          <div style="color: rgba(255,255,255,0.6); font-size: 11px;">About</div>
+          <div style="background: #34D399; color: #0F2D4A; padding: 3px 9px; border-radius: 4px; font-size: 11px; font-weight: 700;">Sign In</div>
+        </div>
+      </div>
+      <!-- Hero -->
+      <div style="padding: 20px 16px 10px; text-align: center;">
+        <div style="color: rgba(255,255,255,0.6); font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px;">Healthcare. Connected.</div>
+        <div style="color: white; font-size: 20px; font-weight: 800; line-height: 1.2; letter-spacing: -0.5px; margin-bottom: 6px;">Bridging access, funding,<br>and research — for everyone.</div>
+        <div style="color: rgba(255,255,255,0.65); font-size: 11px; margin-bottom: 16px; line-height: 1.5;">One platform. Four pathways. Your healthcare journey starts here.</div>
+        <!-- Role Cards IN hero -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 10px;">
+          <div style="background: rgba(52,211,153,0.15); border: 1px solid #34D399; border-radius: 8px; padding: 10px 8px; text-align: left;">
+            <div style="font-size: 16px; margin-bottom: 3px;">🏥</div>
+            <div style="color: #34D399; font-size: 10px; font-weight: 700;">PATIENT / CAREGIVER</div>
+            <div style="color: rgba(255,255,255,0.7); font-size: 9px; margin-top: 2px;">Track health, find support, access funding</div>
+          </div>
+          <div style="background: rgba(245,158,11,0.15); border: 1px solid #F59E0B; border-radius: 8px; padding: 10px 8px; text-align: left;">
+            <div style="font-size: 16px; margin-bottom: 3px;">🤝</div>
+            <div style="color: #F59E0B; font-size: 10px; font-weight: 700;">NGO</div>
+            <div style="color: rgba(255,255,255,0.7); font-size: 9px; margin-top: 2px;">Post programs, select patients</div>
+          </div>
+          <div style="background: rgba(59,130,246,0.15); border: 1px solid #3B82F6; border-radius: 8px; padding: 10px 8px; text-align: left;">
+            <div style="font-size: 16px; margin-bottom: 3px;">🏦</div>
+            <div style="color: #3B82F6; font-size: 10px; font-weight: 700;">HMO</div>
+            <div style="color: rgba(255,255,255,0.7); font-size: 9px; margin-top: 2px;">Build longitudinal patient profiles</div>
+          </div>
+          <div style="background: rgba(139,92,246,0.15); border: 1px solid #8B5CF6; border-radius: 8px; padding: 10px 8px; text-align: left;">
+            <div style="font-size: 16px; margin-bottom: 3px;">🔬</div>
+            <div style="color: #8B5CF6; font-size: 10px; font-weight: 700;">RESEARCHER</div>
+            <div style="color: rgba(255,255,255,0.7); font-size: 9px; margin-top: 2px;">Post studies, recruit participants</div>
+          </div>
+        </div>
+        <div style="color: rgba(255,255,255,0.4); font-size: 9px;">↓ Trust signals, platform stats, testimonials below the fold</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — Role Selector In The Hero</h3>
+      <p>User pathways are front-and-centre. Zero ambiguity about who the platform serves. Fast routing — users click their role directly from the hero. Risk: the grid of four competes with the headline for attention on first load.</p>
+    </div>
+  </div>
+
+  <!-- Option B -->
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image" style="background: #F8FAFB; padding: 0; overflow: hidden; border-radius: 8px 8px 0 0; border-bottom: 1px solid #E2E8F0;">
+      <!-- Nav -->
+      <div style="display:flex; justify-content:space-between; align-items:center; padding: 10px 16px; background: white; border-bottom: 1px solid #E2E8F0;">
+        <div style="color: #0A6E52; font-weight: 800; font-size: 13px; letter-spacing: 0.5px;">LUCEN CARE</div>
+        <div style="display:flex; gap:12px; align-items: center;">
+          <div style="color: #6B7280; font-size: 11px;">About</div>
+          <div style="color: #6B7280; font-size: 11px;">Contact</div>
+          <div style="background: #0A6E52; color: white; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 600;">Get Started</div>
+        </div>
+      </div>
+      <!-- Split Hero -->
+      <div style="display: grid; grid-template-columns: 1.1fr 0.9fr; min-height: 130px;">
+        <div style="padding: 20px 16px; background: white;">
+          <div style="color: #0A6E52; font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 8px;">Healthcare Access Platform</div>
+          <div style="color: #0F2D4A; font-size: 18px; font-weight: 800; line-height: 1.2; letter-spacing: -0.4px; margin-bottom: 8px;">Your healthcare journey, connected end to end.</div>
+          <div style="color: #6B7280; font-size: 11px; line-height: 1.6; margin-bottom: 14px;">Funding. Support. Research. Care management. One platform, built for every role in the healthcare ecosystem.</div>
+          <div style="display:flex; gap:8px;">
+            <div style="background: #0A6E52; color: white; padding: 7px 14px; border-radius: 6px; font-size: 11px; font-weight: 700;">Find My Path →</div>
+            <div style="border: 1.5px solid #E2E8F0; color: #374151; padding: 7px 14px; border-radius: 6px; font-size: 11px;">Learn More</div>
+          </div>
+        </div>
+        <div style="background: linear-gradient(135deg, #0A6E52 0%, #0F2D4A 100%); display:flex; align-items:center; justify-content:center; padding: 16px;">
+          <div style="text-align: center;">
+            <div style="color: rgba(255,255,255,0.5); font-size: 9px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;">Serving</div>
+            <div style="display:flex; flex-direction:column; gap:6px;">
+              <div style="color: #34D399; font-size: 10px; font-weight: 700;">Patients &amp; Caregivers</div>
+              <div style="color: #F59E0B; font-size: 10px; font-weight: 700;">NGOs</div>
+              <div style="color: #3B82F6; font-size: 10px; font-weight: 700;">HMOs</div>
+              <div style="color: #8B5CF6; font-size: 10px; font-weight: 700;">Clinical Researchers</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Below fold hint -->
+      <div style="padding: 10px 16px; background: #F8FAFB; border-top: 1px solid #E2E8F0;">
+        <div style="color: #94A3B8; font-size: 9px; text-align: center;">↓ Role detail cards, trust signals, testimonials, CTA</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — Split Hero, Role Detail Below</h3>
+      <p>Strong editorial hero with a single focused CTA ("Find My Path"). Role detail cards appear as the user scrolls — narrative builds before asking them to choose. More premium feel, better for first impressions and presentations.</p>
+    </div>
+  </div>
+
+  <!-- Option C -->
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image" style="background: #0F2D4A; padding: 0; overflow: hidden; border-radius: 8px 8px 0 0;">
+      <!-- Nav -->
+      <div style="display:flex; justify-content:space-between; align-items:center; padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.08);">
+        <div style="color: #34D399; font-weight: 800; font-size: 13px;">LUCEN CARE</div>
+        <div style="border: 1px solid rgba(255,255,255,0.2); color: white; padding: 3px 10px; border-radius: 20px; font-size: 11px;">Sign In</div>
+      </div>
+      <!-- Full bleed hero -->
+      <div style="padding: 24px 16px 16px; text-align:center;">
+        <div style="display: inline-block; background: rgba(52,211,153,0.15); border: 1px solid rgba(52,211,153,0.4); color: #34D399; padding: 4px 12px; border-radius: 20px; font-size: 10px; font-weight: 600; margin-bottom: 12px; letter-spacing: 0.5px;">Now in Beta</div>
+        <div style="color: white; font-size: 22px; font-weight: 800; line-height: 1.15; letter-spacing: -0.6px; margin-bottom: 10px;">The platform that connects every corner of healthcare.</div>
+        <div style="color: rgba(255,255,255,0.6); font-size: 11px; line-height: 1.6; margin-bottom: 16px; max-width: 280px; margin-left: auto; margin-right: auto;">Built for patients, caregivers, NGOs, HMOs, and clinical researchers — one ecosystem, four tailored experiences.</div>
+        <div style="background: #34D399; color: #0F2D4A; padding: 10px 24px; border-radius: 8px; font-size: 13px; font-weight: 800; display: inline-block; margin-bottom: 16px;">Get Started — It's Free</div>
+      </div>
+      <!-- Floating role cards overlapping footer -->
+      <div style="display: flex; gap: 6px; padding: 0 12px 12px; justify-content: center;">
+        <div style="background: rgba(255,255,255,0.06); border: 1px solid rgba(52,211,153,0.3); border-radius: 8px; padding: 8px 6px; text-align:center; flex: 1;">
+          <div style="color: #34D399; font-size: 9px; font-weight: 700;">Patient</div>
+        </div>
+        <div style="background: rgba(255,255,255,0.06); border: 1px solid rgba(245,158,11,0.3); border-radius: 8px; padding: 8px 6px; text-align:center; flex: 1;">
+          <div style="color: #F59E0B; font-size: 9px; font-weight: 700;">NGO</div>
+        </div>
+        <div style="background: rgba(255,255,255,0.06); border: 1px solid rgba(59,130,246,0.3); border-radius: 8px; padding: 8px 6px; text-align:center; flex: 1;">
+          <div style="color: #3B82F6; font-size: 9px; font-weight: 700;">HMO</div>
+        </div>
+        <div style="background: rgba(255,255,255,0.06); border: 1px solid rgba(139,92,246,0.3); border-radius: 8px; padding: 8px 6px; text-align:center; flex: 1;">
+          <div style="color: #8B5CF6; font-size: 9px; font-weight: 700;">Researcher</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C — Full-Bleed Dark Hero, Floating Role Strip</h3>
+      <p>Bold, tech-forward, app-like. Single powerful CTA above the fold, role strip as a visual anchor below. Very strong on a presentation screen. Risk: "Get Started" without role context may confuse first-time visitors who don't know which path is theirs.</p>
+    </div>
+  </div>
+
+</div>
+
+<p class="subtitle" style="margin-top: 20px;">My recommendation: B. The split hero earns attention before asking users to choose — and it photographs well in demos. But A is faster for return users who already know their role. Click your preference or tell me what to adjust.</p>

@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Landing Page Directions</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', 'Inter', system-ui, sans-serif; background: #F4F5F8; color: #12122A; padding: 32px 24px 60px; }
+
+  h1 { font-size: 20px; font-weight: 700; color: #12122A; margin-bottom: 6px; }
+  .subtitle { font-size: 13px; color: #6B7280; margin-bottom: 32px; }
+
+  .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+
+  .card {
+    background: #fff;
+    border: 2px solid #E5E7EB;
+    border-radius: 16px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+  }
+  .card:hover { border-color: #3535A8; box-shadow: 0 8px 32px rgba(53,53,168,0.12); transform: translateY(-3px); }
+  .card.selected { border-color: #3535A8; box-shadow: 0 8px 32px rgba(53,53,168,0.18); }
+  .card.selected .card-label { background: #3535A8; color: #fff; }
+
+  .card-preview { height: 340px; overflow: hidden; position: relative; }
+  .card-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase;
+    padding: 4px 10px; background: #F4F5F8; color: #3535A8; border-radius: 4px;
+    position: absolute; top: 12px; left: 12px; z-index: 10;
+    transition: background 0.2s, color 0.2s;
+  }
+  .card-body { padding: 18px 20px 20px; border-top: 1px solid #F0F0F5; }
+  .card-body h3 { font-size: 15px; font-weight: 700; color: #12122A; margin-bottom: 4px; }
+  .card-body p { font-size: 12px; color: #6B7280; line-height: 1.5; }
+
+  /* ── OPTION A: Clean White ── */
+  .preview-a {
+    background: #fff;
+    padding: 20px 18px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .a-nav { display: flex; justify-content: space-between; align-items: center; }
+  .a-nav-logo { font-size: 11px; font-weight: 800; color: #3535A8; letter-spacing: 1px; }
+  .a-nav-cta { background: #3535A8; color: #fff; font-size: 9px; font-weight: 700; padding: 4px 10px; border-radius: 5px; }
+  .a-hero { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 10px; padding: 8px 0; }
+  .a-tag { display: inline-flex; align-items: center; gap: 5px; font-size: 9px; font-weight: 600; color: #3535A8; background: rgba(53,53,168,0.07); padding: 3px 8px; border-radius: 20px; width: fit-content; }
+  .a-tag-dot { width: 5px; height: 5px; border-radius: 50%; background: #3AB0A1; }
+  .a-hed { font-size: 26px; font-weight: 800; color: #12122A; line-height: 1.1; letter-spacing: -1px; }
+  .a-hed span { color: #3535A8; }
+  .a-sub { font-size: 10px; color: #6B7280; line-height: 1.6; max-width: 200px; }
+  .a-actions { display: flex; gap: 8px; align-items: center; }
+  .a-btn { background: #3AB0A1; color: #fff; font-size: 9px; font-weight: 700; padding: 6px 14px; border-radius: 6px; }
+  .a-link { font-size: 9px; color: #6B7280; text-decoration: underline; }
+  .a-roles { display: grid; grid-template-columns: repeat(4,1fr); gap: 6px; margin-top: 4px; }
+  .a-role { background: #F4F5F8; border: 1px solid #E8E8F5; border-radius: 8px; padding: 8px 6px; text-align: center; }
+  .a-role-icon { font-size: 14px; display: block; margin-bottom: 3px; }
+  .a-role-label { font-size: 8px; font-weight: 600; color: #4A4A7A; }
+
+  /* ── OPTION B: Soft Gradient ── */
+  .preview-b {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  .b-nav { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; background: #fff; border-bottom: 1px solid rgba(53,53,168,0.1); }
+  .b-nav-logo { font-size: 11px; font-weight: 800; color: #3535A8; letter-spacing: 1px; }
+  .b-nav-cta { background: #3535A8; color: #fff; font-size: 9px; font-weight: 700; padding: 4px 10px; border-radius: 5px; }
+  .b-hero {
+    flex: 1;
+    background: linear-gradient(135deg, #f0f1ff 0%, #e8fff9 50%, #f8f4ff 100%);
+    padding: 28px 20px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 12px;
+    position: relative;
+    overflow: hidden;
+  }
+  .b-bg-blob-1 { position: absolute; width: 200px; height: 200px; background: radial-gradient(circle, rgba(53,53,168,0.08), transparent 70%); top: -60px; left: -60px; border-radius: 50%; }
+  .b-bg-blob-2 { position: absolute; width: 160px; height: 160px; background: radial-gradient(circle, rgba(58,176,161,0.1), transparent 70%); bottom: -40px; right: -40px; border-radius: 50%; }
+  .b-tag { font-size: 9px; font-weight: 600; color: #3535A8; background: rgba(53,53,168,0.08); padding: 3px 10px; border-radius: 20px; position: relative; z-index: 1; }
+  .b-hed { font-size: 22px; font-weight: 800; color: #12122A; line-height: 1.15; letter-spacing: -0.8px; position: relative; z-index: 1; }
+  .b-hed .accent { background: linear-gradient(120deg, #3535A8, #3AB0A1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .b-sub { font-size: 10px; color: #4A4A7A; max-width: 220px; line-height: 1.6; position: relative; z-index: 1; }
+  .b-actions { display: flex; gap: 8px; align-items: center; position: relative; z-index: 1; }
+  .b-btn-primary { background: #3535A8; color: #fff; font-size: 9px; font-weight: 700; padding: 7px 16px; border-radius: 6px; box-shadow: 0 4px 12px rgba(53,53,168,0.25); }
+  .b-btn-sec { color: #3535A8; font-size: 9px; font-weight: 600; border: 1.5px solid rgba(53,53,168,0.25); padding: 6px 12px; border-radius: 6px; }
+  .b-cards { display: grid; grid-template-columns: repeat(4,1fr); gap: 6px; padding: 14px 16px; background: #fff; }
+  .b-card { background: #F8F8FF; border: 1px solid rgba(53,53,168,0.08); border-radius: 8px; padding: 10px 8px; text-align: center; }
+  .b-card-icon { font-size: 16px; display: block; margin-bottom: 4px; }
+  .b-card-label { font-size: 8px; font-weight: 700; color: #3535A8; display: block; margin-bottom: 2px; }
+  .b-card-desc { font-size: 7px; color: #8A8AAF; line-height: 1.4; }
+
+  /* ── OPTION C: Split Panel ── */
+  .preview-c {
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .c-left {
+    background: #3535A8;
+    padding: 20px 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .c-logo { font-size: 10px; font-weight: 800; color: rgba(255,255,255,0.9); letter-spacing: 1px; }
+  .c-hed { font-size: 18px; font-weight: 800; color: #fff; line-height: 1.2; letter-spacing: -0.5px; }
+  .c-hed .teal { color: #3AB0A1; }
+  .c-sub { font-size: 9px; color: rgba(255,255,255,0.6); line-height: 1.6; }
+  .c-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .c-stat { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; padding: 8px; }
+  .c-stat-n { font-size: 14px; font-weight: 800; color: #3AB0A1; display: block; }
+  .c-stat-l { font-size: 8px; color: rgba(255,255,255,0.45); }
+  .c-right {
+    background: #fff;
+    padding: 20px 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+  }
+  .c-tag { font-size: 8px; font-weight: 700; color: #3AB0A1; text-transform: uppercase; letter-spacing: 0.8px; }
+  .c-cta-hed { font-size: 14px; font-weight: 800; color: #12122A; line-height: 1.3; }
+  .c-roles { display: flex; flex-direction: column; gap: 5px; }
+  .c-role-btn { display: flex; align-items: center; gap: 8px; padding: 7px 10px; border: 1.5px solid rgba(53,53,168,0.12); border-radius: 8px; background: #F8F8FF; }
+  .c-role-btn-icon { font-size: 12px; }
+  .c-role-btn-label { font-size: 9px; font-weight: 600; color: #12122A; flex: 1; }
+  .c-role-btn-arrow { font-size: 9px; color: #3535A8; }
+  .c-role-btn.active { border-color: #3535A8; background: rgba(53,53,168,0.06); }
+  .c-btn { background: #3535A8; color: #fff; font-size: 9px; font-weight: 700; padding: 8px 14px; border-radius: 6px; text-align: center; margin-top: 4px; }
+
+  .selected-bar {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: #3535A8; color: #fff;
+    padding: 14px 24px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+    transform: translateY(100%);
+    transition: transform 0.3s;
+    z-index: 100;
+  }
+  .selected-bar.visible { transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<h1>Landing page — pick a direction</h1>
+<p class="subtitle">Three different approaches. Click to select. Let me know in the chat when you've decided.</p>
+
+<div class="cards">
+
+  <!-- OPTION A -->
+  <div class="card" data-choice="a" onclick="pick(this)">
+    <div class="card-preview">
+      <span class="card-label">A</span>
+      <div class="preview-a">
+        <div class="a-nav">
+          <span class="a-nav-logo">LUCEN CARE</span>
+          <span class="a-nav-cta">Get started →</span>
+        </div>
+        <div class="a-hero">
+          <div class="a-tag"><span class="a-tag-dot"></span> Healthcare Platform</div>
+          <div class="a-hed">The platform<br>for <span>every voice</span><br>in healthcare.</div>
+          <p class="a-sub">Patients, NGOs, HMOs, and researchers — on one unified platform.</p>
+          <div class="a-actions">
+            <span class="a-btn">Get started free →</span>
+            <span class="a-link">See how it works</span>
+          </div>
+          <div class="a-roles">
+            <div class="a-role"><span class="a-role-icon">🏥</span><span class="a-role-label">Patient</span></div>
+            <div class="a-role"><span class="a-role-icon">🤝</span><span class="a-role-label">NGO</span></div>
+            <div class="a-role"><span class="a-role-icon">🏦</span><span class="a-role-label">HMO</span></div>
+            <div class="a-role"><span class="a-role-icon">🔬</span><span class="a-role-label">Research</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Clean White</h3>
+      <p>Bright, clinical, trustworthy. Full white background with bold indigo type. Feels like Stripe or Linear — premium SaaS.</p>
+    </div>
+  </div>
+
+  <!-- OPTION B -->
+  <div class="card" data-choice="b" onclick="pick(this)">
+    <div class="card-preview">
+      <span class="card-label">B</span>
+      <div class="preview-b">
+        <div class="b-nav">
+          <span class="b-nav-logo">LUCEN CARE</span>
+          <span class="b-nav-cta">Get started →</span>
+        </div>
+        <div class="b-hero">
+          <div class="b-bg-blob-1"></div>
+          <div class="b-bg-blob-2"></div>
+          <span class="b-tag">✦ Healthcare Access Platform</span>
+          <div class="b-hed">The platform that<br><span class="accent">connects every voice</span><br>in healthcare.</div>
+          <p class="b-sub">Patients, NGOs, HMOs, and researchers — all on one unified platform.</p>
+          <div class="b-actions">
+            <span class="b-btn-primary">Get started free →</span>
+            <span class="b-btn-sec">Learn more</span>
+          </div>
+        </div>
+        <div class="b-cards">
+          <div class="b-card"><span class="b-card-icon">🏥</span><span class="b-card-label">Patient</span><span class="b-card-desc">Track health & funding</span></div>
+          <div class="b-card"><span class="b-card-icon">🤝</span><span class="b-card-label">NGO</span><span class="b-card-desc">Post programs</span></div>
+          <div class="b-card"><span class="b-card-icon">🏦</span><span class="b-card-label">HMO</span><span class="b-card-desc">Care profiles</span></div>
+          <div class="b-card"><span class="b-card-icon">🔬</span><span class="b-card-label">Research</span><span class="b-card-desc">Recruit participants</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Soft Gradient Hero</h3>
+      <p>Gentle indigo-to-teal pastel gradient on white. Light and approachable — professional without being heavy or dark.</p>
+    </div>
+  </div>
+
+  <!-- OPTION C -->
+  <div class="card" data-choice="c" onclick="pick(this)">
+    <div class="card-preview">
+      <span class="card-label">C</span>
+      <div class="preview-c">
+        <div class="c-left">
+          <div>
+            <div class="c-logo">LUCEN CARE</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div class="c-hed">One platform.<br><span class="teal">Every voice</span><br>in healthcare.</div>
+            <p class="c-sub">Connecting patients, NGOs, HMOs and researchers for real-world outcomes.</p>
+          </div>
+          <div class="c-stats">
+            <div class="c-stat"><span class="c-stat-n">2,400+</span><span class="c-stat-l">Patients</span></div>
+            <div class="c-stat"><span class="c-stat-n">340+</span><span class="c-stat-l">Programs</span></div>
+            <div class="c-stat"><span class="c-stat-n">18k+</span><span class="c-stat-l">HMO Profiles</span></div>
+            <div class="c-stat"><span class="c-stat-n">62</span><span class="c-stat-l">Studies</span></div>
+          </div>
+        </div>
+        <div class="c-right">
+          <span class="c-tag">Get started as</span>
+          <div class="c-cta-hed">Who are you<br>on the platform?</div>
+          <div class="c-roles">
+            <div class="c-role-btn active"><span class="c-role-btn-icon">🏥</span><span class="c-role-btn-label">Patient & Caregiver</span><span class="c-role-btn-arrow">→</span></div>
+            <div class="c-role-btn"><span class="c-role-btn-icon">🤝</span><span class="c-role-btn-label">NGO</span><span class="c-role-btn-arrow">→</span></div>
+            <div class="c-role-btn"><span class="c-role-btn-icon">🏦</span><span class="c-role-btn-label">HMO</span><span class="c-role-btn-arrow">→</span></div>
+            <div class="c-role-btn"><span class="c-role-btn-icon">🔬</span><span class="c-role-btn-label">Researcher</span><span class="c-role-btn-arrow">→</span></div>
+          </div>
+          <div class="c-btn">Continue →</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Split Panel</h3>
+      <p>Indigo brand panel on the left, white role-selector on the right. The landing page IS the entry point — no scrolling needed.</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="selected-bar" id="bar">✓ Selected — let me know in the chat</div>
+
+<script>
+  function pick(el) {
+    document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    document.getElementById('bar').classList.add('visible');
+    const choice = el.dataset.choice;
+    const label = el.querySelector('h3').textContent;
+    if (window.recordEvent) recordEvent({ type: 'click', choice, text: label });
+  }
+</script>
+
+</body>
+</html>

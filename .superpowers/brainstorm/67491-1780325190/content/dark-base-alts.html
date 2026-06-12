@@ -1,0 +1,258 @@
+<h2>Replace the dark teal — which base feels right?</h2>
+<p class="subtitle">The hero background (#091F1D) and sidebar (#0C3D3A) are the main dark-teal offenders. Here are 4 alternatives. Click to select.</p>
+
+<style>
+* { box-sizing: border-box; }
+.grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 24px; }
+.alt-card { border-radius: 14px; overflow: hidden; cursor: pointer; border: 2px solid transparent; transition: border-color .2s, transform .15s; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,.07); }
+.alt-card:hover { transform: translateY(-3px); }
+.alt-card.selected { border-color: #6366f1; }
+
+/* mini app mockup */
+.mini-app { display: flex; height: 180px; }
+.mini-sb { width: 56px; display: flex; flex-direction: column; padding: 10px 6px; gap: 5px; flex-shrink: 0; }
+.mini-sb-brand { height: 8px; border-radius: 3px; background: rgba(255,255,255,.6); width: 70%; margin-bottom: 6px; }
+.mini-sb-item { height: 6px; border-radius: 3px; background: rgba(255,255,255,.18); }
+.mini-sb-item-active { height: 6px; border-radius: 3px; }
+.mini-main { flex: 1; padding: 10px 10px; display: flex; flex-direction: column; gap: 6px; }
+.mini-topbar { height: 10px; border-radius: 4px; width: 40%; margin-bottom: 4px; }
+.mini-card-row { display: flex; gap: 5px; }
+.mini-card { flex: 1; border-radius: 6px; padding: 6px; display: flex; flex-direction: column; gap: 3px; }
+.mini-card-line { height: 4px; border-radius: 2px; background: rgba(0,0,0,.08); }
+.mini-card-line-2 { height: 4px; border-radius: 2px; background: rgba(0,0,0,.05); width: 65%; }
+.mini-badge { height: 6px; border-radius: 3px; width: 40%; }
+
+/* hero mini */
+.mini-hero-strip { height: 64px; display: flex; align-items: center; padding: 0 12px; gap: 12px; }
+.mini-hero-text { display: flex; flex-direction: column; gap: 5px; flex: 1; }
+.mini-hero-h1 { height: 9px; border-radius: 3px; width: 75%; background: rgba(255,255,255,.85); }
+.mini-hero-h2 { height: 9px; border-radius: 3px; width: 55%; background: rgba(255,255,255,.85); }
+.mini-hero-sub { height: 6px; border-radius: 2px; width: 80%; background: rgba(255,255,255,.35); }
+.mini-hero-btn { height: 20px; border-radius: 4px; width: 60px; flex-shrink: 0; font-size: 8px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+
+.alt-meta { padding: 12px 14px 14px; }
+.alt-meta h3 { font-size: 13px; font-weight: 700; color: #0f172a; margin: 0 0 4px; }
+.alt-meta p { font-size: 11px; color: #64748b; margin: 0; line-height: 1.4; }
+.swatch-row { display: flex; gap: 4px; margin-bottom: 10px; }
+.sw2 { height: 8px; flex: 1; border-radius: 2px; }
+
+/* ── A: Slate Navy ── */
+.a-sb    { background: #0F172A; }
+.a-main  { background: #F8FAFC; }
+.a-brand { background: rgba(45,212,191,.8); }
+.a-act   { background: #2DD4BF; }
+.a-tb    { background: #0D9488; opacity: .6; }
+.a-card  { background: #fff; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+.a-badge { background: rgba(13,148,136,.15); }
+.a-hero  { background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%); }
+.a-btn   { background: #2DD4BF; color: #0F172A; }
+
+/* ── B: Charcoal ── */
+.b-sb    { background: #111318; }
+.b-main  { background: #F8FAFC; }
+.b-brand { background: rgba(45,212,191,.8); }
+.b-act   { background: #2DD4BF; }
+.b-tb    { background: #0D9488; opacity: .6; }
+.b-card  { background: #fff; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+.b-badge { background: rgba(13,148,136,.15); }
+.b-hero  { background: #111318; }
+.b-btn   { background: #2DD4BF; color: #111318; }
+
+/* ── C: Deep Violet-Black ── */
+.c-sb    { background: #13111C; }
+.c-main  { background: #F8FAFC; }
+.c-brand { background: rgba(167,139,250,.8); }
+.c-act   { background: #A78BFA; }
+.c-tb    { background: #7C3AED; opacity: .6; }
+.c-card  { background: #fff; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+.c-badge { background: rgba(124,58,237,.15); }
+.c-hero  { background: linear-gradient(135deg, #0D0B14 0%, #1A1530 100%); }
+.c-btn   { background: #A78BFA; color: #0D0B14; }
+
+/* ── D: Light sidebar (inverted) ── */
+.d-sb    { background: #FFFFFF; border-right: 1px solid #E2E8F0; }
+.d-main  { background: #F8FAFC; }
+.d-brand { background: rgba(13,148,136,.7); }
+.d-act   { background: #0D9488; }
+.d-tb    { background: #0D9488; opacity: .5; }
+.d-card  { background: #fff; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+.d-badge { background: rgba(13,148,136,.12); }
+.d-hero  { background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%); }
+.d-btn   { background: #0D9488; color: #fff; }
+</style>
+
+<div class="grid4">
+
+  <!-- A: Slate Navy -->
+  <div class="alt-card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="swatch-row" style="height:8px;margin:0;">
+      <div style="background:#0F172A;flex:2;height:8px;"></div>
+      <div style="background:#1E293B;flex:1;height:8px;"></div>
+      <div style="background:#0D9488;flex:1;height:8px;"></div>
+      <div style="background:#2DD4BF;flex:1;height:8px;"></div>
+      <div style="background:#F8FAFC;flex:2;height:8px;"></div>
+    </div>
+    <div class="mini-hero-strip a-hero">
+      <div class="mini-hero-text">
+        <div class="mini-hero-h1"></div>
+        <div class="mini-hero-h2"></div>
+        <div class="mini-hero-sub"></div>
+      </div>
+      <div class="mini-hero-btn a-btn">Go →</div>
+    </div>
+    <div class="mini-app">
+      <div class="mini-sb a-sb">
+        <div class="mini-sb-brand a-brand"></div>
+        <div class="mini-sb-item-active a-act"></div>
+        <div class="mini-sb-item"></div>
+        <div class="mini-sb-item"></div>
+        <div class="mini-sb-item"></div>
+      </div>
+      <div class="mini-main a-main">
+        <div class="mini-topbar a-tb"></div>
+        <div class="mini-card-row">
+          <div class="mini-card a-card"><div class="mini-badge a-badge" style="height:6px;border-radius:2px;"></div><div class="mini-card-line"></div><div class="mini-card-line-2"></div></div>
+          <div class="mini-card a-card"><div class="mini-badge a-badge" style="height:6px;border-radius:2px;"></div><div class="mini-card-line"></div><div class="mini-card-line-2"></div></div>
+        </div>
+        <div class="mini-card-row">
+          <div class="mini-card a-card"><div class="mini-card-line"></div><div class="mini-card-line-2"></div></div>
+          <div class="mini-card a-card"><div class="mini-card-line"></div><div class="mini-card-line-2"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="alt-meta">
+      <h3>A — Slate Navy</h3>
+      <p>Replace dark teal with deep blue-slate (#0F172A). Teal stays as the accent/brand. Clean, premium, very Tailwind/Linear in feel.</p>
+    </div>
+  </div>
+
+  <!-- B: Pure Charcoal -->
+  <div class="alt-card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="swatch-row" style="height:8px;margin:0;">
+      <div style="background:#111318;flex:2;height:8px;"></div>
+      <div style="background:#1C1E24;flex:1;height:8px;"></div>
+      <div style="background:#0D9488;flex:1;height:8px;"></div>
+      <div style="background:#2DD4BF;flex:1;height:8px;"></div>
+      <div style="background:#F8FAFC;flex:2;height:8px;"></div>
+    </div>
+    <div class="mini-hero-strip b-hero">
+      <div class="mini-hero-text">
+        <div class="mini-hero-h1"></div>
+        <div class="mini-hero-h2"></div>
+        <div class="mini-hero-sub"></div>
+      </div>
+      <div class="mini-hero-btn b-btn">Go →</div>
+    </div>
+    <div class="mini-app">
+      <div class="mini-sb b-sb">
+        <div class="mini-sb-brand b-brand"></div>
+        <div class="mini-sb-item-active b-act"></div>
+        <div class="mini-sb-item"></div>
+        <div class="mini-sb-item"></div>
+        <div class="mini-sb-item"></div>
+      </div>
+      <div class="mini-main b-main">
+        <div class="mini-topbar b-tb"></div>
+        <div class="mini-card-row">
+          <div class="mini-card b-card"><div class="mini-badge b-badge" style="height:6px;border-radius:2px;"></div><div class="mini-card-line"></div><div class="mini-card-line-2"></div></div>
+          <div class="mini-card b-card"><div class="mini-badge b-badge" style="height:6px;border-radius:2px;"></div><div class="mini-card-line"></div><div class="mini-card-line-2"></div></div>
+        </div>
+        <div class="mini-card-row">
+          <div class="mini-card b-card"><div class="mini-card-line"></div><div class="mini-card-line-2"></div></div>
+          <div class="mini-card b-card"><div class="mini-card-line"></div><div class="mini-card-line-2"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="alt-meta">
+      <h3>B — Pure Charcoal</h3>
+      <p>Near-black neutral (#111318) — no hue at all. Teal pops strongly against it. Very bold and modern. Hero feels like a high-end product page.</p>
+    </div>
+  </div>
+
+  <!-- C: Violet-Black -->
+  <div class="alt-card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="swatch-row" style="height:8px;margin:0;">
+      <div style="background:#0D0B14;flex:2;height:8px;"></div>
+      <div style="background:#1A1530;flex:1;height:8px;"></div>
+      <div style="background:#7C3AED;flex:1;height:8px;"></div>
+      <div style="background:#A78BFA;flex:1;height:8px;"></div>
+      <div style="background:#F8FAFC;flex:2;height:8px;"></div>
+    </div>
+    <div class="mini-hero-strip c-hero">
+      <div class="mini-hero-text">
+        <div class="mini-hero-h1"></div>
+        <div class="mini-hero-h2"></div>
+        <div class="mini-hero-sub"></div>
+      </div>
+      <div class="mini-hero-btn c-btn">Go →</div>
+    </div>
+    <div class="mini-app">
+      <div class="mini-sb c-sb">
+        <div class="mini-sb-brand c-brand"></div>
+        <div class="mini-sb-item-active c-act"></div>
+        <div class="mini-sb-item"></div>
+        <div class="mini-sb-item"></div>
+        <div class="mini-sb-item"></div>
+      </div>
+      <div class="mini-main c-main">
+        <div class="mini-topbar c-tb"></div>
+        <div class="mini-card-row">
+          <div class="mini-card c-card"><div class="mini-badge c-badge" style="height:6px;border-radius:2px;"></div><div class="mini-card-line"></div><div class="mini-card-line-2"></div></div>
+          <div class="mini-card c-card"><div class="mini-badge c-badge" style="height:6px;border-radius:2px;"></div><div class="mini-card-line"></div><div class="mini-card-line-2"></div></div>
+        </div>
+        <div class="mini-card-row">
+          <div class="mini-card c-card"><div class="mini-card-line"></div><div class="mini-card-line-2"></div></div>
+          <div class="mini-card c-card"><div class="mini-card-line"></div><div class="mini-card-line-2"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="alt-meta">
+      <h3>C — Deep Violet-Black</h3>
+      <p>Dark base with a subtle violet hue (#0D0B14). Brand shifts to violet-purple. More luxurious, cutting-edge health-tech. Very different feel.</p>
+    </div>
+  </div>
+
+  <!-- D: Light sidebar -->
+  <div class="alt-card" data-choice="d" onclick="toggleSelect(this)">
+    <div class="swatch-row" style="height:8px;margin:0;">
+      <div style="background:#0F172A;flex:2;height:8px;"></div>
+      <div style="background:#FFFFFF;flex:1;height:8px;border-top:1px solid #e2e8f0;"></div>
+      <div style="background:#0D9488;flex:1;height:8px;"></div>
+      <div style="background:#2DD4BF;flex:1;height:8px;"></div>
+      <div style="background:#F8FAFC;flex:2;height:8px;"></div>
+    </div>
+    <div class="mini-hero-strip d-hero">
+      <div class="mini-hero-text">
+        <div class="mini-hero-h1"></div>
+        <div class="mini-hero-h2"></div>
+        <div class="mini-hero-sub"></div>
+      </div>
+      <div class="mini-hero-btn d-btn">Go →</div>
+    </div>
+    <div class="mini-app">
+      <div class="mini-sb d-sb">
+        <div class="mini-sb-brand d-brand"></div>
+        <div class="mini-sb-item-active d-act" style="border-radius:3px;"></div>
+        <div class="mini-sb-item" style="background:rgba(0,0,0,.07);"></div>
+        <div class="mini-sb-item" style="background:rgba(0,0,0,.07);"></div>
+        <div class="mini-sb-item" style="background:rgba(0,0,0,.07);"></div>
+      </div>
+      <div class="mini-main d-main">
+        <div class="mini-topbar d-tb"></div>
+        <div class="mini-card-row">
+          <div class="mini-card d-card"><div class="mini-badge d-badge" style="height:6px;border-radius:2px;"></div><div class="mini-card-line"></div><div class="mini-card-line-2"></div></div>
+          <div class="mini-card d-card"><div class="mini-badge d-badge" style="height:6px;border-radius:2px;"></div><div class="mini-card-line"></div><div class="mini-card-line-2"></div></div>
+        </div>
+        <div class="mini-card-row">
+          <div class="mini-card d-card"><div class="mini-card-line"></div><div class="mini-card-line-2"></div></div>
+          <div class="mini-card d-card"><div class="mini-card-line"></div><div class="mini-card-line-2"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="alt-meta">
+      <h3>D — Light Sidebar</h3>
+      <p>Ditch the dark sidebar entirely — white with subtle border. Dark hero for the landing page, but the app itself is fully light. Like Notion or Figma.</p>
+    </div>
+  </div>
+
+</div>

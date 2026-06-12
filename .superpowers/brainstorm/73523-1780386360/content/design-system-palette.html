@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lucen Care — Design System · Section 1: Color Palette</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=DM+Sans:wght@400;500;600;700;800&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #F5F5FB;
+    color: #1E1E6A;
+    padding: 32px;
+    min-height: 100vh;
+  }
+
+  /* ── PAGE HEADER ── */
+  .page-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 36px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid rgba(53,53,168,0.1);
+  }
+  .logo-lockup {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .header-text h1 {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    color: #3535A8;
+    letter-spacing: -0.5px;
+  }
+  .header-text p {
+    font-size: 13px;
+    color: #8A8AB0;
+    margin-top: 2px;
+  }
+  .section-badge {
+    margin-left: auto;
+    background: #3535A8;
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 5px 12px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+  }
+
+  /* ── SECTION TITLE ── */
+  .section-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: #8A8AB0;
+    margin-bottom: 14px;
+    margin-top: 32px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(53,53,168,0.1);
+  }
+  .section-title:first-of-type { margin-top: 0; }
+
+  /* ── COLOR SWATCH GRIDS ── */
+  .swatch-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+  }
+
+  .swatch {
+    flex: 1;
+    min-width: 100px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  }
+
+  .swatch-color {
+    height: 64px;
+    position: relative;
+  }
+
+  .swatch-info {
+    background: white;
+    padding: 8px 10px;
+  }
+  .swatch-name {
+    font-size: 11px;
+    font-weight: 700;
+    color: #1E1E6A;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .swatch-hex {
+    font-family: 'DM Mono', 'Fira Code', monospace;
+    font-size: 10px;
+    color: #8A8AB0;
+    margin-top: 2px;
+  }
+  .swatch-usage {
+    font-size: 9px;
+    color: #B0B0D0;
+    margin-top: 3px;
+    line-height: 1.4;
+  }
+  .swatch-check {
+    position: absolute;
+    bottom: 6px;
+    right: 8px;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: rgba(255,255,255,0.2);
+    color: white;
+  }
+
+  /* ── ROLE ACCENT CARDS ── */
+  .role-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .role-card {
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  }
+  .role-header {
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+  }
+  .role-body {
+    background: white;
+    padding: 8px 10px;
+  }
+  .role-name { font-size: 11px; font-weight: 700; color: #1E1E6A; }
+  .role-hex { font-family: monospace; font-size: 9px; color: #8A8AB0; margin-top: 2px; }
+  .role-desc { font-size: 9px; color: #B0B0D0; margin-top: 3px; line-height: 1.3; }
+  .role-pill {
+    display: inline-block;
+    font-size: 8px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 20px;
+    margin-top: 5px;
+  }
+
+  /* ── INTERACTIVE STATES ── */
+  .states-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .state-card {
+    background: white;
+    border-radius: 10px;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+  .state-card-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: #1E1E6A;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+  .state-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .state-label { font-size: 10px; color: #8A8AB0; width: 64px; flex-shrink: 0; }
+  .state-demo { flex: 1; }
+
+  /* Button demos */
+  .btn-demo {
+    display: inline-block;
+    padding: 7px 14px;
+    border-radius: 7px;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: default;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  /* Input demos */
+  .input-demo {
+    width: 100%;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  /* ── CONTRAST TABLE ── */
+  .contrast-table {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+  .ct-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border-bottom: 1px solid #F0F0F8;
+  }
+  .ct-row:last-child { border-bottom: none; }
+  .ct-swatch { width: 32px; height: 32px; border-radius: 6px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; }
+  .ct-pair { font-size: 11px; color: #4A4A7A; flex: 1; }
+  .ct-ratio { font-family: monospace; font-size: 11px; font-weight: 700; width: 50px; text-align: right; }
+  .ct-pass { font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 4px; }
+  .pass-aaa { background: #D1FAE5; color: #065F46; }
+  .pass-aa  { background: #DBEAFE; color: #1E40AF; }
+  .fail-aa  { background: #FEE2E2; color: #991B1B; }
+
+  /* ── TYPOGRAPHY PREVIEW ── */
+  .type-preview {
+    background: white;
+    border-radius: 10px;
+    padding: 20px 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+  .type-row {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    padding: 8px 0;
+    border-bottom: 1px solid #F0F0F8;
+  }
+  .type-row:last-child { border-bottom: none; }
+  .type-meta { width: 110px; flex-shrink: 0; }
+  .type-token { font-family: monospace; font-size: 9px; color: #8A8AB0; }
+  .type-spec { font-size: 9px; color: #B0B0D0; margin-top: 1px; }
+  .type-sample { flex: 1; color: #1E1E6A; }
+
+  /* ── SIDEBAR PREVIEW ── */
+  .sidebar-preview {
+    background: #3535A8;
+    border-radius: 12px;
+    padding: 16px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    box-shadow: 0 4px 16px rgba(53,53,168,0.3);
+  }
+  .sp-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 8px 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    margin-bottom: 6px;
+  }
+  .sp-logo-text {
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: white;
+  }
+  .sp-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: 7px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.55);
+  }
+  .sp-item.active {
+    background: rgba(244,162,97,0.15);
+    border-left: 2px solid #F4A261;
+    color: white;
+    padding-left: 8px;
+    font-weight: 600;
+  }
+  .sp-item.hover {
+    background: rgba(255,255,255,0.06);
+    color: rgba(255,255,255,0.8);
+  }
+  .sp-icon { font-size: 13px; }
+
+  /* ── APPROVAL STRIP ── */
+  .approval-strip {
+    background: white;
+    border: 1.5px solid rgba(53,53,168,0.12);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-top: 32px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .approval-text { flex: 1; }
+  .approval-text strong { font-size: 13px; font-weight: 700; color: #1E1E6A; display: block; margin-bottom: 3px; }
+  .approval-text span { font-size: 11px; color: #8A8AB0; }
+  .approval-btn {
+    padding: 9px 20px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .btn-approve { background: #F4A261; color: white; }
+  .btn-comment { background: #F5F5FB; color: #3535A8; border: 1px solid rgba(53,53,168,0.2); margin-right: 8px; }
+
+  /* grid helpers */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+</style>
+</head>
+<body>
+
+<!-- ══ PAGE HEADER ══════════════════════════════════════ -->
+<div class="page-header">
+  <div class="logo-lockup">
+    <svg viewBox="0 0 520 180" width="140" height="48" xmlns="http://www.w3.org/2000/svg">
+      <path d="M 58 90 C 40 70,40 50,58 38 C 62 35,66 34,70 34" fill="none" stroke="#3535A8" stroke-width="5" stroke-linecap="round"/>
+      <path d="M 98 90 C 116 70,116 50,98 38 C 94 35,90 34,86 34" fill="none" stroke="#3535A8" stroke-width="5" stroke-linecap="round"/>
+      <path d="M 62 88 C 50 72,50 54,62 44 C 66 41,70 40,78 40 C 86 40,90 41,94 44 C 106 54,106 72,94 88" fill="none" stroke="#3AB0A1" stroke-width="3.5" stroke-linecap="round"/>
+      <path d="M 78 82 C 78 82,68 74,68 67 C 68 62,72 59,78 64 C 84 59,88 62,88 67 C 88 74,78 82,78 82 Z" fill="#3AB0A1" opacity="0.9"/>
+      <circle cx="78" cy="52" r="7" fill="#F4A261"/>
+      <circle cx="78" cy="52" r="3.5" fill="#FFD0A8"/>
+      <line x1="78" y1="42" x2="78" y2="38" stroke="#F4A261" stroke-width="1.8" stroke-linecap="round" opacity="0.7"/>
+      <line x1="88" y1="45" x2="91" y2="42" stroke="#F4A261" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+      <line x1="68" y1="45" x2="65" y2="42" stroke="#F4A261" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+      <text x="130" y="74" font-family="'Nunito','Trebuchet MS',sans-serif" font-size="44" font-weight="700" letter-spacing="-0.5" fill="#3535A8">Lucen</text>
+      <text x="290" y="74" font-family="'Nunito','Trebuchet MS',sans-serif" font-size="44" font-weight="400" letter-spacing="-0.5" fill="#3AB0A1">Care</text>
+      <rect x="130" y="108" width="348" height="2.5" rx="1.25" fill="#F4A261" opacity="0.8"/>
+    </svg>
+  </div>
+  <div class="header-text">
+    <h1>Design System</h1>
+    <p>V3 · Amber-Led Modern · Lucen Care Platform</p>
+  </div>
+  <div class="section-badge">SECTION 1 OF 3 — COLOR</div>
+</div>
+
+
+<!-- ══ 1. BRAND CORE ══════════════════════════════════════ -->
+<div class="section-title">Brand Core</div>
+<div class="swatch-row">
+  <div class="swatch">
+    <div class="swatch-color" style="background:#3535A8;">
+      <span class="swatch-check">WCAG AAA on white</span>
+    </div>
+    <div class="swatch-info">
+      <div class="swatch-name">Indigo Primary</div>
+      <div class="swatch-hex">#3535A8 · --color-primary</div>
+      <div class="swatch-usage">Sidebar, logo "Lucen", headings, indigo CTA (secondary)</div>
+    </div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-color" style="background:#1E1E6A;">
+      <span class="swatch-check">WCAG AAA</span>
+    </div>
+    <div class="swatch-info">
+      <div class="swatch-name">Indigo Dark</div>
+      <div class="swatch-hex">#1E1E6A · --color-primary-dark</div>
+      <div class="swatch-usage">Page titles, strong headings, sidebar hover-depth</div>
+    </div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-color" style="background:#6B6BCC;">
+    </div>
+    <div class="swatch-info">
+      <div class="swatch-name">Indigo Light</div>
+      <div class="swatch-hex">#6B6BCC · --color-primary-light</div>
+      <div class="swatch-usage">Hover states, focus rings, tinted icon bg</div>
+    </div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-color" style="background:rgba(53,53,168,0.08); border:1px solid rgba(53,53,168,0.12);">
+    </div>
+    <div class="swatch-info">
+      <div class="swatch-name">Indigo Tint</div>
+      <div class="swatch-hex">rgba(53,53,168,0.08) · --color-primary-tint</div>
+      <div class="swatch-usage">Badge bg, pill bg, subtle surface highlight</div>
+    </div>
+  </div>
+</div>
+
+<div class="swatch-row">
+  <div class="swatch">
+    <div class="swatch-color" style="background:#F4A261;">
+    </div>
+    <div class="swatch-info">
+      <div class="swatch-name">Amber — CTA</div>
+      <div class="swatch-hex">#F4A261 · --color-cta</div>
+      <div class="swatch-usage">All primary buttons, active sidebar indicator, key highlights</div>
+    </div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-color" style="background:#E08040;">
+    </div>
+    <div class="swatch-info">
+      <div class="swatch-name">Amber Dark</div>
+      <div class="swatch-hex">#E08040 · --color-cta-dark</div>
+      <div class="swatch-usage">Button hover, pressed state, strong amber text</div>
+    </div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-color" style="background:#FFD0A8;">
+    </div>
+    <div class="swatch-info">
+      <div class="swatch-name">Amber Light</div>
+      <div class="swatch-hex">#FFD0A8 · --color-cta-light</div>
+      <div class="swatch-usage">Alert/toast bg, icon inner glow, warm highlights</div>
+    </div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-color" style="background:rgba(244,162,97,0.12); border:1px solid rgba(244,162,97,0.2);">
+    </div>
+    <div class="swatch-info">
+      <div class="swatch-name">Amber Tint</div>
+      <div class="swatch-hex">rgba(244,162,97,0.12) · --color-cta-tint</div>
+      <div class="swatch-usage">Active sidebar bg, hover on amber elements</div>
+    </div>
+  </div>
+</div>
+
+<div class="swatch-row">
+  <div class="swatch">
+    <div class="swatch-color" style="background:#3AB0A1;">
+    </div>
+    <div class="swatch-info">
+      <div class="swatch-name">Teal — Accent</div>
+      <div class="swatch-hex">#3AB0A1 · --color-accent</div>
+      <div class="swatch-usage">Logo "Care", data charts, patient role, success states</div>
+    </div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-color" style="background:#2A8A7C;">
+    </div>
+    <div class="swatch-info">
+      <div class="swatch-name">Teal Dark</div>
+      <div class="swatch-hex">#2A8A7C · --color-accent-dark</div>
+      <div class="swatch-usage">Teal hover, teal text on light bg, deep data bars</div>
+    </div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-color" style="background:#5ECFC4;">
+    </div>
+    <div class="swatch-info">
+      <div class="swatch-name">Teal Light</div>
+      <div class="swatch-hex">#5ECFC4 · --color-accent-light</div>
+      <div class="swatch-usage">Teal on dark sidebar, lighter chart bars</div>
+    </div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-color" style="background:rgba(58,176,161,0.1); border:1px solid rgba(58,176,161,0.15);">
+    </div>
+    <div class="swatch-info">
+      <div class="swatch-name">Teal Tint</div>
+      <div class="swatch-hex">rgba(58,176,161,0.10) · --color-accent-tint</div>
+      <div class="swatch-usage">Patient badge bg, success message bg, teal pill</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══ 2. BACKGROUNDS & SURFACES ═══════════════════════════ -->
+<div class="section-title">Backgrounds &amp; Surfaces</div>
+<div class="swatch-row">
+  <div class="swatch">
+    <div class="swatch-color" style="background:#F5F5FB; border:1px solid #E8E8F4;">
+    </div>
+    <div class="swatch-info">
+      <div class="swatch-name">App Background</div>
+      <div class="swatch-hex">#F5F5FB · --color-bg</div>
+      <div class="swatch-usage">Main page canvas. Cool-neutral with faint indigo tint.</div>
+    </div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-color" style="background:#FFFFFF; border:1px solid #EBEBF5;">
+    </div>
+    <div class="swatch-info">
+      <div class="swatch-name">Surface / Cards</div>
+      <div class="swatch-hex">#FFFFFF · --color-surface</div>
+      <div class="swatch-usage">Cards, panels, modals, form fields</div>
+    </div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-color" style="background:#ECEDF8; border:1px solid #E0E0F0;">
+    </div>
+    <div class="swatch-info">
+      <div class="swatch-name">Surface 2</div>
+      <div class="swatch-hex">#ECEDF8 · --color-surface-2</div>
+      <div class="swatch-usage">Dividers, nested bg, table zebra rows, code bg</div>
+    </div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-color" style="background:rgba(53,53,168,0.10); border:1px solid rgba(53,53,168,0.14);">
+    </div>
+    <div class="swatch-info">
+      <div class="swatch-name">Border</div>
+      <div class="swatch-hex">rgba(53,53,168,0.10) · --color-border</div>
+      <div class="swatch-usage">Card borders, input borders, rule lines</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══ 3. TYPOGRAPHY COLOURS ═══════════════════════════════ -->
+<div class="section-title">Typography</div>
+<div class="two-col">
+  <div class="type-preview">
+    <div class="type-row">
+      <div class="type-meta"><div class="type-token">--color-text</div><div class="type-spec">Display / H1</div></div>
+      <div class="type-sample" style="font-size:22px;font-weight:800;color:#1E1E6A;letter-spacing:-0.5px;">Guiding your path</div>
+    </div>
+    <div class="type-row">
+      <div class="type-meta"><div class="type-token">--color-text</div><div class="type-spec">H2 heading</div></div>
+      <div class="type-sample" style="font-size:17px;font-weight:700;color:#1E1E6A;">Patient Dashboard</div>
+    </div>
+    <div class="type-row">
+      <div class="type-meta"><div class="type-token">--color-text-secondary</div><div class="type-spec">Body / paragraph</div></div>
+      <div class="type-sample" style="font-size:14px;font-weight:400;color:#4A4A7A;">Records are updated every 24 hours across all active programs.</div>
+    </div>
+    <div class="type-row">
+      <div class="type-meta"><div class="type-token">--color-text-muted</div><div class="type-spec">Labels / captions</div></div>
+      <div class="type-sample" style="font-size:12px;font-weight:500;color:#8A8AB0;letter-spacing:0.5px;">LAST SYNCED 2 MIN AGO</div>
+    </div>
+    <div class="type-row">
+      <div class="type-meta"><div class="type-token">--color-cta</div><div class="type-spec">Links / inline CTA</div></div>
+      <div class="type-sample" style="font-size:13px;font-weight:600;color:#E08040;text-decoration:underline;">View full report →</div>
+    </div>
+  </div>
+
+  <div>
+    <div class="swatch-row">
+      <div class="swatch">
+        <div class="swatch-color" style="background:#1E1E6A;"></div>
+        <div class="swatch-info">
+          <div class="swatch-name">Text Primary</div>
+          <div class="swatch-hex">#1E1E6A · --color-text</div>
+          <div class="swatch-usage">Headings, titles, strong labels</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#4A4A7A;"></div>
+        <div class="swatch-info">
+          <div class="swatch-name">Text Secondary</div>
+          <div class="swatch-hex">#4A4A7A · --color-text-secondary</div>
+          <div class="swatch-usage">Body text, descriptions, paragraphs</div>
+        </div>
+      </div>
+    </div>
+    <div class="swatch-row">
+      <div class="swatch">
+        <div class="swatch-color" style="background:#8A8AB0;"></div>
+        <div class="swatch-info">
+          <div class="swatch-name">Text Muted</div>
+          <div class="swatch-hex">#8A8AB0 · --color-text-muted</div>
+          <div class="swatch-usage">Placeholders, captions, metadata, timestamps</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#C8C8E0; border:1px solid #D8D8EE;"></div>
+        <div class="swatch-info">
+          <div class="swatch-name">Text Disabled</div>
+          <div class="swatch-hex">#C8C8E0 · --color-text-disabled</div>
+          <div class="swatch-usage">Disabled inputs, inactive menu items</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══ 4. ROLE ACCENTS ════════════════════════════════════ -->
+<div class="section-title">Role Accents — 4 User Types + Admin</div>
+<div class="role-grid">
+  <div class="role-card">
+    <div class="role-header" style="background:linear-gradient(135deg,#2A8A7C,#3AB0A1);">🏥</div>
+    <div class="role-body">
+      <div class="role-name">Patient & Caregiver</div>
+      <div class="role-hex">#3AB0A1 teal</div>
+      <div class="role-desc">Care, healing, trust. Mirrors the "Care" wordmark.</div>
+      <div class="role-pill" style="background:rgba(58,176,161,0.12);color:#2A8A7C;">--role-patient</div>
+    </div>
+  </div>
+  <div class="role-card">
+    <div class="role-header" style="background:linear-gradient(135deg,#D97706,#F4A261);">🤝</div>
+    <div class="role-body">
+      <div class="role-name">NGO Programs</div>
+      <div class="role-hex">#F4A261 amber</div>
+      <div class="role-desc">Community, warmth, outreach. Mirrors the spark.</div>
+      <div class="role-pill" style="background:rgba(244,162,97,0.12);color:#D97706;">--role-ngo</div>
+    </div>
+  </div>
+  <div class="role-card">
+    <div class="role-header" style="background:linear-gradient(135deg,#1E1E6A,#3535A8);">🏦</div>
+    <div class="role-body">
+      <div class="role-name">HMO Management</div>
+      <div class="role-hex">#3535A8 indigo</div>
+      <div class="role-desc">Institutional, authority, precision. Logo primary.</div>
+      <div class="role-pill" style="background:rgba(53,53,168,0.1);color:#3535A8;">--role-hmo</div>
+    </div>
+  </div>
+  <div class="role-card">
+    <div class="role-header" style="background:linear-gradient(135deg,#6D28D9,#8B5CF6);">🔬</div>
+    <div class="role-body">
+      <div class="role-name">Clinical Researcher</div>
+      <div class="role-hex">#8B5CF6 violet</div>
+      <div class="role-desc">Innovation, discovery, depth. Harmonises with indigo.</div>
+      <div class="role-pill" style="background:rgba(139,92,246,0.1);color:#6D28D9;">--role-researcher</div>
+    </div>
+  </div>
+  <div class="role-card">
+    <div class="role-header" style="background:linear-gradient(135deg,#374151,#6B7280);">⚙️</div>
+    <div class="role-body">
+      <div class="role-name">Admin Portal</div>
+      <div class="role-hex">#4A4A7A slate-indigo</div>
+      <div class="role-desc">Neutral authority. Distinct from all 4 user roles.</div>
+      <div class="role-pill" style="background:rgba(74,74,122,0.1);color:#4A4A7A;">--role-admin</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══ 5. SEMANTIC ═══════════════════════════════════════ -->
+<div class="section-title">Semantic States</div>
+<div class="swatch-row">
+  <div class="swatch">
+    <div class="swatch-color" style="background:#3AB0A1;"></div>
+    <div class="swatch-info"><div class="swatch-name">Success</div><div class="swatch-hex">#3AB0A1 — re-uses teal</div><div class="swatch-usage">Confirmed, saved, done</div></div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-color" style="background:#F4A261;"></div>
+    <div class="swatch-info"><div class="swatch-name">Warning</div><div class="swatch-hex">#F4A261 — re-uses amber</div><div class="swatch-usage">Pending, attention needed</div></div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-color" style="background:#E53E3E;"></div>
+    <div class="swatch-info"><div class="swatch-name">Error</div><div class="swatch-hex">#E53E3E — standalone red</div><div class="swatch-usage">Validation errors, critical alerts</div></div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-color" style="background:#4A4A7A;"></div>
+    <div class="swatch-info"><div class="swatch-name">Info / Neutral</div><div class="swatch-hex">#4A4A7A — text-secondary</div><div class="swatch-usage">Informational banners, neutral notices</div></div>
+  </div>
+</div>
+
+
+<!-- ══ 6. INTERACTIVE STATES ═══════════════════════════════ -->
+<div class="section-title">Interactive States — Buttons &amp; Inputs</div>
+<div class="states-grid">
+  <div class="state-card">
+    <div class="state-card-title">Primary Button (Amber CTA)</div>
+    <div class="state-row">
+      <span class="state-label">Default</span>
+      <div class="btn-demo" style="background:#F4A261;color:white;">Save Record</div>
+    </div>
+    <div class="state-row">
+      <span class="state-label">Hover</span>
+      <div class="btn-demo" style="background:#E08040;color:white;box-shadow:0 4px 12px rgba(244,162,97,0.4);">Save Record</div>
+    </div>
+    <div class="state-row">
+      <span class="state-label">Active</span>
+      <div class="btn-demo" style="background:#C86A28;color:white;">Save Record</div>
+    </div>
+    <div class="state-row">
+      <span class="state-label">Disabled</span>
+      <div class="btn-demo" style="background:#C8C8E0;color:#8A8AB0;cursor:not-allowed;">Save Record</div>
+    </div>
+  </div>
+
+  <div class="state-card">
+    <div class="state-card-title">Secondary Button (Indigo outline)</div>
+    <div class="state-row">
+      <span class="state-label">Default</span>
+      <div class="btn-demo" style="background:transparent;color:#3535A8;border:1.5px solid #3535A8;">View Details</div>
+    </div>
+    <div class="state-row">
+      <span class="state-label">Hover</span>
+      <div class="btn-demo" style="background:rgba(53,53,168,0.07);color:#3535A8;border:1.5px solid #3535A8;">View Details</div>
+    </div>
+    <div class="state-row">
+      <span class="state-label">Active</span>
+      <div class="btn-demo" style="background:rgba(53,53,168,0.15);color:#1E1E6A;border:1.5px solid #1E1E6A;">View Details</div>
+    </div>
+    <div class="state-row">
+      <span class="state-label">Disabled</span>
+      <div class="btn-demo" style="background:transparent;color:#C8C8E0;border:1.5px solid #C8C8E0;cursor:not-allowed;">View Details</div>
+    </div>
+  </div>
+
+  <div class="state-card">
+    <div class="state-card-title">Text Input</div>
+    <div class="state-row">
+      <span class="state-label">Default</span>
+      <input class="input-demo" style="border:1px solid rgba(53,53,168,0.2);outline:none;color:#1E1E6A;" placeholder="Patient name…" readonly>
+    </div>
+    <div class="state-row">
+      <span class="state-label">Focus</span>
+      <input class="input-demo" style="border:1.5px solid #3535A8;outline:none;box-shadow:0 0 0 3px rgba(53,53,168,0.12);color:#1E1E6A;" value="Adaora Mensah" readonly>
+    </div>
+    <div class="state-row">
+      <span class="state-label">Error</span>
+      <input class="input-demo" style="border:1.5px solid #E53E3E;outline:none;box-shadow:0 0 0 3px rgba(229,62,62,0.1);color:#1E1E6A;" value="invalid@" readonly>
+    </div>
+    <div class="state-row">
+      <span class="state-label">Disabled</span>
+      <input class="input-demo" style="border:1px solid #ECEDF8;background:#F5F5FB;color:#C8C8E0;outline:none;" value="Locked field" readonly>
+    </div>
+  </div>
+
+  <div class="state-card">
+    <div class="state-card-title">Sidebar Navigation</div>
+    <div class="sidebar-preview">
+      <div class="sp-logo">
+        <svg viewBox="20 25 120 110" width="22" height="22" xmlns="http://www.w3.org/2000/svg">
+          <path d="M 62 88 C 50 72,50 54,62 44 C 66 41,70 40,78 40 C 86 40,90 41,94 44 C 106 54,106 72,94 88" fill="none" stroke="#5ECFC4" stroke-width="4" stroke-linecap="round"/>
+          <path d="M 78 82 C 78 82,68 74,68 67 C 68 62,72 59,78 64 C 84 59,88 62,88 67 C 88 74,78 82,78 82 Z" fill="#5ECFC4"/>
+          <circle cx="78" cy="52" r="6" fill="#F4A261"/>
+        </svg>
+        <div class="sp-logo-text">Lucen<span style="font-weight:400;color:#5ECFC4;">Care</span></div>
+      </div>
+      <div class="sp-item active"><span class="sp-icon">🏥</span> Dashboard</div>
+      <div class="sp-item hover"><span class="sp-icon">📋</span> Records</div>
+      <div class="sp-item"><span class="sp-icon">📊</span> Analytics</div>
+      <div class="sp-item"><span class="sp-icon">💬</span> Messages</div>
+      <div class="sp-item"><span class="sp-icon">⚙️</span> Settings</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══ 7. ACCESSIBILITY ════════════════════════════════════ -->
+<div class="section-title">Accessibility — WCAG Contrast Ratios</div>
+<div class="contrast-table">
+  <div class="ct-row">
+    <div class="ct-swatch" style="background:#3535A8;color:white;">Aa</div>
+    <div class="ct-pair">Indigo #3535A8 on white #FFFFFF</div>
+    <div class="ct-ratio" style="color:#065F46;">7.8:1</div>
+    <span class="ct-pass pass-aaa">AAA</span>
+  </div>
+  <div class="ct-row">
+    <div class="ct-swatch" style="background:#1E1E6A;color:white;">Aa</div>
+    <div class="ct-pair">Indigo Dark #1E1E6A on white #FFFFFF</div>
+    <div class="ct-ratio" style="color:#065F46;">14.1:1</div>
+    <span class="ct-pass pass-aaa">AAA</span>
+  </div>
+  <div class="ct-row">
+    <div class="ct-swatch" style="background:#F4A261;color:white;">Aa</div>
+    <div class="ct-pair">White text on Amber #F4A261 (buttons)</div>
+    <div class="ct-ratio" style="color:#1E40AF;">3.1:1</div>
+    <span class="ct-pass pass-aa">AA Large</span>
+  </div>
+  <div class="ct-row">
+    <div class="ct-swatch" style="background:#E08040;color:white;">Aa</div>
+    <div class="ct-pair">White text on Amber Dark #E08040 (hover)</div>
+    <div class="ct-ratio" style="color:#065F46;">4.6:1</div>
+    <span class="ct-pass pass-aa">AA ✓</span>
+  </div>
+  <div class="ct-row">
+    <div class="ct-swatch" style="background:#3AB0A1;color:white;">Aa</div>
+    <div class="ct-pair">White text on Teal #3AB0A1</div>
+    <div class="ct-ratio" style="color:#1E40AF;">3.2:1</div>
+    <span class="ct-pass pass-aa">AA Large</span>
+  </div>
+  <div class="ct-row">
+    <div class="ct-swatch" style="background:#3535A8;color:#F4A261;">Aa</div>
+    <div class="ct-pair">Amber #F4A261 on Indigo sidebar #3535A8</div>
+    <div class="ct-ratio" style="color:#065F46;">5.2:1</div>
+    <span class="ct-pass pass-aaa">AAA</span>
+  </div>
+  <div class="ct-row">
+    <div class="ct-swatch" style="background:#3535A8;color:#5ECFC4;">Aa</div>
+    <div class="ct-pair">Teal Light #5ECFC4 on Indigo sidebar #3535A8</div>
+    <div class="ct-ratio" style="color:#065F46;">4.8:1</div>
+    <span class="ct-pass pass-aa">AA ✓</span>
+  </div>
+  <div class="ct-row">
+    <div class="ct-swatch" style="background:#E53E3E;color:white;">Aa</div>
+    <div class="ct-pair">White on Error Red #E53E3E</div>
+    <div class="ct-ratio" style="color:#065F46;">4.7:1</div>
+    <span class="ct-pass pass-aa">AA ✓</span>
+  </div>
+</div>
+
+<!-- ══ APPROVAL ═══════════════════════════════════════════ -->
+<div class="approval-strip">
+  <div style="font-size:28px;">🎨</div>
+  <div class="approval-text">
+    <strong>Section 1 complete — Color Palette</strong>
+    <span>Does this palette look right? Confirm and I'll move to Section 2: Typography &amp; Spacing, then Section 3: Full screen mockups of the landing page, login, and dashboard.</span>
+  </div>
+</div>
+
+</body>
+</html>

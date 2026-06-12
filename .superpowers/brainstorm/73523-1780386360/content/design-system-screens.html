@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lucen Care — Design System · Section 3: Screen Mockups</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap');
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: #E8E8F2; color: #1E1E6A; padding: 32px; }
+
+  .page-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 36px; padding-bottom: 20px;
+    border-bottom: 1px solid rgba(53,53,168,0.12);
+  }
+  .page-header h1 { font-size: 20px; font-weight: 800; color: #3535A8; }
+  .page-header p { font-size: 12px; color: #8A8AB0; margin-top: 2px; }
+  .section-badge { background: #3AB0A1; color: white; font-size: 11px; font-weight: 700; padding: 5px 12px; border-radius: 20px; }
+
+  .screen-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase;
+    color: #8A8AB0; margin-bottom: 14px; margin-top: 40px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .screen-label::after { content: ''; flex: 1; height: 1px; background: rgba(53,53,168,0.12); }
+  .screen-label:first-of-type { margin-top: 0; }
+
+  /* Browser chrome wrapper */
+  .browser {
+    border-radius: 14px; overflow: hidden;
+    box-shadow: 0 20px 60px rgba(53,53,168,0.18), 0 4px 16px rgba(53,53,168,0.08);
+    border: 1px solid rgba(53,53,168,0.1);
+  }
+  .browser-bar {
+    background: #2A2A4A; padding: 10px 16px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .browser-dots { display: flex; gap: 6px; }
+  .browser-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .browser-url {
+    flex: 1; background: rgba(255,255,255,0.08); border-radius: 6px;
+    padding: 4px 12px; font-size: 11px; color: rgba(255,255,255,0.5);
+    font-family: monospace; margin: 0 8px;
+  }
+
+  /* ═══════════════════════════════════════════
+     SCREEN 1: LANDING PAGE
+  ═══════════════════════════════════════════ */
+  .landing { background: #F5F5FB; }
+
+  /* Nav */
+  .lp-nav {
+    background: rgba(27,27,90,0.96); backdrop-filter: blur(12px);
+    padding: 14px 48px; display: flex; align-items: center; gap: 32px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .nav-logo { display: flex; align-items: center; gap: 8px; }
+  .nav-logo-text { font-family: 'Nunito',sans-serif; font-size: 17px; font-weight: 700; color: white; }
+  .nav-links { display: flex; gap: 24px; margin-left: auto; }
+  .nav-link { font-size: 13px; color: rgba(255,255,255,0.65); font-weight: 500; }
+  .nav-link.active { color: white; }
+  .nav-actions { display: flex; gap: 10px; margin-left: 24px; }
+  .btn-ghost-nav { padding: 7px 16px; border-radius: 8px; font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.8); border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer; font-family: 'DM Sans',sans-serif; }
+  .btn-cta-nav { padding: 7px 16px; border-radius: 8px; font-size: 12px; font-weight: 700; color: white; background: #3AB0A1; border: none; cursor: pointer; font-family: 'DM Sans',sans-serif; }
+
+  /* Hero */
+  .lp-hero {
+    background: linear-gradient(135deg, #1A1A60 0%, #3535A8 55%, #2A2A8A 100%);
+    padding: 72px 48px 80px; display: flex; gap: 48px; align-items: center;
+    position: relative; overflow: hidden;
+  }
+  .hero-orb-a {
+    position: absolute; width: 400px; height: 400px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(58,176,161,0.15) 0%, transparent 70%);
+    top: -100px; right: 200px; pointer-events: none;
+  }
+  .hero-orb-b {
+    position: absolute; width: 300px; height: 300px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(244,162,97,0.1) 0%, transparent 70%);
+    bottom: -80px; left: 100px; pointer-events: none;
+  }
+  .hero-copy { flex: 1; position: relative; z-index: 1; }
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
+    padding: 5px 12px; border-radius: 20px; margin-bottom: 22px;
+    font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.8); letter-spacing: 0.5px;
+  }
+  .live-dot { width: 7px; height: 7px; border-radius: 50%; background: #3AB0A1; flex-shrink: 0; box-shadow: 0 0 0 2px rgba(58,176,161,0.3); }
+  .hero-h1 {
+    font-family: 'Nunito',sans-serif; font-size: 46px; font-weight: 800;
+    color: white; line-height: 1.08; letter-spacing: -1px; margin-bottom: 18px;
+  }
+  .hero-accent { color: #F4A261; }
+  .hero-sub { font-size: 15px; color: rgba(255,255,255,0.65); line-height: 1.6; margin-bottom: 28px; max-width: 420px; }
+  .hero-actions { display: flex; gap: 12px; margin-bottom: 28px; }
+  .btn-hero-primary {
+    padding: 12px 24px; border-radius: 10px; font-size: 14px; font-weight: 700;
+    color: white; background: #3AB0A1; border: none; cursor: pointer;
+    font-family: 'DM Sans',sans-serif; box-shadow: 0 4px 16px rgba(58,176,161,0.4);
+  }
+  .btn-hero-ghost {
+    padding: 12px 24px; border-radius: 10px; font-size: 14px; font-weight: 600;
+    color: rgba(255,255,255,0.8); background: transparent;
+    border: 1px solid rgba(255,255,255,0.25); cursor: pointer; font-family: 'DM Sans',sans-serif;
+  }
+  .hero-proof { display: flex; align-items: center; gap: 10px; }
+  .proof-avatars { display: flex; }
+  .proof-dot {
+    width: 28px; height: 28px; border-radius: 50%; border: 2px solid #3535A8;
+    margin-right: -8px;
+  }
+  .hero-proof-text { font-size: 12px; color: rgba(255,255,255,0.55); margin-left: 14px; }
+  .hero-proof-text strong { color: rgba(255,255,255,0.9); }
+
+  /* Platform card */
+  .hero-card-wrap { flex-shrink: 0; width: 320px; position: relative; z-index: 1; }
+  .pcard {
+    background: rgba(255,255,255,0.06); backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; padding: 22px;
+  }
+  .pcard-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+  .pcard-label { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.5); letter-spacing: 0.8px; text-transform: uppercase; }
+  .pcard-status { display: flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; color: #3AB0A1; }
+  .pcard-status-dot { width: 6px; height: 6px; border-radius: 50%; background: #3AB0A1; }
+  .pcard-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 18px; }
+  .pcard-stat-n { font-family: 'DM Sans',sans-serif; font-size: 22px; font-weight: 800; color: white; display: block; }
+  .pcard-stat-l { font-size: 10px; color: rgba(255,255,255,0.45); display: block; margin-top: 2px; }
+  .pcard-rule { height: 1px; background: rgba(255,255,255,0.08); margin-bottom: 14px; }
+  .pcard-activity-label { font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.4); letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 12px; }
+  .pcard-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .pcard-row:last-child { margin-bottom: 0; }
+  .pcard-row-icon { font-size: 13px; }
+  .pcard-row-body { flex: 1; }
+  .pcard-row-head { display: flex; justify-content: space-between; margin-bottom: 4px; }
+  .pcard-row-name { font-size: 11px; color: rgba(255,255,255,0.7); }
+  .pcard-row-pct { font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.9); }
+  .pcard-track { height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden; }
+  .pcard-fill { display: block; height: 100%; border-radius: 2px; }
+  .pcard-tags { display: flex; gap: 6px; margin-top: 14px; }
+  .pcard-tag { font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 4px; background: rgba(58,176,161,0.15); color: #5ECFC4; border: 1px solid rgba(58,176,161,0.2); }
+
+  /* Who section */
+  .lp-who { background: #F5F5FB; padding: 64px 48px; }
+  .section-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: #3AB0A1; margin-bottom: 10px; }
+  .section-h2 { font-size: 30px; font-weight: 800; color: #1E1E6A; letter-spacing: -0.5px; margin-bottom: 32px; }
+  .who-list { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; }
+  .who-item {
+    background: white; border-radius: 12px; padding: 20px;
+    border: 1px solid rgba(53,53,168,0.08); display: flex; flex-direction: column; gap: 8px;
+    box-shadow: 0 2px 8px rgba(53,53,168,0.05); cursor: pointer;
+    transition: all 0.2s;
+  }
+  .who-num { font-size: 11px; font-weight: 700; color: #C8C8E0; }
+  .who-icon { font-size: 24px; }
+  .who-label { font-size: 14px; font-weight: 700; color: #1E1E6A; }
+  .who-desc { font-size: 12px; color: #8A8AB0; line-height: 1.5; }
+  .who-arrow { font-size: 14px; color: #3AB0A1; margin-top: auto; }
+  .who-item:nth-child(1) { border-top: 3px solid #3AB0A1; }
+  .who-item:nth-child(2) { border-top: 3px solid #F4A261; }
+  .who-item:nth-child(3) { border-top: 3px solid #3535A8; }
+  .who-item:nth-child(4) { border-top: 3px solid #8B5CF6; }
+
+  /* Features */
+  .lp-features { background: white; padding: 64px 48px; border-top: 1px solid rgba(53,53,168,0.06); }
+  .features-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+  .feat { padding: 20px; border-radius: 10px; background: #F5F5FB; border: 1px solid rgba(53,53,168,0.06); }
+  .feat-icon { font-size: 22px; display: block; margin-bottom: 10px; }
+  .feat-title { font-size: 14px; font-weight: 700; color: #1E1E6A; margin-bottom: 6px; display: block; }
+  .feat-desc { font-size: 12px; color: #8A8AB0; line-height: 1.5; display: block; }
+
+  /* ═══════════════════════════════════════════
+     SCREEN 2: LOGIN
+  ═══════════════════════════════════════════ */
+  .login-screen { display: flex; min-height: 560px; }
+  .login-left {
+    width: 44%; background: linear-gradient(160deg, #1A1A60 0%, #3535A8 100%);
+    padding: 48px 40px; display: flex; flex-direction: column; justify-content: space-between;
+    position: relative; overflow: hidden;
+  }
+  .ll-orb {
+    position: absolute; width: 280px; height: 280px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(58,176,161,0.18) 0%, transparent 70%);
+    bottom: -60px; left: -60px;
+  }
+  .ll-orb2 {
+    position: absolute; width: 200px; height: 200px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(244,162,97,0.12) 0%, transparent 70%);
+    top: 60px; right: -40px;
+  }
+  .ll-logo { position: relative; z-index: 1; }
+  .ll-tagline { position: relative; z-index: 1; }
+  .ll-tagline-h { font-family: 'Nunito',sans-serif; font-size: 26px; font-weight: 800; color: white; line-height: 1.2; margin-bottom: 12px; }
+  .ll-tagline-p { font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.6; }
+  .ll-roles { display: flex; flex-direction: column; gap: 8px; position: relative; z-index: 1; }
+  .ll-role { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); }
+  .ll-role-icon { font-size: 16px; }
+  .ll-role-name { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.85); }
+  .ll-role-dot { width: 6px; height: 6px; border-radius: 50%; margin-left: auto; }
+
+  .login-right {
+    flex: 1; background: white; padding: 48px 44px;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .lr-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #8A8AB0; margin-bottom: 8px; }
+  .lr-h1 { font-size: 26px; font-weight: 800; color: #1E1E6A; letter-spacing: -0.5px; margin-bottom: 6px; }
+  .lr-sub { font-size: 13px; color: #8A8AB0; margin-bottom: 28px; }
+  .form-group { margin-bottom: 16px; }
+  .form-label { font-size: 12px; font-weight: 600; color: #4A4A7A; margin-bottom: 6px; display: block; }
+  .form-input {
+    width: 100%; padding: 11px 14px; border-radius: 8px;
+    border: 1.5px solid rgba(53,53,168,0.18); font-size: 14px;
+    font-family: 'DM Sans',sans-serif; color: #1E1E6A; outline: none;
+    background: white;
+  }
+  .form-input:focus { border-color: #3535A8; box-shadow: 0 0 0 3px rgba(53,53,168,0.1); }
+  .form-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .remember { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #8A8AB0; }
+  .forgot { font-size: 12px; color: #3AB0A1; font-weight: 600; }
+  .btn-login {
+    width: 100%; padding: 13px; border-radius: 9px; font-size: 15px; font-weight: 700;
+    color: white; background: #3AB0A1; border: none; cursor: pointer;
+    font-family: 'DM Sans',sans-serif; box-shadow: 0 4px 14px rgba(58,176,161,0.35);
+    margin-bottom: 20px;
+  }
+  .divider { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+  .divider-line { flex: 1; height: 1px; background: #ECEDF8; }
+  .divider-text { font-size: 11px; color: #C8C8E0; }
+  .social-row { display: flex; gap: 10px; margin-bottom: 24px; }
+  .social-btn {
+    flex: 1; padding: 10px; border-radius: 8px; border: 1.5px solid #ECEDF8;
+    background: white; font-size: 12px; font-weight: 600; color: #4A4A7A;
+    cursor: pointer; font-family: 'DM Sans',sans-serif; text-align: center;
+  }
+  .signup-link { text-align: center; font-size: 13px; color: #8A8AB0; }
+  .signup-link a { color: #3AB0A1; font-weight: 700; }
+  .role-selector { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 20px; }
+  .role-chip {
+    padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 600;
+    border: 1.5px solid transparent; cursor: pointer; background: #F5F5FB; color: #8A8AB0;
+  }
+  .role-chip.active { background: rgba(53,53,168,0.08); color: #3535A8; border-color: rgba(53,53,168,0.3); }
+
+  /* ═══════════════════════════════════════════
+     SCREEN 3: PATIENT DASHBOARD
+  ═══════════════════════════════════════════ */
+  .dashboard { display: flex; min-height: 700px; background: #F5F5FB; }
+
+  /* Sidebar */
+  .dash-sidebar {
+    width: 220px; background: #3535A8; display: flex; flex-direction: column;
+    padding: 0; flex-shrink: 0;
+  }
+  .ds-logo-area {
+    padding: 20px 16px 16px; border-bottom: 1px solid rgba(255,255,255,0.08);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .ds-logo-text { font-family: 'Nunito',sans-serif; font-size: 15px; font-weight: 700; color: white; }
+  .ds-section-label { font-size: 9px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: rgba(255,255,255,0.28); padding: 16px 16px 6px; }
+  .ds-nav-item {
+    display: flex; align-items: center; gap: 10px; padding: 9px 16px;
+    font-size: 13px; color: rgba(255,255,255,0.55); border-left: 2px solid transparent;
+    cursor: pointer; font-weight: 500;
+  }
+  .ds-nav-item.active {
+    background: rgba(58,176,161,0.15); color: white;
+    border-left-color: #3AB0A1; font-weight: 600;
+  }
+  .ds-nav-item:hover:not(.active) { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.8); }
+  .ds-nav-icon { font-size: 14px; width: 18px; text-align: center; }
+  .ds-badge { margin-left: auto; background: #3AB0A1; color: white; font-size: 9px; font-weight: 700; padding: 1px 6px; border-radius: 10px; }
+  .ds-divider { height: 1px; background: rgba(255,255,255,0.07); margin: 10px 16px; }
+  .ds-user {
+    margin-top: auto; padding: 14px 16px; display: flex; align-items: center; gap: 10px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  .ds-avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg,#3AB0A1,#2A8A7C); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: white; flex-shrink: 0; }
+  .ds-user-name { font-size: 12px; font-weight: 600; color: white; }
+  .ds-user-role { font-size: 10px; color: rgba(255,255,255,0.45); margin-top: 1px; }
+
+  /* Dashboard content */
+  .dash-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+  .dash-topbar {
+    background: white; padding: 14px 24px; display: flex; align-items: center; gap: 16px;
+    border-bottom: 1px solid rgba(53,53,168,0.08); box-shadow: 0 1px 4px rgba(53,53,168,0.05);
+    flex-shrink: 0;
+  }
+  .dt-breadcrumb { font-size: 11px; color: #8A8AB0; }
+  .dt-title { font-size: 17px; font-weight: 700; color: #1E1E6A; flex: 1; }
+  .dt-search {
+    padding: 7px 14px; border-radius: 8px; border: 1px solid rgba(53,53,168,0.15);
+    font-size: 12px; color: #8A8AB0; font-family: 'DM Sans',sans-serif; width: 200px; background: #F5F5FB;
+  }
+  .dt-actions { display: flex; align-items: center; gap: 10px; }
+  .dt-icon-btn { width: 34px; height: 34px; border-radius: 8px; border: 1px solid rgba(53,53,168,0.1); background: white; display: flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; position: relative; }
+  .dt-notif-dot { position: absolute; top: 5px; right: 5px; width: 6px; height: 6px; border-radius: 50%; background: #F4A261; }
+  .dt-avatar { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg,#3AB0A1,#2A8A7C); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: white; cursor: pointer; }
+  .dt-btn-add { padding: 7px 16px; border-radius: 8px; background: #3AB0A1; color: white; font-size: 12px; font-weight: 700; border: none; cursor: pointer; font-family: 'DM Sans',sans-serif; box-shadow: 0 2px 8px rgba(58,176,161,0.3); }
+
+  .dash-main { flex: 1; padding: 22px 24px; overflow: auto; display: flex; flex-direction: column; gap: 16px; }
+
+  /* Welcome banner */
+  .welcome-banner {
+    background: linear-gradient(135deg, #3535A8, #4A4AB8);
+    border-radius: 14px; padding: 20px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .wb-text h3 { font-family: 'Nunito',sans-serif; font-size: 18px; font-weight: 800; color: white; margin-bottom: 4px; }
+  .wb-text p { font-size: 12px; color: rgba(255,255,255,0.6); }
+  .wb-stats { display: flex; gap: 28px; }
+  .wb-stat { text-align: center; }
+  .wb-val { font-size: 22px; font-weight: 800; color: #5ECFC4; display: block; }
+  .wb-lbl { font-size: 10px; color: rgba(255,255,255,0.5); display: block; margin-top: 2px; }
+  .wb-cta { padding: 9px 18px; border-radius: 8px; background: #3AB0A1; color: white; font-size: 12px; font-weight: 700; border: none; cursor: pointer; font-family: 'DM Sans',sans-serif; }
+
+  /* Stat cards */
+  .stat-cards { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; }
+  .stat-card {
+    background: white; border-radius: 12px; padding: 18px 16px;
+    box-shadow: 0 2px 8px rgba(53,53,168,0.06); position: relative; overflow: hidden;
+  }
+  .sc-accent-bar { position: absolute; top: 0; left: 0; right: 0; height: 3px; border-radius: 12px 12px 0 0; }
+  .sc-icon-wrap { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; margin-bottom: 12px; }
+  .sc-val { font-size: 26px; font-weight: 800; color: #1E1E6A; letter-spacing: -0.5px; display: block; }
+  .sc-label { font-size: 12px; color: #8A8AB0; display: block; margin-top: 3px; }
+  .sc-delta { display: inline-flex; align-items: center; gap: 3px; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 4px; margin-top: 8px; }
+
+  /* Charts row */
+  .charts-row { display: grid; grid-template-columns: 1.6fr 1fr; gap: 14px; }
+  .chart-card { background: white; border-radius: 12px; padding: 18px 20px; box-shadow: 0 2px 8px rgba(53,53,168,0.06); }
+  .chart-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .chart-title { font-size: 14px; font-weight: 700; color: #1E1E6A; }
+  .chart-legend { display: flex; gap: 12px; }
+  .legend-item { display: flex; align-items: center; gap: 5px; font-size: 10px; color: #8A8AB0; }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .chart-bars { display: flex; align-items: flex-end; gap: 6px; height: 100px; }
+  .chart-bar-group { display: flex; gap: 2px; align-items: flex-end; flex: 1; }
+  .chart-bar { border-radius: 3px 3px 0 0; width: 10px; }
+  .chart-x { display: flex; gap: 6px; margin-top: 6px; }
+  .chart-x-label { flex: 1; text-align: center; font-size: 9px; color: #C8C8E0; }
+
+  /* Recent activity */
+  .activity-list { display: flex; flex-direction: column; gap: 0; }
+  .activity-item {
+    display: flex; align-items: center; gap: 12px; padding: 11px 0;
+    border-bottom: 1px solid #F0F0F8;
+  }
+  .activity-item:last-child { border-bottom: none; }
+  .activity-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .activity-avatar { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: white; flex-shrink: 0; }
+  .activity-info { flex: 1; }
+  .activity-name { font-size: 12px; font-weight: 600; color: #1E1E6A; }
+  .activity-desc { font-size: 11px; color: #8A8AB0; margin-top: 1px; }
+  .activity-time { font-size: 10px; color: #C8C8E0; }
+  .activity-badge { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 20px; }
+
+  /* Bottom row */
+  .bottom-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .bottom-card { background: white; border-radius: 12px; padding: 18px 20px; box-shadow: 0 2px 8px rgba(53,53,168,0.06); }
+  .care-plan-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid #F0F0F8; }
+  .care-plan-item:last-child { border-bottom: none; }
+  .cp-check { width: 18px; height: 18px; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 10px; flex-shrink: 0; }
+  .cp-text { flex: 1; font-size: 12px; color: #4A4A7A; }
+  .cp-date { font-size: 10px; color: #C8C8E0; }
+  .appt-item { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid #F0F0F8; align-items: center; }
+  .appt-item:last-child { border-bottom: none; }
+  .appt-date-box { width: 40px; text-align: center; flex-shrink: 0; background: rgba(53,53,168,0.06); border-radius: 8px; padding: 5px 4px; }
+  .appt-day { font-size: 16px; font-weight: 800; color: #3535A8; display: block; line-height: 1; }
+  .appt-mon { font-size: 9px; color: #8A8AB0; display: block; text-transform: uppercase; letter-spacing: 0.5px; }
+  .appt-info { flex: 1; }
+  .appt-name { font-size: 12px; font-weight: 600; color: #1E1E6A; }
+  .appt-type { font-size: 11px; color: #8A8AB0; margin-top: 1px; }
+  .appt-time { font-size: 11px; font-weight: 600; color: #3535A8; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div><h1 style="font-family:'DM Sans';font-size:20px;font-weight:800;color:#3535A8;">Design System</h1><p style="font-size:12px;color:#8A8AB0;">V3 · Amber-Led Modern · Lucen Care Platform</p></div>
+  <div class="section-badge">SECTION 3 OF 3 — SCREEN MOCKUPS</div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════
+     SCREEN 1 — LANDING PAGE
+════════════════════════════════════════════════ -->
+<div class="screen-label">Screen 1 — Landing Page (Public)</div>
+<div class="browser">
+  <div class="browser-bar">
+    <div class="browser-dots">
+      <div class="browser-dot" style="background:#FF5F57;"></div>
+      <div class="browser-dot" style="background:#FFBD2E;"></div>
+      <div class="browser-dot" style="background:#28CA41;"></div>
+    </div>
+    <div class="browser-url">lucencare.com</div>
+  </div>
+  <div class="landing">
+
+    <!-- Nav -->
+    <nav class="lp-nav">
+      <div class="nav-logo">
+        <svg viewBox="20 25 120 110" width="28" height="28" xmlns="http://www.w3.org/2000/svg">
+          <path d="M 58 90 C 40 70,40 50,58 38 C 62 35,66 34,70 34" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="5" stroke-linecap="round"/>
+          <path d="M 98 90 C 116 70,116 50,98 38 C 94 35,90 34,86 34" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="5" stroke-linecap="round"/>
+          <path d="M 62 88 C 50 72,50 54,62 44 C 66 41,70 40,78 40 C 86 40,90 41,94 44 C 106 54,106 72,94 88" fill="none" stroke="#5ECFC4" stroke-width="3.5" stroke-linecap="round"/>
+          <path d="M 78 82 C 78 82,68 74,68 67 C 68 62,72 59,78 64 C 84 59,88 62,88 67 C 88 74,78 82,78 82 Z" fill="#5ECFC4"/>
+          <circle cx="78" cy="52" r="7" fill="#F4A261"/>
+          <circle cx="78" cy="52" r="3.5" fill="#FFD0A8"/>
+        </svg>
+        <span class="nav-logo-text">Lucen<span style="font-weight:400;color:#5ECFC4;">Care</span></span>
+      </div>
+      <div class="nav-links">
+        <span class="nav-link active">Platform</span>
+        <span class="nav-link">For NGOs</span>
+        <span class="nav-link">For HMOs</span>
+        <span class="nav-link">Research</span>
+        <span class="nav-link">About</span>
+      </div>
+      <div class="nav-actions">
+        <button class="btn-ghost-nav">Log in</button>
+        <button class="btn-cta-nav">Get started →</button>
+      </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="lp-hero">
+      <div class="hero-orb-a"></div>
+      <div class="hero-orb-b"></div>
+      <div class="hero-copy">
+        <div class="hero-eyebrow"><span class="live-dot"></span>Healthcare Access Platform</div>
+        <h1 class="hero-h1">The platform<br>that connects<br><span class="hero-accent">every voice</span><br>in healthcare.</h1>
+        <p class="hero-sub">Patients, NGOs, HMOs, and researchers — all on one unified platform built for real-world health outcomes.</p>
+        <div class="hero-actions">
+          <button class="btn-hero-primary">Get started free →</button>
+          <button class="btn-hero-ghost">See how it works</button>
+        </div>
+        <div class="hero-proof">
+          <div class="proof-avatars">
+            <div class="proof-dot" style="background:#3AB0A1;"></div>
+            <div class="proof-dot" style="background:#F4A261;"></div>
+            <div class="proof-dot" style="background:#8B5CF6;"></div>
+            <div class="proof-dot" style="background:#3535A8;"></div>
+          </div>
+          <span class="hero-proof-text">Trusted by <strong>1,200+</strong> healthcare professionals</span>
+        </div>
+      </div>
+
+      <div class="hero-card-wrap">
+        <div class="pcard">
+          <div class="pcard-top">
+            <span class="pcard-label">Platform Overview</span>
+            <span class="pcard-status"><span class="pcard-status-dot"></span>Live</span>
+          </div>
+          <div class="pcard-stats">
+            <div><span class="pcard-stat-n">2,400+</span><span class="pcard-stat-l">Patients</span></div>
+            <div><span class="pcard-stat-n">340+</span><span class="pcard-stat-l">NGO Programs</span></div>
+            <div><span class="pcard-stat-n">18k+</span><span class="pcard-stat-l">HMO Profiles</span></div>
+            <div><span class="pcard-stat-n">62</span><span class="pcard-stat-l">Studies</span></div>
+          </div>
+          <div class="pcard-rule"></div>
+          <div class="pcard-activity-label">Role Activity</div>
+          <div class="pcard-rows">
+            <div class="pcard-row"><span class="pcard-row-icon">🏥</span><div class="pcard-row-body"><div class="pcard-row-head"><span class="pcard-row-name">Patient & Caregiver</span><span class="pcard-row-pct">88%</span></div><div class="pcard-track"><span class="pcard-fill" style="width:88%;background:#3AB0A1;"></span></div></div></div>
+            <div class="pcard-row"><span class="pcard-row-icon">🤝</span><div class="pcard-row-body"><div class="pcard-row-head"><span class="pcard-row-name">NGO Programs</span><span class="pcard-row-pct">72%</span></div><div class="pcard-track"><span class="pcard-fill" style="width:72%;background:#F4A261;"></span></div></div></div>
+            <div class="pcard-row"><span class="pcard-row-icon">🏦</span><div class="pcard-row-body"><div class="pcard-row-head"><span class="pcard-row-name">HMO Management</span><span class="pcard-row-pct">94%</span></div><div class="pcard-track"><span class="pcard-fill" style="width:94%;background:rgba(255,255,255,0.7);"></span></div></div></div>
+            <div class="pcard-row"><span class="pcard-row-icon">🔬</span><div class="pcard-row-body"><div class="pcard-row-head"><span class="pcard-row-name">Clinical Research</span><span class="pcard-row-pct">61%</span></div><div class="pcard-track"><span class="pcard-fill" style="width:61%;background:#8B5CF6;"></span></div></div></div>
+          </div>
+          <div class="pcard-tags">
+            <span class="pcard-tag">✓ GDPR</span>
+            <span class="pcard-tag">✓ HIPAA</span>
+            <span class="pcard-tag">✓ AI-powered</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Who it's for -->
+    <section class="lp-who">
+      <div class="section-eyebrow">Who it's for</div>
+      <h2 class="section-h2">Every role. One platform.</h2>
+      <div class="who-list">
+        <div class="who-item"><span class="who-num">01</span><span class="who-icon">🏥</span><span class="who-label">Patient & Caregiver</span><span class="who-desc">Track health records, connect with care providers, and manage your wellness journey.</span><span class="who-arrow">→</span></div>
+        <div class="who-item"><span class="who-num">02</span><span class="who-icon">🤝</span><span class="who-label">NGO Programs</span><span class="who-desc">Coordinate outreach, measure impact, and connect communities to healthcare access.</span><span class="who-arrow">→</span></div>
+        <div class="who-item"><span class="who-num">03</span><span class="who-icon">🏦</span><span class="who-label">HMO Management</span><span class="who-desc">Manage enrollees, claims, and provider networks with precision and compliance.</span><span class="who-arrow">→</span></div>
+        <div class="who-item"><span class="who-num">04</span><span class="who-icon">🔬</span><span class="who-label">Clinical Researcher</span><span class="who-desc">Access de-identified data, run studies, and publish insights with consent-first protocols.</span><span class="who-arrow">→</span></div>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section class="lp-features">
+      <div class="section-eyebrow">What's inside</div>
+      <h2 class="section-h2">Everything your team needs</h2>
+      <div class="features-grid">
+        <div class="feat"><span class="feat-icon">🔐</span><span class="feat-title">GDPR & HIPAA Ready</span><span class="feat-desc">Built-in compliance, consent management, and audit trails across all user roles.</span></div>
+        <div class="feat"><span class="feat-icon">🤖</span><span class="feat-title">AI Health Assistant</span><span class="feat-desc">LLM-powered chatbot for patient guidance, routed through a secure proxy layer.</span></div>
+        <div class="feat"><span class="feat-icon">📊</span><span class="feat-title">Analytics Dashboard</span><span class="feat-desc">Real-time reporting for HMOs, NGOs, and researchers with role-specific views.</span></div>
+        <div class="feat"><span class="feat-icon">🔗</span><span class="feat-title">Unified Records</span><span class="feat-desc">Patients own their data. Share selectively across providers, NGOs, and studies.</span></div>
+        <div class="feat"><span class="feat-icon">📍</span><span class="feat-title">Care Mapping</span><span class="feat-desc">Locate nearby clinics, NGO programs, and HMO-approved providers on an integrated map.</span></div>
+        <div class="feat"><span class="feat-icon">✉️</span><span class="feat-title">Secure Messaging</span><span class="feat-desc">Encrypted in-app communication between patients, providers, and care coordinators.</span></div>
+      </div>
+    </section>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════
+     SCREEN 2 — LOGIN
+════════════════════════════════════════════════ -->
+<div class="screen-label">Screen 2 — Login / Auth</div>
+<div class="browser">
+  <div class="browser-bar">
+    <div class="browser-dots">
+      <div class="browser-dot" style="background:#FF5F57;"></div>
+      <div class="browser-dot" style="background:#FFBD2E;"></div>
+      <div class="browser-dot" style="background:#28CA41;"></div>
+    </div>
+    <div class="browser-url">lucencare.com/login</div>
+  </div>
+  <div class="login-screen">
+    <!-- Left panel -->
+    <div class="login-left">
+      <div class="ll-orb"></div>
+      <div class="ll-orb2"></div>
+      <div class="ll-logo">
+        <svg viewBox="0 0 520 180" width="160" height="55" xmlns="http://www.w3.org/2000/svg">
+          <path d="M 58 90 C 40 70,40 50,58 38 C 62 35,66 34,70 34" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="5" stroke-linecap="round"/>
+          <path d="M 98 90 C 116 70,116 50,98 38 C 94 35,90 34,86 34" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="5" stroke-linecap="round"/>
+          <path d="M 62 88 C 50 72,50 54,62 44 C 66 41,70 40,78 40 C 86 40,90 41,94 44 C 106 54,106 72,94 88" fill="none" stroke="#5ECFC4" stroke-width="3.5" stroke-linecap="round"/>
+          <path d="M 78 82 C 78 82,68 74,68 67 C 68 62,72 59,78 64 C 84 59,88 62,88 67 C 88 74,78 82,78 82 Z" fill="#5ECFC4"/>
+          <circle cx="78" cy="52" r="7" fill="#F4A261"/>
+          <circle cx="78" cy="52" r="3.5" fill="#FFD0A8"/>
+          <line x1="78" y1="42" x2="78" y2="38" stroke="#F4A261" stroke-width="1.8" stroke-linecap="round" opacity="0.7"/>
+          <text x="130" y="74" font-family="'Nunito','Trebuchet MS',sans-serif" font-size="44" font-weight="700" letter-spacing="-0.5" fill="white">Lucen</text>
+          <text x="290" y="74" font-family="'Nunito','Trebuchet MS',sans-serif" font-size="44" font-weight="400" letter-spacing="-0.5" fill="#5ECFC4">Care</text>
+          <rect x="130" y="108" width="348" height="2.5" rx="1.25" fill="#F4A261" opacity="0.6"/>
+        </svg>
+      </div>
+      <div class="ll-tagline">
+        <div class="ll-tagline-h">Welcome back to your care platform.</div>
+        <p class="ll-tagline-p">Your health data, your care network, and your tools — all in one place. Secure and GDPR-compliant.</p>
+      </div>
+      <div class="ll-roles">
+        <div class="ll-role"><span class="ll-role-icon">🏥</span><span class="ll-role-name">Patient & Caregiver</span><span class="ll-role-dot" style="background:#3AB0A1;"></span></div>
+        <div class="ll-role"><span class="ll-role-icon">🤝</span><span class="ll-role-name">NGO Programs</span><span class="ll-role-dot" style="background:#F4A261;"></span></div>
+        <div class="ll-role"><span class="ll-role-icon">🏦</span><span class="ll-role-name">HMO Management</span><span class="ll-role-dot" style="background:rgba(255,255,255,0.4);"></span></div>
+        <div class="ll-role"><span class="ll-role-icon">🔬</span><span class="ll-role-name">Clinical Researcher</span><span class="ll-role-dot" style="background:#8B5CF6;"></span></div>
+      </div>
+    </div>
+
+    <!-- Right panel -->
+    <div class="login-right">
+      <div class="lr-eyebrow">Secure Sign In</div>
+      <h1 class="lr-h1">Log in to your account</h1>
+      <p class="lr-sub">Which portal are you accessing?</p>
+
+      <div class="role-selector">
+        <div class="role-chip active">🏥 Patient</div>
+        <div class="role-chip">🤝 NGO</div>
+        <div class="role-chip">🏦 HMO</div>
+        <div class="role-chip">🔬 Researcher</div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Email address</label>
+        <input class="form-input" type="email" value="adaora@example.com" readonly>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input class="form-input" type="password" value="••••••••••" readonly>
+      </div>
+      <div class="form-row">
+        <label class="remember"><input type="checkbox" checked style="accent-color:#3535A8;"> Remember me</label>
+        <span class="forgot">Forgot password?</span>
+      </div>
+      <button class="btn-login">Log in to Patient Portal</button>
+      <div class="divider"><div class="divider-line"></div><span class="divider-text">or continue with</span><div class="divider-line"></div></div>
+      <div class="social-row">
+        <button class="social-btn">🔵 Google</button>
+        <button class="social-btn">🍎 Apple</button>
+        <button class="social-btn">🏛️ NHS / Org SSO</button>
+      </div>
+      <div class="signup-link">Don't have an account? <a>Sign up free →</a></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════
+     SCREEN 3 — PATIENT DASHBOARD
+════════════════════════════════════════════════ -->
+<div class="screen-label">Screen 3 — Patient Dashboard (Authenticated)</div>
+<div class="browser">
+  <div class="browser-bar">
+    <div class="browser-dots">
+      <div class="browser-dot" style="background:#FF5F57;"></div>
+      <div class="browser-dot" style="background:#FFBD2E;"></div>
+      <div class="browser-dot" style="background:#28CA41;"></div>
+    </div>
+    <div class="browser-url">lucencare.com/patient/dashboard</div>
+  </div>
+  <div class="dashboard">
+
+    <!-- Sidebar -->
+    <aside class="dash-sidebar">
+      <div class="ds-logo-area">
+        <svg viewBox="20 25 120 110" width="24" height="24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M 62 88 C 50 72,50 54,62 44 C 66 41,70 40,78 40 C 86 40,90 41,94 44 C 106 54,106 72,94 88" fill="none" stroke="#5ECFC4" stroke-width="4" stroke-linecap="round"/>
+          <path d="M 78 82 C 78 82,68 74,68 67 C 68 62,72 59,78 64 C 84 59,88 62,88 67 C 88 74,78 82,78 82 Z" fill="#5ECFC4"/>
+          <circle cx="78" cy="52" r="6.5" fill="#F4A261"/>
+          <circle cx="78" cy="52" r="3" fill="#FFD0A8"/>
+        </svg>
+        <div class="ds-logo-text">Lucen<span style="font-weight:400;color:#5ECFC4;">Care</span></div>
+      </div>
+      <div class="ds-section-label">Main</div>
+      <div class="ds-nav-item active"><span class="ds-nav-icon">📊</span> Dashboard</div>
+      <div class="ds-nav-item"><span class="ds-nav-icon">📋</span> Health Records</div>
+      <div class="ds-nav-item"><span class="ds-nav-icon">🗓️</span> Care Plan</div>
+      <div class="ds-nav-item"><span class="ds-nav-icon">💊</span> Medications</div>
+      <div class="ds-nav-item"><span class="ds-nav-icon">💬</span> Messages <span class="ds-badge">3</span></div>
+      <div class="ds-divider"></div>
+      <div class="ds-section-label">Support</div>
+      <div class="ds-nav-item"><span class="ds-nav-icon">🤖</span> AI Assistant</div>
+      <div class="ds-nav-item"><span class="ds-nav-icon">📍</span> Find Care</div>
+      <div class="ds-nav-item"><span class="ds-nav-icon">⚙️</span> Settings</div>
+      <div class="ds-user">
+        <div class="ds-avatar">AM</div>
+        <div>
+          <div class="ds-user-name">Adaora Mensah</div>
+          <div class="ds-user-role">Patient · Verified</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Content -->
+    <div class="dash-content">
+
+      <!-- Top bar -->
+      <div class="dash-topbar">
+        <div style="flex:1;">
+          <div class="dt-breadcrumb">Patient Portal</div>
+          <div class="dt-title">Dashboard</div>
+        </div>
+        <input class="dt-search" placeholder="🔍  Search records, providers…" readonly>
+        <div class="dt-actions">
+          <div class="dt-icon-btn">🔔<div class="dt-notif-dot"></div></div>
+          <div class="dt-icon-btn">📎</div>
+          <div class="dt-avatar">AM</div>
+          <button class="dt-btn-add">+ New Record</button>
+        </div>
+      </div>
+
+      <!-- Main -->
+      <div class="dash-main">
+
+        <!-- Welcome banner -->
+        <div class="welcome-banner">
+          <div class="wb-text">
+            <h3>Good morning, Adaora 👋</h3>
+            <p>Your next appointment is in 3 days. Your care plan is 72% complete.</p>
+          </div>
+          <div class="wb-stats">
+            <div class="wb-stat"><span class="wb-val">72%</span><span class="wb-lbl">Plan complete</span></div>
+            <div class="wb-stat"><span class="wb-val">3</span><span class="wb-lbl">Unread msgs</span></div>
+            <div class="wb-stat"><span class="wb-val">Jun 5</span><span class="wb-lbl">Next appt</span></div>
+          </div>
+          <button class="wb-cta">View care plan →</button>
+        </div>
+
+        <!-- Stat cards -->
+        <div class="stat-cards">
+          <div class="stat-card">
+            <div class="sc-accent-bar" style="background:#3AB0A1;"></div>
+            <div class="sc-icon-wrap" style="background:rgba(58,176,161,0.1);">🏥</div>
+            <span class="sc-val">12</span>
+            <span class="sc-label">Health records</span>
+            <div class="sc-delta" style="background:rgba(58,176,161,0.1);color:#2A8A7C;">↑ 2 this month</div>
+          </div>
+          <div class="stat-card">
+            <div class="sc-accent-bar" style="background:#F4A261;"></div>
+            <div class="sc-icon-wrap" style="background:rgba(244,162,97,0.1);">💊</div>
+            <span class="sc-val">4</span>
+            <span class="sc-label">Active medications</span>
+            <div class="sc-delta" style="background:rgba(244,162,97,0.1);color:#D97706;">Review due</div>
+          </div>
+          <div class="stat-card">
+            <div class="sc-accent-bar" style="background:#3535A8;"></div>
+            <div class="sc-icon-wrap" style="background:rgba(53,53,168,0.08);">🗓️</div>
+            <span class="sc-val">2</span>
+            <span class="sc-label">Upcoming appointments</span>
+            <div class="sc-delta" style="background:rgba(53,53,168,0.08);color:#3535A8;">Next: Jun 5</div>
+          </div>
+          <div class="stat-card">
+            <div class="sc-accent-bar" style="background:#8B5CF6;"></div>
+            <div class="sc-icon-wrap" style="background:rgba(139,92,246,0.08);">🔬</div>
+            <span class="sc-val">1</span>
+            <span class="sc-label">Active study enrolment</span>
+            <div class="sc-delta" style="background:rgba(139,92,246,0.08);color:#6D28D9;">Consented ✓</div>
+          </div>
+        </div>
+
+        <!-- Charts + Activity -->
+        <div class="charts-row">
+          <div class="chart-card">
+            <div class="chart-header">
+              <span class="chart-title">Health Engagement — 7 Days</span>
+              <div class="chart-legend">
+                <div class="legend-item"><div class="legend-dot" style="background:#3AB0A1;"></div>Records</div>
+                <div class="legend-item"><div class="legend-dot" style="background:#F4A261;"></div>Messages</div>
+              </div>
+            </div>
+            <div class="chart-bars">
+              <div class="chart-bar-group"><div class="chart-bar" style="height:50%;background:#3AB0A1;"></div><div class="chart-bar" style="height:30%;background:#F4A261;opacity:0.7;"></div></div>
+              <div class="chart-bar-group"><div class="chart-bar" style="height:75%;background:#3AB0A1;"></div><div class="chart-bar" style="height:50%;background:#F4A261;opacity:0.7;"></div></div>
+              <div class="chart-bar-group"><div class="chart-bar" style="height:40%;background:#3AB0A1;opacity:0.6;"></div><div class="chart-bar" style="height:80%;background:#F4A261;"></div></div>
+              <div class="chart-bar-group"><div class="chart-bar" style="height:90%;background:#3AB0A1;"></div><div class="chart-bar" style="height:40%;background:#F4A261;opacity:0.7;"></div></div>
+              <div class="chart-bar-group"><div class="chart-bar" style="height:60%;background:#3AB0A1;opacity:0.7;"></div><div class="chart-bar" style="height:60%;background:#F4A261;opacity:0.8;"></div></div>
+              <div class="chart-bar-group"><div class="chart-bar" style="height:80%;background:#3AB0A1;"></div><div class="chart-bar" style="height:30%;background:#F4A261;opacity:0.6;"></div></div>
+              <div class="chart-bar-group"><div class="chart-bar" style="height:55%;background:#3AB0A1;opacity:0.8;"></div><div class="chart-bar" style="height:70%;background:#F4A261;"></div></div>
+            </div>
+            <div class="chart-x">
+              <span class="chart-x-label">Mon</span><span class="chart-x-label">Tue</span><span class="chart-x-label">Wed</span><span class="chart-x-label">Thu</span><span class="chart-x-label">Fri</span><span class="chart-x-label">Sat</span><span class="chart-x-label">Sun</span>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-header"><span class="chart-title">Recent Activity</span></div>
+            <div class="activity-list">
+              <div class="activity-item">
+                <div class="activity-avatar" style="background:#3AB0A1;">Dr</div>
+                <div class="activity-info"><div class="activity-name">Dr. Nwosu updated your records</div><div class="activity-desc">Blood pressure readings added</div></div>
+                <span class="activity-time">2h ago</span>
+              </div>
+              <div class="activity-item">
+                <div class="activity-avatar" style="background:#F4A261;">NG</div>
+                <div class="activity-info"><div class="activity-name">Lagos Women's Health NGO</div><div class="activity-desc">Programme enrolment confirmed</div></div>
+                <span class="activity-time">Yesterday</span>
+              </div>
+              <div class="activity-item">
+                <div class="activity-avatar" style="background:#8B5CF6;">RS</div>
+                <div class="activity-info"><div class="activity-name">Study consent submitted</div><div class="activity-desc">CARDIO-NG-2026 trial</div></div>
+                <span class="activity-time">Jun 1</span>
+              </div>
+              <div class="activity-item">
+                <div class="activity-avatar" style="background:#3535A8;">HM</div>
+                <div class="activity-info"><div class="activity-name">HMO claim processed</div><div class="activity-desc">Consultation — ₦12,000 approved</div></div>
+                <span class="activity-time">May 30</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom row -->
+        <div class="bottom-row">
+          <div class="bottom-card">
+            <div class="chart-header" style="margin-bottom:12px;"><span class="chart-title">Active Care Plan</span><span style="font-size:11px;font-weight:700;color:#3AB0A1;cursor:pointer;">View all →</span></div>
+            <div class="care-plan-item"><div class="cp-check" style="background:rgba(58,176,161,0.12);">✓</div><span class="cp-text" style="color:#8A8AB0;text-decoration:line-through;">Complete intake questionnaire</span><span class="cp-date">Done</span></div>
+            <div class="care-plan-item"><div class="cp-check" style="background:rgba(58,176,161,0.12);">✓</div><span class="cp-text" style="color:#8A8AB0;text-decoration:line-through;">Upload previous records</span><span class="cp-date">Done</span></div>
+            <div class="care-plan-item"><div class="cp-check" style="background:rgba(58,176,161,0.12);color:#3AB0A1;font-weight:700;">→</div><span class="cp-text" style="font-weight:600;">Schedule specialist consultation</span><span class="cp-date" style="color:#3AB0A1;">Due Jun 5</span></div>
+            <div class="care-plan-item"><div class="cp-check" style="background:#F5F5FB;border:1px solid #ECEDF8;"></div><span class="cp-text">Medication review with pharmacist</span><span class="cp-date">Jun 10</span></div>
+            <div class="care-plan-item"><div class="cp-check" style="background:#F5F5FB;border:1px solid #ECEDF8;"></div><span class="cp-text">Submit study data for CARDIO-NG</span><span class="cp-date">Jun 15</span></div>
+          </div>
+
+          <div class="bottom-card">
+            <div class="chart-header" style="margin-bottom:12px;"><span class="chart-title">Upcoming Appointments</span><span style="font-size:11px;font-weight:700;color:#3AB0A1;cursor:pointer;">+ Book →</span></div>
+            <div class="appt-item">
+              <div class="appt-date-box"><span class="appt-day">5</span><span class="appt-mon">Jun</span></div>
+              <div class="appt-info"><div class="appt-name">Dr. Chisom Nwosu</div><div class="appt-type">Cardiology · Specialist</div></div>
+              <span class="appt-time">10:00am</span>
+            </div>
+            <div class="appt-item">
+              <div class="appt-date-box"><span class="appt-day">10</span><span class="appt-mon">Jun</span></div>
+              <div class="appt-info"><div class="appt-name">PharmaCare Clinic</div><div class="appt-type">Medication review</div></div>
+              <span class="appt-time">2:30pm</span>
+            </div>
+            <div class="appt-item">
+              <div class="appt-date-box"><span class="appt-day">18</span><span class="appt-mon">Jun</span></div>
+              <div class="appt-info"><div class="appt-name">CARDIO-NG Study Team</div><div class="appt-type">Remote · Research check-in</div></div>
+              <span class="appt-time">11:00am</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Approval -->
+<div style="background:white;border:1.5px solid rgba(53,53,168,0.12);border-radius:12px;padding:20px 24px;margin-top:36px;display:flex;align-items:center;gap:16px;">
+  <div style="font-size:32px;">🎉</div>
+  <div>
+    <strong style="font-size:14px;font-weight:800;color:#1E1E6A;display:block;margin-bottom:4px;">All three screens complete — does this design system feel right?</strong>
+    <span style="font-size:12px;color:#8A8AB0;">If approved, I'll write the full design spec document (tokens, guidelines, component rules, role accents) and then create an implementation plan to apply it across all existing Angular components and style files.</span>
+  </div>
+</div>
+
+</body>
+</html>

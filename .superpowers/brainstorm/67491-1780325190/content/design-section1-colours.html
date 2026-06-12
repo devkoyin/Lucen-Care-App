@@ -1,0 +1,224 @@
+<h2>Section 1 of 3 — Colour System + Surfaces</h2>
+<p class="subtitle">The new token values. Key changes: darker, inkier text; slate-tinted surfaces instead of teal-grey; proper role colours wired up. Click an area to confirm or flag it.</p>
+
+<style>
+* { box-sizing: border-box; }
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 24px; }
+.panel { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; }
+.panel-head { padding: 14px 18px; border-bottom: 1px solid #f1f5f9; }
+.panel-head h3 { font-size: 13px; font-weight: 700; color: #0f172a; margin: 0 0 2px; }
+.panel-head p  { font-size: 11px; color: #94a3b8; margin: 0; }
+
+/* ── Palette grid ── */
+.pal-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0; }
+.pal-row  { display: flex; align-items: center; gap: 12px; padding: 9px 18px; border-bottom: 1px solid #f8fafc; }
+.pal-row:last-child { border-bottom: none; }
+.swatch   { width: 28px; height: 28px; border-radius: 6px; flex-shrink: 0; border: 1px solid rgba(0,0,0,.06); }
+.pal-info { flex: 1; }
+.pal-name { font-size: 11px; font-weight: 600; color: #334155; display: block; }
+.pal-hex  { font-size: 10px; color: #94a3b8; font-family: monospace; }
+.pal-tag  { font-size: 9px; background: #f1f5f9; color: #64748b; padding: 1px 6px; border-radius: 4px; margin-left: 4px; }
+
+/* ── Text ramp ── */
+.text-ramp { padding: 18px; display: flex; flex-direction: column; gap: 10px; }
+.t-row { display: flex; align-items: center; gap: 14px; }
+.t-dot { width: 20px; height: 20px; border-radius: 4px; flex-shrink: 0; }
+.t-sample { font-family: 'DM Sans', sans-serif; font-size: 14px; }
+.t-token { font-size: 10px; color: #94a3b8; font-family: monospace; margin-left: auto; }
+
+/* ── Surface stack ── */
+.surface-stack { padding: 18px; display: flex; flex-direction: column; gap: 10px; }
+.surf-row { display: flex; align-items: center; gap: 12px; }
+.surf-block { width: 52px; height: 32px; border-radius: 6px; border: 1px solid rgba(0,0,0,.07); flex-shrink: 0; }
+.surf-info { flex: 1; }
+.surf-name { font-size: 11px; font-weight: 600; color: #334155; }
+.surf-hex  { font-size: 10px; color: #94a3b8; font-family: monospace; }
+.surf-use  { font-size: 10px; color: #64748b; margin-left: 4px; }
+
+/* ── Role colour grid ── */
+.role-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; }
+.role-col  { padding: 14px 12px; border-right: 1px solid #f1f5f9; }
+.role-col:last-child { border-right: none; }
+.role-sidebar { height: 56px; border-radius: 8px; margin-bottom: 10px; display: flex; flex-direction: column; justify-content: flex-end; padding: 8px; }
+.role-sidebar-dot { width: 6px; height: 6px; border-radius: 50%; margin-bottom: 4px; }
+.role-sidebar-line { height: 3px; border-radius: 2px; width: 60%; background: rgba(255,255,255,.2); }
+.role-name { font-size: 11px; font-weight: 700; color: #0f172a; margin-bottom: 4px; }
+.role-chips-row { display: flex; flex-direction: column; gap: 4px; }
+.role-chip2 { font-size: 9px; font-weight: 600; padding: 3px 8px; border-radius: 4px; width: fit-content; }
+.role-accent-bar { height: 3px; border-radius: 2px; margin-bottom: 8px; }
+
+/* Change badge */
+.change { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; padding: 2px 7px; border-radius: 4px; font-weight: 600; }
+.change--new { background: #ecfdf5; color: #059669; }
+.change--kept { background: #f0f9ff; color: #0284c7; }
+.change--refined { background: #fef3c7; color: #b45309; }
+
+.full-width { margin-top: 24px; }
+.section-label { font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+</style>
+
+<div class="two-col">
+
+  <!-- Left: Core palette -->
+  <div class="panel">
+    <div class="panel-head">
+      <h3>Core palette — what changes</h3>
+      <p>Background, text and border tokens get a slate tint for more neutral depth</p>
+    </div>
+    <div style="padding: 18px; display:flex; flex-direction:column; gap:8px;">
+
+      <div class="section-label">Backgrounds + Surfaces</div>
+      <div class="surf-row" style="margin-bottom:4px">
+        <div class="surf-block" style="background:#F8FAFC"></div>
+        <div class="surf-info">
+          <div class="surf-name">--color-bg <span class="change change--refined">refined</span></div>
+          <div class="surf-hex">#F8FAFC <span class="surf-use">was #F1F5F5 (teal-grey) → now slate-50</span></div>
+        </div>
+      </div>
+      <div class="surf-row" style="margin-bottom:4px">
+        <div class="surf-block" style="background:#FFFFFF; box-shadow:0 1px 3px rgba(0,0,0,.08)"></div>
+        <div class="surf-info">
+          <div class="surf-name">--color-surface <span class="change change--kept">kept</span></div>
+          <div class="surf-hex">#FFFFFF — cards now get shadow, not just a border</div>
+        </div>
+      </div>
+      <div class="surf-row" style="margin-bottom:16px">
+        <div class="surf-block" style="background:#F1F5F9"></div>
+        <div class="surf-info">
+          <div class="surf-name">--color-surface-2 <span class="change change--refined">refined</span></div>
+          <div class="surf-hex">#F1F5F9 <span class="surf-use">nested areas, inactive tabs</span></div>
+        </div>
+      </div>
+
+      <div class="section-label">Text</div>
+      <div class="t-row">
+        <div class="t-dot" style="background:#0F172A"></div>
+        <span class="t-sample" style="color:#0F172A; font-weight:600;">Primary heading text</span>
+        <span class="t-token">--color-text <span class="change change--refined" style="font-size:9px">refined</span></span>
+      </div>
+      <div class="t-row">
+        <div class="t-dot" style="background:#475569"></div>
+        <span class="t-sample" style="color:#475569;">Secondary body copy</span>
+        <span class="t-token">--color-text-secondary</span>
+      </div>
+      <div class="t-row" style="margin-bottom:16px">
+        <div class="t-dot" style="background:#94A3B8"></div>
+        <span class="t-sample" style="color:#94A3B8;">Muted / placeholder</span>
+        <span class="t-token">--color-text-muted</span>
+      </div>
+
+      <div class="section-label">Brand (unchanged)</div>
+      <div class="surf-row"><div class="surf-block" style="background:#0D9488"></div><div class="surf-info"><div class="surf-name">--color-primary <span class="change change--kept">kept</span></div><div class="surf-hex">#0D9488 — teal</div></div></div>
+      <div class="surf-row"><div class="surf-block" style="background:#2DD4BF"></div><div class="surf-info"><div class="surf-name">--color-accent <span class="change change--kept">kept</span></div><div class="surf-hex">#2DD4BF — bright teal</div></div></div>
+    </div>
+  </div>
+
+  <!-- Right: Shadow tokens (NEW) -->
+  <div class="panel">
+    <div class="panel-head">
+      <h3>Shadow tokens — new</h3>
+      <p>4-level elevation scale. This is what fixes "flat". Cards get shadow-sm, modals get shadow-lg.</p>
+    </div>
+    <div style="padding: 18px; display:flex; flex-direction:column; gap:16px;">
+      <div style="display:flex;flex-direction:column;gap:10px;">
+
+        <div style="background:#fff;border-radius:8px;padding:14px 16px;box-shadow:0 1px 2px rgba(0,0,0,.05);">
+          <div style="font-size:11px;font-weight:700;color:#334155;margin-bottom:2px;">shadow-xs</div>
+          <div style="font-size:10px;color:#94a3b8;font-family:monospace;">0 1px 2px rgba(0,0,0,.05)</div>
+          <div style="font-size:10px;color:#64748b;margin-top:4px;">badges, chips, subtle borders</div>
+        </div>
+
+        <div style="background:#fff;border-radius:8px;padding:14px 16px;box-shadow:0 2px 4px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);">
+          <div style="font-size:11px;font-weight:700;color:#334155;margin-bottom:2px;">shadow-sm <span class="change change--new">new</span></div>
+          <div style="font-size:10px;color:#94a3b8;font-family:monospace;">0 2px 4px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04)</div>
+          <div style="font-size:10px;color:#64748b;margin-top:4px;">cards, inputs on focus</div>
+        </div>
+
+        <div style="background:#fff;border-radius:10px;padding:14px 16px;box-shadow:0 4px 8px rgba(0,0,0,.07),0 2px 4px rgba(0,0,0,.04);">
+          <div style="font-size:11px;font-weight:700;color:#334155;margin-bottom:2px;">shadow-md <span class="change change--new">new</span></div>
+          <div style="font-size:10px;color:#94a3b8;font-family:monospace;">0 4px 8px rgba(0,0,0,.07), 0 2px 4px rgba(0,0,0,.04)</div>
+          <div style="font-size:10px;color:#64748b;margin-top:4px;">popovers, dropdowns, hero card</div>
+        </div>
+
+        <div style="background:#fff;border-radius:12px;padding:14px 16px;box-shadow:0 10px 20px rgba(0,0,0,.08),0 4px 8px rgba(0,0,0,.04);">
+          <div style="font-size:11px;font-weight:700;color:#334155;margin-bottom:2px;">shadow-lg <span class="change change--new">new</span></div>
+          <div style="font-size:10px;color:#94a3b8;font-family:monospace;">0 10px 20px rgba(0,0,0,.08), 0 4px 8px rgba(0,0,0,.04)</div>
+          <div style="font-size:10px;color:#64748b;margin-top:4px;">modals, bottom sheets, floating elements</div>
+        </div>
+
+      </div>
+      <div style="background:#f8fafc;border-radius:8px;padding:12px 14px;">
+        <div style="font-size:10px;color:#64748b;line-height:1.6;">Also adding <strong style="color:#334155">--card-shadow: var(--shadow-sm)</strong> so all cards get lift by default — no more flat bordered rectangles.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Role colours -->
+<div class="panel full-width">
+  <div class="panel-head">
+    <h3>Role token files — implemented <span class="change change--new">new</span></h3>
+    <p>Currently all 4 role token files are empty. Each portal gets its own accent + sidebar colour for a genuinely differentiated experience.</p>
+  </div>
+  <div class="role-grid">
+
+    <div class="role-col">
+      <div class="role-sidebar" style="background:#0C3D3A;">
+        <div class="role-sidebar-dot" style="background:#2DD4BF;"></div>
+        <div class="role-sidebar-line"></div>
+      </div>
+      <div class="role-accent-bar" style="background:#0D9488;"></div>
+      <div class="role-name">Patient / Caregiver</div>
+      <div class="role-chips-row">
+        <span class="role-chip2" style="background:rgba(13,148,136,.1);color:#0D9488;">Accent — Teal #0D9488</span>
+        <span class="role-chip2" style="background:rgba(45,212,191,.1);color:#0F766E;">Bright — #2DD4BF</span>
+        <span class="role-chip2" style="background:#0C3D3A;color:rgba(255,255,255,.7);">Sidebar — #0C3D3A</span>
+      </div>
+    </div>
+
+    <div class="role-col">
+      <div class="role-sidebar" style="background:#2D1800;">
+        <div class="role-sidebar-dot" style="background:#F59E0B;"></div>
+        <div class="role-sidebar-line"></div>
+      </div>
+      <div class="role-accent-bar" style="background:#D97706;"></div>
+      <div class="role-name">NGO</div>
+      <div class="role-chips-row">
+        <span class="role-chip2" style="background:rgba(217,119,6,.1);color:#B45309;">Accent — Amber #D97706</span>
+        <span class="role-chip2" style="background:rgba(245,158,11,.1);color:#92400E;">Bright — #F59E0B</span>
+        <span class="role-chip2" style="background:#2D1800;color:rgba(255,255,255,.7);">Sidebar — #2D1800</span>
+      </div>
+    </div>
+
+    <div class="role-col">
+      <div class="role-sidebar" style="background:#0F1D38;">
+        <div class="role-sidebar-dot" style="background:#60A5FA;"></div>
+        <div class="role-sidebar-line"></div>
+      </div>
+      <div class="role-accent-bar" style="background:#2563EB;"></div>
+      <div class="role-name">HMO</div>
+      <div class="role-chips-row">
+        <span class="role-chip2" style="background:rgba(37,99,235,.1);color:#1D4ED8;">Accent — Blue #2563EB</span>
+        <span class="role-chip2" style="background:rgba(96,165,250,.1);color:#1E40AF;">Bright — #60A5FA</span>
+        <span class="role-chip2" style="background:#0F1D38;color:rgba(255,255,255,.7);">Sidebar — #0F1D38</span>
+      </div>
+    </div>
+
+    <div class="role-col">
+      <div class="role-sidebar" style="background:#190C34;">
+        <div class="role-sidebar-dot" style="background:#A78BFA;"></div>
+        <div class="role-sidebar-line"></div>
+      </div>
+      <div class="role-accent-bar" style="background:#7C3AED;"></div>
+      <div class="role-name">Clinical Researcher</div>
+      <div class="role-chips-row">
+        <span class="role-chip2" style="background:rgba(124,58,237,.1);color:#6D28D9;">Accent — Violet #7C3AED</span>
+        <span class="role-chip2" style="background:rgba(167,139,250,.1);color:#5B21B6;">Bright — #A78BFA</span>
+        <span class="role-chip2" style="background:#190C34;color:rgba(255,255,255,.7);">Sidebar — #190C34</span>
+      </div>
+    </div>
+
+  </div>
+</div>

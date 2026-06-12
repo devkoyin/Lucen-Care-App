@@ -1,0 +1,352 @@
+<h2>Which logo works with the indigo system?</h2>
+<p class="subtitle">The Uizard-inspired indigo (~#3535A8) is now the sidebar/brand base. Each option shows the logo on white (content area) and on indigo (sidebar), plus a mini UI preview.</p>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap');
+
+  .logo-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 24px;
+  }
+
+  .logo-card {
+    border-radius: 14px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.2s;
+    background: #fff;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  }
+  .logo-card.selected {
+    border-color: #F4A261;
+    box-shadow: 0 0 0 4px rgba(244,162,97,0.2);
+  }
+  .logo-card:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(0,0,0,0.12); }
+
+  /* Logo on white */
+  .logo-on-white {
+    background: #F8F9FC;
+    padding: 20px 16px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid #EAECF0;
+    min-height: 90px;
+  }
+
+  /* Logo on indigo */
+  .logo-on-indigo {
+    background: #3535A8;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 60px;
+  }
+
+  /* Mini UI */
+  .mini-ui {
+    display: flex;
+    height: 130px;
+    border-bottom: 1px solid #EAECF0;
+  }
+  .mini-sidebar {
+    width: 50px;
+    background: #3535A8;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px 0;
+    gap: 5px;
+  }
+  .mini-icon-box {
+    width: 28px;
+    height: 24px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+  }
+  .mini-icon-box.active { background: rgba(255,255,255,0.15); }
+  .mini-icon-box.rest { opacity: 0.35; }
+  .mini-content {
+    flex: 1;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .mc-heading { font-size: 11px; font-weight: 700; font-family: 'DM Sans', sans-serif; }
+  .mc-row { display: flex; gap: 5px; }
+  .mc-stat { flex: 1; background: #F4F7FB; border-radius: 6px; padding: 6px; }
+  .mc-val { font-size: 13px; font-weight: 800; font-family: 'DM Sans', sans-serif; }
+  .mc-lbl { font-size: 7px; color: #9CA3AF; font-family: 'DM Sans', sans-serif; }
+  .mc-bar-strip { height: 2px; border-radius: 1px; margin-top: 4px; }
+  .mc-chart { background: #F4F7FB; border-radius: 6px; padding: 6px; flex: 1; }
+  .mini-bars { display: flex; align-items: flex-end; gap: 3px; height: 32px; }
+  .mbar { width: 8px; border-radius: 2px 2px 0 0; }
+
+  /* Meta */
+  .logo-meta { padding: 12px 14px; }
+  .lm-name { font-size: 13px; font-weight: 700; color: #111; margin-bottom: 3px; }
+  .lm-desc { font-size: 11px; color: #6B7280; line-height: 1.5; }
+  .lm-swatches { display: flex; gap: 5px; margin-top: 8px; align-items: center; }
+  .lsw { width: 18px; height: 18px; border-radius: 4px; }
+  .lm-label { font-size: 9px; color: #9CA3AF; margin-right: 4px; }
+  .select-hint { font-size: 10px; color: #9CA3AF; margin-top: 5px; }
+  .tag-new { display: inline-block; font-size: 9px; font-weight: 700; color: white; background: #3535A8; border-radius: 4px; padding: 2px 6px; margin-left: 6px; }
+  .tag-rec { display: inline-block; font-size: 9px; font-weight: 700; color: #D97706; background: #FEF3C7; border-radius: 4px; padding: 2px 6px; margin-left: 6px; }
+
+  .section-divider {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #9CA3AF;
+    text-transform: uppercase;
+    padding: 4px 16px;
+    background: #F9FAFB;
+    border-top: 1px solid #EAECF0;
+    border-bottom: 1px solid #EAECF0;
+  }
+</style>
+
+<div class="logo-grid">
+
+  <!-- ── OPTION 1: V1 Blue & Gold ── -->
+  <div class="logo-card" data-choice="v1" onclick="toggleSelect(this)">
+
+    <div class="logo-on-white">
+      <svg viewBox="0 0 520 180" width="240" height="83" xmlns="http://www.w3.org/2000/svg">
+        <path d="M 58 90 C 40 70,40 50,58 38 C 62 35,66 34,70 34" fill="none" stroke="#1D4E89" stroke-width="5" stroke-linecap="round"/>
+        <path d="M 98 90 C 116 70,116 50,98 38 C 94 35,90 34,86 34" fill="none" stroke="#1D4E89" stroke-width="5" stroke-linecap="round"/>
+        <path d="M 62 88 C 50 72,50 54,62 44 C 66 41,70 40,78 40 C 86 40,90 41,94 44 C 106 54,106 72,94 88" fill="none" stroke="#3AB0A1" stroke-width="3.5" stroke-linecap="round"/>
+        <path d="M 78 82 C 78 82,68 74,68 67 C 68 62,72 59,78 64 C 84 59,88 62,88 67 C 88 74,78 82,78 82 Z" fill="#3AB0A1" opacity="0.9"/>
+        <circle cx="78" cy="52" r="7" fill="#F2C94C"/>
+        <circle cx="78" cy="52" r="3.5" fill="#FFE08A"/>
+        <line x1="78" y1="42" x2="78" y2="38" stroke="#F2C94C" stroke-width="1.8" stroke-linecap="round" opacity="0.7"/>
+        <line x1="88" y1="45" x2="91" y2="42" stroke="#F2C94C" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+        <line x1="68" y1="45" x2="65" y2="42" stroke="#F2C94C" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+        <text x="130" y="74" font-family="'Nunito','Trebuchet MS',sans-serif" font-size="44" font-weight="700" letter-spacing="-0.5" fill="#1D4E89">Lucen</text>
+        <text x="290" y="74" font-family="'Nunito','Trebuchet MS',sans-serif" font-size="44" font-weight="400" letter-spacing="-0.5" fill="#3AB0A1">Care</text>
+        <text x="131" y="100" font-family="'Nunito','Trebuchet MS',sans-serif" font-size="12" font-weight="400" letter-spacing="1.8" fill="#1D4E89" opacity="0.6">Guiding your path to wellness</text>
+        <rect x="130" y="108" width="348" height="2.5" rx="1.25" fill="#F2C94C" opacity="0.8"/>
+      </svg>
+    </div>
+
+    <div class="section-divider">On indigo sidebar</div>
+    <div class="logo-on-indigo">
+      <svg viewBox="20 25 120 110" width="36" height="36" xmlns="http://www.w3.org/2000/svg">
+        <path d="M 58 90 C 40 70,40 50,58 38 C 62 35,66 34,70 34" fill="none" stroke="rgba(255,255,255,0.65)" stroke-width="5" stroke-linecap="round"/>
+        <path d="M 98 90 C 116 70,116 50,98 38 C 94 35,90 34,86 34" fill="none" stroke="rgba(255,255,255,0.65)" stroke-width="5" stroke-linecap="round"/>
+        <path d="M 62 88 C 50 72,50 54,62 44 C 66 41,70 40,78 40 C 86 40,90 41,94 44 C 106 54,106 72,94 88" fill="none" stroke="#5ECFC4" stroke-width="3.5" stroke-linecap="round"/>
+        <path d="M 78 82 C 78 82,68 74,68 67 C 68 62,72 59,78 64 C 84 59,88 62,88 67 C 88 74,78 82,78 82 Z" fill="#5ECFC4" opacity="0.9"/>
+        <circle cx="78" cy="52" r="7" fill="#F2C94C"/>
+        <circle cx="78" cy="52" r="3.5" fill="#FFE08A"/>
+      </svg>
+      <span style="font-family:'Nunito',sans-serif;font-size:16px;font-weight:700;color:white;margin-left:10px;">Lucen<span style="font-weight:400;color:#5ECFC4;">Care</span></span>
+    </div>
+
+    <div class="mini-ui">
+      <div class="mini-sidebar">
+        <div style="width:28px;height:28px;display:flex;align-items:center;justify-content:center;margin-bottom:6px;">
+          <svg viewBox="20 25 120 110" width="22" height="22" xmlns="http://www.w3.org/2000/svg">
+            <path d="M 62 88 C 50 72,50 54,62 44 C 66 41,70 40,78 40 C 86 40,90 41,94 44 C 106 54,106 72,94 88" fill="none" stroke="#5ECFC4" stroke-width="4" stroke-linecap="round"/>
+            <path d="M 78 82 C 78 82,68 74,68 67 C 68 62,72 59,78 64 C 84 59,88 62,88 67 C 88 74,78 82,78 82 Z" fill="#5ECFC4"/>
+            <circle cx="78" cy="52" r="6" fill="#F2C94C"/>
+          </svg>
+        </div>
+        <div class="mini-icon-box active">🏥</div>
+        <div class="mini-icon-box rest">📋</div>
+        <div class="mini-icon-box rest">📊</div>
+        <div class="mini-icon-box rest">⚙️</div>
+      </div>
+      <div class="mini-content" style="background:#F4F7FB;">
+        <div class="mc-heading" style="color:#1D4E89;">Dashboard</div>
+        <div class="mc-row">
+          <div class="mc-stat"><div class="mc-val" style="color:#1D4E89;">2.4k</div><div class="mc-lbl">Patients</div><div class="mc-bar-strip" style="background:#3AB0A1;"></div></div>
+          <div class="mc-stat"><div class="mc-val" style="color:#1D4E89;">340</div><div class="mc-lbl">NGOs</div><div class="mc-bar-strip" style="background:#F2C94C;"></div></div>
+        </div>
+        <div class="mc-chart"><div class="mini-bars">
+          <div class="mbar" style="height:60%;background:#3AB0A1;"></div>
+          <div class="mbar" style="height:80%;background:#1D4E89;"></div>
+          <div class="mbar" style="height:50%;background:#F2C94C;"></div>
+          <div class="mbar" style="height:90%;background:#3AB0A1;"></div>
+          <div class="mbar" style="height:65%;background:#1D4E89;"></div>
+        </div></div>
+      </div>
+    </div>
+
+    <div class="logo-meta">
+      <div class="lm-name">V1 — Navy, Teal & Gold</div>
+      <div class="lm-desc">Your original logo. Navy feels close to indigo but slightly cooler. Works but there's a subtle mismatch between sidebar indigo and logo navy.</div>
+      <div class="lm-swatches">
+        <span class="lm-label">Logo:</span>
+        <div class="lsw" style="background:#1D4E89;"></div>
+        <div class="lsw" style="background:#3AB0A1;"></div>
+        <div class="lsw" style="background:#F2C94C;"></div>
+      </div>
+      <div class="select-hint">Click to select</div>
+    </div>
+  </div>
+
+
+  <!-- ── OPTION 2: V2 Lavender ── -->
+  <div class="logo-card" data-choice="v2" onclick="toggleSelect(this)">
+
+    <div class="logo-on-white">
+      <svg viewBox="0 0 520 180" width="240" height="83" xmlns="http://www.w3.org/2000/svg">
+        <path d="M 58 90 C 40 70,40 50,58 38 C 62 35,66 34,70 34" fill="none" stroke="#5C3D7A" stroke-width="5" stroke-linecap="round"/>
+        <path d="M 98 90 C 116 70,116 50,98 38 C 94 35,90 34,86 34" fill="none" stroke="#5C3D7A" stroke-width="5" stroke-linecap="round"/>
+        <path d="M 62 88 C 50 72,50 54,62 44 C 66 41,70 40,78 40 C 86 40,90 41,94 44 C 106 54,106 72,94 88" fill="none" stroke="#C9748A" stroke-width="3.5" stroke-linecap="round"/>
+        <path d="M 78 82 C 78 82,68 74,68 67 C 68 62,72 59,78 64 C 84 59,88 62,88 67 C 88 74,78 82,78 82 Z" fill="#C9748A" opacity="0.9"/>
+        <circle cx="78" cy="52" r="7" fill="#F4A261"/>
+        <circle cx="78" cy="52" r="3.5" fill="#FFD0A8"/>
+        <line x1="78" y1="42" x2="78" y2="38" stroke="#F4A261" stroke-width="1.8" stroke-linecap="round" opacity="0.7"/>
+        <line x1="88" y1="45" x2="91" y2="42" stroke="#F4A261" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+        <line x1="68" y1="45" x2="65" y2="42" stroke="#F4A261" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+        <text x="130" y="74" font-family="'Nunito','Trebuchet MS',sans-serif" font-size="44" font-weight="700" letter-spacing="-0.5" fill="#5C3D7A">Lucen</text>
+        <text x="290" y="74" font-family="'Nunito','Trebuchet MS',sans-serif" font-size="44" font-weight="400" letter-spacing="-0.5" fill="#C9748A">Care</text>
+        <text x="131" y="100" font-family="'Nunito','Trebuchet MS',sans-serif" font-size="12" font-weight="400" letter-spacing="1.8" fill="#5C3D7A" opacity="0.6">Guiding your path to wellness</text>
+        <rect x="130" y="108" width="348" height="2.5" rx="1.25" fill="#F4A261" opacity="0.8"/>
+      </svg>
+    </div>
+
+    <div class="section-divider">On indigo sidebar</div>
+    <div class="logo-on-indigo">
+      <svg viewBox="20 25 120 110" width="36" height="36" xmlns="http://www.w3.org/2000/svg">
+        <path d="M 58 90 C 40 70,40 50,58 38 C 62 35,66 34,70 34" fill="none" stroke="rgba(255,255,255,0.65)" stroke-width="5" stroke-linecap="round"/>
+        <path d="M 98 90 C 116 70,116 50,98 38 C 94 35,90 34,86 34" fill="none" stroke="rgba(255,255,255,0.65)" stroke-width="5" stroke-linecap="round"/>
+        <path d="M 62 88 C 50 72,50 54,62 44 C 66 41,70 40,78 40 C 86 40,90 41,94 44 C 106 54,106 72,94 88" fill="none" stroke="#F4AABB" stroke-width="3.5" stroke-linecap="round"/>
+        <path d="M 78 82 C 78 82,68 74,68 67 C 68 62,72 59,78 64 C 84 59,88 62,88 67 C 88 74,78 82,78 82 Z" fill="#F4AABB" opacity="0.9"/>
+        <circle cx="78" cy="52" r="7" fill="#F4A261"/>
+        <circle cx="78" cy="52" r="3.5" fill="#FFD0A8"/>
+      </svg>
+      <span style="font-family:'Nunito',sans-serif;font-size:16px;font-weight:700;color:white;margin-left:10px;">Lucen<span style="font-weight:400;color:#F4AABB;">Care</span></span>
+    </div>
+
+    <div class="mini-ui">
+      <div class="mini-sidebar">
+        <div style="width:28px;height:28px;display:flex;align-items:center;justify-content:center;margin-bottom:6px;">
+          <svg viewBox="20 25 120 110" width="22" height="22" xmlns="http://www.w3.org/2000/svg">
+            <path d="M 62 88 C 50 72,50 54,62 44 C 66 41,70 40,78 40 C 86 40,90 41,94 44 C 106 54,106 72,94 88" fill="none" stroke="#F4AABB" stroke-width="4" stroke-linecap="round"/>
+            <path d="M 78 82 C 78 82,68 74,68 67 C 68 62,72 59,78 64 C 84 59,88 62,88 67 C 88 74,78 82,78 82 Z" fill="#F4AABB"/>
+            <circle cx="78" cy="52" r="6" fill="#F4A261"/>
+          </svg>
+        </div>
+        <div class="mini-icon-box active">🏥</div>
+        <div class="mini-icon-box rest">📋</div>
+        <div class="mini-icon-box rest">📊</div>
+        <div class="mini-icon-box rest">⚙️</div>
+      </div>
+      <div class="mini-content" style="background:#FDF8F5;">
+        <div class="mc-heading" style="color:#5C3D7A;">Dashboard</div>
+        <div class="mc-row">
+          <div class="mc-stat"><div class="mc-val" style="color:#5C3D7A;">2.4k</div><div class="mc-lbl">Patients</div><div class="mc-bar-strip" style="background:#C9748A;"></div></div>
+          <div class="mc-stat"><div class="mc-val" style="color:#5C3D7A;">340</div><div class="mc-lbl">NGOs</div><div class="mc-bar-strip" style="background:#F4A261;"></div></div>
+        </div>
+        <div class="mc-chart"><div class="mini-bars">
+          <div class="mbar" style="height:60%;background:#C9748A;"></div>
+          <div class="mbar" style="height:80%;background:#5C3D7A;"></div>
+          <div class="mbar" style="height:50%;background:#F4A261;"></div>
+          <div class="mbar" style="height:90%;background:#C9748A;"></div>
+          <div class="mbar" style="height:65%;background:#5C3D7A;"></div>
+        </div></div>
+      </div>
+    </div>
+
+    <div class="logo-meta">
+      <div class="lm-name">V2 — Plum, Rose & Amber</div>
+      <div class="lm-desc">Warm, human, caring. Plum harmonises with indigo (both purple family). Rose + amber on dark sidebar pops beautifully. Distinct and warm.</div>
+      <div class="lm-swatches">
+        <span class="lm-label">Logo:</span>
+        <div class="lsw" style="background:#5C3D7A;"></div>
+        <div class="lsw" style="background:#C9748A;"></div>
+        <div class="lsw" style="background:#F4A261;"></div>
+      </div>
+      <div class="select-hint">Click to select</div>
+    </div>
+  </div>
+
+
+  <!-- ── OPTION 3: V3 — Indigo Native (New) ── -->
+  <div class="logo-card" data-choice="v3" onclick="toggleSelect(this)">
+
+    <div class="logo-on-white">
+      <svg viewBox="0 0 520 180" width="240" height="83" xmlns="http://www.w3.org/2000/svg">
+        <path d="M 58 90 C 40 70,40 50,58 38 C 62 35,66 34,70 34" fill="none" stroke="#3535A8" stroke-width="5" stroke-linecap="round"/>
+        <path d="M 98 90 C 116 70,116 50,98 38 C 94 35,90 34,86 34" fill="none" stroke="#3535A8" stroke-width="5" stroke-linecap="round"/>
+        <path d="M 62 88 C 50 72,50 54,62 44 C 66 41,70 40,78 40 C 86 40,90 41,94 44 C 106 54,106 72,94 88" fill="none" stroke="#3AB0A1" stroke-width="3.5" stroke-linecap="round"/>
+        <path d="M 78 82 C 78 82,68 74,68 67 C 68 62,72 59,78 64 C 84 59,88 62,88 67 C 88 74,78 82,78 82 Z" fill="#3AB0A1" opacity="0.9"/>
+        <circle cx="78" cy="52" r="7" fill="#F4A261"/>
+        <circle cx="78" cy="52" r="3.5" fill="#FFD0A8"/>
+        <line x1="78" y1="42" x2="78" y2="38" stroke="#F4A261" stroke-width="1.8" stroke-linecap="round" opacity="0.7"/>
+        <line x1="88" y1="45" x2="91" y2="42" stroke="#F4A261" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+        <line x1="68" y1="45" x2="65" y2="42" stroke="#F4A261" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+        <text x="130" y="74" font-family="'Nunito','Trebuchet MS',sans-serif" font-size="44" font-weight="700" letter-spacing="-0.5" fill="#3535A8">Lucen</text>
+        <text x="290" y="74" font-family="'Nunito','Trebuchet MS',sans-serif" font-size="44" font-weight="400" letter-spacing="-0.5" fill="#3AB0A1">Care</text>
+        <text x="131" y="100" font-family="'Nunito','Trebuchet MS',sans-serif" font-size="12" font-weight="400" letter-spacing="1.8" fill="#3535A8" opacity="0.6">Guiding your path to wellness</text>
+        <rect x="130" y="108" width="348" height="2.5" rx="1.25" fill="#F4A261" opacity="0.8"/>
+      </svg>
+    </div>
+
+    <div class="section-divider">On indigo sidebar</div>
+    <div class="logo-on-indigo">
+      <svg viewBox="20 25 120 110" width="36" height="36" xmlns="http://www.w3.org/2000/svg">
+        <path d="M 58 90 C 40 70,40 50,58 38 C 62 35,66 34,70 34" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="5" stroke-linecap="round"/>
+        <path d="M 98 90 C 116 70,116 50,98 38 C 94 35,90 34,86 34" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="5" stroke-linecap="round"/>
+        <path d="M 62 88 C 50 72,50 54,62 44 C 66 41,70 40,78 40 C 86 40,90 41,94 44 C 106 54,106 72,94 88" fill="none" stroke="#5ECFC4" stroke-width="3.5" stroke-linecap="round"/>
+        <path d="M 78 82 C 78 82,68 74,68 67 C 68 62,72 59,78 64 C 84 59,88 62,88 67 C 88 74,78 82,78 82 Z" fill="#5ECFC4" opacity="0.95"/>
+        <circle cx="78" cy="52" r="7" fill="#F4A261"/>
+        <circle cx="78" cy="52" r="3.5" fill="#FFD0A8"/>
+      </svg>
+      <span style="font-family:'Nunito',sans-serif;font-size:16px;font-weight:700;color:white;margin-left:10px;">Lucen<span style="font-weight:400;color:#5ECFC4;">Care</span></span>
+    </div>
+
+    <div class="mini-ui">
+      <div class="mini-sidebar">
+        <div style="width:28px;height:28px;display:flex;align-items:center;justify-content:center;margin-bottom:6px;">
+          <svg viewBox="20 25 120 110" width="22" height="22" xmlns="http://www.w3.org/2000/svg">
+            <path d="M 62 88 C 50 72,50 54,62 44 C 66 41,70 40,78 40 C 86 40,90 41,94 44 C 106 54,106 72,94 88" fill="none" stroke="#5ECFC4" stroke-width="4" stroke-linecap="round"/>
+            <path d="M 78 82 C 78 82,68 74,68 67 C 68 62,72 59,78 64 C 84 59,88 62,88 67 C 88 74,78 82,78 82 Z" fill="#5ECFC4"/>
+            <circle cx="78" cy="52" r="6" fill="#F4A261"/>
+          </svg>
+        </div>
+        <div class="mini-icon-box active">🏥</div>
+        <div class="mini-icon-box rest">📋</div>
+        <div class="mini-icon-box rest">📊</div>
+        <div class="mini-icon-box rest">⚙️</div>
+      </div>
+      <div class="mini-content" style="background:#F4F7FB;">
+        <div class="mc-heading" style="color:#3535A8;">Dashboard</div>
+        <div class="mc-row">
+          <div class="mc-stat"><div class="mc-val" style="color:#3535A8;">2.4k</div><div class="mc-lbl">Patients</div><div class="mc-bar-strip" style="background:#3AB0A1;"></div></div>
+          <div class="mc-stat"><div class="mc-val" style="color:#3535A8;">340</div><div class="mc-lbl">NGOs</div><div class="mc-bar-strip" style="background:#F4A261;"></div></div>
+        </div>
+        <div class="mc-chart"><div class="mini-bars">
+          <div class="mbar" style="height:60%;background:#3AB0A1;"></div>
+          <div class="mbar" style="height:80%;background:#3535A8;"></div>
+          <div class="mbar" style="height:50%;background:#F4A261;"></div>
+          <div class="mbar" style="height:90%;background:#3AB0A1;"></div>
+          <div class="mbar" style="height:65%;background:#3535A8;"></div>
+        </div></div>
+      </div>
+    </div>
+
+    <div class="logo-meta">
+      <div class="lm-name">V3 — Indigo, Teal & Amber <span class="tag-rec">Recommended</span></div>
+      <div class="lm-desc">New variant built for this system. "Lucen" in indigo, "Care" in teal, amber spark. Perfectly native to the indigo sidebar. Zero tension between logo and UI.</div>
+      <div class="lm-swatches">
+        <span class="lm-label">Logo:</span>
+        <div class="lsw" style="background:#3535A8;"></div>
+        <div class="lsw" style="background:#3AB0A1;"></div>
+        <div class="lsw" style="background:#F4A261;"></div>
+      </div>
+      <div class="select-hint">Click to select</div>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lucen Care — Design System · Section 2: Typography & Spacing</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: #F5F5FB; color: #1E1E6A; padding: 32px; }
+
+  .page-header {
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 36px; padding-bottom: 24px;
+    border-bottom: 1px solid rgba(53,53,168,0.1);
+  }
+  .header-text h1 { font-size: 22px; font-weight: 800; color: #3535A8; letter-spacing: -0.5px; }
+  .header-text p { font-size: 13px; color: #8A8AB0; margin-top: 2px; }
+  .section-badge {
+    margin-left: auto; background: #F4A261; color: white;
+    font-size: 11px; font-weight: 700; padding: 5px 12px;
+    border-radius: 20px; letter-spacing: 0.5px;
+  }
+
+  .section-title {
+    font-size: 11px; font-weight: 700; letter-spacing: 1.2px;
+    text-transform: uppercase; color: #8A8AB0;
+    margin-bottom: 16px; margin-top: 36px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .section-title::after { content: ''; flex: 1; height: 1px; background: rgba(53,53,168,0.1); }
+  .section-title:first-of-type { margin-top: 0; }
+
+  /* ── TYPE SCALE ── */
+  .type-scale { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 10px rgba(53,53,168,0.06); }
+  .ts-row {
+    display: flex; align-items: baseline; gap: 20px;
+    padding: 14px 20px; border-bottom: 1px solid #F0F0F8;
+  }
+  .ts-row:last-child { border-bottom: none; }
+  .ts-meta { width: 140px; flex-shrink: 0; }
+  .ts-token { font-family: 'DM Mono', monospace; font-size: 10px; color: #8A8AB0; }
+  .ts-spec { font-size: 9px; color: #C8C8E0; margin-top: 3px; }
+  .ts-usage { font-size: 9px; color: #B0B0D0; margin-top: 2px; }
+  .ts-sample { flex: 1; color: #1E1E6A; line-height: 1.15; }
+
+  /* ── FONT PAIR CARD ── */
+  .font-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 6px; }
+  .font-card {
+    background: white; border-radius: 12px; padding: 20px 22px;
+    box-shadow: 0 2px 10px rgba(53,53,168,0.06);
+  }
+  .fc-label { font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #8A8AB0; margin-bottom: 12px; }
+  .fc-name { font-size: 16px; font-weight: 700; color: #1E1E6A; margin-bottom: 6px; }
+  .fc-sub { font-size: 11px; color: #8A8AB0; margin-bottom: 16px; }
+  .fc-alphabet { font-size: 22px; letter-spacing: 1px; color: #3535A8; margin-bottom: 10px; line-height: 1.4; }
+  .fc-weights { display: flex; flex-direction: column; gap: 5px; }
+  .fw-row { display: flex; align-items: baseline; gap: 10px; }
+  .fw-num { font-family: monospace; font-size: 9px; color: #B0B0D0; width: 28px; }
+  .fc-tag {
+    display: inline-block; font-size: 9px; font-weight: 700;
+    padding: 2px 7px; border-radius: 4px; margin-top: 12px;
+  }
+
+  /* ── SPACING ── */
+  .spacing-grid { display: flex; flex-direction: column; gap: 0; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 10px rgba(53,53,168,0.06); }
+  .sp-row {
+    display: flex; align-items: center; gap: 16px;
+    padding: 10px 20px; border-bottom: 1px solid #F0F0F8;
+  }
+  .sp-row:last-child { border-bottom: none; }
+  .sp-token { font-family: monospace; font-size: 10px; color: #8A8AB0; width: 80px; flex-shrink: 0; }
+  .sp-px { font-size: 11px; font-weight: 700; color: #1E1E6A; width: 36px; flex-shrink: 0; }
+  .sp-bar-wrap { flex: 1; }
+  .sp-bar { height: 14px; border-radius: 3px; background: linear-gradient(90deg, #3535A8, #6B6BCC); }
+  .sp-usage { font-size: 10px; color: #B0B0D0; width: 200px; flex-shrink: 0; text-align: right; }
+
+  /* ── RADIUS ── */
+  .radius-row { display: flex; gap: 14px; flex-wrap: wrap; }
+  .radius-card {
+    background: white; border-radius: 10px; padding: 16px;
+    box-shadow: 0 2px 8px rgba(53,53,168,0.06);
+    display: flex; flex-direction: column; align-items: center; gap: 10px; flex: 1; min-width: 90px;
+  }
+  .radius-demo {
+    width: 52px; height: 52px; background: #3535A8;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 700; color: white;
+  }
+  .radius-token { font-family: monospace; font-size: 9px; color: #8A8AB0; text-align: center; }
+  .radius-val { font-size: 11px; font-weight: 700; color: #1E1E6A; }
+
+  /* ── SHADOWS ── */
+  .shadow-row { display: flex; gap: 16px; flex-wrap: wrap; }
+  .shadow-card {
+    flex: 1; min-width: 120px; background: white; border-radius: 10px;
+    padding: 16px 14px; display: flex; flex-direction: column; align-items: center; gap: 10px;
+  }
+  .shadow-demo {
+    width: 60px; height: 44px; background: white; border-radius: 8px;
+  }
+  .shadow-token { font-family: monospace; font-size: 9px; color: #8A8AB0; text-align: center; }
+  .shadow-usage { font-size: 10px; color: #B0B0D0; text-align: center; }
+
+  /* ── LINE HEIGHT / LETTER SPACING ── */
+  .metrics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .metric-card {
+    background: white; border-radius: 12px; padding: 18px 20px;
+    box-shadow: 0 2px 10px rgba(53,53,168,0.06);
+  }
+  .metric-title { font-size: 11px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: #8A8AB0; margin-bottom: 14px; }
+  .metric-row { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #F0F0F8; }
+  .metric-row:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+  .metric-token { font-family: monospace; font-size: 9px; color: #8A8AB0; width: 110px; flex-shrink: 0; padding-top: 2px; }
+  .metric-sample { flex: 1; }
+
+  .approval-strip {
+    background: white; border: 1.5px solid rgba(53,53,168,0.12);
+    border-radius: 12px; padding: 16px 20px; margin-top: 36px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .approval-text strong { font-size: 13px; font-weight: 700; color: #1E1E6A; display: block; margin-bottom: 3px; }
+  .approval-text span { font-size: 11px; color: #8A8AB0; }
+</style>
+</head>
+<body>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div>
+    <div class="header-text">
+      <h1>Design System</h1>
+      <p>V3 · Amber-Led Modern · Lucen Care Platform</p>
+    </div>
+  </div>
+  <div class="section-badge">SECTION 2 OF 3 — TYPOGRAPHY & SPACING</div>
+</div>
+
+
+<!-- ══ 1. FONT FAMILIES ══════════════════════════════════ -->
+<div class="section-title">Font Families</div>
+<div class="font-pair">
+
+  <div class="font-card">
+    <div class="fc-label">UI & Body — Primary</div>
+    <div class="fc-name" style="font-family:'DM Sans',sans-serif;">DM Sans</div>
+    <div class="fc-sub">Clean, geometric, humanist. Excellent screen legibility at small sizes. Google Fonts — free.</div>
+    <div class="fc-alphabet" style="font-family:'DM Sans',sans-serif;">
+      AaBbCcDdEeFfGgHhIiJj<br>KkLlMmNnOoPpQqRrSs<br>TtUuVvWwXxYyZz 0–9
+    </div>
+    <div class="fc-weights" style="font-family:'DM Sans',sans-serif;">
+      <div class="fw-row"><span class="fw-num">400</span><span style="font-weight:400;font-size:13px;color:#4A4A7A;">Regular — body text, descriptions</span></div>
+      <div class="fw-row"><span class="fw-num">500</span><span style="font-weight:500;font-size:13px;color:#4A4A7A;">Medium — labels, form fields</span></div>
+      <div class="fw-row"><span class="fw-num">600</span><span style="font-weight:600;font-size:13px;color:#1E1E6A;">Semibold — sub-headings, nav items</span></div>
+      <div class="fw-row"><span class="fw-num">700</span><span style="font-weight:700;font-size:13px;color:#1E1E6A;">Bold — section headings, card titles</span></div>
+      <div class="fw-row"><span class="fw-num">800</span><span style="font-weight:800;font-size:13px;color:#3535A8;">Extrabold — stat numbers, page titles</span></div>
+    </div>
+    <span class="fc-tag" style="background:rgba(53,53,168,0.1);color:#3535A8;">--font-family: 'DM Sans'</span>
+  </div>
+
+  <div class="font-card">
+    <div class="fc-label">Logo & Display — Secondary</div>
+    <div class="fc-name" style="font-family:'Nunito',sans-serif;">Nunito</div>
+    <div class="fc-sub">Rounded, warm, distinctive. Used for the logo wordmark and hero display text only — gives personality at large sizes.</div>
+    <div class="fc-alphabet" style="font-family:'Nunito',sans-serif;">
+      AaBbCcDdEeFfGgHhIiJj<br>KkLlMmNnOoPpQqRrSs<br>TtUuVvWwXxYyZz 0–9
+    </div>
+    <div class="fc-weights" style="font-family:'Nunito',sans-serif;">
+      <div class="fw-row"><span class="fw-num">400</span><span style="font-weight:400;font-size:13px;color:#4A4A7A;">Regular — tagline / subtext</span></div>
+      <div class="fw-row"><span class="fw-num">700</span><span style="font-weight:700;font-size:13px;color:#1E1E6A;">Bold — logo "Lucen"</span></div>
+      <div class="fw-row"><span class="fw-num">800</span><span style="font-weight:800;font-size:14px;color:#3535A8;">Extrabold — hero headline display</span></div>
+      <div class="fw-row"><span class="fw-num">900</span><span style="font-weight:900;font-size:14px;color:#3535A8;">Black — special display moments</span></div>
+    </div>
+    <span class="fc-tag" style="background:rgba(244,162,97,0.12);color:#D97706;">--font-display: 'Nunito' — logo & hero only</span>
+  </div>
+
+</div>
+
+
+<!-- ══ 2. TYPE SCALE ══════════════════════════════════════ -->
+<div class="section-title">Type Scale — DM Sans</div>
+<div class="type-scale">
+  <div class="ts-row">
+    <div class="ts-meta">
+      <div class="ts-token">--text-display</div>
+      <div class="ts-spec">48px / weight 800</div>
+      <div class="ts-usage">Hero headline (Nunito)</div>
+    </div>
+    <div class="ts-sample" style="font-family:'Nunito',sans-serif;font-size:48px;font-weight:800;letter-spacing:-1px;color:#3535A8;">Lucen Care</div>
+  </div>
+  <div class="ts-row">
+    <div class="ts-meta">
+      <div class="ts-token">--text-3xl</div>
+      <div class="ts-spec">36px / weight 800</div>
+      <div class="ts-usage">Landing page H1</div>
+    </div>
+    <div class="ts-sample" style="font-size:36px;font-weight:800;letter-spacing:-0.8px;">The platform for care.</div>
+  </div>
+  <div class="ts-row">
+    <div class="ts-meta">
+      <div class="ts-token">--text-2xl</div>
+      <div class="ts-spec">28px / weight 700</div>
+      <div class="ts-usage">Section headings, H2</div>
+    </div>
+    <div class="ts-sample" style="font-size:28px;font-weight:700;letter-spacing:-0.5px;">Patient Dashboard</div>
+  </div>
+  <div class="ts-row">
+    <div class="ts-meta">
+      <div class="ts-token">--text-xl</div>
+      <div class="ts-spec">22px / weight 700</div>
+      <div class="ts-usage">Card titles, modal headers</div>
+    </div>
+    <div class="ts-sample" style="font-size:22px;font-weight:700;">Health Overview</div>
+  </div>
+  <div class="ts-row">
+    <div class="ts-meta">
+      <div class="ts-token">--text-lg</div>
+      <div class="ts-spec">18px / weight 600</div>
+      <div class="ts-usage">Sub-section titles, sidebar role label</div>
+    </div>
+    <div class="ts-sample" style="font-size:18px;font-weight:600;color:#4A4A7A;">Active Programs — NGO</div>
+  </div>
+  <div class="ts-row">
+    <div class="ts-meta">
+      <div class="ts-token">--text-md</div>
+      <div class="ts-spec">16px / weight 400–600</div>
+      <div class="ts-usage">Prominent body, form labels</div>
+    </div>
+    <div class="ts-sample" style="font-size:16px;font-weight:400;color:#4A4A7A;">Records are updated every 24 hours across all active programs and enrolled patients.</div>
+  </div>
+  <div class="ts-row">
+    <div class="ts-meta">
+      <div class="ts-token">--text-base</div>
+      <div class="ts-spec">14px / weight 400</div>
+      <div class="ts-usage">Default UI body text</div>
+    </div>
+    <div class="ts-sample" style="font-size:14px;font-weight:400;color:#4A4A7A;">Select a patient record to view their full health timeline, consent history, and active care plan.</div>
+  </div>
+  <div class="ts-row">
+    <div class="ts-meta">
+      <div class="ts-token">--text-sm</div>
+      <div class="ts-spec">12px / weight 500</div>
+      <div class="ts-usage">Table cells, metadata, secondary labels</div>
+    </div>
+    <div class="ts-sample" style="font-size:12px;font-weight:500;color:#8A8AB0;">Last updated: 3 minutes ago · Verified by Admin</div>
+  </div>
+  <div class="ts-row">
+    <div class="ts-meta">
+      <div class="ts-token">--text-xs</div>
+      <div class="ts-spec">11px / weight 700</div>
+      <div class="ts-usage">Badges, tags, uppercase labels</div>
+    </div>
+    <div class="ts-sample" style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#8A8AB0;">Role Activity · GDPR Compliant</div>
+  </div>
+  <div class="ts-row">
+    <div class="ts-meta">
+      <div class="ts-token">--text-stat</div>
+      <div class="ts-spec">32px / weight 800</div>
+      <div class="ts-usage">Dashboard stat numbers</div>
+    </div>
+    <div class="ts-sample" style="display:flex;gap:32px;align-items:baseline;">
+      <span style="font-size:32px;font-weight:800;color:#3535A8;">2,412</span>
+      <span style="font-size:32px;font-weight:800;color:#3AB0A1;">340</span>
+      <span style="font-size:32px;font-weight:800;color:#F4A261;">18k+</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══ 3. LINE HEIGHT & LETTER SPACING ═══════════════════ -->
+<div class="section-title">Line Height &amp; Letter Spacing</div>
+<div class="metrics-grid">
+  <div class="metric-card">
+    <div class="metric-title">Line Height</div>
+    <div class="metric-row">
+      <div class="metric-token">--leading-none<br>1.0</div>
+      <div class="metric-sample" style="font-size:16px;font-weight:800;line-height:1.0;color:#1E1E6A;">The platform that connects<br>every voice in healthcare.</div>
+    </div>
+    <div class="metric-row">
+      <div class="metric-token">--leading-tight<br>1.25</div>
+      <div class="metric-sample" style="font-size:16px;font-weight:700;line-height:1.25;color:#1E1E6A;">Patient Dashboard<br>Health Overview</div>
+    </div>
+    <div class="metric-row">
+      <div class="metric-token">--leading-snug<br>1.4</div>
+      <div class="metric-sample" style="font-size:14px;line-height:1.4;color:#4A4A7A;">Records are updated every 24 hours across all active programs and enrolled patients.</div>
+    </div>
+    <div class="metric-row">
+      <div class="metric-token">--leading-relaxed<br>1.6</div>
+      <div class="metric-sample" style="font-size:13px;line-height:1.6;color:#4A4A7A;">Lucen Care connects patients, NGOs, HMOs, and researchers on one unified platform. Built for real-world health outcomes.</div>
+    </div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-title">Letter Spacing</div>
+    <div class="metric-row">
+      <div class="metric-token">--tracking-tight<br>-0.8px</div>
+      <div class="metric-sample" style="font-size:28px;font-weight:800;letter-spacing:-0.8px;color:#1E1E6A;">Lucen Care</div>
+    </div>
+    <div class="metric-row">
+      <div class="metric-token">--tracking-normal<br>0px</div>
+      <div class="metric-sample" style="font-size:16px;font-weight:600;letter-spacing:0;color:#1E1E6A;">Patient Dashboard</div>
+    </div>
+    <div class="metric-row">
+      <div class="metric-token">--tracking-wide<br>0.5px</div>
+      <div class="metric-sample" style="font-size:13px;font-weight:500;letter-spacing:0.5px;color:#4A4A7A;">Health monitoring tools</div>
+    </div>
+    <div class="metric-row">
+      <div class="metric-token">--tracking-wider<br>1.4px</div>
+      <div class="metric-sample" style="font-size:10px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:#8A8AB0;">ROLE ACTIVITY · GDPR</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══ 4. SPACING SCALE ══════════════════════════════════ -->
+<div class="section-title">Spacing Scale — 4px Base</div>
+<div class="spacing-grid">
+  <div class="sp-row"><span class="sp-token">--space-1</span><span class="sp-px">4px</span><div class="sp-bar-wrap"><div class="sp-bar" style="width:4px;"></div></div><span class="sp-usage">Icon internal gap, tight badge padding</span></div>
+  <div class="sp-row"><span class="sp-token">--space-2</span><span class="sp-px">8px</span><div class="sp-bar-wrap"><div class="sp-bar" style="width:8px;"></div></div><span class="sp-usage">Small gap, inline icon-to-label</span></div>
+  <div class="sp-row"><span class="sp-token">--space-3</span><span class="sp-px">12px</span><div class="sp-bar-wrap"><div class="sp-bar" style="width:12px;"></div></div><span class="sp-usage">Input padding vertical, tag padding</span></div>
+  <div class="sp-row"><span class="sp-token">--space-4</span><span class="sp-px">16px</span><div class="sp-bar-wrap"><div class="sp-bar" style="width:20px;"></div></div><span class="sp-usage">Card padding, button padding horizontal</span></div>
+  <div class="sp-row"><span class="sp-token">--space-5</span><span class="sp-px">20px</span><div class="sp-bar-wrap"><div class="sp-bar" style="width:28px;"></div></div><span class="sp-usage">Section header gap, sidebar item padding</span></div>
+  <div class="sp-row"><span class="sp-token">--space-6</span><span class="sp-px">24px</span><div class="sp-bar-wrap"><div class="sp-bar" style="width:38px;"></div></div><span class="sp-usage">Card internal sections, form field gap</span></div>
+  <div class="sp-row"><span class="sp-token">--space-8</span><span class="sp-px">32px</span><div class="sp-bar-wrap"><div class="sp-bar" style="width:56px;"></div></div><span class="sp-usage">Dashboard stat row, section gap</span></div>
+  <div class="sp-row"><span class="sp-token">--space-10</span><span class="sp-px">40px</span><div class="sp-bar-wrap"><div class="sp-bar" style="width:76px;"></div></div><span class="sp-usage">Page section padding top/bottom</span></div>
+  <div class="sp-row"><span class="sp-token">--space-12</span><span class="sp-px">48px</span><div class="sp-bar-wrap"><div class="sp-bar" style="width:96px;"></div></div><span class="sp-usage">Hero padding, large modal padding</span></div>
+  <div class="sp-row"><span class="sp-token">--space-16</span><span class="sp-px">64px</span><div class="sp-bar-wrap"><div class="sp-bar" style="width:140px;"></div></div><span class="sp-usage">Landing page section vertical rhythm</span></div>
+  <div class="sp-row"><span class="sp-token">--space-24</span><span class="sp-px">96px</span><div class="sp-bar-wrap"><div class="sp-bar" style="width:200px;"></div></div><span class="sp-usage">Hero section height offset, max-width gutters</span></div>
+</div>
+
+
+<!-- ══ 5. BORDER RADIUS ══════════════════════════════════ -->
+<div class="section-title">Border Radius</div>
+<div class="radius-row">
+  <div class="radius-card">
+    <div class="radius-demo" style="border-radius:0px;">sm</div>
+    <div class="radius-val">0px</div>
+    <div class="radius-token">--radius-none<br>Dividers, full-bleed</div>
+  </div>
+  <div class="radius-card">
+    <div class="radius-demo" style="border-radius:4px;">sm</div>
+    <div class="radius-val">4px</div>
+    <div class="radius-token">--radius-sm<br>Tags, badges, chips</div>
+  </div>
+  <div class="radius-card">
+    <div class="radius-demo" style="border-radius:8px;">md</div>
+    <div class="radius-val">8px</div>
+    <div class="radius-token">--radius-md<br>Buttons, inputs, small cards</div>
+  </div>
+  <div class="radius-card">
+    <div class="radius-demo" style="border-radius:12px;">lg</div>
+    <div class="radius-val">12px</div>
+    <div class="radius-token">--radius-lg<br>Dashboard cards, panels</div>
+  </div>
+  <div class="radius-card">
+    <div class="radius-demo" style="border-radius:16px;">xl</div>
+    <div class="radius-val">16px</div>
+    <div class="radius-token">--radius-xl<br>Modals, drawers, hero cards</div>
+  </div>
+  <div class="radius-card">
+    <div class="radius-demo" style="border-radius:9999px;padding:0 8px;font-size:9px;">full</div>
+    <div class="radius-val">9999px</div>
+    <div class="radius-token">--radius-full<br>Pills, avatars, progress</div>
+  </div>
+</div>
+
+
+<!-- ══ 6. SHADOW SCALE ═══════════════════════════════════ -->
+<div class="section-title">Shadow Scale — Indigo-tinted</div>
+<div class="shadow-row">
+  <div class="shadow-card">
+    <div class="shadow-demo" style="box-shadow:0 1px 3px rgba(53,53,168,0.06);border:1px solid rgba(53,53,168,0.08);"></div>
+    <div class="radius-val" style="font-size:11px;">xs</div>
+    <div class="shadow-token">--shadow-xs</div>
+    <div class="shadow-usage">Subtle cards, table rows</div>
+  </div>
+  <div class="shadow-card">
+    <div class="shadow-demo" style="box-shadow:0 2px 8px rgba(53,53,168,0.08);"></div>
+    <div class="radius-val" style="font-size:11px;">sm</div>
+    <div class="shadow-token">--shadow-sm</div>
+    <div class="shadow-usage">Default dashboard cards</div>
+  </div>
+  <div class="shadow-card">
+    <div class="shadow-demo" style="box-shadow:0 4px 16px rgba(53,53,168,0.12);"></div>
+    <div class="radius-val" style="font-size:11px;">md</div>
+    <div class="shadow-token">--shadow-md</div>
+    <div class="shadow-usage">Hover state, dropdowns</div>
+  </div>
+  <div class="shadow-card">
+    <div class="shadow-demo" style="box-shadow:0 8px 28px rgba(53,53,168,0.16);"></div>
+    <div class="radius-val" style="font-size:11px;">lg</div>
+    <div class="shadow-token">--shadow-lg</div>
+    <div class="shadow-usage">Modals, drawers</div>
+  </div>
+  <div class="shadow-card">
+    <div class="shadow-demo" style="box-shadow:0 4px 16px rgba(244,162,97,0.3);"></div>
+    <div class="radius-val" style="font-size:11px;">amber</div>
+    <div class="shadow-token">--shadow-cta</div>
+    <div class="shadow-usage">Amber button hover glow</div>
+  </div>
+  <div class="shadow-card">
+    <div class="shadow-demo" style="box-shadow:0 4px 20px rgba(53,53,168,0.3);background:#3535A8;border-radius:8px;"></div>
+    <div class="radius-val" style="font-size:11px;">sidebar</div>
+    <div class="shadow-token">--shadow-sidebar</div>
+    <div class="shadow-usage">Sidebar depth on scroll</div>
+  </div>
+</div>
+
+
+<!-- ══ APPROVAL ══════════════════════════════════════════ -->
+<div class="approval-strip">
+  <div style="font-size:28px;">✏️</div>
+  <div>
+    <strong>Section 2 complete — Typography &amp; Spacing</strong>
+    <span>DM Sans for UI, Nunito for logo &amp; hero display. 4px base spacing grid. 6-step radius scale. Indigo-tinted shadows. Let me know if anything needs adjusting — otherwise I'll move to Section 3: full screen mockups of the landing page, login, and patient dashboard.</span>
+  </div>
+</div>
+
+</body>
+</html>

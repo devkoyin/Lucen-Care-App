@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Lucen Care — Animation Options</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, sans-serif; background: #f0faf8; padding: 40px; }
+    h1 { color: #2A8A7D; font-size: 18px; margin-bottom: 8px; letter-spacing: -0.3px; }
+    .note { color: #3D6B67; font-size: 12px; margin-bottom: 32px; }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      max-width: 900px;
+    }
+    .card {
+      background: #EAF7F5;
+      border: 1.5px solid rgba(58,176,161,0.22);
+      border-radius: 20px;
+      padding: 28px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+    .card--wide { grid-column: span 2; }
+    .card--wide svg { max-width: 420px; }
+    .card h2 { color: #2A8A7D; font-size: 13px; font-weight: 700; text-align: center; letter-spacing: -0.2px; }
+    .card p { color: #3D6B67; font-size: 11px; text-align: center; line-height: 1.65; max-width: 280px; }
+    svg { display: block; overflow: visible; }
+
+    /* ══ CARD 1 — Pulse glow ════════════════════════════════ */
+    @keyframes tp-pulse {
+      0%, 100% { opacity: 0.85; transform: scale(1); }
+      50%       { opacity: 0.10; transform: scale(1.8); }
+    }
+    .c1-tp1-inner { transform-box: fill-box; transform-origin: center; animation: tp-pulse 1.8s ease-in-out infinite; }
+    .c1-tp2-inner { transform-box: fill-box; transform-origin: center; animation: tp-pulse 1.8s ease-in-out 0.9s infinite; }
+    .c1-tp1-outer { transform-box: fill-box; transform-origin: center; opacity: 0.14; animation: tp-pulse 1.8s ease-in-out 0.15s infinite; }
+    .c1-tp2-outer { transform-box: fill-box; transform-origin: center; opacity: 0.14; animation: tp-pulse 1.8s ease-in-out 1.05s infinite; }
+
+    /* ══ CARD 2 — Flowing dashes ════════════════════════════ */
+    @keyframes flow {
+      from { stroke-dashoffset: 8; }
+      to   { stroke-dashoffset: 0; }
+    }
+    .c2-flow { animation: flow 0.85s linear infinite; }
+
+    /* ══ CARD 3 — Soft float ════════════════════════════════ */
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-6px); }
+    }
+    .c3-svg { animation: float 4s ease-in-out infinite; }
+
+    /* ══ CARD 4 — Staggered entry ═══════════════════════════ */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    .c4-svg .e-left   { animation: fadeUp 0.55s cubic-bezier(0.22,1,0.36,1) 0.15s both; }
+    .c4-svg .e-center { animation: fadeUp 0.55s cubic-bezier(0.22,1,0.36,1) 0.45s both; }
+    .c4-svg .e-right  { animation: fadeUp 0.55s cubic-bezier(0.22,1,0.36,1) 0.75s both; }
+    .c4-svg .e-arms   { animation: fadeIn 0.45s ease 1.15s both; }
+    .c4-svg .e-touch  { animation: fadeIn 0.40s ease 1.55s both; }
+
+    /* ══ CARD 5 — Figure sway ═══════════════════════════════ */
+    @keyframes sway-l {
+      0%, 100% { transform: rotate(0deg); }
+      50%       { transform: rotate(2.5deg); }
+    }
+    @keyframes sway-c {
+      0%, 100% { transform: rotate(0deg); }
+      50%       { transform: rotate(-1.2deg); }
+    }
+    @keyframes sway-r {
+      0%, 100% { transform: rotate(0deg); }
+      50%       { transform: rotate(-2.5deg); }
+    }
+    .c5-svg .s-left   { transform-box: fill-box; transform-origin: bottom center; animation: sway-l 3.2s ease-in-out infinite; }
+    .c5-svg .s-center { transform-box: fill-box; transform-origin: bottom center; animation: sway-c 3.8s ease-in-out 0.4s infinite; }
+    .c5-svg .s-right  { transform-box: fill-box; transform-origin: bottom center; animation: sway-r 3.2s ease-in-out 1.6s infinite; }
+  </style>
+</head>
+<body>
+  <h1>Lucen Care — Animation Options</h1>
+  <p class="note">All animations run live. Tell me which ones to apply — you can combine them.</p>
+  <div class="grid">
+
+    <!-- ── Card 1: Pulse glow ─────────────────────────────── -->
+    <div class="card">
+      <h2>1 — Pulse Glow (touch points)</h2>
+      <svg width="260" height="160" viewBox="0 0 260 160" fill="none">
+        <line x1="20" y1="138" x2="240" y2="138" stroke="#3AB0A1" stroke-width="1" opacity="0.25"/>
+        <line x1="97" y1="77" x2="163" y2="77" stroke="#3AB0A1" stroke-width="1" stroke-dasharray="3 2" opacity="0.18"/>
+        <!-- Patient -->
+        <circle cx="65" cy="52" r="18" fill="#3AB0A1" opacity="0.12"/>
+        <circle cx="65" cy="52" r="11" fill="#3AB0A1" opacity="0.60"/>
+        <line x1="65" y1="63" x2="65" y2="106" stroke="#3AB0A1" stroke-width="2.5" stroke-linecap="round" opacity="0.55"/>
+        <line x1="65" y1="78" x2="47" y2="93"  stroke="#3AB0A1" stroke-width="2" stroke-linecap="round" opacity="0.40"/>
+        <line x1="65" y1="78" x2="97" y2="77"  stroke="#3AB0A1" stroke-width="2" stroke-linecap="round" opacity="0.60"/>
+        <line x1="65" y1="106" x2="52" y2="136" stroke="#3AB0A1" stroke-width="2" stroke-linecap="round" opacity="0.45"/>
+        <line x1="65" y1="106" x2="78" y2="136" stroke="#3AB0A1" stroke-width="2" stroke-linecap="round" opacity="0.45"/>
+        <text x="65" y="152" text-anchor="middle" font-size="8" fill="#2A8A7D" font-weight="600" font-family="system-ui">Patient</text>
+        <!-- NGO -->
+        <circle cx="130" cy="42" r="20" fill="#5ECFC0" opacity="0.16"/>
+        <circle cx="130" cy="42" r="13" fill="#2A9D8F" opacity="0.75"/>
+        <line x1="130" y1="55"  x2="130" y2="106" stroke="#2A9D8F" stroke-width="3"   stroke-linecap="round" opacity="0.65"/>
+        <line x1="130" y1="74"  x2="97"  y2="77"  stroke="#2A9D8F" stroke-width="2.5" stroke-linecap="round" opacity="0.60"/>
+        <line x1="130" y1="74"  x2="163" y2="77"  stroke="#2A9D8F" stroke-width="2.5" stroke-linecap="round" opacity="0.60"/>
+        <line x1="130" y1="106" x2="117" y2="136" stroke="#2A9D8F" stroke-width="2.5" stroke-linecap="round" opacity="0.55"/>
+        <line x1="130" y1="106" x2="143" y2="136" stroke="#2A9D8F" stroke-width="2.5" stroke-linecap="round" opacity="0.55"/>
+        <text x="130" y="152" text-anchor="middle" font-size="8" fill="#2A8A7D" font-weight="600" font-family="system-ui">NGO</text>
+        <!-- HMO -->
+        <circle cx="195" cy="52" r="18" fill="#3535A8" opacity="0.10"/>
+        <circle cx="195" cy="52" r="11" fill="#3535A8" opacity="0.60"/>
+        <line x1="195" y1="63"  x2="195" y2="106" stroke="#3535A8" stroke-width="2.5" stroke-linecap="round" opacity="0.55"/>
+        <line x1="195" y1="78"  x2="163" y2="77"  stroke="#3535A8" stroke-width="2"   stroke-linecap="round" opacity="0.60"/>
+        <line x1="195" y1="78"  x2="213" y2="93"  stroke="#3535A8" stroke-width="2"   stroke-linecap="round" opacity="0.40"/>
+        <line x1="195" y1="106" x2="182" y2="136" stroke="#3535A8" stroke-width="2"   stroke-linecap="round" opacity="0.45"/>
+        <line x1="195" y1="106" x2="208" y2="136" stroke="#3535A8" stroke-width="2"   stroke-linecap="round" opacity="0.45"/>
+        <text x="195" y="152" text-anchor="middle" font-size="8" fill="#3535A8" font-weight="600" font-family="system-ui">HMO</text>
+        <!-- Pulsing touch points -->
+        <circle class="c1-tp1-outer" cx="97"  cy="77" r="5.5" fill="#3AB0A1"/>
+        <circle class="c1-tp1-inner" cx="97"  cy="77" r="3"   fill="#3AB0A1"/>
+        <circle class="c1-tp2-outer" cx="163" cy="77" r="5.5" fill="#2A9D8F"/>
+        <circle class="c1-tp2-inner" cx="163" cy="77" r="3"   fill="#2A9D8F"/>
+      </svg>
+      <p>Connection circles breathe in and out, alternating 0.9 s apart — like a live heartbeat at each join point.</p>
+    </div>
+
+    <!-- ── Card 2: Flowing dashes ─────────────────────────── -->
+    <div class="card">
+      <h2>2 — Flowing Dashes (bridge line)</h2>
+      <svg width="260" height="160" viewBox="0 0 260 160" fill="none">
+        <line x1="20" y1="138" x2="240" y2="138" stroke="#3AB0A1" stroke-width="1" opacity="0.25"/>
+        <line class="c2-flow" x1="60" y1="77" x2="200" y2="77" stroke="#3AB0A1" stroke-width="1.5" stroke-dasharray="5 3" opacity="0.50"/>
+        <!-- Patient -->
+        <circle cx="65" cy="52" r="18" fill="#3AB0A1" opacity="0.12"/>
+        <circle cx="65" cy="52" r="11" fill="#3AB0A1" opacity="0.60"/>
+        <line x1="65" y1="63" x2="65" y2="106" stroke="#3AB0A1" stroke-width="2.5" stroke-linecap="round" opacity="0.55"/>
+        <line x1="65" y1="78" x2="47" y2="93"  stroke="#3AB0A1" stroke-width="2" stroke-linecap="round" opacity="0.40"/>
+        <line x1="65" y1="78" x2="97" y2="77"  stroke="#3AB0A1" stroke-width="2" stroke-linecap="round" opacity="0.60"/>
+        <line x1="65" y1="106" x2="52" y2="136" stroke="#3AB0A1" stroke-width="2" stroke-linecap="round" opacity="0.45"/>
+        <line x1="65" y1="106" x2="78" y2="136" stroke="#3AB0A1" stroke-width="2" stroke-linecap="round" opacity="0.45"/>
+        <text x="65" y="152" text-anchor="middle" font-size="8" fill="#2A8A7D" font-weight="600" font-family="system-ui">Patient</text>
+        <!-- NGO -->
+        <circle cx="130" cy="42" r="20" fill="#5ECFC0" opacity="0.16"/>
+        <circle cx="130" cy="42" r="13" fill="#2A9D8F" opacity="0.75"/>
+        <line x1="130" y1="55"  x2="130" y2="106" stroke="#2A9D8F" stroke-width="3"   stroke-linecap="round" opacity="0.65"/>
+        <line x1="130" y1="74"  x2="97"  y2="77"  stroke="#2A9D8F" stroke-width="2.5" stroke-linecap="round" opacity="0.60"/>
+        <line x1="130" y1="74"  x2="163" y2="77"  stroke="#2A9D8F" stroke-width="2.5" stroke-linecap="round" opacity="0.60"/>
+        <line x1="130" y1="106" x2="117" y2="136" stroke="#2A9D8F" stroke-width="2.5" stroke-linecap="round" opacity="0.55"/>
+        <line x1="130" y1="106" x2="143" y2="136" stroke="#2A9D8F" stroke-width="2.5" stroke-linecap="round" opacity="0.55"/>
+        <text x="130" y="152" text-anchor="middle" font-size="8" fill="#2A8A7D" font-weight="600" font-family="system-ui">NGO</text>
+        <!-- HMO -->
+        <circle cx="195" cy="52" r="18" fill="#3535A8" opacity="0.10"/>
+        <circle cx="195" cy="52" r="11" fill="#3535A8" opacity="0.60"/>
+        <line x1="195" y1="63"  x2="195" y2="106" stroke="#3535A8" stroke-width="2.5" stroke-linecap="round" opacity="0.55"/>
+        <line x1="195" y1="78"  x2="163" y2="77"  stroke="#3535A8" stroke-width="2"   stroke-linecap="round" opacity="0.60"/>
+        <line x1="195" y1="78"  x2="213" y2="93"  stroke="#3535A8" stroke-width="2"   stroke-linecap="round" opacity="0.40"/>
+        <line x1="195" y1="106" x2="182" y2="136" stroke="#3535A8" stroke-width="2"   stroke-linecap="round" opacity="0.45"/>
+        <line x1="195" y1="106" x2="208" y2="136" stroke="#3535A8" stroke-width="2"   stroke-linecap="round" opacity="0.45"/>
+        <text x="195" y="152" text-anchor="middle" font-size="8" fill="#3535A8" font-weight="600" font-family="system-ui">HMO</text>
+        <circle cx="97"  cy="77" r="5.5" fill="#3AB0A1" opacity="0.14"/>
+        <circle cx="97"  cy="77" r="3"   fill="#3AB0A1" opacity="0.80"/>
+        <circle cx="163" cy="77" r="5.5" fill="#2A9D8F" opacity="0.14"/>
+        <circle cx="163" cy="77" r="3"   fill="#2A9D8F" opacity="0.80"/>
+      </svg>
+      <p>Dashes continuously travel Patient → HMO — like a signal or care record flowing between stakeholders.</p>
+    </div>
+
+    <!-- ── Card 3: Soft float ─────────────────────────────── -->
+    <div class="card">
+      <h2>3 — Soft Float (whole illustration)</h2>
+      <svg class="c3-svg" width="260" height="160" viewBox="0 0 260 160" fill="none">
+        <line x1="20" y1="138" x2="240" y2="138" stroke="#3AB0A1" stroke-width="1" opacity="0.25"/>
+        <line x1="97" y1="77" x2="163" y2="77" stroke="#3AB0A1" stroke-width="1" stroke-dasharray="3 2" opacity="0.18"/>
+        <circle cx="65" cy="52" r="18" fill="#3AB0A1" opacity="0.12"/>
+        <circle cx="65" cy="52" r="11" fill="#3AB0A1" opacity="0.60"/>
+        <line x1="65" y1="63" x2="65" y2="106" stroke="#3AB0A1" stroke-width="2.5" stroke-linecap="round" opacity="0.55"/>
+        <line x1="65" y1="78" x2="47" y2="93"  stroke="#3AB0A1" stroke-width="2" stroke-linecap="round" opacity="0.40"/>
+        <line x1="65" y1="78" x2="97" y2="77"  stroke="#3AB0A1" stroke-width="2" stroke-linecap="round" opacity="0.60"/>
+        <line x1="65" y1="106" x2="52" y2="136" stroke="#3AB0A1" stroke-width="2" stroke-linecap="round" opacity="0.45"/>
+        <line x1="65" y1="106" x2="78" y2="136" stroke="#3AB0A1" stroke-width="2" stroke-linecap="round" opacity="0.45"/>
+        <text x="65" y="152" text-anchor="middle" font-size="8" fill="#2A8A7D" font-weight="600" font-family="system-ui">Patient</text>
+        <circle cx="130" cy="42" r="20" fill="#5ECFC0" opacity="0.16"/>
+        <circle cx="130" cy="42" r="13" fill="#2A9D8F" opacity="0.75"/>
+        <line x1="130" y1="55"  x2="130" y2="106" stroke="#2A9D8F" stroke-width="3"   stroke-linecap="round" opacity="0.65"/>
+        <line x1="130" y1="74"  x2="97"  y2="77"  stroke="#2A9D8F" stroke-width="2.5" stroke-linecap="round" opacity="0.60"/>
+        <line x1="130" y1="74"  x2="163" y2="77"  stroke="#2A9D8F" stroke-width="2.5" stroke-linecap="round" opacity="0.60"/>
+        <line x1="130" y1="106" x2="117" y2="136" stroke="#2A9D8F" stroke-width="2.5" stroke-linecap="round" opacity="0.55"/>
+        <line x1="130" y1="106" x2="143" y2="136" stroke="#2A9D8F" stroke-width="2.5" stroke-linecap="round" opacity="0.55"/>
+        <text x="130" y="152" text-anchor="middle" font-size="8" fill="#2A8A7D" font-weight="600" font-family="system-ui">NGO</text>
+        <circle cx="195" cy="52" r="18" fill="#3535A8" opacity="0.10"/>
+        <circle cx="195" cy="52" r="11" fill="#3535A8" opacity="0.60"/>
+        <line x1="195" y1="63"  x2="195" y2="106" stroke="#3535A8" stroke-width="2.5" stroke-linecap="round" opacity="0.55"/>
+        <line x1="195" y1="78"  x2="163" y2="77"  stroke="#3535A8" stroke-width="2"   stroke-linecap="round" opacity="0.60"/>
+        <line x1="195" y1="78"  x2="213" y2="93"  stroke="#3535A8" stroke-width="2"   stroke-linecap="round" opacity="0.40"/>
+        <line x1="195" y1="106" x2="182" y2="136" stroke="#3535A8" stroke-width="2"   stroke-linecap="round" opacity="0.45"/>
+        <line x1="195" y1="106" x2="208" y2="136" stroke="#3535A8" stroke-width="2"   stroke-linecap="round" opacity="0.45"/>
+        <text x="195" y="152" text-anchor="middle" font-size="8" fill="#3535A8" font-weight="600" font-family="system-ui">HMO</text>
+        <circle cx="97"  cy="77" r="5.5" fill="#3AB0A1" opacity="0.14"/>
+        <circle cx="97"  cy="77" r="3"   fill="#3AB0A1" opacity="0.80"/>
+        <circle cx="163" cy="77" r="5.5" fill="#2A9D8F" opacity="0.14"/>
+        <circle cx="163" cy="77" r="3"   fill="#2A9D8F" opacity="0.80"/>
+      </svg>
+      <p>The entire illustration gently bobs up 6 px and back on a 4 s loop. Subtle life — pairs well with any of the others.</p>
+    </div>
+
+    <!-- ── Card 4: Staggered entry ────────────────────────── -->
+    <div class="card">
+      <h2>4 — Staggered Entry (on load)</h2>
+      <svg class="c4-svg" width="260" height="160" viewBox="0 0 260 160" fill="none">
+        <line x1="20" y1="138" x2="240" y2="138" stroke="#3AB0A1" stroke-width="1" opacity="0.25"/>
+        <g class="e-left">
+          <circle cx="65" cy="52" r="18" fill="#3AB0A1" opacity="0.12"/>
+          <circle cx="65" cy="52" r="11" fill="#3AB0A1" opacity="0.60"/>
+          <line x1="65" y1="63" x2="65" y2="106" stroke="#3AB0A1" stroke-width="2.5" stroke-linecap="round" opacity="0.55"/>
+          <line x1="65" y1="78" x2="47" y2="93"  stroke="#3AB0A1" stroke-width="2" stroke-linecap="round" opacity="0.40"/>
+          <line x1="65" y1="106" x2="52" y2="136" stroke="#3AB0A1" stroke-width="2" stroke-linecap="round" opacity="0.45"/>
+          <line x1="65" y1="106" x2="78" y2="136" stroke="#3AB0A1" stroke-width="2" stroke-linecap="round" opacity="0.45"/>
+          <text x="65" y="152" text-anchor="middle" font-size="8" fill="#2A8A7D" font-weight="600" font-family="system-ui">Patient</text>
+        </g>
+        <g class="e-center">
+          <circle cx="130" cy="42" r="20" fill="#5ECFC0" opacity="0.16"/>
+          <circle cx="130" cy="42" r="13" fill="#2A9D8F" opacity="0.75"/>
+          <line x1="130" y1="55"  x2="130" y2="106" stroke="#2A9D8F" stroke-width="3"   stroke-linecap="round" opacity="0.65"/>
+          <line x1="130" y1="106" x2="117" y2="136" stroke="#2A9D8F" stroke-width="2.5" stroke-linecap="round" opacity="0.55"/>
+          <line x1="130" y1="106" x2="143" y2="136" stroke="#2A9D8F" stroke-width="2.5" stroke-linecap="round" opacity="0.55"/>
+          <text x="130" y="152" text-anchor="middle" font-size="8" fill="#2A8A7D" font-weight="600" font-family="system-ui">NGO</text>
+        </g>
+        <g class="e-right">
+          <circle cx="195" cy="52" r="18" fill="#3535A8" opacity="0.10"/>
+          <circle cx="195" cy="52" r="11" fill="#3535A8" opacity="0.60"/>
+          <line x1="195" y1="63"  x2="195" y2="106" stroke="#3535A8" stroke-width="2.5" stroke-linecap="round" opacity="0.55"/>
+          <line x1="195" y1="78"  x2="213" y2="93"  stroke="#3535A8" stroke-width="2"   stroke-linecap="round" opacity="0.40"/>
+          <line x1="195" y1="106" x2="182" y2="136" stroke="#3535A8" stroke-width="2"   stroke-linecap="round" opacity="0.45"/>
+          <line x1="195" y1="106" x2="208" y2="136" stroke="#3535A8" stroke-width="2"   stroke-linecap="round" opacity="0.45"/>
+          <text x="195" y="152" text-anchor="middle" font-size="8" fill="#3535A8" font-weight="600" font-family="system-ui">HMO</text>
+        </g>
+        <g class="e-arms">
+          <line x1="65"  y1="78" x2="97"  y2="77" stroke="#3AB0A1" stroke-width="2"   stroke-linecap="round" opacity="0.60"/>
+          <line x1="130" y1="74" x2="97"  y2="77" stroke="#2A9D8F" stroke-width="2.5" stroke-linecap="round" opacity="0.60"/>
+          <line x1="130" y1="74" x2="163" y2="77" stroke="#2A9D8F" stroke-width="2.5" stroke-linecap="round" opacity="0.60"/>
+          <line x1="195" y1="78" x2="163" y2="77" stroke="#3535A8" stroke-width="2"   stroke-linecap="round" opacity="0.60"/>
+          <line x1="97"  y1="77" x2="163" y2="77" stroke="#3AB0A1" stroke-width="1"   stroke-dasharray="3 2" opacity="0.18"/>
+        </g>
+        <g class="e-touch">
+          <circle cx="97"  cy="77" r="5.5" fill="#3AB0A1" opacity="0.14"/>
+          <circle cx="97"  cy="77" r="3"   fill="#3AB0A1" opacity="0.80"/>
+          <circle cx="163" cy="77" r="5.5" fill="#2A9D8F" opacity="0.14"/>
+          <circle cx="163" cy="77" r="3"   fill="#2A9D8F" opacity="0.80"/>
+        </g>
+      </svg>
+      <p>On load: Patient → NGO → HMO each fade up, then arms extend, then touch points glow. Plays once — tells a story. (reload page to replay)</p>
+    </div>
+
+    <!-- ── Card 5: Figure sway (wide) ────────────────────── -->
+    <div class="card card--wide">
+      <h2>5 — Figure Sway (living figures)</h2>
+      <svg class="c5-svg" width="420" height="160" viewBox="0 0 420 160" fill="none">
+        <line x1="20" y1="138" x2="400" y2="138" stroke="#3AB0A1" stroke-width="1" opacity="0.25"/>
+        <line x1="160" y1="77" x2="260" y2="77" stroke="#3AB0A1" stroke-width="1" stroke-dasharray="3 2" opacity="0.18"/>
+        <!-- Patient (sways right) -->
+        <g class="s-left">
+          <circle cx="105" cy="52" r="18" fill="#3AB0A1" opacity="0.12"/>
+          <circle cx="105" cy="52" r="11" fill="#3AB0A1" opacity="0.60"/>
+          <line x1="105" y1="63"  x2="105" y2="106" stroke="#3AB0A1" stroke-width="2.5" stroke-linecap="round" opacity="0.55"/>
+          <line x1="105" y1="78"  x2="87"  y2="93"  stroke="#3AB0A1" stroke-width="2"   stroke-linecap="round" opacity="0.40"/>
+          <line x1="105" y1="78"  x2="160" y2="77"  stroke="#3AB0A1" stroke-width="2"   stroke-linecap="round" opacity="0.60"/>
+          <line x1="105" y1="106" x2="92"  y2="136" stroke="#3AB0A1" stroke-width="2"   stroke-linecap="round" opacity="0.45"/>
+          <line x1="105" y1="106" x2="118" y2="136" stroke="#3AB0A1" stroke-width="2"   stroke-linecap="round" opacity="0.45"/>
+          <text x="105" y="152" text-anchor="middle" font-size="8" fill="#2A8A7D" font-weight="600" font-family="system-ui">Patient</text>
+        </g>
+        <!-- NGO (counter-sway) -->
+        <g class="s-center">
+          <circle cx="210" cy="42" r="20" fill="#5ECFC0" opacity="0.16"/>
+          <circle cx="210" cy="42" r="13" fill="#2A9D8F" opacity="0.75"/>
+          <line x1="210" y1="55"  x2="210" y2="106" stroke="#2A9D8F" stroke-width="3"   stroke-linecap="round" opacity="0.65"/>
+          <line x1="210" y1="74"  x2="160" y2="77"  stroke="#2A9D8F" stroke-width="2.5" stroke-linecap="round" opacity="0.60"/>
+          <line x1="210" y1="74"  x2="260" y2="77"  stroke="#2A9D8F" stroke-width="2.5" stroke-linecap="round" opacity="0.60"/>
+          <line x1="210" y1="106" x2="197" y2="136" stroke="#2A9D8F" stroke-width="2.5" stroke-linecap="round" opacity="0.55"/>
+          <line x1="210" y1="106" x2="223" y2="136" stroke="#2A9D8F" stroke-width="2.5" stroke-linecap="round" opacity="0.55"/>
+          <text x="210" y="152" text-anchor="middle" font-size="8" fill="#2A8A7D" font-weight="600" font-family="system-ui">NGO</text>
+        </g>
+        <!-- HMO (sways opposite) -->
+        <g class="s-right">
+          <circle cx="315" cy="52" r="18" fill="#3535A8" opacity="0.10"/>
+          <circle cx="315" cy="52" r="11" fill="#3535A8" opacity="0.60"/>
+          <line x1="315" y1="63"  x2="315" y2="106" stroke="#3535A8" stroke-width="2.5" stroke-linecap="round" opacity="0.55"/>
+          <line x1="315" y1="78"  x2="260" y2="77"  stroke="#3535A8" stroke-width="2"   stroke-linecap="round" opacity="0.60"/>
+          <line x1="315" y1="78"  x2="333" y2="93"  stroke="#3535A8" stroke-width="2"   stroke-linecap="round" opacity="0.40"/>
+          <line x1="315" y1="106" x2="302" y2="136" stroke="#3535A8" stroke-width="2"   stroke-linecap="round" opacity="0.45"/>
+          <line x1="315" y1="106" x2="328" y2="136" stroke="#3535A8" stroke-width="2"   stroke-linecap="round" opacity="0.45"/>
+          <text x="315" y="152" text-anchor="middle" font-size="8" fill="#3535A8" font-weight="600" font-family="system-ui">HMO</text>
+        </g>
+        <!-- touch points static -->
+        <circle cx="160" cy="77" r="5.5" fill="#3AB0A1" opacity="0.14"/>
+        <circle cx="160" cy="77" r="3"   fill="#3AB0A1" opacity="0.80"/>
+        <circle cx="260" cy="77" r="5.5" fill="#2A9D8F" opacity="0.14"/>
+        <circle cx="260" cy="77" r="3"   fill="#2A9D8F" opacity="0.80"/>
+      </svg>
+      <p>Patient and HMO sway in opposite directions; NGO subtly counters. Offset timing keeps it organic, not mechanical. Gives the figures a human, breathing quality.</p>
+    </div>
+
+  </div>
+</body>
+</html>
