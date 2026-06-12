@@ -1,0 +1,239 @@
+<div class="funding-page">
+
+  <!-- ── Header ─────────────────────────────────────────────── -->
+  <div class="funding-header">
+    <div>
+      <h1 class="funding-header__title">Funding &amp; Coverage</h1>
+      <p class="funding-header__sub">Your health plans, pre-authorisation requests, and assistance programmes</p>
+    </div>
+    <button class="funding-primary-btn" type="button">+ Request Pre-Auth</button>
+  </div>
+
+  <!-- ── Stats ──────────────────────────────────────────────── -->
+  <div class="funding-stats">
+    @for (s of stats(); track s.label) {
+      <div class="fund-stat-card">
+        <span class="fund-stat-card__icon" aria-hidden="true">{{ s.icon }}</span>
+        <span class="fund-stat-card__value">{{ s.value }}</span>
+        <span class="fund-stat-card__label">{{ s.label }}</span>
+      </div>
+    }
+  </div>
+
+  <!-- ── Body ───────────────────────────────────────────────── -->
+  <div class="funding-body">
+
+    <!-- ── Left column ──────────────────────────────────────── -->
+    <div class="funding-main">
+
+      <!-- Active plans -->
+      <section class="funding-section">
+        <h2 class="funding-section__title">Active Plans</h2>
+        <div class="plan-list">
+          @for (plan of plans(); track plan.id) {
+            <div class="plan-card">
+              <div class="plan-card__header">
+                <div class="plan-card__header-left">
+                  <span class="plan-card__type-badge"
+                        [style.background]="plan.typeColor + '18'"
+                        [style.color]="plan.typeColor"
+                        [style.border-color]="plan.typeColor + '33'">
+                    {{ plan.type }}
+                  </span>
+                  <div>
+                    <p class="plan-card__name">{{ plan.name }}</p>
+                    <p class="plan-card__provider">{{ plan.provider }} &middot; {{ plan.memberNumber }}</p>
+                  </div>
+                </div>
+                <div class="plan-card__renewal">
+                  <span class="plan-card__active-dot" aria-hidden="true"></span>
+                  <span>Renews {{ plan.renewalDate }}</span>
+                </div>
+              </div>
+              <div class="plan-card__coverage">
+                @for (item of plan.coverageItems; track item.label) {
+                  <div class="coverage-row">
+                    <span class="coverage-row__label">{{ item.label }}</span>
+                    <span class="coverage-row__value">{{ item.value }}</span>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      </section>
+
+      <!-- Pre-authorization requests -->
+      <section class="funding-section">
+        <div class="funding-section__header">
+          <div>
+            <h2 class="funding-section__title">Pre-Authorization Requests</h2>
+            <p class="funding-section__sub">Your doctors submit these on your behalf for procedures requiring HMO approval</p>
+          </div>
+          <button class="funding-ghost-btn" type="button">+ New Request</button>
+        </div>
+        <div class="preauth-list">
+          @for (pa of preAuths(); track pa.id) {
+            <div class="preauth-card">
+              <div class="preauth-card__top">
+                <div class="preauth-card__info">
+                  <p class="preauth-card__procedure">{{ pa.procedure }}</p>
+                  <p class="preauth-card__meta">Requested by {{ pa.requestedBy }} &middot; {{ pa.requestDate }} &middot; {{ pa.plan }}</p>
+                </div>
+                <span class="preauth-status"
+                      [style.color]="preAuthStatusColor(pa.status)"
+                      [style.background]="preAuthStatusColor(pa.status) + '18'">
+                  {{ pa.status }}
+                </span>
+              </div>
+              @if (pa.note) {
+                <p class="preauth-card__note">{{ pa.note }}</p>
+              }
+            </div>
+          }
+        </div>
+      </section>
+
+      <!-- Assistance programmes -->
+      <section class="funding-section">
+        <h2 class="funding-section__title">Assistance Programmes</h2>
+        <p class="funding-section__sub">NGO and pharmaceutical support available to you</p>
+        <div class="program-list">
+          @for (prog of programs(); track prog.id) {
+            <div class="program-card" [class.program-card--enrolled]="prog.enrolled">
+              <div class="program-card__header">
+                <div>
+                  <div class="program-card__name-row">
+                    <h3 class="program-card__name">{{ prog.name }}</h3>
+                    @if (prog.enrolled) {
+                      <span class="program-card__enrolled-badge">Enrolled</span>
+                    }
+                  </div>
+                  <span class="program-card__org-badge"
+                        [style.background]="prog.orgColor + '18'"
+                        [style.color]="prog.orgColor"
+                        [style.border-color]="prog.orgColor + '33'">
+                    {{ prog.orgType }} · {{ prog.org }}
+                  </span>
+                </div>
+                <button
+                  class="program-enroll-btn"
+                  [class.program-enroll-btn--enrolled]="prog.enrolled"
+                  type="button"
+                  (click)="toggleEnroll(prog.id)">
+                  {{ prog.enrolled ? 'Leave' : 'Enrol' }}
+                </button>
+              </div>
+              <p class="program-card__desc">{{ prog.description }}</p>
+              <div class="program-card__meta">
+                <div class="program-meta-item">
+                  <span class="program-meta-item__label">Covers</span>
+                  <span class="program-meta-item__value">{{ prog.covers }}</span>
+                </div>
+                <div class="program-meta-item">
+                  <span class="program-meta-item__label">Eligibility</span>
+                  <span class="program-meta-item__value">{{ prog.eligibility }}</span>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ── Sidebar ───────────────────────────────────────────── -->
+    <aside class="funding-sidebar">
+
+      <!-- Provider-submitted claims -->
+      <div class="sidebar-panel">
+        <div class="sidebar-panel__title-row">
+          <h2 class="sidebar-panel__title">Treatment Claims</h2>
+          <span class="sidebar-panel__hint">Submitted by your providers</span>
+        </div>
+        <div class="claims-filters">
+          @for (f of [['all','All'],['Approved','Approved'],['Pending','Pending'],['Rejected','Rejected']]; track f[0]) {
+            <button
+              class="claims-filter-btn"
+              [class.claims-filter-btn--active]="claimsFilter() === f[0]"
+              type="button"
+              (click)="setClaimsFilter($any(f[0]))">
+              {{ f[1] }}
+            </button>
+          }
+        </div>
+        <div class="claims-list">
+          @for (claim of filteredClaims(); track claim.id) {
+            <div class="claim-item">
+              <div class="claim-item__left">
+                <p class="claim-item__desc">{{ claim.description }}</p>
+                <p class="claim-item__meta">{{ claim.date }} &middot; {{ claim.plan }}</p>
+              </div>
+              <div class="claim-item__right">
+                <span class="claim-item__amount">{{ formatAmount(claim.amount) }}</span>
+                <span class="claim-item__status"
+                      [style.color]="claimStatusColor(claim.status)"
+                      [style.background]="claimStatusColor(claim.status) + '18'">
+                  {{ claim.status }}
+                </span>
+              </div>
+            </div>
+          } @empty {
+            <p class="claims-empty">No claims match this filter.</p>
+          }
+        </div>
+        <div class="sidebar-panel__footer">
+          <button class="sidebar-link-btn" type="button">Submit reimbursement request →</button>
+        </div>
+      </div>
+
+      <!-- Network providers -->
+      <div class="sidebar-panel">
+        <div class="sidebar-panel__title-row sidebar-panel__title-row--pad">
+          <h2 class="sidebar-panel__title sidebar-panel__title--pad">Accredited Providers</h2>
+          <span class="sidebar-panel__hint">Near you</span>
+        </div>
+        <div class="provider-list">
+          @for (prov of providers(); track prov.id) {
+            <div class="provider-item">
+              <div class="provider-item__info">
+                <p class="provider-item__name">{{ prov.name }}</p>
+                <p class="provider-item__meta">{{ prov.type }} &middot; {{ prov.area }}</p>
+                <div class="provider-item__plans">
+                  @for (plan of prov.plans; track plan) {
+                    <span class="provider-plan-chip">{{ plan }}</span>
+                  }
+                </div>
+              </div>
+              <span class="provider-item__distance">{{ prov.distance }}</span>
+            </div>
+          }
+        </div>
+        <div class="sidebar-panel__footer">
+          <button class="sidebar-link-btn" type="button">View all accredited providers →</button>
+        </div>
+      </div>
+
+      <!-- Quick actions -->
+      <div class="sidebar-panel">
+        <h2 class="sidebar-panel__title sidebar-panel__title--pad">Quick Actions</h2>
+        <div class="quick-actions">
+          <button class="quick-action-btn" type="button">
+            <span aria-hidden="true">📲</span> Show digital HMO card
+          </button>
+          <button class="quick-action-btn" type="button">
+            <span aria-hidden="true">📞</span> Contact Hygeia HMO
+          </button>
+          <button class="quick-action-btn" type="button">
+            <span aria-hidden="true">↩️</span> Out-of-pocket reimbursement
+          </button>
+          <button class="quick-action-btn" type="button">
+            <span aria-hidden="true">📋</span> Request referral letter
+          </button>
+        </div>
+      </div>
+
+    </aside>
+  </div>
+
+</div>

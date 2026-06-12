@@ -1,67 +1,131 @@
 <div class="landing">
+  <div class="split">
 
-  <!-- HERO -->
-  <section class="hero">
-    <!-- Left panel -->
-    <div class="hero__left">
-      <span class="hero__eyebrow">Healthcare Access Platform</span>
-      <h1 class="hero__headline">
-        Connecting care.<br>
-        <span class="hero__headline--accent">Enabling outcomes.</span>
-      </h1>
-      <p class="hero__subtext">
-        One platform bridging healthcare access, NGO funding, HMO care management,
-        and clinical research — for every role in the ecosystem.
-      </p>
-      <div class="hero__actions">
-        <a class="btn btn--cta" routerLink="/select-role" data-testid="cta-find-path" aria-label="Find My Path">
-          Find My Path <span aria-hidden="true">→</span>
-        </a>
-        <a class="btn btn--ghost" routerLink="/about">Learn how it works</a>
-      </div>
-      <div class="hero__trust">
-        <div class="trust-item">
-          <span class="trust-item__value">Multi-region</span>
-          <span class="trust-item__label">GDPR + HIPAA ready</span>
-        </div>
-        <div class="trust-item">
-          <span class="trust-item__value">AI-powered</span>
-          <span class="trust-item__label">Health guidance</span>
-        </div>
-        <div class="trust-item">
-          <span class="trust-item__value">4</span>
-          <span class="trust-item__label">User types served</span>
-        </div>
-      </div>
-    </div>
+    <!-- LEFT: Teal brand panel -->
+    <div class="brand-panel">
+      <div class="brand-panel__blobs" aria-hidden="true"></div>
+      <div class="brand-panel__content">
 
-    <!-- Right panel: role cards -->
-    <div class="hero__right">
-      <span class="hero__right-label">Who are you?</span>
-      @for (card of roleCards; track card.role) {
-        <a class="role-card role-card--{{ card.role }}" [routerLink]="card.signupRoute">
-          <div class="role-card__icon">{{ card.emoji }}</div>
-          <div class="role-card__content">
-            <span class="role-card__label">{{ card.label }}</span>
-            <span class="role-card__desc">{{ card.description }}</span>
+        <div class="brand-panel__eyebrow">
+          <!-- <span class="brand-panel__live-dot"></span> -->
+          Healthcare Access Platform
+        </div>
+
+        <h1 class="brand-panel__hed">
+          Every voice<br>
+          in healthcare —<br>
+          one platform.
+        </h1>
+
+        <p class="brand-panel__sub">
+          Patients, NGOs and HMOs connecting for real-world health outcomes.
+        </p>
+
+        <div class="brand-panel__stats">
+          <div class="brand-panel__stat">
+            <span class="brand-panel__stat-n">2,400+</span>
+            <span class="brand-panel__stat-l">Patients</span>
           </div>
-        </a>
-      }
-    </div>
-  </section>
-
-  <!-- FEATURES STRIP -->
-  <section class="features">
-    <span class="features__label">Platform capabilities</span>
-    <div class="features__grid">
-      @for (feature of features; track feature.title) {
-        <div class="feature-item">
-          <span class="feature-item__emoji">{{ feature.emoji }}</span>
-          <span class="feature-item__title">{{ feature.title }}</span>
-          <span class="feature-item__desc">{{ feature.description }}</span>
+          <div class="brand-panel__stat">
+            <span class="brand-panel__stat-n">340+</span>
+            <span class="brand-panel__stat-l">NGO Programs</span>
+          </div>
+          <div class="brand-panel__stat">
+            <span class="brand-panel__stat-n">18k+</span>
+            <span class="brand-panel__stat-l">HMO Profiles</span>
+          </div>
+          <div class="brand-panel__stat">
+            <span class="brand-panel__stat-n">62</span>
+            <span class="brand-panel__stat-l">Active Studies</span>
+          </div>
         </div>
-      }
-    </div>
-  </section>
 
+        <div class="brand-panel__trust">
+          <span class="brand-panel__trust-badge">&#10003; GDPR</span>
+          <span class="brand-panel__trust-badge">&#10003; HIPAA</span>
+          <span class="brand-panel__trust-badge">&#10003; AI-powered</span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RIGHT: Role selector panel -->
+    <div class="role-panel">
+
+      <!-- Illustration: staggered entry then soft float -->
+      <svg class="role-panel__illustration" viewBox="0 0 260 160" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <line x1="20" y1="138" x2="240" y2="138" stroke="#3AB0A1" stroke-width="1" opacity="0.25"/>
+        <!-- NGO figure (left) — purple -->
+        <g class="illu-fig-left">
+          <circle cx="65"  cy="52" r="18" fill="#C4B5FD" opacity="0.16"/>
+          <circle cx="65"  cy="52" r="11" fill="#7C3AED" opacity="0.60"/>
+          <line x1="65"  y1="63"  x2="65"  y2="106" stroke="#7C3AED" stroke-width="2.5" stroke-linecap="round" opacity="0.55"/>
+          <line x1="65"  y1="78"  x2="47"  y2="93"  stroke="#7C3AED" stroke-width="2"   stroke-linecap="round" opacity="0.40"/>
+          <line x1="65"  y1="106" x2="52"  y2="136" stroke="#7C3AED" stroke-width="2"   stroke-linecap="round" opacity="0.45"/>
+          <line x1="65"  y1="106" x2="78"  y2="136" stroke="#7C3AED" stroke-width="2"   stroke-linecap="round" opacity="0.45"/>
+          <text x="65"  y="152" text-anchor="middle" font-size="8" fill="#6D28D9" font-weight="600" font-family="system-ui,sans-serif">NGO</text>
+        </g>
+        <!-- Patient figure (center, taller) — teal -->
+        <g class="illu-fig-center">
+          <circle cx="130" cy="42" r="20" fill="#5ECFC0" opacity="0.16"/>
+          <circle cx="130" cy="42" r="13" fill="#2A9D8F" opacity="0.75"/>
+          <line x1="130" y1="55"  x2="130" y2="106" stroke="#2A9D8F" stroke-width="3"   stroke-linecap="round" opacity="0.65"/>
+          <line x1="130" y1="106" x2="117" y2="136" stroke="#2A9D8F" stroke-width="2.5" stroke-linecap="round" opacity="0.55"/>
+          <line x1="130" y1="106" x2="143" y2="136" stroke="#2A9D8F" stroke-width="2.5" stroke-linecap="round" opacity="0.55"/>
+          <text x="130" y="152" text-anchor="middle" font-size="8" fill="#2A8A7D" font-weight="600" font-family="system-ui,sans-serif">Patient</text>
+        </g>
+        <!-- HMO figure (right) — soft blue -->
+        <g class="illu-fig-right">
+          <circle cx="195" cy="52" r="18" fill="#BFDBFE" opacity="0.60"/>
+          <circle cx="195" cy="52" r="11" fill="#60A5FA" opacity="0.60"/>
+          <line x1="195" y1="63"  x2="195" y2="106" stroke="#60A5FA" stroke-width="2.5" stroke-linecap="round" opacity="0.55"/>
+          <line x1="195" y1="78"  x2="213" y2="93"  stroke="#60A5FA" stroke-width="2"   stroke-linecap="round" opacity="0.40"/>
+          <line x1="195" y1="106" x2="182" y2="136" stroke="#60A5FA" stroke-width="2"   stroke-linecap="round" opacity="0.45"/>
+          <line x1="195" y1="106" x2="208" y2="136" stroke="#60A5FA" stroke-width="2"   stroke-linecap="round" opacity="0.45"/>
+          <text x="195" y="152" text-anchor="middle" font-size="8" fill="#2563EB" font-weight="600" font-family="system-ui,sans-serif">HMO</text>
+        </g>
+        <!-- Reaching arms + bridge — appear after all three figures -->
+        <g class="illu-arms">
+          <line x1="97"  y1="77" x2="163" y2="77"  stroke="#2A9D8F" stroke-width="1"   stroke-dasharray="3 2" opacity="0.18"/>
+          <line x1="65"  y1="78" x2="97"  y2="77"  stroke="#7C3AED" stroke-width="2"   stroke-linecap="round" opacity="0.60"/>
+          <line x1="130" y1="74" x2="97"  y2="77"  stroke="#2A9D8F" stroke-width="2.5" stroke-linecap="round" opacity="0.60"/>
+          <line x1="130" y1="74" x2="163" y2="77"  stroke="#2A9D8F" stroke-width="2.5" stroke-linecap="round" opacity="0.60"/>
+          <line x1="195" y1="78" x2="163" y2="77"  stroke="#60A5FA" stroke-width="2"   stroke-linecap="round" opacity="0.60"/>
+        </g>
+        <!-- Touch points — appear last -->
+        <g class="illu-touch">
+          <circle cx="97"  cy="77" r="5.5" fill="#7C3AED" opacity="0.14"/>
+          <circle cx="97"  cy="77" r="3"   fill="#7C3AED" opacity="0.80"/>
+          <circle cx="163" cy="77" r="5.5" fill="#2A9D8F" opacity="0.14"/>
+          <circle cx="163" cy="77" r="3"   fill="#2A9D8F" opacity="0.80"/>
+        </g>
+      </svg>
+
+      <div class="role-panel__content">
+
+        <span class="role-panel__eyebrow">Get started free</span>
+        <h2 class="role-panel__hed">Where do you fit?</h2>
+        <p class="role-panel__sub">Choose your role to create your account.</p>
+
+        <div class="role-panel__list">
+          @for (card of roleCards; track card.role) {
+            <a class="role-btn" [routerLink]="card.signupRoute">
+              <span class="role-btn__icon">{{ card.emoji }}</span>
+              <div class="role-btn__body">
+                <span class="role-btn__label">{{ card.label }}</span>
+                <span class="role-btn__desc">{{ card.description }}</span>
+              </div>
+              <span class="role-btn__arrow">&#8594;</span>
+            </a>
+          }
+        </div>
+
+        <p class="role-panel__signin">
+          Already have an account? <a routerLink="/auth/login">Sign in</a>
+        </p>
+
+      </div>
+    </div>
+
+  </div>
 </div>

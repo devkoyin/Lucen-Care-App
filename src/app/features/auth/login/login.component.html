@@ -1,12 +1,29 @@
-<div class="auth-page" [ngClass]="'portal-' + role">
+<div class="auth-page" [ngClass]="'portal-' + selectedRole()">
   <div class="auth-card">
     <div class="auth-card__accent"></div>
     <div class="auth-card__body">
+
       <div class="auth-card__header">
-        <span class="auth-card__role-badge">{{ roleName }}</span>
         <h1 class="auth-card__title">Welcome back</h1>
-        <p class="auth-card__subtitle">Sign in to your account</p>
+        <p class="auth-card__subtitle">Select your account type and sign in</p>
       </div>
+
+      <!-- Role switcher -->
+      <div class="role-tabs" role="group" aria-label="Account type">
+        @for (r of roles; track r.id) {
+          <button
+            type="button"
+            class="role-tab"
+            [class.role-tab--active]="selectedRole() === r.id"
+            [attr.aria-pressed]="selectedRole() === r.id"
+            (click)="selectRole(r.id)"
+          >
+            <span class="role-tab__emoji">{{ r.emoji }}</span>
+            <span class="role-tab__label">{{ r.label }}</span>
+          </button>
+        }
+      </div>
+
       <form [formGroup]="form" (ngSubmit)="submit()" class="auth-form" novalidate>
         <lc-form-field label="Email" id="login-email" [error]="emailError">
           <input
@@ -29,17 +46,19 @@
         @if (serverError) {
           <p class="auth-form__server-error" role="alert">{{ serverError }}</p>
         }
-        <a
-          class="auth-form__forgot"
-          [routerLink]="'/auth/' + role + '/forgot-password'"
-        >Forgot password?</a>
+        <a class="auth-form__forgot" [routerLink]="'/auth/' + selectedRole() + '/forgot-password'">
+          Forgot password?
+        </a>
         <button type="submit" class="auth-btn" [disabled]="loading">
-          @if (loading) { Signing in… } @else { Sign in }
+          @if (loading) { Signing in… } @else { Sign in as {{ roleName }} }
         </button>
       </form>
+
       <p class="auth-card__footer">
-        New here? <a [routerLink]="'/auth/' + role + '/signup'">Create an account</a>
+        New here?
+        <a [routerLink]="'/auth/' + selectedRole() + '/signup'">Create an account</a>
       </p>
+
     </div>
   </div>
 </div>

@@ -1,0 +1,110 @@
+<div class="chat-page">
+
+  <!-- ── Header ─────────────────────────────────────────────── -->
+  <div class="chat-header">
+    <div class="chat-header__title-row">
+      <span class="chat-header__icon" aria-hidden="true">🤖</span>
+      <div>
+        <div class="chat-header__title-group">
+          <h1 class="chat-header__title">AI Health Assistant</h1>
+          <span class="chat-header__badge">Beta</span>
+        </div>
+        <p class="chat-header__disclaimer">For guidance only — not a substitute for professional medical advice</p>
+      </div>
+    </div>
+
+    <!-- Context strip -->
+    <div class="chat-context">
+      @if (contextLine()) {
+        <div class="chat-context__item">
+          <span class="chat-context__dot chat-context__dot--appt"></span>
+          <span>Next: {{ contextLine() }}</span>
+        </div>
+      }
+      <div class="chat-context__item">
+        <span class="chat-context__dot chat-context__dot--med"></span>
+        <span>5 active medications &middot; 2 due today at 8:00 PM</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Messages ────────────────────────────────────────────── -->
+  <div class="chat-messages" #messagesEl>
+
+    @if (messages().length === 0) {
+      <!-- Welcome state -->
+      <div class="chat-welcome">
+        <span class="chat-welcome__icon" aria-hidden="true">🤖</span>
+        <h2 class="chat-welcome__heading">How can I help you today?</h2>
+        <p class="chat-welcome__sub">Ask me about your appointments, medications, or managing your health conditions.</p>
+        <div class="chat-welcome__chips">
+          @for (s of suggestions; track s) {
+            <button class="chat-suggestion-chip" type="button" (click)="send(s)">{{ s }}</button>
+          }
+        </div>
+      </div>
+
+    } @else {
+
+      @for (msg of messages(); track msg.id) {
+        <div class="chat-msg chat-msg--{{ msg.role }}">
+          @if (msg.role === 'assistant') {
+            <span class="chat-msg__avatar" aria-hidden="true">🤖</span>
+          }
+          <div class="chat-msg__bubble">
+            <p class="chat-msg__text">{{ msg.text }}</p>
+            <span class="chat-msg__time">{{ formatTime(msg.ts) }}</span>
+          </div>
+          @if (msg.role === 'user') {
+            <span class="chat-msg__avatar chat-msg__avatar--user" aria-hidden="true">👤</span>
+          }
+        </div>
+      }
+
+      @if (isTyping()) {
+        <div class="chat-msg chat-msg--assistant">
+          <span class="chat-msg__avatar" aria-hidden="true">🤖</span>
+          <div class="chat-msg__bubble chat-msg__bubble--typing">
+            <span class="typing-dot"></span>
+            <span class="typing-dot"></span>
+            <span class="typing-dot"></span>
+          </div>
+        </div>
+      }
+
+    }
+  </div>
+
+  <!-- ── Footer ──────────────────────────────────────────────── -->
+  <div class="chat-footer">
+
+    <!-- Suggestion chips (visible after first message) -->
+    @if (messages().length > 0 && !isTyping()) {
+      <div class="chat-footer__chips">
+        @for (s of suggestions; track s) {
+          <button class="chat-suggestion-chip chat-suggestion-chip--sm" type="button" (click)="send(s)">{{ s }}</button>
+        }
+      </div>
+    }
+
+    <!-- Input row -->
+    <div class="chat-input-row">
+      <textarea
+        class="chat-input"
+        [(ngModel)]="inputText"
+        (keydown)="onKeydown($event)"
+        placeholder="Ask anything about your health…"
+        rows="1"
+        aria-label="Message input">
+      </textarea>
+      <button class="chat-send-btn" type="button"
+              [disabled]="!inputText.trim() || isTyping()"
+              (click)="send()">
+        <span aria-hidden="true">&#x27A4;</span>
+      </button>
+    </div>
+    <p class="chat-footer__hint">Enter to send &middot; Shift+Enter for new line</p>
+
+  </div>
+
+</div>

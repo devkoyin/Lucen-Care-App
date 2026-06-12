@@ -1,0 +1,107 @@
+.sps-wrapper {
+  position: relative;
+}
+
+// ── Trigger ────────────────────────────────────────────────────
+.sps-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 8px var(--space-3);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-family: var(--font-family);
+  color: var(--color-text);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.15s;
+
+  &:focus { outline: none; border-color: var(--color-role-accent); }
+  &--open { border-color: var(--color-role-accent); }
+
+  &__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  &__label {
+    flex: 1;
+    &--placeholder { color: var(--color-text-muted); }
+  }
+
+  &__chevron {
+    color: var(--color-text-muted);
+    font-size: 12px;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+    display: inline-block;
+    &--up { transform: rotate(180deg); }
+  }
+}
+
+// ── Panel ──────────────────────────────────────────────────────
+.sps-panel {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.13);
+  z-index: 50;
+  max-height: 256px;
+  overflow-y: auto;
+  animation: fadeSlideUp 0.15s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+// ── Groups ─────────────────────────────────────────────────────
+.sps-group {
+  &__header {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    padding: 5px var(--space-3);
+    font-size: 10px;
+    font-weight: var(--font-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+  }
+}
+
+// ── Options ────────────────────────────────────────────────────
+.sps-option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  padding: 7px var(--space-3);
+  background: transparent;
+  border: none;
+  font-size: var(--text-sm);
+  font-family: var(--font-family);
+  color: var(--color-text);
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.1s;
+
+  &:hover { background: var(--opt-bg, rgba(0, 0, 0, 0.04)); }
+
+  &--active {
+    background: var(--opt-bg, rgba(0, 0, 0, 0.04));
+    font-weight: var(--font-semibold);
+    color: var(--opt-accent, var(--color-role-accent));
+  }
+
+  &__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+}

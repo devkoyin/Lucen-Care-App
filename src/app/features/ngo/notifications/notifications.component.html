@@ -1,0 +1,56 @@
+<div class="notif-page">
+
+  <div class="notif-header">
+    <div>
+      <h1 class="notif-header__title">Notifications</h1>
+      <p class="notif-header__sub">Activity across your programs and applications</p>
+    </div>
+    <div class="notif-header__controls">
+      @if (unreadCount() > 0) {
+        <span class="notif-header__badge">{{ unreadCount() }} unread</span>
+        <button class="notif-mark-all" type="button" (click)="markAllRead()">Mark all read</button>
+      }
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="notif-tabs">
+    @for (tab of tabs; track tab.key) {
+      <button class="notif-tab" [class.notif-tab--active]="typeFilter() === tab.key"
+              type="button" (click)="setFilter(tab.key)">
+        {{ tab.label }}
+      </button>
+    }
+  </div>
+
+  <!-- List -->
+  <div class="notif-list">
+    @for (n of filtered(); track n.id) {
+      <div class="notif-item" [class.notif-item--unread]="!n.read" (click)="markRead(n.id)">
+        <div class="notif-item__icon"
+             [style.color]="typeColor(n.type)"
+             [style.background]="typeColor(n.type) + '15'">
+          {{ typeIcon(n.type) }}
+        </div>
+        <div class="notif-item__body">
+          <div class="notif-item__title">{{ n.title }}</div>
+          <p class="notif-item__text">{{ n.body }}</p>
+          <span class="notif-item__time">{{ n.timestamp }}</span>
+        </div>
+        <div class="notif-item__right">
+          @if (!n.read) {
+            <span class="notif-dot" aria-label="Unread"></span>
+          }
+          @if (n.actionLabel) {
+            <button class="notif-action-btn" type="button" (click)="$event.stopPropagation()">
+              {{ n.actionLabel }}
+            </button>
+          }
+        </div>
+      </div>
+    } @empty {
+      <div class="notif-empty">No notifications in this category.</div>
+    }
+  </div>
+
+</div>

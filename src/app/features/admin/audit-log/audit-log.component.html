@@ -1,0 +1,92 @@
+<div class="audit-log">
+
+  <!-- Header -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-header__title">Audit Log</h1>
+      <p class="page-header__sub">Full history of all application events</p>
+    </div>
+    <div class="page-header__total">
+      <span class="page-header__total-n">{{ countFor('all') }}</span>
+      <span class="page-header__total-l">total events</span>
+    </div>
+  </div>
+
+  <!-- Controls row -->
+  <div class="controls">
+    <div class="filter-tabs">
+      @for (tab of tabs; track tab.id) {
+        <button
+          class="filter-tab"
+          [class.filter-tab--active]="activeTab() === tab.id"
+          (click)="setTab(tab.id)">
+          {{ tab.label }}
+          <span class="filter-tab__count">{{ countFor(tab.id) }}</span>
+        </button>
+      }
+    </div>
+    <div class="search-box">
+      <span class="search-box__icon">🔍</span>
+      <input
+        class="search-box__input"
+        type="text"
+        placeholder="Search by organisation or actor…"
+        [value]="search()"
+        (input)="search.set($any($event.target).value)"
+      />
+    </div>
+  </div>
+
+  <!-- Log table -->
+  <div class="log-panel">
+    @if (filtered.length > 0) {
+      <table class="log-table">
+        <thead>
+          <tr>
+            <th>Time</th>
+            <th>Organisation</th>
+            <th>Type</th>
+            <th>Event</th>
+            <th>Actor</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (entry of filtered; track entry.id) {
+            <tr class="log-row log-row--{{ entry.action }}">
+              <td class="log-row__time">
+                <span class="log-row__ago">{{ timeAgo(entry.timestamp) }}</span>
+                <span class="log-row__date">{{ formatDate(entry.timestamp) }} · {{ formatTime(entry.timestamp) }}</span>
+              </td>
+              <td class="log-row__org">{{ entry.orgName }}</td>
+              <td>
+                <span class="type-badge type-badge--{{ entry.orgType }}">{{ typeLabel(entry.orgType) }}</span>
+              </td>
+              <td>
+                <span class="action-badge action-badge--{{ entry.action }}">
+                  <span class="action-badge__dot"></span>
+                  {{ actionLabel(entry.action) }}
+                </span>
+              </td>
+              <td class="log-row__actor">{{ entry.actor }}</td>
+              <td class="log-row__notes">{{ entry.reason || '—' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    } @else {
+      <div class="empty-state">
+        <div class="empty-state__icon">📋</div>
+        <p class="empty-state__title">No events found</p>
+        <p class="empty-state__sub">
+          @if (search()) {
+            No results for "{{ search() }}". Try a different search.
+          } @else {
+            Events will appear here as organisations apply, get approved, or are rejected.
+          }
+        </p>
+      </div>
+    }
+  </div>
+
+</div>

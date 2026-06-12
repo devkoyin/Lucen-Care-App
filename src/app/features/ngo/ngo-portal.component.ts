@@ -27,7 +27,7 @@ export class NgoPortalComponent {
     { icon: '🏠', label: 'Dashboard', route: '/ngo/dashboard' },
     { icon: '📋', label: 'Programs', route: '/ngo/programs' },
     { icon: '👥', label: 'Applicants', route: '/ngo/applicants' },
-    { icon: '🗺️', label: 'Patient Map', route: '/ngo/selections/map' },
+    { icon: '🗺️', label: 'Patient Map', route: '/ngo/map' },
     { icon: '🔔', label: 'Notifications', route: '/ngo/notifications' },
   ];
 

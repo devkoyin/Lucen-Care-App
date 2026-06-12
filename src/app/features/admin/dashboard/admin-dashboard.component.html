@@ -1,0 +1,76 @@
+<div class="dashboard">
+
+  <!-- Header -->
+  <div class="dash-header">
+    <div>
+      <h1 class="dash-header__title">Admin Dashboard</h1>
+      <p class="dash-header__sub">Review and approve organisation registrations</p>
+    </div>
+  </div>
+
+  <!-- Stats row -->
+  <div class="stats-row">
+    @for (stat of stats; track stat.label) {
+      <div class="stat-card" [class.stat-card--accent]="stat.accent">
+        <span class="stat-card__label">{{ stat.label }}</span>
+        <span class="stat-card__value">{{ stat.value }}</span>
+        @if (stat.trend) {
+          <span class="stat-card__trend">{{ stat.trend }}</span>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- Quick actions -->
+  <div class="actions-row">
+    <a class="action-btn action-btn--primary" routerLink="/admin/ngo-approvals">
+      <span class="action-btn__icon">🏢</span>
+      Review NGO Applications
+      @if (ngoPendingCount > 0) {
+        <span class="action-btn__badge">{{ ngoPendingCount }} pending</span>
+      }
+    </a>
+    <a class="action-btn action-btn--primary" routerLink="/admin/hmo-approvals">
+      <span class="action-btn__icon">🏥</span>
+      Review HMO Applications
+      @if (hmoPendingCount > 0) {
+        <span class="action-btn__badge">{{ hmoPendingCount }} pending</span>
+      }
+    </a>
+    <a class="action-btn" routerLink="/admin/audit-log">
+      <span class="action-btn__icon">📋</span>
+      View Audit Log
+    </a>
+  </div>
+
+  <!-- Recent activity -->
+  <div class="panel">
+    <div class="panel__header">
+      <span class="panel__title">Recent Activity</span>
+      <a class="panel__link" routerLink="/admin/audit-log">View all</a>
+    </div>
+    <table class="activity-table">
+      <thead>
+        <tr>
+          <th>Organisation</th>
+          <th>Type</th>
+          <th>Action</th>
+          <th>Actor</th>
+          <th>Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of activity; track item.orgName + item.time) {
+          <tr>
+            <td class="activity-table__name">{{ item.orgName }}</td>
+            <td><span class="type-badge type-badge--{{ item.type.toLowerCase() }}">{{ item.type }}</span></td>
+            <td><span class="status-badge status-badge--{{ actionClass(item.action) }}">{{ actionLabel(item.action) }}</span></td>
+            <td class="activity-table__actor">{{ item.actor }}</td>
+            <td class="activity-table__time">{{ item.time }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+</div>

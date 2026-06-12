@@ -1,0 +1,64 @@
+<div class="rsm-overlay" (click)="onOverlayClick($event)">
+  <div class="rsm-card" role="dialog" aria-modal="true" aria-labelledby="rsm-title">
+
+    <!-- Header -->
+    <div class="rsm-card__header">
+      <span class="rsm-card__title" id="rsm-title">Reschedule Appointment</span>
+      <button class="rsm-card__close" type="button" (click)="close.emit()" aria-label="Close">&#x2715;</button>
+    </div>
+
+    <!-- Context block -->
+    <div class="rsm-context">
+      <div class="rsm-context__icon" aria-hidden="true">{{ typeIcon(appointment.type) }}</div>
+      <div class="rsm-context__body">
+        <span class="rsm-context__provider">{{ appointment.provider }}</span>
+        <span class="rsm-context__meta">{{ appointment.specialty }} &middot; {{ appointment.facility }}</span>
+        <span class="rsm-context__current">
+          Currently: {{ appointment.day }} {{ appointment.dayNum }} {{ appointment.month }}
+          &middot; {{ appointment.time }} &middot; {{ appointment.duration }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Form -->
+    <form #f="ngForm" (ngSubmit)="submit(f)" novalidate>
+      <div class="rsm-card__body">
+
+        <div class="rsm-row">
+          <div class="rsm-field">
+            <label for="rsm-date">New Date</label>
+            <input id="rsm-date" type="date" name="isoDate"
+                   [(ngModel)]="form.isoDate" [min]="todayISO" required>
+          </div>
+          <div class="rsm-field">
+            <label for="rsm-time">New Time</label>
+            <input id="rsm-time" type="time" name="time24"
+                   [(ngModel)]="form.time24" required>
+          </div>
+        </div>
+
+        <div class="rsm-field">
+          <label>Duration</label>
+          <lc-color-select
+            [options]="durationOptions"
+            [value]="form.duration"
+            (valueChange)="form.duration = $event"
+            placeholder="Select duration" />
+        </div>
+
+        <div class="rsm-field">
+          <label for="rsm-note">Prep Note <span class="rsm-field__optional">(optional)</span></label>
+          <textarea id="rsm-note" name="note" [(ngModel)]="form.note"
+                    placeholder="Any preparation notes for the new time…"></textarea>
+        </div>
+
+      </div>
+
+      <div class="rsm-card__footer">
+        <button type="button" class="rsm-cancel-btn" (click)="close.emit()">Cancel</button>
+        <button type="submit" class="rsm-save-btn" [disabled]="f.invalid">Confirm Reschedule</button>
+      </div>
+    </form>
+
+  </div>
+</div>

@@ -1,0 +1,94 @@
+<div class="prov-page">
+
+  <div class="prov-header">
+    <div>
+      <h1 class="prov-header__title">Accredited Providers</h1>
+      <p class="prov-header__sub">Hospitals and clinics in your network — {{ formatAmount(totalMTD()) }} in claims this month</p>
+    </div>
+    <div class="prov-header__controls">
+      <input class="prov-search" type="search" placeholder="Search name or area…"
+             (input)="setSearch($event)" />
+      <button class="prov-primary-btn" type="button">+ Add Provider</button>
+    </div>
+  </div>
+
+  <!-- Status tabs -->
+  <div class="prov-tabs">
+    @for (tab of statusTabs; track tab.key) {
+      <button class="prov-tab" [class.prov-tab--active]="statusFilter() === tab.key"
+              type="button" (click)="setStatusFilter(tab.key)">
+        {{ tab.label }}
+      </button>
+    }
+  </div>
+
+  <!-- Provider cards -->
+  <div class="prov-list">
+    @for (prov of filtered(); track prov.id) {
+      <div class="prov-card" [class.prov-card--expanded]="expandedId() === prov.id"
+           (click)="toggleExpand(prov.id)">
+
+        <div class="prov-card__row">
+          <div class="prov-card__icon" aria-hidden="true">🏥</div>
+
+          <div class="prov-card__main">
+            <div class="prov-card__top">
+              <span class="prov-card__name">{{ prov.name }}</span>
+              <span class="prov-card__type">{{ prov.type }}</span>
+            </div>
+            <p class="prov-card__meta">{{ prov.area }}, {{ prov.city }} · Accredited since {{ prov.accreditedSince }}</p>
+            <div class="prov-card__plans">
+              @for (plan of prov.plans; track plan) {
+                <span class="prov-plan-chip">{{ plan }}</span>
+              }
+            </div>
+          </div>
+
+          <div class="prov-card__stats">
+            <div class="prov-stat">
+              <span class="prov-stat__value">{{ formatAmount(prov.claimsMTD) }}</span>
+              <span class="prov-stat__label">Claims MTD</span>
+            </div>
+            <div class="prov-stat">
+              <span class="prov-stat__value">{{ prov.claimsCount }}</span>
+              <span class="prov-stat__label">Claims count</span>
+            </div>
+          </div>
+
+          <div class="prov-card__right">
+            <span class="prov-status"
+                  [style.color]="statusColor(prov.status)"
+                  [style.background]="statusColor(prov.status) + '18'">
+              {{ prov.status }}
+            </span>
+            <div class="prov-actions" (click)="$event.stopPropagation()">
+              @if (prov.status !== 'Active') {
+                <button class="prov-btn prov-btn--activate" type="button" (click)="activate(prov.id, $event)">Activate</button>
+              }
+              @if (prov.status === 'Active') {
+                <button class="prov-btn prov-btn--suspend" type="button" (click)="suspend(prov.id, $event)">Suspend</button>
+              }
+            </div>
+          </div>
+        </div>
+
+        @if (expandedId() === prov.id) {
+          <div class="prov-card__detail" (click)="$event.stopPropagation()">
+            <div class="prov-detail-item">
+              <span class="prov-detail-item__label">Contact</span>
+              <span class="prov-detail-item__value">{{ prov.contactName }} · {{ prov.contactPhone }}</span>
+            </div>
+            <div class="prov-detail-item">
+              <span class="prov-detail-item__label">Accepted plans</span>
+              <span class="prov-detail-item__value">{{ prov.plans.join(', ') }}</span>
+            </div>
+          </div>
+        }
+
+      </div>
+    } @empty {
+      <div class="prov-empty">No providers match this filter.</div>
+    }
+  </div>
+
+</div>

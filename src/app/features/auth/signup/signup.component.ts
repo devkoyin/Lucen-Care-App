@@ -10,7 +10,6 @@ const ROLE_LABELS: Record<string, string> = {
   patient: 'Patient & Caregiver',
   ngo: 'NGO',
   hmo: 'HMO',
-  researcher: 'Researcher',
 };
 
 function passwordMatch(control: AbstractControl): ValidationErrors | null {

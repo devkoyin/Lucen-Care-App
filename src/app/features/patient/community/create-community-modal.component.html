@@ -1,0 +1,103 @@
+<div class="ccm-overlay" (click)="onOverlayClick($event)">
+  <div class="ccm-card" role="dialog" aria-modal="true" aria-labelledby="ccm-title">
+
+    <div class="ccm-card__header">
+      <h2 class="ccm-card__title" id="ccm-title">Create a Community</h2>
+      <button class="ccm-card__close" type="button" (click)="close.emit()" aria-label="Close">✕</button>
+    </div>
+
+    <form #ccmForm="ngForm" (ngSubmit)="submit(ccmForm)">
+      <div class="ccm-card__body">
+
+        <!-- Name -->
+        <div class="ccm-field">
+          <label for="ccm-name">Community name <span class="ccm-field__req">*</span></label>
+          <input
+            id="ccm-name"
+            name="name"
+            type="text"
+            [(ngModel)]="form.name"
+            required
+            maxlength="60"
+            placeholder="e.g. Kidney Health Nigeria"
+            autocomplete="off" />
+        </div>
+
+        <!-- Description -->
+        <div class="ccm-field">
+          <label for="ccm-desc">Description <span class="ccm-field__opt">(optional)</span></label>
+          <textarea
+            id="ccm-desc"
+            name="description"
+            [(ngModel)]="form.description"
+            maxlength="200"
+            rows="3"
+            placeholder="What is this community about?"></textarea>
+        </div>
+
+        <!-- Icon picker -->
+        <div class="ccm-field">
+          <label>Community icon <span class="ccm-field__req">*</span></label>
+          <div class="ccm-icon-grid">
+            @for (icon of iconOptions; track icon) {
+              <button
+                class="ccm-icon-btn"
+                [class.ccm-icon-btn--active]="form.icon === icon"
+                type="button"
+                (click)="selectIcon(icon)"
+                [attr.aria-label]="'Select icon ' + icon"
+                [attr.aria-pressed]="form.icon === icon">
+                {{ icon }}
+              </button>
+            }
+          </div>
+        </div>
+
+        <!-- Accent colour -->
+        <div class="ccm-field">
+          <label>Accent colour</label>
+          <div class="ccm-accent-row">
+            @for (colour of accentOptions; track colour) {
+              <button
+                class="ccm-accent-chip"
+                [class.ccm-accent-chip--active]="form.accent === colour"
+                type="button"
+                (click)="selectAccent(colour)"
+                [style.background]="colour"
+                [style.box-shadow]="form.accent === colour ? '0 0 0 2px var(--color-surface), 0 0 0 4px ' + colour : 'none'"
+                [attr.aria-label]="'Select colour ' + colour"
+                [attr.aria-pressed]="form.accent === colour">
+              </button>
+            }
+          </div>
+        </div>
+
+        <!-- Live preview -->
+        @if (form.name || form.icon) {
+          <div class="ccm-preview">
+            <span class="ccm-preview__label">Preview</span>
+            <div
+              class="ccm-preview__item"
+              [style.border-color]="form.accent + '44'"
+              [style.background]="form.accent + '0d'">
+              <span class="ccm-preview__icon" aria-hidden="true">{{ form.icon || '?' }}</span>
+              <div class="ccm-preview__info">
+                <span class="ccm-preview__name" [style.color]="form.accent">
+                  {{ form.name || 'Community name' }}
+                </span>
+                <span class="ccm-preview__members">1 member · just created</span>
+              </div>
+            </div>
+          </div>
+        }
+
+      </div>
+
+      <div class="ccm-card__footer">
+        <button class="ccm-cancel-btn" type="button" (click)="close.emit()">Cancel</button>
+        <button class="ccm-save-btn" type="submit" [disabled]="!isValid">Create Community</button>
+      </div>
+    </form>
+
+  </div>
+</div>

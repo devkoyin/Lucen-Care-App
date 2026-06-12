@@ -1,0 +1,88 @@
+<div class="pa-page">
+
+  <div class="pa-header">
+    <div>
+      <h1 class="pa-header__title">Pre-Authorisation Requests</h1>
+      <p class="pa-header__sub">Review and action requests submitted by accredited providers</p>
+    </div>
+    @if (pendingCount() > 0) {
+      <span class="pa-header__badge">{{ pendingCount() }} awaiting action</span>
+    }
+  </div>
+
+  <!-- Tabs -->
+  <div class="pa-tabs">
+    @for (tab of tabs; track tab.key) {
+      <button class="pa-tab" [class.pa-tab--active]="activeFilter() === tab.key"
+              type="button" (click)="setFilter(tab.key)">
+        {{ tab.label }}
+      </button>
+    }
+  </div>
+
+  <!-- List -->
+  <div class="pa-list">
+    @for (req of filtered(); track req.id) {
+      <div class="pa-card" [class.pa-card--expanded]="expandedId() === req.id"
+           (click)="toggleExpand(req.id)">
+
+        <!-- Row -->
+        <div class="pa-card__row">
+          <div class="pa-card__avatar">{{ req.initial }}</div>
+
+          <div class="pa-card__main">
+            <div class="pa-card__top">
+              <span class="pa-card__procedure">{{ req.procedure }}</span>
+              <span class="pa-card__id">{{ req.id }}</span>
+            </div>
+            <p class="pa-card__meta">
+              {{ req.patient }} · {{ req.plan }} Plan · {{ req.memberNumber }}
+            </p>
+            <p class="pa-card__meta">
+              {{ req.requestedBy }} · {{ req.hospital }} · {{ req.requestDate }} · ICD {{ req.icdCode }}
+            </p>
+          </div>
+
+          <div class="pa-card__right">
+            <span class="pa-status"
+                  [style.color]="statusColor(req.status)"
+                  [style.background]="statusColor(req.status) + '18'">
+              {{ req.status }}
+            </span>
+            @if (req.status === 'Pending' || req.status === 'Under Review') {
+              <div class="pa-actions" (click)="$event.stopPropagation()">
+                @if (req.status === 'Pending') {
+                  <button class="pa-btn pa-btn--review" type="button" (click)="review(req.id, $event)">Review</button>
+                }
+                <button class="pa-btn pa-btn--approve" type="button" (click)="approve(req.id, $event)">Approve</button>
+                <button class="pa-btn pa-btn--reject"  type="button" (click)="reject(req.id, $event)">Reject</button>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Expanded detail -->
+        @if (expandedId() === req.id) {
+          <div class="pa-card__detail" (click)="$event.stopPropagation()">
+            @if (req.note) {
+              <div class="pa-detail-block">
+                <span class="pa-detail-block__label">Clinical note from provider</span>
+                <p class="pa-detail-block__text">{{ req.note }}</p>
+              </div>
+            }
+            @if (req.reviewNote) {
+              <div class="pa-detail-block pa-detail-block--review">
+                <span class="pa-detail-block__label">Reviewer note</span>
+                <p class="pa-detail-block__text">{{ req.reviewNote }}</p>
+              </div>
+            }
+          </div>
+        }
+
+      </div>
+    } @empty {
+      <div class="pa-empty">No requests match this filter.</div>
+    }
+  </div>
+
+</div>

@@ -1,0 +1,97 @@
+<div class="map-page">
+
+  <div class="map-header">
+    <div>
+      <h1 class="map-header__title">Patient Distribution</h1>
+      <p class="map-header__sub">Geographic breakdown of selected patients and active applicants across Nigeria</p>
+    </div>
+  </div>
+
+  <!-- Summary cards -->
+  <div class="map-summary">
+    <div class="map-stat-card">
+      <span class="map-stat-card__value">{{ totalSelected() }}</span>
+      <span class="map-stat-card__label">Selected Patients</span>
+    </div>
+    <div class="map-stat-card">
+      <span class="map-stat-card__value">{{ totalInReview() }}</span>
+      <span class="map-stat-card__label">In Review</span>
+    </div>
+    <div class="map-stat-card">
+      <span class="map-stat-card__value">{{ totalWaitlisted() }}</span>
+      <span class="map-stat-card__label">Waitlisted</span>
+    </div>
+    <div class="map-stat-card">
+      <span class="map-stat-card__value">{{ statesReached }}</span>
+      <span class="map-stat-card__label">States Reached</span>
+    </div>
+  </div>
+
+  <div class="map-body">
+
+    <!-- State breakdown -->
+    <div class="map-states">
+      <h2 class="map-section-title">By State</h2>
+      <div class="map-table-wrap">
+        <table class="map-table">
+          <thead>
+            <tr>
+              <th>State</th>
+              <th>Zone</th>
+              <th>Selected</th>
+              <th>In Review</th>
+              <th>Waitlisted</th>
+              <th>Top Condition</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (row of states; track row.state) {
+              <tr>
+                <td class="map-state-name">{{ row.state }}</td>
+                <td>
+                  <span class="map-zone-chip" [style.color]="zoneColor(row.zone)" [style.background]="zoneColor(row.zone) + '15'">
+                    {{ row.zone }}
+                  </span>
+                </td>
+                <td class="map-count map-count--selected">{{ row.selected }}</td>
+                <td class="map-count map-count--review">{{ row.inReview }}</td>
+                <td class="map-count map-count--waitlisted">{{ row.waitlisted }}</td>
+                <td class="td-muted">{{ row.topCondition }}</td>
+                <td class="map-bar-cell">
+                  <div class="map-bar">
+                    <div class="map-bar__fill" [style.width.%]="barWidth(row.selected)"></div>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Zone summary -->
+    <div class="map-zones">
+      <h2 class="map-section-title">By Geopolitical Zone</h2>
+      <div class="map-zone-list">
+        @for (zone of zoneSummaries; track zone.zone) {
+          <div class="map-zone-card">
+            <div class="map-zone-card__dot" [style.background]="zone.color"></div>
+            <div class="map-zone-card__info">
+              <span class="map-zone-card__name">{{ zone.zone }}</span>
+              <span class="map-zone-card__count">{{ zone.total }} patients</span>
+            </div>
+            <div class="map-zone-bar">
+              <div class="map-zone-bar__fill"
+                   [style.width.%]="(zone.total / totalSelected()) * 100"
+                   [style.background]="zone.color">
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+  </div>
+
+</div>

@@ -24,8 +24,7 @@ describe('HmoDashboardComponent', () => {
   it('creates', () => expect(fixture.componentInstance).toBeTruthy());
   it('shows org name', () => expect(fixture.componentInstance.orgName).toBe('HealthCo HMO'));
   it('renders 4 stat cards', () => expect(fixture.nativeElement.querySelectorAll('.stat-card').length).toBe(4));
-  it('renders activity items', () => expect(fixture.nativeElement.querySelectorAll('.activity-item').length).toBe(5));
-  it('completenessColor returns green for >=80', () => expect(fixture.componentInstance.completenessColor(85)).toBe('#34D399'));
-  it('completenessColor returns amber for 50-79', () => expect(fixture.componentInstance.completenessColor(65)).toBe('#F59E0B'));
-  it('completenessColor returns red for <50', () => expect(fixture.componentInstance.completenessColor(40)).toBe('#EF4444'));
+  it('utilisationColor returns red for >=80', () => expect(fixture.componentInstance.utilisationColor(85)).toBe('#DC2626'));
+  it('utilisationColor returns amber for 50-79', () => expect(fixture.componentInstance.utilisationColor(65)).toBe('#D97706'));
+  it('utilisationColor returns green for <50', () => expect(fixture.componentInstance.utilisationColor(30)).toBe('#059669'));
 });

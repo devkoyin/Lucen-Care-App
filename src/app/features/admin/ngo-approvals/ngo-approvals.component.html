@@ -1,0 +1,124 @@
+<div class="approvals">
+
+  <!-- Header -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-header__title">NGO Applications</h1>
+      <p class="page-header__sub">Review and approve NGO registration requests</p>
+    </div>
+  </div>
+
+  <!-- Filter tabs -->
+  <div class="filter-tabs">
+    @for (tab of tabs; track tab.id) {
+      <button
+        class="filter-tab"
+        [class.filter-tab--active]="activeTab() === tab.id"
+        (click)="setTab(tab.id)">
+        {{ tab.label }}
+        <span class="filter-tab__count">{{ countFor(tab.id) }}</span>
+      </button>
+    }
+  </div>
+
+  <!-- Applications list -->
+  <div class="app-list">
+    @for (app of filtered; track app.id) {
+      <div class="app-card" [class.app-card--expanded]="expandedId() === app.id">
+
+        <!-- Row summary -->
+        <div class="app-card__row" (click)="toggleExpand(app.id)">
+          <div class="app-card__main">
+            <span class="app-card__name">{{ app.orgName }}</span>
+            <span class="app-card__meta">{{ app.contactPerson }} · {{ app.email }}</span>
+          </div>
+          <div class="app-card__meta-col">
+            <span class="app-card__reg">{{ app.registrationNo }}</span>
+            <span class="app-card__date">Submitted {{ formatDate(app.submittedAt) }}</span>
+          </div>
+          <div class="app-card__docs-col">
+            @if (docsComplete(app)) {
+              <span class="docs-badge docs-badge--complete">✓ All docs</span>
+            } @else {
+              <span class="docs-badge docs-badge--missing">⚠ Incomplete</span>
+            }
+          </div>
+          <span class="status-badge status-badge--{{ app.status }}">
+            {{ app.status === 'pending' ? 'Pending' : app.status === 'approved' ? 'Approved' : 'Rejected' }}
+          </span>
+          <span class="app-card__chevron" [class.app-card__chevron--open]="expandedId() === app.id">›</span>
+        </div>
+
+        <!-- Expanded detail -->
+        @if (expandedId() === app.id) {
+          <div class="app-card__detail">
+
+            <div class="detail-grid">
+              <div class="detail-section">
+                <p class="detail-section__title">Contact Details</p>
+                <dl class="detail-list">
+                  <dt>Contact Person</dt><dd>{{ app.contactPerson }}</dd>
+                  <dt>Email</dt><dd>{{ app.email }}</dd>
+                  <dt>Head Office</dt><dd>{{ app.headOfficeCountry }}</dd>
+                  <dt>Registration No.</dt><dd>{{ app.registrationNo }}</dd>
+                </dl>
+              </div>
+
+              <div class="detail-section">
+                <p class="detail-section__title">Submitted Documents</p>
+                <div class="doc-list">
+                  @for (doc of app.docs; track doc.label) {
+                    <div class="doc-item">
+                      <span class="doc-item__icon">{{ doc.submitted ? '✓' : '✕' }}</span>
+                      <span class="doc-item__label" [class.doc-item__label--missing]="!doc.submitted">{{ doc.label }}</span>
+                    </div>
+                  }
+                </div>
+              </div>
+            </div>
+
+            @if (app.status === 'rejected' && app.rejectionReason) {
+              <div class="rejection-note">
+                <span class="rejection-note__label">Rejection reason:</span>
+                {{ app.rejectionReason }}
+              </div>
+            }
+
+            <!-- Reject reason form -->
+            @if (rejectingId() === app.id) {
+              <div class="reject-form">
+                <label class="reject-form__label" for="reason-{{ app.id }}">Rejection reason</label>
+                <textarea
+                  id="reason-{{ app.id }}"
+                  class="reject-form__textarea"
+                  rows="3"
+                  placeholder="Explain why this application is being rejected…"
+                  [value]="rejectReason()"
+                  (input)="rejectReason.set($any($event.target).value)">
+                </textarea>
+                <div class="reject-form__actions">
+                  <button class="btn-ghost" (click)="cancelReject()">Cancel</button>
+                  <button class="btn-danger" [disabled]="!rejectReason().trim()" (click)="confirmReject(app.id)">Confirm Rejection</button>
+                </div>
+              </div>
+            }
+
+            @if (app.status === 'pending' && rejectingId() !== app.id) {
+              <div class="app-card__actions">
+                <button class="btn-approve" (click)="approve(app.id)">✓ Approve</button>
+                <button class="btn-reject" (click)="startReject(app.id)">✕ Reject</button>
+              </div>
+            }
+
+          </div>
+        }
+
+      </div>
+    }
+
+    @if (filtered.length === 0) {
+      <div class="empty-state">No applications in this category.</div>
+    }
+  </div>
+
+</div>

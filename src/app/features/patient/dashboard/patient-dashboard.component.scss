@@ -126,6 +126,24 @@
   }
 }
 
+// Widget header right group + reminder badge
+.widget__header-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.dash-reminder-badge {
+  font-size: 10px;
+  font-weight: var(--font-semibold);
+  padding: 2px 7px;
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+
+  &--today    { background: rgba(220, 38, 38, 0.10); color: #991B1B; border: 1px solid rgba(220, 38, 38, 0.20); }
+  &--tomorrow { background: rgba(217, 119, 6, 0.10);  color: #92400E; border: 1px solid rgba(217, 119, 6, 0.20); }
+}
+
 // Appointment items
 .appt-item {
   display: flex;
@@ -157,6 +175,8 @@
     text-transform: uppercase;
     letter-spacing: 0.5px;
   }
+
+  &--empty { padding: var(--space-5); justify-content: center; border-bottom: none; }
 
   &__detail { display: flex; flex-direction: column; gap: 2px; }
 

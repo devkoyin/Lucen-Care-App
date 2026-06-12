@@ -1,0 +1,96 @@
+<div class="app-page">
+
+  <div class="app-header">
+    <div>
+      <h1 class="app-header__title">Applicants</h1>
+      <p class="app-header__sub">{{ applicants().length }} total applications across all programs</p>
+    </div>
+    <div class="app-header__controls">
+      @if (pendingCount() > 0) {
+        <span class="app-header__badge">{{ pendingCount() }} awaiting review</span>
+      }
+      <select class="app-select" (change)="setProgram($event)">
+        @for (opt of programOptions; track opt.value) {
+          <option [value]="opt.value">{{ opt.label }}</option>
+        }
+      </select>
+      <input class="app-search" type="search" placeholder="Search name or condition…"
+             (input)="setSearch($event)" />
+    </div>
+  </div>
+
+  <!-- Status tabs -->
+  <div class="app-tabs">
+    @for (tab of statusTabs; track tab.key) {
+      <button class="app-tab" [class.app-tab--active]="statusFilter() === tab.key"
+              type="button" (click)="setStatus(tab.key)">
+        {{ tab.label }}
+      </button>
+    }
+  </div>
+
+  <!-- Table -->
+  <div class="app-table-wrap">
+    <table class="app-table">
+      <thead>
+        <tr>
+          <th>Applicant</th>
+          <th>Condition</th>
+          <th>Program</th>
+          <th>Monthly Cost</th>
+          <th>Applied</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (app of filtered(); track app.id) {
+          <tr [class.app-table__row--selected]="app.status === 'Selected'">
+            <td>
+              <div class="app-cell">
+                <div class="app-cell__avatar">{{ app.initial }}</div>
+                <div>
+                  <div class="app-cell__name">{{ app.name }}</div>
+                  <div class="app-cell__meta">{{ app.age }}yo {{ app.gender === 'F' ? 'Female' : 'Male' }} · {{ app.state }}</div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div class="app-condition">{{ app.condition }}</div>
+              @if (app.note) {
+                <div class="app-note">{{ app.note }}</div>
+              }
+            </td>
+            <td class="td-muted">{{ app.programName }}</td>
+            <td class="td-cost">{{ formatAmount(app.monthlyCost) }}/mo</td>
+            <td class="td-muted">{{ app.appliedDate }}</td>
+            <td>
+              <span class="app-status"
+                    [style.color]="statusColor(app.status)"
+                    [style.background]="statusColor(app.status) + '18'">
+                {{ app.status }}
+              </span>
+            </td>
+            <td>
+              <div class="app-actions">
+                @if (app.status === 'New') {
+                  <button class="app-btn app-btn--review" type="button" (click)="review(app.id)">Review</button>
+                }
+                @if (app.status === 'New' || app.status === 'In Review') {
+                  <button class="app-btn app-btn--select"   type="button" (click)="select(app.id)">Select</button>
+                  <button class="app-btn app-btn--waitlist" type="button" (click)="waitlist(app.id)">Waitlist</button>
+                  <button class="app-btn app-btn--reject"   type="button" (click)="reject(app.id)">Reject</button>
+                }
+              </div>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td class="app-empty" colspan="7">No applicants match this filter.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+</div>

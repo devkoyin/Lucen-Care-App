@@ -1,0 +1,79 @@
+<div class="bam-overlay" (click)="onOverlayClick($event)">
+  <div class="bam-card" role="dialog" aria-modal="true" aria-labelledby="bam-title">
+
+    <div class="bam-card__header">
+      <span class="bam-card__title" id="bam-title">Book Appointment</span>
+      <button class="bam-card__close" type="button" (click)="close.emit()" aria-label="Close">&#x2715;</button>
+    </div>
+
+    <form #f="ngForm" (ngSubmit)="submit(f)" novalidate>
+      <div class="bam-card__body">
+
+        <div class="bam-row">
+          <div class="bam-field">
+            <label for="bam-date">Date</label>
+            <input id="bam-date" type="date" name="isoDate"
+                   [(ngModel)]="form.isoDate" [min]="todayISO" required>
+          </div>
+          <div class="bam-field">
+            <label for="bam-time">Time</label>
+            <input id="bam-time" type="time" name="time24"
+                   [(ngModel)]="form.time24" required>
+          </div>
+        </div>
+
+        <div class="bam-row">
+          <div class="bam-field">
+            <label for="bam-provider">Provider / Doctor</label>
+            <input id="bam-provider" type="text" name="provider"
+                   [(ngModel)]="form.provider" required
+                   placeholder="e.g. Dr. Sarah Chen">
+          </div>
+          <div class="bam-field">
+            <label>Specialty</label>
+            <lc-specialty-select [value]="form.specialty" (valueChange)="form.specialty = $event" />
+          </div>
+        </div>
+
+        <div class="bam-row">
+          <div class="bam-field">
+            <label>Type</label>
+            <lc-color-select
+              [options]="typeOptions"
+              [value]="form.type"
+              (valueChange)="form.type = $any($event)"
+              placeholder="Select a type" />
+          </div>
+          <div class="bam-field">
+            <label>Duration</label>
+            <lc-color-select
+              [options]="durationOptions"
+              [value]="form.duration"
+              (valueChange)="form.duration = $event"
+              placeholder="Select duration" />
+          </div>
+        </div>
+
+        <div class="bam-field">
+          <label for="bam-facility">Clinic / Facility</label>
+          <input id="bam-facility" type="text" name="facility"
+                 [(ngModel)]="form.facility" required
+                 placeholder="e.g. Lucen Health Centre, Lagos">
+        </div>
+
+        <div class="bam-field">
+          <label for="bam-note">Prep Note <span class="bam-field__optional">(optional)</span></label>
+          <textarea id="bam-note" name="note" [(ngModel)]="form.note"
+                    placeholder="e.g. Fast for 8 hours, bring medication list…"></textarea>
+        </div>
+
+      </div>
+
+      <div class="bam-card__footer">
+        <button type="button" class="bam-cancel-btn" (click)="close.emit()">Cancel</button>
+        <button type="submit" class="bam-save-btn" [disabled]="f.invalid || !form.specialty">Save Appointment</button>
+      </div>
+    </form>
+
+  </div>
+</div>

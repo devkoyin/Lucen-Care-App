@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../../core/auth/auth.service';
+import { ApplicationsService } from '../../../../core/applications/applications.service';
 import { OnboardingShellComponent } from '../onboarding-shell/onboarding-shell.component';
 import { FormFieldComponent } from '../../../../shared/components/form-field/form-field.component';
 
@@ -13,8 +14,9 @@ import { FormFieldComponent } from '../../../../shared/components/form-field/for
   styleUrl: './ngo-onboarding.component.scss',
 })
 export class NgoOnboardingComponent {
-  private readonly fb = inject(FormBuilder);
+  private readonly fb   = inject(FormBuilder);
   private readonly auth = inject(AuthService);
+  private readonly apps = inject(ApplicationsService);
   private readonly router = inject(Router);
 
   currentStep = 1;
@@ -81,6 +83,31 @@ export class NgoOnboardingComponent {
     const form = this.currentForm;
     form?.markAllAsTouched();
     if (form?.invalid) return;
+
+    if (this.currentStep === 3) {
+      const user = this.auth.user();
+      const s1   = this.step1Form.value;
+      const s2   = this.step2Form.value;
+      this.apps.submit({
+        type: 'ngo',
+        contactPerson: user?.name  ?? '',
+        email:         user?.email ?? '',
+        orgName:            s1.orgName            ?? '',
+        registrationNo:     s1.registrationNumber ?? '',
+        focusAreas:         s1.focusAreas         ?? '',
+        website:            s1.website            ?? '',
+        operatingRegions:   s2.operatingRegions   ?? '',
+        headOfficeCountry:  s2.headOfficeCountry  ?? '',
+        programDescription: s2.programDescription ?? '',
+        docs: [
+          { label: 'Registration Number',  submitted: !!(s1.registrationNumber) },
+          { label: 'Focus Areas',          submitted: !!(s1.focusAreas) },
+          { label: 'Operating Regions',    submitted: !!(s2.operatingRegions) },
+          { label: 'Program Description',  submitted: !!(s2.programDescription) },
+        ],
+      });
+    }
+
     this.currentStep++;
   }
 }

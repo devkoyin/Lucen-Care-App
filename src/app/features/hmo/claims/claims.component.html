@@ -1,0 +1,83 @@
+<div class="claims-page">
+
+  <div class="claims-header">
+    <div>
+      <h1 class="claims-header__title">Claims</h1>
+      <p class="claims-header__sub">Provider-submitted treatment claims for review and processing</p>
+    </div>
+    @if (pendingCount() > 0) {
+      <span class="claims-header__badge">{{ pendingCount() }} requiring action</span>
+    }
+  </div>
+
+  <!-- Tabs -->
+  <div class="claims-tabs">
+    @for (tab of tabs; track tab.key) {
+      <button class="claims-tab" [class.claims-tab--active]="activeFilter() === tab.key"
+              type="button" (click)="setFilter(tab.key)">
+        {{ tab.label }}
+      </button>
+    }
+    <span class="claims-tabs__total">{{ formatAmount(totalFiltered()) }} total</span>
+  </div>
+
+  <!-- List -->
+  <div class="claims-list">
+    @for (claim of filtered(); track claim.id) {
+      <div class="claim-card" [class.claim-card--expanded]="expandedId() === claim.id"
+           (click)="toggleExpand(claim.id)">
+
+        <div class="claim-card__row">
+          <div class="claim-card__avatar">{{ claim.initial }}</div>
+
+          <div class="claim-card__main">
+            <div class="claim-card__top">
+              <span class="claim-card__desc">{{ claim.description }}</span>
+              <span class="claim-card__id">{{ claim.id }}</span>
+            </div>
+            <p class="claim-card__meta">
+              {{ claim.patient }} · {{ claim.plan }} Plan · {{ claim.hospital }}
+              @if (claim.preAuthId) { · Pre-Auth: {{ claim.preAuthId }} }
+            </p>
+            <p class="claim-card__meta">Submitted {{ claim.submittedDate }}</p>
+          </div>
+
+          <div class="claim-card__right">
+            <span class="claim-card__amount">{{ formatAmount(claim.amount) }}</span>
+            <span class="claim-status"
+                  [style.color]="statusColor(claim.status)"
+                  [style.background]="statusColor(claim.status) + '18'">
+              {{ claim.status }}
+            </span>
+            @if (claim.status === 'Pending') {
+              <div class="claim-actions" (click)="$event.stopPropagation()">
+                <button class="claim-btn claim-btn--query"   type="button" (click)="query(claim.id, $event)">Query</button>
+                <button class="claim-btn claim-btn--approve" type="button" (click)="approve(claim.id, $event)">Approve</button>
+                <button class="claim-btn claim-btn--reject"  type="button" (click)="reject(claim.id, $event)">Reject</button>
+              </div>
+            }
+            @if (claim.status === 'Queried') {
+              <div class="claim-actions" (click)="$event.stopPropagation()">
+                <button class="claim-btn claim-btn--approve" type="button" (click)="approve(claim.id, $event)">Approve</button>
+                <button class="claim-btn claim-btn--reject"  type="button" (click)="reject(claim.id, $event)">Reject</button>
+              </div>
+            }
+          </div>
+        </div>
+
+        @if (expandedId() === claim.id && claim.queryNote) {
+          <div class="claim-card__detail" (click)="$event.stopPropagation()">
+            <div class="claim-note">
+              <span class="claim-note__label">Query / Reviewer note</span>
+              <p class="claim-note__text">{{ claim.queryNote }}</p>
+            </div>
+          </div>
+        }
+
+      </div>
+    } @empty {
+      <div class="claims-empty">No claims match this filter.</div>
+    }
+  </div>
+
+</div>

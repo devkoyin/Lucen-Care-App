@@ -1,0 +1,189 @@
+<div class="community-page">
+
+  <!-- ── Header ─────────────────────────────────────────────── -->
+  <div class="community-header">
+    <div>
+      <h1 class="community-header__title">Community</h1>
+      <p class="community-header__sub">Connect with others managing similar health journeys</p>
+    </div>
+    <button class="community-primary-btn" type="button" (click)="showNewPost.set(true)">+ New Post</button>
+  </div>
+
+  <!-- ── Stats ──────────────────────────────────────────────── -->
+  <div class="community-stats">
+    @for (s of stats(); track s.label) {
+      <div class="comm-stat-card">
+        <span class="comm-stat-card__icon" aria-hidden="true">{{ s.icon }}</span>
+        <span class="comm-stat-card__value">{{ s.value }}</span>
+        <span class="comm-stat-card__label">{{ s.label }}</span>
+      </div>
+    }
+  </div>
+
+  <!-- ── Body ───────────────────────────────────────────────── -->
+  <div class="community-body">
+
+    <!-- Feed column -->
+    <main class="community-feed">
+
+      <!-- Filter chips -->
+      <div class="community-filters">
+        @for (f of filters(); track f.key) {
+          <button
+            class="filter-chip"
+            [class.filter-chip--active]="activeFilter() === f.key"
+            type="button"
+            (click)="setFilter(f.key)">
+            {{ f.label }}
+          </button>
+        }
+      </div>
+
+      <!-- Posts -->
+      <div class="post-list">
+        @for (post of filteredPosts(); track post.id) {
+          <article class="post-card">
+
+            <!-- Post meta row -->
+            <div class="post-card__meta">
+              <span class="post-card__avatar" [style.background]="post.authorColor" aria-hidden="true">
+                {{ post.authorInitial }}
+              </span>
+              <div class="post-card__author-info">
+                <span class="post-card__author">{{ post.author }}</span>
+                <span class="post-card__time">{{ post.timeAgo }}</span>
+              </div>
+              <span class="post-card__group-badge" [style.background]="post.groupColor + '1a'" [style.color]="post.groupColor" [style.border-color]="post.groupColor + '33'">
+                {{ post.groupLabel }}
+              </span>
+            </div>
+
+            <!-- Post body -->
+            <div class="post-card__body">
+              <h3 class="post-card__title">{{ post.title }}</h3>
+              <p class="post-card__excerpt">{{ post.content }}</p>
+            </div>
+
+            <!-- Tags -->
+            <div class="post-card__tags">
+              @for (tag of post.tags; track tag) {
+                <span class="post-tag">#{{ tag }}</span>
+              }
+            </div>
+
+            <!-- Actions -->
+            <div class="post-card__actions">
+              <button
+                class="post-action-btn"
+                [class.post-action-btn--liked]="post.liked"
+                type="button"
+                (click)="toggleLike(post.id)"
+                [attr.aria-label]="post.liked ? 'Unlike post' : 'Like post'">
+                <span aria-hidden="true">{{ post.liked ? '❤️' : '🤍' }}</span>
+                <span>{{ post.likes }}</span>
+              </button>
+              <button class="post-action-btn" type="button" aria-label="View comments">
+                <span aria-hidden="true">💬</span>
+                <span>{{ post.comments }}</span>
+              </button>
+              <button class="post-action-btn" type="button" aria-label="Share post">
+                <span aria-hidden="true">↗</span>
+                <span>Share</span>
+              </button>
+            </div>
+
+          </article>
+        } @empty {
+          <div class="post-empty">
+            <span class="post-empty__icon" aria-hidden="true">🌿</span>
+            <p class="post-empty__text">No posts in this group yet. Be the first to share!</p>
+            <button class="community-primary-btn" type="button" (click)="showNewPost.set(true)">+ New Post</button>
+          </div>
+        }
+      </div>
+    </main>
+
+    <!-- Sidebar -->
+    <aside class="community-sidebar">
+
+      <!-- Your Groups -->
+      <div class="sidebar-card">
+        <div class="sidebar-card__header-row">
+          <h2 class="sidebar-card__title">Your Groups</h2>
+          <button class="sidebar-card__create-btn" type="button" (click)="showCreateCommunity.set(true)">+ Create</button>
+        </div>
+        <div class="group-list">
+          @for (group of groups(); track group.id) {
+            <div class="group-item">
+              <span class="group-item__icon" aria-hidden="true">{{ group.icon }}</span>
+              <div class="group-item__info">
+                <span class="group-item__name">{{ group.name }}</span>
+                <span class="group-item__members">{{ group.members.toLocaleString() }} members</span>
+              </div>
+              <button
+                class="group-join-btn"
+                [class.group-join-btn--joined]="group.joined"
+                type="button"
+                (click)="toggleJoin(group.id)">
+                {{ group.joined ? 'Leave' : 'Join' }}
+              </button>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Trending Topics -->
+      <div class="sidebar-card">
+        <h2 class="sidebar-card__title">Trending Topics</h2>
+        <div class="trending-list">
+          @for (t of trending; track t.tag) {
+            <div class="trending-item">
+              <span class="trending-item__tag">#{{ t.tag }}</span>
+              <span class="trending-item__count">{{ t.count }} posts</span>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Community Guidelines -->
+      <div class="guidelines-card">
+        <div class="guidelines-card__header">
+          <span class="guidelines-card__icon" aria-hidden="true">🛡️</span>
+          <h2 class="guidelines-card__title">Community Guidelines</h2>
+        </div>
+        <ul class="guidelines-list">
+          <li class="guidelines-item">
+            <span class="guidelines-item__icon" aria-hidden="true">💬</span>
+            <span>Share experiences, not medical advice</span>
+          </li>
+          <li class="guidelines-item">
+            <span class="guidelines-item__icon" aria-hidden="true">🤝</span>
+            <span>Be kind — everyone's journey is different</span>
+          </li>
+          <li class="guidelines-item">
+            <span class="guidelines-item__icon" aria-hidden="true">🔒</span>
+            <span>Protect your privacy — avoid sharing personal identifiers</span>
+          </li>
+          <li class="guidelines-item">
+            <span class="guidelines-item__icon" aria-hidden="true">⚕️</span>
+            <span>Always consult your care team for clinical decisions</span>
+          </li>
+        </ul>
+      </div>
+
+    </aside>
+  </div>
+
+</div>
+
+@if (showNewPost()) {
+  <lc-new-post-modal
+    (close)="showNewPost.set(false)"
+    (posted)="addPost($event)" />
+}
+
+@if (showCreateCommunity()) {
+  <lc-create-community-modal
+    (close)="showCreateCommunity.set(false)"
+    (created)="createCommunity($event)" />
+}

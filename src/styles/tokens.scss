@@ -1,20 +1,20 @@
 :root {
   // Brand
-  --color-primary:          #3535A8;
-  --color-primary-dark:     #2929A0;
+  --color-primary:          #3AB0A1;
+  --color-primary-dark:     #2A8A7D;
   --color-teal:             #3AB0A1;
   --color-amber:            #F4A261;
 
   // Backgrounds
   --color-bg:               #F4F5F8;
   --color-surface:          #FFFFFF;
-  --color-surface-2:        #ECEDF5;
-  --color-border:           rgba(53, 53, 168, 0.12);
+  --color-surface-2:        #E8F5F3;
+  --color-border:           rgba(58, 176, 161, 0.15);
 
   // Text
   --color-text:             #12122A;
-  --color-text-secondary:   #4A4A7A;
-  --color-text-muted:       #8A8AAF;
+  --color-text-secondary:   #3D6B67;
+  --color-text-muted:       #7A9E9A;
 
   // Semantic
   --color-error:            #DC2626;
@@ -26,11 +26,15 @@
   --color-role-surface:     rgba(58, 176, 161, 0.08);
   --color-role-border:      rgba(58, 176, 161, 0.20);
 
-  // Sidebar — indigo
+  // Auth page dark background — overridden per portal
+  --login-bg-dark:          #071412;
+  --login-grid-line:        rgba(58, 176, 161, 0.08);
+
+  // Sidebar — teal
   --sidebar-width:          220px;
-  --sidebar-bg:             #3535A8;
-  --sidebar-active-bg:      rgba(58, 176, 161, 0.15);
-  --sidebar-active-border:  #3AB0A1;
+  --sidebar-bg:             #3AB0A1;
+  --sidebar-active-bg:      rgba(255, 255, 255, 0.16);
+  --sidebar-active-border:  #FFFFFF;
   --sidebar-hover-bg:       rgba(255, 255, 255, 0.07);
   --sidebar-text:           rgba(255, 255, 255, 0.90);
   --sidebar-text-secondary: rgba(255, 255, 255, 0.55);
@@ -77,10 +81,10 @@
   --radius-2xl: 24px;
   --radius-full: 9999px;
 
-  // Shadows — indigo-tinted
-  --shadow-sm: 0 1px 3px rgba(53, 53, 168, 0.06), 0 1px 2px rgba(53, 53, 168, 0.04);
-  --shadow-md: 0 4px 12px rgba(53, 53, 168, 0.10), 0 2px 4px rgba(53, 53, 168, 0.06);
-  --shadow-lg: 0 8px 32px rgba(53, 53, 168, 0.12), 0 4px 8px rgba(53, 53, 168, 0.08);
+  // Shadows — teal-tinted
+  --shadow-sm: 0 1px 3px rgba(58, 176, 161, 0.07), 0 1px 2px rgba(58, 176, 161, 0.05);
+  --shadow-md: 0 4px 12px rgba(58, 176, 161, 0.12), 0 2px 4px rgba(58, 176, 161, 0.07);
+  --shadow-lg: 0 8px 32px rgba(58, 176, 161, 0.14), 0 4px 8px rgba(58, 176, 161, 0.09);
 
   // Button tokens
   --btn-primary-bg:         var(--color-role-accent);

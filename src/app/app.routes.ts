@@ -27,11 +27,6 @@ export const routes: Routes = [
       import('./features/hmo/hmo.routes').then(m => m.HMO_ROUTES),
   },
   {
-    path: 'researcher',
-    loadChildren: () =>
-      import('./features/researcher/researcher.routes').then(m => m.RESEARCHER_ROUTES),
-  },
-  {
     path: 'admin',
     loadChildren: () =>
       import('./features/admin/admin.routes').then(m => m.ADMIN_ROUTES),

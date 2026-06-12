@@ -1,0 +1,144 @@
+<div class="appts-page">
+
+  <!-- ── Header ─────────────────────────────────────────────── -->
+  <div class="appts-header">
+    <div>
+      <h1 class="appts-header__title">My Appointments</h1>
+      <p class="appts-header__sub">Track, manage and prepare for your consultations</p>
+    </div>
+    <button class="appts-primary-btn" type="button" (click)="showModal.set(true)">+ Book Appointment</button>
+  </div>
+
+  <!-- ── Reminder banner ─────────────────────────────────────── -->
+  @if (reminderAppt()) {
+    <div class="reminder-banner reminder-banner--{{ reminderAppt()!.urgency }}">
+      <span class="reminder-banner__icon" aria-hidden="true">
+        {{ reminderAppt()!.urgency === 'today' ? '🚨' : '🔔' }}
+      </span>
+      <div class="reminder-banner__body">
+        <span class="reminder-banner__title">
+          {{ reminderAppt()!.urgency === 'today' ? 'Appointment today' : 'Appointment tomorrow' }}
+          with {{ reminderAppt()!.appt.provider }} at {{ reminderAppt()!.appt.time }}
+        </span>
+        <span class="reminder-banner__detail">
+          {{ reminderAppt()!.appt.specialty }} &middot; {{ reminderAppt()!.appt.facility }}
+        </span>
+      </div>
+      <button class="reminder-banner__close" type="button" (click)="dismissReminder()" aria-label="Dismiss">&#x2715;</button>
+    </div>
+  }
+
+  <!-- ── Stats bar ───────────────────────────────────────────── -->
+  <div class="appts-stats">
+    @for (s of stats(); track s.label) {
+      <div class="stat-card">
+        <span class="stat-card__icon" aria-hidden="true">{{ s.icon }}</span>
+        <span class="stat-card__value">{{ s.value }}</span>
+        <span class="stat-card__label">{{ s.label }}</span>
+      </div>
+    }
+  </div>
+
+  <!-- ── Upcoming appointments ───────────────────────────────── -->
+  <div class="widget">
+    <div class="widget__header">
+      <span class="widget__title">Upcoming</span>
+      <span class="widget__count">{{ service.upcoming().length }} scheduled</span>
+    </div>
+    <div class="widget__body">
+      @for (appt of service.upcoming(); track appt.id) {
+        <div class="appt-card">
+
+          <!-- Date badge -->
+          <div class="appt-card__date">
+            <span class="appt-card__daynum">{{ appt.dayNum }}</span>
+            <span class="appt-card__month">{{ appt.month }}</span>
+            <span class="appt-card__day">{{ appt.day }}</span>
+          </div>
+
+          <!-- Type icon -->
+          <div class="appt-card__type-icon" aria-hidden="true">{{ typeIcon(appt.type) }}</div>
+
+          <!-- Main info -->
+          <div class="appt-card__info">
+            <div class="appt-card__top">
+              <span class="appt-card__provider">{{ appt.provider }}</span>
+              <span class="appt-badge appt-badge--{{ appt.status }}">{{ statusLabel(appt.status) }}</span>
+              @if (urgencyLabel(appt.isoDate)) {
+                <span class="urgency-pill urgency-pill--{{ urgencyLevel(appt.isoDate) }}">
+                  {{ urgencyLabel(appt.isoDate) }}
+                </span>
+              }
+            </div>
+            <span class="appt-card__specialty">{{ appt.specialty }} &middot; {{ appt.type }}</span>
+            <span class="appt-card__facility">📍 {{ appt.facility }}</span>
+            @if (appt.note) {
+              <span class="appt-card__note">💡 {{ appt.note }}</span>
+            }
+          </div>
+
+          <!-- Time + actions -->
+          <div class="appt-card__right">
+            <div class="appt-card__time-block">
+              <span class="appt-card__time">{{ appt.time }}</span>
+              <span class="appt-card__duration">{{ appt.duration }}</span>
+            </div>
+            <div class="appt-card__actions">
+              <button class="appt-action-btn appt-action-btn--ghost" type="button" (click)="reschedulingAppt.set(appt)">Reschedule</button>
+              <button class="appt-action-btn appt-action-btn--danger" type="button">Cancel</button>
+            </div>
+          </div>
+
+        </div>
+      } @empty {
+        <div class="appts-empty">
+          <span class="appts-empty__icon">📅</span>
+          <p class="appts-empty__text">No upcoming appointments</p>
+          <button class="appts-primary-btn" type="button" (click)="showModal.set(true)">
+            Book your first appointment
+          </button>
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- ── Past appointments ────────────────────────────────────── -->
+  <div class="widget">
+    <div class="widget__header">
+      <span class="widget__title">Past Appointments</span>
+      <span class="widget__count">Last 30 days</span>
+    </div>
+    <div class="widget__body">
+      @for (appt of service.past(); track appt.id) {
+        <div class="past-appt-row">
+          <div class="past-appt-row__date">
+            <span class="past-appt-row__daynum">{{ appt.dayNum }}</span>
+            <span class="past-appt-row__month">{{ appt.month }}</span>
+          </div>
+          <span class="past-appt-row__type-icon" aria-hidden="true">{{ typeIcon(appt.type) }}</span>
+          <div class="past-appt-row__info">
+            <span class="past-appt-row__provider">{{ appt.provider }}</span>
+            <span class="past-appt-row__meta">{{ appt.specialty }} &middot; {{ appt.time }}</span>
+          </div>
+          <span class="appt-badge appt-badge--{{ appt.status }}">{{ statusLabel(appt.status) }}</span>
+          @if (appt.status === 'completed') {
+            <button class="appt-action-btn appt-action-btn--ghost" type="button">View notes</button>
+          }
+        </div>
+      }
+    </div>
+  </div>
+
+</div>
+
+<!-- ── Book appointment modal ──────────────────────────────────── -->
+@if (showModal()) {
+  <lc-book-appointment-modal (close)="showModal.set(false)" />
+}
+
+<!-- ── Reschedule modal ────────────────────────────────────────── -->
+@if (reschedulingAppt()) {
+  <lc-reschedule-modal
+    [appointment]="reschedulingAppt()!"
+    (close)="reschedulingAppt.set(null)" />
+}

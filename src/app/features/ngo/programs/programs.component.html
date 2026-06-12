@@ -1,0 +1,113 @@
+<div class="prog-page">
+
+  <div class="prog-header">
+    <div>
+      <h1 class="prog-header__title">Health Programs</h1>
+      <p class="prog-header__sub">{{ formatAmount(totalDisbursed()) }} disbursed of {{ formatAmount(totalBudget()) }} total across {{ programs().length }} programs</p>
+    </div>
+    <button class="prog-primary-btn" type="button">+ New Program</button>
+  </div>
+
+  <!-- Tabs -->
+  <div class="prog-tabs">
+    @for (tab of tabs; track tab.key) {
+      <button class="prog-tab" [class.prog-tab--active]="statusFilter() === tab.key"
+              type="button" (click)="setFilter(tab.key)">
+        {{ tab.label }}
+      </button>
+    }
+  </div>
+
+  <!-- Program cards -->
+  <div class="prog-list">
+    @for (prog of filtered(); track prog.id) {
+      <div class="prog-card" [class.prog-card--expanded]="expandedId() === prog.id"
+           (click)="toggleExpand(prog.id)">
+
+        <div class="prog-card__row">
+          <div class="prog-card__main">
+            <div class="prog-card__top">
+              <span class="prog-card__name">{{ prog.name }}</span>
+              <span class="prog-card__focus">{{ prog.focus }}</span>
+            </div>
+
+            <div class="prog-bars">
+              <!-- Slots -->
+              <div class="prog-bar-item">
+                <div class="prog-bar-item__labels">
+                  <span>Slots</span>
+                  <span class="prog-bar-item__count">{{ prog.slotsFilled }} / {{ prog.slotsTotal }}</span>
+                </div>
+                <div class="prog-bar">
+                  <div class="prog-bar__fill"
+                       [style.width.%]="fillPercent(prog)"
+                       [style.background]="fillColor(fillPercent(prog))">
+                  </div>
+                </div>
+              </div>
+              <!-- Budget -->
+              <div class="prog-bar-item">
+                <div class="prog-bar-item__labels">
+                  <span>Budget</span>
+                  <span class="prog-bar-item__count">{{ formatAmount(prog.budgetDisbursed) }} / {{ formatAmount(prog.budgetTotal) }}</span>
+                </div>
+                <div class="prog-bar">
+                  <div class="prog-bar__fill"
+                       [style.width.%]="budgetPercent(prog)"
+                       [style.background]="fillColor(budgetPercent(prog))">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <p class="prog-card__meta">Deadline: {{ prog.deadline }} · Coordinator: {{ prog.coordinator }}</p>
+          </div>
+
+          <div class="prog-card__right">
+            <span class="prog-status"
+                  [style.color]="statusColor(prog.status)"
+                  [style.background]="statusColor(prog.status) + '18'">
+              {{ prog.status }}
+            </span>
+            <div class="prog-actions" (click)="$event.stopPropagation()">
+              @if (prog.status !== 'Full' && prog.status !== 'Paused') {
+                <button class="prog-btn prog-btn--pause" type="button">Pause</button>
+              }
+              @if (prog.status === 'Paused') {
+                <button class="prog-btn prog-btn--resume" type="button">Resume</button>
+              }
+              <button class="prog-btn prog-btn--view" type="button">Applicants</button>
+            </div>
+          </div>
+        </div>
+
+        @if (expandedId() === prog.id) {
+          <div class="prog-card__detail" (click)="$event.stopPropagation()">
+            <div class="prog-detail-item">
+              <span class="prog-detail-item__label">About</span>
+              <p class="prog-detail-item__value">{{ prog.description }}</p>
+            </div>
+            <div class="prog-detail-item">
+              <span class="prog-detail-item__label">Eligibility</span>
+              <p class="prog-detail-item__value">{{ prog.eligibility }}</p>
+            </div>
+            <div class="prog-detail-row">
+              <div class="prog-detail-item">
+                <span class="prog-detail-item__label">Donor / Funder</span>
+                <span class="prog-detail-item__value">{{ prog.donor }}</span>
+              </div>
+              <div class="prog-detail-item">
+                <span class="prog-detail-item__label">Program ID</span>
+                <span class="prog-detail-item__value">{{ prog.id }}</span>
+              </div>
+            </div>
+          </div>
+        }
+
+      </div>
+    } @empty {
+      <div class="prog-empty">No programs match this filter.</div>
+    }
+  </div>
+
+</div>

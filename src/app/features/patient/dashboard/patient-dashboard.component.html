@@ -26,19 +26,30 @@
     <div class="widget">
       <div class="widget__header">
         <span class="widget__title">Upcoming Appointments</span>
-        <a class="widget__link" routerLink="/patient/appointments">View all</a>
+        <div class="widget__header-right">
+          @if (nextUrgency() === 'today' || nextUrgency() === 'tomorrow') {
+            <span class="dash-reminder-badge dash-reminder-badge--{{ nextUrgency() }}">
+              {{ nextUrgency() === 'today' ? 'Today!' : 'Tomorrow' }}
+            </span>
+          }
+          <a class="widget__link" routerLink="/patient/appointments">View all</a>
+        </div>
       </div>
       <div class="widget__body">
-        @for (appt of appointments; track appt.date) {
+        @for (appt of upcomingPreview(); track appt.id) {
           <div class="appt-item">
             <div class="appt-item__date">
-              <span class="appt-item__day">{{ appt.date.split(' ')[1] }}</span>
-              <span class="appt-item__month">{{ appt.date.split(' ')[2] }}</span>
+              <span class="appt-item__day">{{ appt.dayNum }}</span>
+              <span class="appt-item__month">{{ appt.month }}</span>
             </div>
             <div class="appt-item__detail">
               <span class="appt-item__provider">{{ appt.provider }}</span>
-              <span class="appt-item__meta">{{ appt.type }} · {{ appt.time }}</span>
+              <span class="appt-item__meta">{{ appt.specialty }} &middot; {{ appt.time }}</span>
             </div>
+          </div>
+        } @empty {
+          <div class="appt-item appt-item--empty">
+            <span class="appt-item__meta">No upcoming appointments</span>
           </div>
         }
       </div>
@@ -55,7 +66,7 @@
           <div class="med-item">
             <div class="med-item__info">
               <span class="med-item__name">{{ med.name }}</span>
-              <span class="med-item__meta">{{ med.dosage }} · {{ med.nextDue }}</span>
+              <span class="med-item__meta">{{ med.dosage }} &middot; {{ med.nextDue }}</span>
             </div>
             <span class="med-badge med-badge--{{ med.status }}">{{ statusLabel(med.status) }}</span>
           </div>

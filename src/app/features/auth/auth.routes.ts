@@ -48,9 +48,4 @@ export const AUTH_ROUTES: Routes = [
     loadComponent: () =>
       import('./onboarding/hmo/hmo-onboarding.component').then(m => m.HmoOnboardingComponent),
   },
-  {
-    path: 'onboarding/researcher',
-    loadComponent: () =>
-      import('./onboarding/researcher/researcher-onboarding.component').then(m => m.ResearcherOnboardingComponent),
-  },
 ];

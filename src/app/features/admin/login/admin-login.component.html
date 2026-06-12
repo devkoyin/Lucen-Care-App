@@ -1,0 +1,52 @@
+<div class="auth-page portal-admin">
+  <div class="auth-card">
+    <div class="auth-card__accent"></div>
+    <div class="auth-card__body">
+
+      <div class="auth-card__brand">
+        <span class="auth-card__shield">🛡️</span>
+        <span class="auth-card__brand-name">LUCEN CARE</span>
+      </div>
+
+      <div class="auth-card__header">
+        <h1 class="auth-card__title">Admin Portal</h1>
+        <p class="auth-card__subtitle">Sign in with your admin credentials</p>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="submit()" class="auth-form" novalidate>
+        <lc-form-field label="Email" id="admin-email" [error]="emailError">
+          <input
+            id="admin-email"
+            type="email"
+            formControlName="email"
+            placeholder="admin@lucencare.com"
+            autocomplete="email"
+          />
+        </lc-form-field>
+
+        <lc-form-field label="Password" id="admin-password" [error]="passwordError">
+          <input
+            id="admin-password"
+            type="password"
+            formControlName="password"
+            placeholder="••••••••"
+            autocomplete="current-password"
+          />
+        </lc-form-field>
+
+        @if (serverError) {
+          <p class="auth-form__server-error" role="alert">{{ serverError }}</p>
+        }
+
+        <button type="submit" class="auth-btn" [disabled]="loading">
+          @if (loading) { Signing in… } @else { Sign in to Admin Portal }
+        </button>
+      </form>
+
+      <p class="auth-card__back">
+        <a routerLink="/">← Back to main site</a>
+      </p>
+
+    </div>
+  </div>
+</div>

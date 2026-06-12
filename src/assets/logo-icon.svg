@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="22 16 108 112" width="36" height="36">
+  <defs>
+    <filter id="softglow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background circle -->
+  <circle cx="76" cy="72" r="54" fill="#EEF6FA" opacity="0.9"/>
+
+  <!-- Outer embrace arc (faint) -->
+  <path d="M 34 90 Q 20 50 52 30 Q 76 18 100 30 Q 132 50 118 90"
+        fill="none" stroke="#1D4E89" stroke-width="5.5" stroke-linecap="round" opacity="0.15"/>
+
+  <!-- Main embrace arc — teal -->
+  <path d="M 38 86 Q 26 52 56 34 Q 76 22 96 34 Q 126 52 114 86"
+        fill="none" stroke="#3AB0A1" stroke-width="5" stroke-linecap="round"/>
+
+  <!-- Inner arc -->
+  <path d="M 48 84 Q 40 60 62 46 Q 76 38 90 46 Q 112 60 104 84"
+        fill="none" stroke="#1D4E89" stroke-width="2.5" stroke-linecap="round" opacity="0.3"/>
+
+  <!-- Heart-drop fill (dark, faint) -->
+  <path d="M 76 100 C 62 88, 50 78, 50 68 C 50 57, 63 52, 76 64 C 89 52, 102 57, 102 68 C 102 78, 90 88, 76 100 Z"
+        fill="#1D4E89" opacity="0.12"/>
+  <!-- Heart-drop fill (teal) -->
+  <path d="M 76 97 C 64 86, 53 77, 53 68 C 53 59, 65 55, 76 66 C 87 55, 99 59, 99 68 C 99 77, 88 86, 76 97 Z"
+        fill="#3AB0A1" opacity="0.6"/>
+
+  <!-- Central spark glow -->
+  <circle cx="76" cy="55" r="6.5" fill="#F2C94C" filter="url(#softglow)"/>
+  <circle cx="76" cy="55" r="4" fill="#F2C94C"/>
+  <!-- Spark rays -->
+  <line x1="76" y1="44" x2="76" y2="48" stroke="#F2C94C" stroke-width="2" stroke-linecap="round" opacity="0.8"/>
+  <line x1="67" y1="47" x2="69.5" y2="50" stroke="#F2C94C" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+  <line x1="85" y1="47" x2="82.5" y2="50" stroke="#F2C94C" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+  <line x1="64" y1="55" x2="68" y2="55" stroke="#F2C94C" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+  <line x1="88" y1="55" x2="84" y2="55" stroke="#F2C94C" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+</svg>

@@ -1,0 +1,107 @@
+<div class="amm-overlay" (click)="onOverlayClick($event)">
+  <div class="amm-card" role="dialog" aria-modal="true" aria-labelledby="amm-title">
+
+    <div class="amm-card__header">
+      <span class="amm-card__title" id="amm-title">Add Medication</span>
+      <button class="amm-card__close" type="button" (click)="close.emit()" aria-label="Close">&#x2715;</button>
+    </div>
+
+    <form #f="ngForm" (ngSubmit)="submit(f)" novalidate>
+      <div class="amm-card__body">
+
+        <!-- Name + Dosage -->
+        <div class="amm-row">
+          <div class="amm-field">
+            <label for="amm-name">Medication name</label>
+            <input id="amm-name" type="text" name="name"
+                   [(ngModel)]="form.name" required
+                   placeholder="e.g. Metformin">
+          </div>
+          <div class="amm-field">
+            <label for="amm-dosage">Dosage / Strength</label>
+            <input id="amm-dosage" type="text" name="dosage"
+                   [(ngModel)]="form.dosage" required
+                   placeholder="e.g. 500 mg">
+          </div>
+        </div>
+
+        <!-- Condition + Frequency -->
+        <div class="amm-row">
+          <div class="amm-field">
+            <label for="amm-condition">Condition being treated</label>
+            <input id="amm-condition" type="text" name="condition"
+                   [(ngModel)]="form.condition" required
+                   placeholder="e.g. Type 2 Diabetes">
+          </div>
+          <div class="amm-field">
+            <label for="amm-frequency">Frequency</label>
+            <select id="amm-frequency" name="frequency" [(ngModel)]="form.frequency" required>
+              @for (opt of frequencyOptions; track opt) {
+                <option [value]="opt">{{ opt }}</option>
+              }
+            </select>
+          </div>
+        </div>
+
+        <!-- Prescriber + Specialty -->
+        <div class="amm-row">
+          <div class="amm-field">
+            <label for="amm-prescriber">Prescriber</label>
+            <input id="amm-prescriber" type="text" name="prescriber"
+                   [(ngModel)]="form.prescriber" required
+                   placeholder="e.g. Dr. Sarah Chen">
+          </div>
+          <div class="amm-field">
+            <label>Specialty</label>
+            <lc-specialty-select [value]="form.specialty" (valueChange)="form.specialty = $event" />
+          </div>
+        </div>
+
+        <!-- Schedule times -->
+        <div class="amm-field">
+          <label>Dose times <span class="amm-field__hint">Select at least one</span></label>
+          <div class="amm-times">
+            @for (opt of timeOptions; track opt.time) {
+              <button type="button" class="amm-time-chip"
+                      [class.amm-time-chip--active]="opt.checked"
+                      (click)="toggleTime(opt)">
+                <span>{{ opt.icon }}</span>
+                <span>{{ opt.label }}</span>
+                <span class="amm-time-chip__time">{{ opt.time }}</span>
+              </button>
+            }
+          </div>
+        </div>
+
+        <!-- Pills + Refill date -->
+        <div class="amm-row">
+          <div class="amm-field">
+            <label for="amm-pills">Pills in current supply</label>
+            <input id="amm-pills" type="number" name="pillsTotal"
+                   [(ngModel)]="form.pillsTotal" required min="1"
+                   placeholder="e.g. 30">
+          </div>
+          <div class="amm-field">
+            <label for="amm-refill">Next refill date</label>
+            <input id="amm-refill" type="date" name="refillDateISO"
+                   [(ngModel)]="form.refillDateISO" [min]="todayISO" required>
+          </div>
+        </div>
+
+        <!-- Note -->
+        <div class="amm-field">
+          <label for="amm-note">Note <span class="amm-field__optional">(optional)</span></label>
+          <textarea id="amm-note" name="note" [(ngModel)]="form.note"
+                    placeholder="e.g. take with food, avoid grapefruit…"></textarea>
+        </div>
+
+      </div>
+
+      <div class="amm-card__footer">
+        <button type="button" class="amm-cancel-btn" (click)="close.emit()">Cancel</button>
+        <button type="submit" class="amm-save-btn" [disabled]="!isValid">Save Medication</button>
+      </div>
+    </form>
+
+  </div>
+</div>

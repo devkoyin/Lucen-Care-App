@@ -82,7 +82,7 @@
 .pending-icon { font-size: 48px; }
 
 .pending-title {
-  color: white;
+  color: var(--color-role-accent);
   font-size: var(--text-xl);
   font-weight: var(--font-extrabold);
   letter-spacing: var(--tracking-tight);

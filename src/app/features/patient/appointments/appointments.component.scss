@@ -1,0 +1,420 @@
+.appts-page {
+  padding: var(--space-8) var(--space-10);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  max-width: 1100px;
+  animation: fadeSlideUp 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+// ── Header ────────────────────────────────────────────────────
+.appts-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  &__title {
+    color: var(--color-text);
+    font-size: var(--text-2xl);
+    font-weight: var(--font-extrabold);
+    letter-spacing: var(--tracking-tight);
+    margin-bottom: var(--space-1);
+  }
+
+  &__sub {
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+  }
+}
+
+.appts-primary-btn {
+  padding: 9px var(--space-5);
+  background: var(--color-role-accent);
+  color: #ffffff;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-weight: var(--font-extrabold);
+  font-family: var(--font-family);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: opacity 0.15s;
+
+  &:hover { opacity: 0.9; }
+}
+
+// ── Stats bar ─────────────────────────────────────────────────
+.appts-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-4);
+}
+
+.stat-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-1);
+
+  &__icon { font-size: 20px; margin-bottom: var(--space-1); }
+
+  &__value {
+    color: var(--color-text);
+    font-size: var(--text-2xl);
+    font-weight: var(--font-extrabold);
+    letter-spacing: var(--tracking-tight);
+    line-height: 1;
+  }
+
+  &__label {
+    color: var(--color-text-muted);
+    font-size: var(--text-xs);
+    font-weight: var(--font-medium);
+  }
+}
+
+// ── Widget ────────────────────────────────────────────────────
+.widget {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-4) var(--space-5);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  &__title {
+    color: var(--color-text);
+    font-size: var(--text-sm);
+    font-weight: var(--font-semibold);
+  }
+
+  &__count {
+    color: var(--color-text-muted);
+    font-size: var(--text-xs);
+  }
+
+  &__body { padding: var(--space-2) 0; }
+}
+
+// ── Upcoming appointment cards ─────────────────────────────────
+.appt-card {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-5);
+  padding: var(--space-5) var(--space-5);
+  border-bottom: 1px solid var(--color-border);
+  transition: background 0.15s;
+
+  &:last-child { border-bottom: none; }
+  &:hover { background: var(--color-surface-2); }
+
+  &__date {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 44px;
+    flex-shrink: 0;
+    padding-top: 2px;
+  }
+
+  &__daynum {
+    color: var(--color-role-accent);
+    font-size: var(--text-2xl);
+    font-weight: var(--font-extrabold);
+    line-height: 1;
+  }
+
+  &__month {
+    color: var(--color-text-muted);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: var(--font-semibold);
+  }
+
+  &__day {
+    color: var(--color-text-muted);
+    font-size: 10px;
+    margin-top: 1px;
+  }
+
+  &__type-icon {
+    font-size: 22px;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-role-surface);
+    border-radius: var(--radius-lg);
+    flex-shrink: 0;
+  }
+
+  &__info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  &__top {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+  }
+
+  &__provider {
+    color: var(--color-text);
+    font-size: var(--text-base);
+    font-weight: var(--font-bold);
+  }
+
+  &__specialty {
+    color: var(--color-text-secondary);
+    font-size: var(--text-sm);
+  }
+
+  &__facility {
+    color: var(--color-text-muted);
+    font-size: var(--text-xs);
+  }
+
+  &__note {
+    color: var(--color-text-secondary);
+    font-size: var(--text-xs);
+    line-height: 1.5;
+    background: var(--color-role-surface);
+    border: 1px solid var(--color-role-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-2) var(--space-3);
+    margin-top: var(--space-1);
+  }
+
+  &__right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--space-3);
+    flex-shrink: 0;
+  }
+
+  &__time-block {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
+  }
+
+  &__time {
+    color: var(--color-text);
+    font-size: var(--text-base);
+    font-weight: var(--font-bold);
+  }
+
+  &__duration {
+    color: var(--color-text-muted);
+    font-size: var(--text-xs);
+  }
+
+  &__actions {
+    display: flex;
+    gap: var(--space-2);
+  }
+}
+
+// ── Past appointments (compact rows) ──────────────────────────
+.past-appt-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-3) var(--space-5);
+  border-bottom: 1px solid var(--color-border);
+  transition: background 0.15s;
+
+  &:last-child { border-bottom: none; }
+  &:hover { background: var(--color-surface-2); }
+
+  &__date {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 32px;
+    flex-shrink: 0;
+  }
+
+  &__daynum {
+    color: var(--color-text-secondary);
+    font-size: var(--text-base);
+    font-weight: var(--font-extrabold);
+    line-height: 1;
+  }
+
+  &__month {
+    color: var(--color-text-muted);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  &__type-icon {
+    font-size: 16px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-surface-2);
+    border-radius: var(--radius-md);
+    flex-shrink: 0;
+  }
+
+  &__info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+  }
+
+  &__provider {
+    color: var(--color-text);
+    font-size: var(--text-sm);
+    font-weight: var(--font-semibold);
+  }
+
+  &__meta {
+    color: var(--color-text-muted);
+    font-size: var(--text-xs);
+  }
+}
+
+// ── Status badges ─────────────────────────────────────────────
+.appt-badge {
+  font-size: var(--text-xs);
+  font-weight: var(--font-semibold);
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+  flex-shrink: 0;
+
+  &--confirmed { background: rgba(10, 110, 82, 0.10); color: #065F46;  border: 1px solid rgba(10, 110, 82, 0.20); }
+  &--pending   { background: rgba(180, 83, 9, 0.10);  color: #92400E;  border: 1px solid rgba(180, 83, 9, 0.20); }
+  &--completed { background: rgba(15, 45, 74, 0.07);  color: var(--color-text-secondary); border: 1px solid var(--color-border); }
+  &--cancelled { background: rgba(220, 38, 38, 0.08); color: #991B1B;  border: 1px solid rgba(220, 38, 38, 0.18); }
+}
+
+// ── Reminder banner ───────────────────────────────────────────
+.reminder-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-xl);
+  border: 1px solid;
+
+  &--tomorrow {
+    background: rgba(217, 119, 6, 0.06);
+    border-color: rgba(217, 119, 6, 0.25);
+    .reminder-banner__title { color: #92400E; }
+  }
+
+  &--today {
+    background: rgba(220, 38, 38, 0.05);
+    border-color: rgba(220, 38, 38, 0.2);
+    .reminder-banner__title { color: #991B1B; }
+  }
+
+  &__icon { font-size: 18px; flex-shrink: 0; padding-top: 1px; }
+
+  &__body { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+
+  &__title {
+    font-size: var(--text-sm);
+    font-weight: var(--font-semibold);
+  }
+
+  &__detail {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  &__close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--color-text-muted);
+    font-size: 14px;
+    line-height: 1;
+    padding: 2px;
+    flex-shrink: 0;
+    transition: color 0.15s;
+    &:hover { color: var(--color-text); }
+  }
+}
+
+// ── Urgency pills ──────────────────────────────────────────────
+.urgency-pill {
+  font-size: 10px;
+  font-weight: var(--font-semibold);
+  padding: 2px 7px;
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+  flex-shrink: 0;
+
+  &--today    { background: rgba(220, 38, 38, 0.10); color: #991B1B; border: 1px solid rgba(220, 38, 38, 0.20); }
+  &--tomorrow { background: rgba(217, 119, 6, 0.10);  color: #92400E; border: 1px solid rgba(217, 119, 6, 0.20); }
+  &--soon     { background: rgba(59, 130, 246, 0.08); color: #1D4ED8; border: 1px solid rgba(59, 130, 246, 0.18); }
+}
+
+// ── Empty state ────────────────────────────────────────────────
+.appts-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-10) var(--space-5);
+
+  &__icon { font-size: 32px; opacity: 0.4; }
+
+  &__text {
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+  }
+}
+
+// ── Action buttons ────────────────────────────────────────────
+.appt-action-btn {
+  padding: 5px 12px;
+  border-radius: var(--radius-md);
+  font-size: var(--text-xs);
+  font-weight: var(--font-semibold);
+  font-family: var(--font-family);
+  cursor: pointer;
+  transition: background 0.15s, opacity 0.15s;
+
+  &--ghost {
+    background: transparent;
+    border: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
+    &:hover { background: var(--color-surface-2); }
+  }
+
+  &--danger {
+    background: transparent;
+    border: 1px solid rgba(220, 38, 38, 0.25);
+    color: #DC2626;
+    &:hover { background: rgba(220, 38, 38, 0.06); }
+  }
+}

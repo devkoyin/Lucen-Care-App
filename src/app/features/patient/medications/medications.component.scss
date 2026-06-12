@@ -1,0 +1,353 @@
+.meds-page {
+  padding: var(--space-8) var(--space-10);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  max-width: 1100px;
+  animation: fadeSlideUp 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+// ── Header ────────────────────────────────────────────────────
+.meds-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  &__title {
+    color: var(--color-text);
+    font-size: var(--text-2xl);
+    font-weight: var(--font-extrabold);
+    letter-spacing: var(--tracking-tight);
+    margin-bottom: var(--space-1);
+  }
+
+  &__sub {
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+  }
+}
+
+.meds-primary-btn {
+  padding: 9px var(--space-5);
+  background: var(--color-role-accent);
+  color: #ffffff;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-weight: var(--font-extrabold);
+  font-family: var(--font-family);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: opacity 0.15s;
+
+  &:hover { opacity: 0.9; }
+}
+
+// ── Stats bar ─────────────────────────────────────────────────
+.meds-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-4);
+}
+
+.stat-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-1);
+
+  &__icon { font-size: 20px; margin-bottom: var(--space-1); }
+
+  &__value {
+    color: var(--color-text);
+    font-size: var(--text-2xl);
+    font-weight: var(--font-extrabold);
+    letter-spacing: var(--tracking-tight);
+    line-height: 1;
+  }
+
+  &__label {
+    color: var(--color-text-muted);
+    font-size: var(--text-xs);
+    font-weight: var(--font-medium);
+  }
+}
+
+// ── Grid (schedule + refill) ──────────────────────────────────
+.meds-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: var(--space-6);
+}
+
+// ── Widget ────────────────────────────────────────────────────
+.widget {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+
+  &--full { width: 100%; }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-4) var(--space-5);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  &__title {
+    color: var(--color-text);
+    font-size: var(--text-sm);
+    font-weight: var(--font-semibold);
+  }
+
+  &__date,
+  &__count {
+    color: var(--color-text-muted);
+    font-size: var(--text-xs);
+  }
+
+  &__body { padding: var(--space-2) 0; }
+}
+
+// ── Time slots (schedule) ─────────────────────────────────────
+.time-slot {
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: var(--space-2);
+  margin-bottom: 0;
+
+  &:last-child { border-bottom: none; }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-5) var(--space-1);
+  }
+
+  &__icon { font-size: 14px; }
+
+  &__label {
+    color: var(--color-text-secondary);
+    font-size: var(--text-xs);
+    font-weight: var(--font-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    flex: 1;
+  }
+
+  &__time {
+    color: var(--color-text-muted);
+    font-size: var(--text-xs);
+  }
+}
+
+.dose-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-2) var(--space-5) var(--space-2) calc(var(--space-5) + 22px);
+
+  &__info { display: flex; flex-direction: column; gap: 1px; }
+  &__name { color: var(--color-text); font-size: var(--text-sm); font-weight: var(--font-semibold); }
+  &__meta { color: var(--color-text-muted); font-size: var(--text-xs); }
+}
+
+// ── Refill alerts ─────────────────────────────────────────────
+.refill-count {
+  color: #92400E;
+  font-size: var(--text-xs);
+  font-weight: var(--font-semibold);
+  background: rgba(180, 83, 9, 0.1);
+  border: 1px solid rgba(180, 83, 9, 0.2);
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+}
+
+.refill-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--color-border);
+  border-left: 3px solid transparent;
+
+  &--urgent   { border-left-color: #DC2626; background: rgba(220, 38, 38, 0.03); }
+  &--upcoming { border-left-color: #D97706; background: rgba(217, 119, 6, 0.03); }
+
+  &__left { display: flex; flex-direction: column; gap: 2px; }
+  &__name { color: var(--color-text); font-size: var(--text-sm); font-weight: var(--font-semibold); }
+  &__pills { color: var(--color-text-muted); font-size: var(--text-xs); }
+  &__date  { color: var(--color-text-muted); font-size: var(--text-xs); }
+}
+
+.refill-btn {
+  padding: 6px 14px;
+  border-radius: var(--radius-md);
+  font-size: var(--text-xs);
+  font-weight: var(--font-extrabold);
+  font-family: var(--font-family);
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: opacity 0.15s;
+
+  &--urgent {
+    background: #DC2626;
+    color: #ffffff;
+    &:hover { opacity: 0.88; }
+  }
+
+  &--upcoming {
+    background: rgba(217, 119, 6, 0.12);
+    color: #92400E;
+    border: 1px solid rgba(217, 119, 6, 0.3);
+    &:hover { background: rgba(217, 119, 6, 0.2); }
+  }
+}
+
+.refill-ok {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-5);
+
+  &__icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: rgba(10, 110, 82, 0.12);
+    color: #065F46;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  &__text { color: var(--color-text-muted); font-size: var(--text-xs); }
+}
+
+// ── Med badge (shared with dashboard) ─────────────────────────
+.med-badge {
+  font-size: var(--text-xs);
+  font-weight: var(--font-semibold);
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+
+  &--taken   { background: rgba(10, 110, 82, 0.10); color: #065F46;  border: 1px solid rgba(10, 110, 82, 0.20); }
+  &--pending { background: rgba(180, 83, 9, 0.10);  color: #92400E;  border: 1px solid rgba(180, 83, 9, 0.20); }
+  &--later   { background: rgba(15, 45, 74, 0.05);  color: var(--color-text-muted); border: 1px solid var(--color-border); }
+  &--skipped { background: rgba(220, 38, 38, 0.08); color: #991B1B;  border: 1px solid rgba(220, 38, 38, 0.18); }
+}
+
+// ── All medications cards ──────────────────────────────────────
+.med-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--color-border);
+  transition: background 0.15s;
+
+  &:last-child { border-bottom: none; }
+  &:hover { background: var(--color-surface-2); }
+
+  &__left {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__pill-icon {
+    font-size: 22px;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-role-surface);
+    border-radius: var(--radius-lg);
+    flex-shrink: 0;
+  }
+
+  &__info { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+
+  &__name {
+    color: var(--color-text);
+    font-size: var(--text-sm);
+    font-weight: var(--font-bold);
+  }
+
+  &__dosage {
+    color: var(--color-text-secondary);
+    font-weight: var(--font-medium);
+  }
+
+  &__condition { color: var(--color-text-muted); font-size: var(--text-xs); }
+  &__prescriber { color: var(--color-text-muted); font-size: var(--text-xs); }
+
+  &__mid {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    width: 130px;
+    flex-shrink: 0;
+  }
+
+  &__freq  { color: var(--color-text-secondary); font-size: var(--text-sm); font-weight: var(--font-semibold); }
+  &__schedule { color: var(--color-text-muted); font-size: var(--text-xs); }
+
+  &__right {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    width: 160px;
+    flex-shrink: 0;
+  }
+}
+
+// ── Refill progress bar ───────────────────────────────────────
+.refill-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  &__track {
+    height: 5px;
+    background: var(--color-border);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+  }
+
+  &__fill {
+    height: 100%;
+    border-radius: var(--radius-full);
+    transition: width 0.6s ease;
+
+    &--ok       { background: var(--color-role-accent); }
+    &--upcoming { background: #D97706; }
+    &--urgent   { background: #DC2626; }
+  }
+
+  &__label { color: var(--color-text-muted); font-size: 10px; }
+}
+
+.refill-date {
+  font-size: var(--text-xs);
+
+  &--ok       { color: var(--color-text-muted); }
+  &--upcoming { color: #92400E; font-weight: var(--font-semibold); }
+  &--urgent   { color: #991B1B; font-weight: var(--font-semibold); }
+}

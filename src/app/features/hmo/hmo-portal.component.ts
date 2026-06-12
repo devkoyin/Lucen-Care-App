@@ -24,10 +24,11 @@ export class HmoPortalComponent {
   private readonly router = inject(Router);
 
   readonly navItems: NavItem[] = [
-    { icon: '🏠', label: 'Dashboard', route: '/hmo/dashboard' },
-    { icon: '👥', label: 'Patients', route: '/hmo/patients' },
-    { icon: '📊', label: 'Analytics', route: '/hmo/analytics' },
-    { icon: '🔔', label: 'Notifications', route: '/hmo/notifications' },
+    { icon: '🏠', label: 'Dashboard',  route: '/hmo/dashboard' },
+    { icon: '✅', label: 'Pre-Auth',   route: '/hmo/pre-auth'  },
+    { icon: '🧾', label: 'Claims',     route: '/hmo/claims'    },
+    { icon: '👥', label: 'Members',    route: '/hmo/members'   },
+    { icon: '🏥', label: 'Providers',  route: '/hmo/providers' },
   ];
 
   get userName(): string { return this.auth.user()?.name ?? 'User'; }

@@ -22,7 +22,7 @@ input:not([type='checkbox']):not([type='radio']),
 textarea,
 select {
   font-family: var(--font-family);
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   color: var(--color-text);
@@ -30,11 +30,11 @@ select {
   padding: var(--space-3) var(--space-4);
   width: 100%;
   outline: none;
-  transition: border-color 0.15s, background 0.15s;
+  transition: border-color 0.15s, box-shadow 0.15s;
 
   &:focus {
     border-color: var(--color-role-accent);
-    background: rgba(255, 255, 255, 0.06);
+    box-shadow: 0 0 0 3px var(--color-role-surface);
   }
 
   &::placeholder {
@@ -54,7 +54,7 @@ input[type='radio'] {
 select {
   cursor: pointer;
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='rgba(255,255,255,0.25)' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237FA3B5' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right var(--space-4) center;
   padding-right: var(--space-10);
@@ -64,3 +64,38 @@ select {
   outline: 2px solid var(--color-role-accent);
   outline-offset: 2px;
 }
+
+// ── Shared keyframes ──────────────────────────────────────
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeSlideRight {
+  from { opacity: 0; transform: translateX(-14px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.97); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+// Utility: fill forwards, ease-out by default
+.anim-fade-up   { animation: fadeSlideUp   0.45s cubic-bezier(0.22,1,0.36,1) both; }
+.anim-fade-right { animation: fadeSlideRight 0.45s cubic-bezier(0.22,1,0.36,1) both; }
+.anim-scale-in  { animation: scaleIn        0.35s cubic-bezier(0.22,1,0.36,1) both; }
+.anim-fade-in   { animation: fadeIn         0.4s  ease both; }
+
+// Stagger helpers
+.anim-delay-1 { animation-delay: 0.08s; }
+.anim-delay-2 { animation-delay: 0.16s; }
+.anim-delay-3 { animation-delay: 0.24s; }
+.anim-delay-4 { animation-delay: 0.32s; }
+.anim-delay-5 { animation-delay: 0.40s; }
+.anim-delay-6 { animation-delay: 0.48s; }

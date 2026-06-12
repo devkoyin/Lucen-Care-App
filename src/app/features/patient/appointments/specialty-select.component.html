@@ -1,0 +1,43 @@
+<div class="sps-wrapper">
+
+  <!-- Trigger -->
+  <button type="button" class="sps-trigger"
+          [class.sps-trigger--open]="open()"
+          [class.sps-trigger--filled]="!!value"
+          (click)="toggle($event)">
+    @if (value) {
+      <span class="sps-trigger__dot" [style.background]="groupForValue()?.accent"></span>
+    }
+    <span class="sps-trigger__label" [class.sps-trigger__label--placeholder]="!value">
+      {{ value || 'Select a specialty' }}
+    </span>
+    <span class="sps-trigger__chevron" [class.sps-trigger__chevron--up]="open()">&#x25BE;</span>
+  </button>
+
+  <!-- Panel -->
+  @if (open()) {
+    <div class="sps-panel" role="listbox">
+      @for (group of groups; track group.category) {
+        <div class="sps-group">
+          <div class="sps-group__header"
+               [style.background]="group.bg"
+               [style.color]="group.text">
+            {{ group.category }}
+          </div>
+          @for (item of group.items; track item) {
+            <button type="button" role="option"
+                    class="sps-option"
+                    [class.sps-option--active]="item === value"
+                    [style.--opt-bg]="group.bg"
+                    [style.--opt-accent]="group.accent"
+                    (click)="select(item)">
+              <span class="sps-option__dot" [style.background]="group.accent"></span>
+              {{ item }}
+            </button>
+          }
+        </div>
+      }
+    </div>
+  }
+
+</div>

@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 
-type Role = 'patient' | 'ngo' | 'hmo' | 'researcher';
+type Role = 'patient' | 'ngo' | 'hmo' | 'admin';
 
 interface RoleOption {
   id: Role;
@@ -24,7 +24,7 @@ export class RoleSelectionComponent {
     { id: 'patient',    emoji: '🏥', label: 'Patient & Caregiver',  description: 'Health tracking, support & funding access' },
     { id: 'ngo',        emoji: '🤝', label: 'NGO',                  description: 'Funding programs & patient matching' },
     { id: 'hmo',        emoji: '🏦', label: 'HMO',                  description: 'Longitudinal care management' },
-    { id: 'researcher', emoji: '🔬', label: 'Clinical Researcher',  description: 'Study posting & participant recruitment' },
+    { id: 'admin',      emoji: '🛡️', label: 'Admin',               description: 'Approve & manage organisation accounts' },
   ];
 
   selectedRole: Role | null = null;
@@ -40,7 +40,10 @@ export class RoleSelectionComponent {
   }
 
   continue(): void {
-    if (this.selectedRole) {
+    if (!this.selectedRole) return;
+    if (this.selectedRole === 'admin') {
+      this.router.navigate(['/admin']);
+    } else {
       this.router.navigate(['/auth', this.selectedRole, 'signup']);
     }
   }

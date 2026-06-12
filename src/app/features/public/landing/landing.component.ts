@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 interface RoleCard {
-  role: 'patient' | 'ngo' | 'hmo' | 'researcher';
+  role: 'patient' | 'ngo' | 'hmo' | 'admin';
   emoji: string;
   label: string;
   description: string;
@@ -40,18 +40,11 @@ export class LandingComponent {
       signupRoute: '/auth/hmo/signup',
     },
     {
-      role: 'researcher',
-      emoji: '🔬',
-      label: 'Clinical Researcher',
-      description: 'Post studies, recruit participants',
-      signupRoute: '/auth/researcher/signup',
+      role: 'admin',
+      emoji: '🛡️',
+      label: 'Admin',
+      description: 'Approve & manage organisation accounts',
+      signupRoute: '/admin',
     },
-  ];
-
-  readonly features = [
-    { emoji: '💊', title: 'Medication & Care Tracking', description: 'Reminders, appointments, health history' },
-    { emoji: '💰', title: 'NGO Funding Access', description: 'Browse programs, apply, get matched' },
-    { emoji: '📊', title: 'Longitudinal Health Profiles', description: 'HMO-managed care journey data' },
-    { emoji: '🔬', title: 'Clinical Research', description: 'Study recruitment, participant matching' },
   ];
 }

@@ -1,0 +1,31 @@
+<div class="cls-wrapper">
+
+  <!-- Trigger -->
+  <button type="button" class="cls-trigger"
+          [class.cls-trigger--open]="open()"
+          (click)="toggle($event)">
+    @if (selected()) {
+      <span class="cls-trigger__dot" [style.background]="selected()!.accent"></span>
+    }
+    <span class="cls-trigger__label" [class.cls-trigger__label--placeholder]="!value">
+      {{ selected()?.value ?? placeholder }}
+    </span>
+    <span class="cls-trigger__chevron" [class.cls-trigger__chevron--up]="open()">&#x25BE;</span>
+  </button>
+
+  <!-- Panel -->
+  @if (open()) {
+    <div class="cls-panel" role="listbox">
+      @for (opt of options; track opt.value) {
+        <button type="button" role="option"
+                class="cls-option"
+                [class.cls-option--active]="opt.value === value"
+                (click)="select(opt)">
+          <span class="cls-option__dot" [style.background]="opt.accent"></span>
+          <span class="cls-option__label">{{ opt.value }}</span>
+        </button>
+      }
+    </div>
+  }
+
+</div>

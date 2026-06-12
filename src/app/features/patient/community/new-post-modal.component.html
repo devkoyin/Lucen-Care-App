@@ -1,0 +1,53 @@
+<div class="npm-overlay" (click)="onOverlayClick($event)">
+  <div class="npm-card" role="dialog" aria-modal="true" aria-labelledby="npm-title">
+
+    <div class="npm-card__header">
+      <span class="npm-card__title" id="npm-title">New Post</span>
+      <button class="npm-card__close" type="button" (click)="close.emit()" aria-label="Close">&#x2715;</button>
+    </div>
+
+    <form #f="ngForm" (ngSubmit)="submit(f)" novalidate>
+      <div class="npm-card__body">
+
+        <div class="npm-field">
+          <label>Post in</label>
+          <lc-color-select
+            [options]="groupSelectOptions"
+            [value]="form.groupLabel"
+            placeholder="Select a group…"
+            (valueChange)="form.groupLabel = $event" />
+        </div>
+
+        <div class="npm-field">
+          <label for="npm-title">Title</label>
+          <input id="npm-title" type="text" name="title"
+                 [(ngModel)]="form.title" required
+                 placeholder="What's on your mind?"
+                 maxlength="120">
+        </div>
+
+        <div class="npm-field">
+          <label for="npm-content">Your story</label>
+          <textarea id="npm-content" name="content"
+                    [(ngModel)]="form.content" required
+                    placeholder="Share your experience, question, or tip with the community…"
+                    rows="5"></textarea>
+        </div>
+
+        <div class="npm-field">
+          <label for="npm-tags">Tags <span class="npm-field__optional">(optional — comma separated)</span></label>
+          <input id="npm-tags" type="text" name="tagsRaw"
+                 [(ngModel)]="form.tagsRaw"
+                 placeholder="e.g. Metformin, BloodPressure, Tips">
+        </div>
+
+      </div>
+
+      <div class="npm-card__footer">
+        <button type="button" class="npm-cancel-btn" (click)="close.emit()">Cancel</button>
+        <button type="submit" class="npm-save-btn" [disabled]="f.invalid || !form.groupLabel">Post to Community</button>
+      </div>
+    </form>
+
+  </div>
+</div>

@@ -1,11 +1,14 @@
 .portal-hmo {
-  --color-role-accent:    #3535A8;
-  --color-role-surface:   rgba(53, 53, 168, 0.08);
-  --color-role-border:    rgba(53, 53, 168, 0.20);
-  --btn-primary-bg:       #3535A8;
+  --color-role-accent:    #60A5FA;
+  --color-role-surface:   rgba(96, 165, 250, 0.08);
+  --color-role-border:    rgba(96, 165, 250, 0.20);
+  --btn-primary-bg:       #60A5FA;
   --btn-primary-text:     #FFFFFF;
-  --btn-secondary-border: #3535A8;
-  --btn-secondary-text:   #3535A8;
-  --btn-accent-bg:        #3535A8;
+  --btn-secondary-border: #60A5FA;
+  --btn-secondary-text:   #60A5FA;
+  --btn-accent-bg:        #60A5FA;
   --btn-accent-text:      #FFFFFF;
+  --sidebar-bg:           #60A5FA;
+  --login-bg-dark:        #070e18;
+  --login-grid-line:      rgba(96, 165, 250, 0.10);
 }

@@ -1,0 +1,119 @@
+<div class="members-page">
+
+  <div class="members-header">
+    <div>
+      <h1 class="members-header__title">Members</h1>
+      <p class="members-header__sub">Enrolled member roster and utilisation overview</p>
+    </div>
+    <div class="members-header__controls">
+      @if (flaggedCount() > 0) {
+        <span class="members-header__badge">{{ flaggedCount() }} flagged</span>
+      }
+      <input class="members-search" type="search" placeholder="Search name, member no., employer…"
+             (input)="setSearch($event)" />
+    </div>
+  </div>
+
+  <!-- Plan + status filters -->
+  <div class="members-filters">
+    <div class="plan-tabs">
+      @for (tab of planTabs; track tab.key) {
+        <button class="plan-tab" [class.plan-tab--active]="planFilter() === tab.key"
+                type="button" (click)="setPlanFilter(tab.key)">
+          {{ tab.label }}
+        </button>
+      }
+    </div>
+    <div class="status-chips">
+      @for (s of [['all','All'],['Active','Active'],['Flagged','Flagged'],['Suspended','Suspended']]; track s[0]) {
+        <button class="status-chip" [class.status-chip--active]="statusFilter() === s[0]"
+                type="button" (click)="setStatusFilter($any(s[0]))">
+          {{ s[1] }}
+        </button>
+      }
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="members-table-wrap">
+    <table class="members-table">
+      <thead>
+        <tr>
+          <th>Member</th>
+          <th>Plan</th>
+          <th>Employer Group</th>
+          <th>Conditions</th>
+          <th>Utilisation YTD</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (m of filtered(); track m.id) {
+          <tr [class.members-table__row--flagged]="m.status === 'Flagged'">
+            <td>
+              <div class="member-cell">
+                <div class="member-cell__avatar">{{ m.initial }}</div>
+                <div>
+                  <p class="member-cell__name">{{ m.name }}</p>
+                  <p class="member-cell__number">{{ m.memberNumber }}</p>
+                </div>
+              </div>
+            </td>
+            <td>
+              <span class="plan-chip"
+                    [style.background]="m.planColor + '18'"
+                    [style.color]="m.planColor"
+                    [style.border-color]="m.planColor + '33'">
+                {{ m.plan }}
+              </span>
+            </td>
+            <td class="td-muted">{{ m.employerGroup }}</td>
+            <td>
+              <div class="condition-chips">
+                @for (c of m.conditions; track c) {
+                  <span class="condition-chip">{{ c }}</span>
+                }
+              </div>
+            </td>
+            <td>
+              <div class="util-cell">
+                <div class="util-bar">
+                  <div class="util-bar__fill"
+                       [style.width.%]="utilisationPct(m.utilisationYTD, m.annualLimit)"
+                       [style.background]="utilisationColor(utilisationPct(m.utilisationYTD, m.annualLimit))">
+                  </div>
+                </div>
+                <span class="util-cell__pct"
+                      [style.color]="utilisationColor(utilisationPct(m.utilisationYTD, m.annualLimit))">
+                  {{ utilisationPct(m.utilisationYTD, m.annualLimit) }}%
+                </span>
+                <span class="util-cell__amount">{{ formatAmount(m.utilisationYTD) }}</span>
+              </div>
+            </td>
+            <td>
+              <span class="member-status"
+                    [style.color]="statusColor(m.status)"
+                    [style.background]="statusColor(m.status) + '18'">
+                {{ m.status }}
+              </span>
+            </td>
+            <td>
+              <button class="flag-btn"
+                      [class.flag-btn--flagged]="m.status === 'Flagged'"
+                      type="button"
+                      (click)="flag(m.id)">
+                {{ m.status === 'Flagged' ? 'Unflag' : 'Flag' }}
+              </button>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="7" class="members-empty">No members match this filter.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+</div>
