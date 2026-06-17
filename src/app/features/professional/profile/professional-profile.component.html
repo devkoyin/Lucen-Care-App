@@ -1,0 +1,45 @@
+<div class="profile-page">
+  @if (application) {
+    <div class="page-header">
+      <div>
+        <h1 class="page-header__title">My Profile</h1>
+        <p class="page-header__sub">Your verified credentials, as reviewed by Lucen Care</p>
+      </div>
+      <span class="status-badge status-badge--{{ application.status }}">
+        {{ application.status === 'approved' ? '✓ Verified Health Professional' : application.status }}
+      </span>
+    </div>
+
+    <div class="profile-card">
+      <p class="profile-card__title">Credentials</p>
+      <dl class="detail-list">
+        <dt>Full Name</dt><dd>{{ application.fullName }}</dd>
+        <dt>Profession</dt><dd>{{ application.profession }}</dd>
+        <dt>Specialty</dt><dd>{{ application.specialty }}</dd>
+        <dt>Licence Number</dt><dd>{{ application.licenseNumber }}</dd>
+        <dt>Years of Experience</dt><dd>{{ application.yearsOfExperience }}</dd>
+        <dt>Email</dt><dd>{{ application.email }}</dd>
+        <dt>Phone</dt><dd>{{ application.phone }}</dd>
+      </dl>
+    </div>
+
+    <div class="profile-card">
+      <p class="profile-card__title">Bio</p>
+      @if (!editingBio()) {
+        <p class="profile-card__bio">{{ application.bio }}</p>
+        <button class="btn-ghost" type="button" (click)="startEditBio()">Edit bio</button>
+      } @else {
+        <textarea
+          class="profile-card__bio-input"
+          rows="4"
+          [value]="bioDraft()"
+          (input)="bioDraft.set($any($event.target).value)">
+        </textarea>
+        <div class="profile-card__actions">
+          <button class="btn-ghost" type="button" (click)="cancelEditBio()">Cancel</button>
+          <button class="btn-approve" type="button" (click)="saveBio()">Save</button>
+        </div>
+      }
+    </div>
+  }
+</div>
