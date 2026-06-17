@@ -5,6 +5,7 @@ describe('AuthService', () => {
   let service: AuthService;
 
   beforeEach(() => {
+    localStorage.clear();
     TestBed.configureTestingModule({ providers: [AuthService] });
     service = TestBed.inject(AuthService);
   });
@@ -34,6 +35,12 @@ describe('AuthService', () => {
     service.signup('ngo', { name: 'Org', email: 'o@n.com', password: 'pass' }).subscribe();
     expect(service.user()?.status).toBe('pending');
     expect(service.user()?.role).toBe('ngo');
+  });
+
+  it('sets professional status to pending on signup', () => {
+    service.signup('professional', { name: 'Dr. Jane Doe', email: 'jane@doe.com', password: 'pass' }).subscribe();
+    expect(service.user()?.status).toBe('pending');
+    expect(service.user()?.role).toBe('professional');
   });
 
   it('clears user on signOut', () => {
