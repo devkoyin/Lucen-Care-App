@@ -1,6 +1,7 @@
 import { Injectable, signal } from '@angular/core';
 
 export type OrgType    = 'ngo' | 'hmo';
+export type AuditSubjectType = OrgType | 'professional';
 export type AppStatus  = 'pending' | 'approved' | 'rejected';
 export type AuditAction = 'submitted' | 'approved' | 'rejected';
 
@@ -50,7 +51,7 @@ export interface AuditEntry {
   id: string;
   action: AuditAction;
   orgName: string;
-  orgType: OrgType;
+  orgType: AuditSubjectType;
   applicationId: string;
   actor: string;
   timestamp: string;
@@ -120,7 +121,7 @@ export class ApplicationsService {
     ).length;
   }
 
-  private addAudit(entry: Omit<AuditEntry, 'id' | 'timestamp'>): void {
+  addAudit(entry: Omit<AuditEntry, 'id' | 'timestamp'>): void {
     const newEntry: AuditEntry = { ...entry, id: `audit-${Date.now()}`, timestamp: new Date().toISOString() };
     const updated = [newEntry, ...this._auditLog()];
     this._auditLog.set(updated);
