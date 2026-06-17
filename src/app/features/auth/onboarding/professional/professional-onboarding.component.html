@@ -1,0 +1,90 @@
+<lc-onboarding-shell
+  [currentStep]="currentStep"
+  [totalSteps]="totalSteps"
+  [stepLabels]="stepLabels"
+  [stepTitle]="stepTitle"
+  [canContinue]="canContinue"
+  [continueLabel]="continueLabel"
+  role="professional"
+  (back)="back()"
+  (continue)="next()">
+
+  @switch (currentStep) {
+    @case (1) {
+      <div class="step-content" [formGroup]="step1Form">
+        <lc-form-field label="Profession" id="prof-profession">
+          <select id="prof-profession" formControlName="profession">
+            <option value="">Select...</option>
+            <option value="Doctor">Doctor</option>
+            <option value="Nurse">Nurse</option>
+            <option value="Therapist">Therapist</option>
+            <option value="Other">Other</option>
+          </select>
+        </lc-form-field>
+        <lc-form-field label="Medical licence / registration number" id="prof-license">
+          <input id="prof-license" type="text" formControlName="licenseNumber" placeholder="Official licence or registration number" />
+        </lc-form-field>
+        <lc-form-field label="Specialty" id="prof-specialty" hint="e.g. Cardiology, Endocrinology, Mental Health">
+          <input id="prof-specialty" type="text" formControlName="specialty" placeholder="Your area of clinical focus" />
+        </lc-form-field>
+        <lc-form-field label="Years of experience" id="prof-experience">
+          <input id="prof-experience" type="number" min="0" formControlName="yearsOfExperience" placeholder="e.g. 8" />
+        </lc-form-field>
+        <lc-form-field label="Phone" id="prof-phone">
+          <input id="prof-phone" type="tel" formControlName="phone" placeholder="Contact phone number" />
+        </lc-form-field>
+      </div>
+    }
+    @case (2) {
+      <div class="step-content" [formGroup]="step2Form">
+        <lc-form-field label="Practice bio" id="prof-bio" hint="Shown to patients alongside your verified badge">
+          <textarea id="prof-bio" formControlName="bio" rows="5" placeholder="Briefly describe your background and how you'd like to help patients..."></textarea>
+        </lc-form-field>
+      </div>
+    }
+    @case (3) {
+      <div class="step-content" [formGroup]="step3Form">
+        <div class="consent-list">
+          <label class="consent-item">
+            <input type="checkbox" formControlName="termsConsent" />
+            <div class="consent-item__text">
+              <span class="consent-item__label">
+                Terms of Service
+                <span class="consent-item__req">Required</span>
+              </span>
+              <span class="consent-item__desc">I agree to the Lucen Care Terms of Service and confirm that the credentials I've provided are accurate.</span>
+            </div>
+          </label>
+          <label class="consent-item">
+            <input type="checkbox" formControlName="codeOfConductConsent" />
+            <div class="consent-item__text">
+              <span class="consent-item__label">
+                Community code of conduct
+                <span class="consent-item__req">Required</span>
+              </span>
+              <span class="consent-item__desc">I agree to share experience-based guidance only, defer clinical decisions to each patient's own care team, and follow Lucen Care's community guidelines.</span>
+            </div>
+          </label>
+        </div>
+        <p class="upload-note">
+          <span class="upload-note__icon" aria-hidden="true">📎</span>
+          Our team will verify your licence and credentials during admin review. You'll receive an activation email once approved.
+        </p>
+      </div>
+    }
+    @case (4) {
+      <div class="step-content step-content--pending">
+        <div class="pending-icon" aria-hidden="true">⏳</div>
+        <p class="pending-title">Application submitted</p>
+        <p class="pending-desc">Thank you, <strong>{{ fullName }}</strong>. Our team will verify your credentials within 48 hours. You'll receive an activation email once approved.</p>
+        <div class="pending-info">
+          <span class="pending-info__item">✓ Professional details captured</span>
+          <span class="pending-info__item">✓ Credentials recorded</span>
+          <span class="pending-info__item">✓ Terms agreed</span>
+          <span class="pending-info__item">◎ Admin verification pending</span>
+        </div>
+      </div>
+    }
+  }
+
+</lc-onboarding-shell>

@@ -48,4 +48,9 @@ export const AUTH_ROUTES: Routes = [
     loadComponent: () =>
       import('./onboarding/hmo/hmo-onboarding.component').then(m => m.HmoOnboardingComponent),
   },
+  {
+    path: 'onboarding/professional',
+    loadComponent: () =>
+      import('./onboarding/professional/professional-onboarding.component').then(m => m.ProfessionalOnboardingComponent),
+  },
 ];
