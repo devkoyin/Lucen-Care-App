@@ -27,6 +27,11 @@ export const routes: Routes = [
       import('./features/hmo/hmo.routes').then(m => m.HMO_ROUTES),
   },
   {
+    path: 'professional',
+    loadChildren: () =>
+      import('./features/professional/professional.routes').then(m => m.PROFESSIONAL_ROUTES),
+  },
+  {
     path: 'admin',
     loadChildren: () =>
       import('./features/admin/admin.routes').then(m => m.ADMIN_ROUTES),
