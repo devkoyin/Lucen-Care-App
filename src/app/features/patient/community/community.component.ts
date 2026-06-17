@@ -1,12 +1,16 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { NewPostModalComponent, NewPostData } from './new-post-modal.component';
 import { CreateCommunityModalComponent, CreateCommunityData } from './create-community-modal.component';
+import { AuthService } from '../../../core/auth/auth.service';
+import { ProfessionalApplicationsService } from '../../../core/applications/professional-applications.service';
 
 interface CommunityPost {
   id: string;
   author: string;
   authorInitial: string;
   authorColor: string;
+  authorBadge?: 'verified-professional';
+  authorSpecialty?: string;
   groupId: string;
   groupLabel: string;
   groupColor: string;
@@ -38,6 +42,17 @@ const SEED_POSTS: CommunityPost[] = [
     content: "I've been on Metformin 500mg for about 3 months and still get occasional nausea. My doctor said it should settle, but wondering if anyone has tips? I currently take it with breakfast but it still bothers me sometimes.",
     likes: 24, comments: 18, liked: false,
     tags: ['Metformin', 'Diabetes', 'SideEffects'],
+  },
+  {
+    id: 'c1b',
+    author: 'Dr. Yemi Adekunle', authorInitial: 'Y', authorColor: '#16A34A',
+    authorBadge: 'verified-professional', authorSpecialty: 'Endocrinology',
+    groupId: 'diabetes', groupLabel: 'Diabetes Support', groupColor: '#D97706',
+    timeAgo: '6 hours ago',
+    title: 'Clinical note: when persistent Metformin GI side effects are worth a dose review',
+    content: "As an endocrinologist, I often see patients give up on Metformin too early because of GI discomfort. A few practical thresholds for when this is worth raising with your care team rather than just pushing through it.",
+    likes: 64, comments: 12, liked: false,
+    tags: ['Metformin', 'ClinicalAdvice', 'Diabetes'],
   },
   {
     id: 'c2',
@@ -127,6 +142,9 @@ const TRENDING = [
   styleUrl: './community.component.scss',
 })
 export class CommunityComponent {
+  private readonly auth     = inject(AuthService);
+  private readonly profApps = inject(ProfessionalApplicationsService);
+
   readonly showNewPost = signal(false);
   readonly showCreateCommunity = signal(false);
 
@@ -194,11 +212,14 @@ export class CommunityComponent {
   }
 
   addPost(data: NewPostData): void {
+    const meta = this.currentAuthorMeta();
     const post: CommunityPost = {
       id: crypto.randomUUID(),
-      author: 'You',
-      authorInitial: 'Y',
-      authorColor: 'var(--color-role-accent)',
+      author: meta.name,
+      authorInitial: meta.initial,
+      authorColor: meta.color,
+      authorBadge: meta.badge,
+      authorSpecialty: meta.specialty,
       groupId: data.groupId,
       groupLabel: data.groupLabel,
       groupColor: data.groupColor,
@@ -212,5 +233,26 @@ export class CommunityComponent {
     };
     this.posts.update(list => [post, ...list]);
     this.setFilter('all');
+  }
+
+  private currentAuthorMeta(): { name: string; initial: string; color: string; badge?: 'verified-professional'; specialty?: string } {
+    const user = this.auth.user();
+    if (user?.role === 'professional') {
+      const application = this.profApps.findByEmail(user.email);
+      if (application?.status === 'approved') {
+        return {
+          name: user.name,
+          initial: user.name.charAt(0).toUpperCase(),
+          color: 'var(--color-role-accent)',
+          badge: 'verified-professional',
+          specialty: application.specialty,
+        };
+      }
+    }
+    return {
+      name: user?.name ?? 'You',
+      initial: (user?.name ?? 'Y').charAt(0).toUpperCase(),
+      color: 'var(--color-role-accent)',
+    };
   }
 }

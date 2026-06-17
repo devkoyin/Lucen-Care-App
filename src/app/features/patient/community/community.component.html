@@ -52,6 +52,13 @@
               <div class="post-card__author-info">
                 <span class="post-card__author">{{ post.author }}</span>
                 <span class="post-card__time">{{ post.timeAgo }}</span>
+                @if (post.authorBadge === 'verified-professional') {
+                  <span
+                    class="post-card__pro-badge"
+                    [attr.title]="post.authorSpecialty ? 'Verified Health Professional · ' + post.authorSpecialty : 'Verified Health Professional'">
+                    ✓ Verified Health Professional
+                  </span>
+                }
               </div>
               <span class="post-card__group-badge" [style.background]="post.groupColor + '1a'" [style.color]="post.groupColor" [style.border-color]="post.groupColor + '33'">
                 {{ post.groupLabel }}
