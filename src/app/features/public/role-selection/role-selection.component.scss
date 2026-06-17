@@ -131,6 +131,13 @@
     .role-option__radio--checked { background: #3535A8; border-color: #3535A8; color: #FFFFFF; }
   }
 
+  &--professional.role-option--selected {
+    background: rgba(22, 163, 74, 0.06);
+    border-color: rgba(22, 163, 74, 0.35);
+    .role-option__label { color: #15803D; }
+    .role-option__radio--checked { background: #16A34A; border-color: #16A34A; color: #FFFFFF; }
+  }
+
 }
 
 .role-cta {

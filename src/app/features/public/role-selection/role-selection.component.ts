@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 
-type Role = 'patient' | 'ngo' | 'hmo' | 'admin';
+type Role = 'patient' | 'ngo' | 'hmo' | 'admin' | 'professional';
 
 interface RoleOption {
   id: Role;
@@ -21,10 +21,11 @@ export class RoleSelectionComponent {
   private readonly router = inject(Router);
 
   readonly roles: RoleOption[] = [
-    { id: 'patient',    emoji: '🏥', label: 'Patient & Caregiver',  description: 'Health tracking, support & funding access' },
-    { id: 'ngo',        emoji: '🤝', label: 'NGO',                  description: 'Funding programs & patient matching' },
-    { id: 'hmo',        emoji: '🏦', label: 'HMO',                  description: 'Longitudinal care management' },
-    { id: 'admin',      emoji: '🛡️', label: 'Admin',               description: 'Approve & manage organisation accounts' },
+    { id: 'patient',      emoji: '🏥', label: 'Patient & Caregiver',      description: 'Health tracking, support & funding access' },
+    { id: 'ngo',          emoji: '🤝', label: 'NGO',                      description: 'Funding programs & patient matching' },
+    { id: 'hmo',          emoji: '🏦', label: 'HMO',                      description: 'Longitudinal care management' },
+    { id: 'professional', emoji: '⚕️', label: 'Healthcare Professional', description: 'Verified volunteer support in patient communities' },
+    { id: 'admin',        emoji: '🛡️', label: 'Admin',                   description: 'Approve & manage organisation accounts' },
   ];
 
   selectedRole: Role | null = null;

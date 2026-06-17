@@ -18,8 +18,8 @@ describe('RoleSelectionComponent', () => {
 
   it('creates', () => expect(component).toBeTruthy());
 
-  it('renders 4 role options', () => {
-    expect(fixture.nativeElement.querySelectorAll('.role-option').length).toBe(4);
+  it('renders 5 role options', () => {
+    expect(fixture.nativeElement.querySelectorAll('.role-option').length).toBe(5);
   });
 
   it('has no role selected initially', () => {
@@ -49,6 +49,14 @@ describe('RoleSelectionComponent', () => {
     component.selectRole('hmo');
     component.continue();
     expect(spy).toHaveBeenCalledWith(['/auth', 'hmo', 'signup']);
+  });
+
+  it('navigates to the professional signup route when continue() is called', () => {
+    const router = TestBed.inject(Router);
+    const spy = spyOn(router, 'navigate');
+    component.selectRole('professional');
+    component.continue();
+    expect(spy).toHaveBeenCalledWith(['/auth', 'professional', 'signup']);
   });
 
   it('does not navigate when continue() is called with no role selected', () => {
