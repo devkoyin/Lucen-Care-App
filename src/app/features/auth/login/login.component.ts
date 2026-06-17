@@ -10,13 +10,15 @@ const ROLE_LABELS: Record<string, string> = {
   patient: 'Patient & Caregiver',
   ngo: 'NGO',
   hmo: 'HMO',
+  professional: 'Healthcare Professional',
   admin: 'Admin',
 };
 
 const ROLES: { id: Role; label: string; emoji: string }[] = [
-  { id: 'patient', label: 'Patient', emoji: '🏥' },
-  { id: 'ngo',     label: 'NGO',     emoji: '🤝' },
-  { id: 'hmo',     label: 'HMO',     emoji: '🏛' },
+  { id: 'patient',      label: 'Patient',      emoji: '🏥' },
+  { id: 'ngo',          label: 'NGO',          emoji: '🤝' },
+  { id: 'hmo',          label: 'HMO',          emoji: '🏛' },
+  { id: 'professional', label: 'Professional', emoji: '⚕️' },
 ];
 
 @Component({
@@ -77,8 +79,9 @@ export class LoginComponent implements OnInit {
     this.loading     = true;
     this.serverError = '';
     const role = this.selectedRole();
+    const landing = role === 'professional' ? 'community' : 'dashboard';
     this.auth.login(role, this.form.getRawValue() as LoginPayload).subscribe({
-      next: () => this.router.navigate(['/', role, 'dashboard']),
+      next: () => this.router.navigate(['/', role, landing]),
       error: (e: { error?: { message?: string } }) => {
         this.loading = false;
         this.serverError = e?.error?.message ?? 'Something went wrong. Please try again.';

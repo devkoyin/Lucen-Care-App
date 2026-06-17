@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { Router, provideRouter } from '@angular/router';
 import { of } from 'rxjs';
 import { LoginComponent } from './login.component';
 import { AuthService } from '../../../core/auth/auth.service';
@@ -50,5 +50,16 @@ describe('LoginComponent', () => {
   it('does not call auth.login when form is invalid', () => {
     fixture.componentInstance.submit();
     expect(authSpy.login).not.toHaveBeenCalled();
+  });
+
+  it('navigates professionals to the community page instead of dashboard', () => {
+    const router = TestBed.inject(Router);
+    const navSpy = spyOn(router, 'navigate');
+    fixture.componentInstance.role = 'professional';
+    fixture.componentInstance.selectRole('professional');
+    fixture.componentInstance.form.setValue({ email: 'jane@doe.com', password: 'password123' });
+    authSpy.login.and.returnValue(of({ id: '2', role: 'professional', name: 'Dr. Jane', email: 'jane@doe.com', status: 'pending' }));
+    fixture.componentInstance.submit();
+    expect(navSpy).toHaveBeenCalledWith(['/', 'professional', 'community']);
   });
 });
