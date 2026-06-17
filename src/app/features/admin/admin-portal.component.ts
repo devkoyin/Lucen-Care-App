@@ -24,10 +24,11 @@ export class AdminPortalComponent {
   private readonly router = inject(Router);
 
   readonly navItems: NavItem[] = [
-    { icon: '🏠', label: 'Dashboard',      route: '/admin/dashboard' },
-    { icon: '🏢', label: 'NGO Approvals',  route: '/admin/ngo-approvals' },
-    { icon: '🏥', label: 'HMO Approvals',  route: '/admin/hmo-approvals' },
-    { icon: '📋', label: 'Audit Log',      route: '/admin/audit-log' },
+    { icon: '🏠', label: 'Dashboard',               route: '/admin/dashboard' },
+    { icon: '🏢', label: 'NGO Approvals',            route: '/admin/ngo-approvals' },
+    { icon: '🏥', label: 'HMO Approvals',            route: '/admin/hmo-approvals' },
+    { icon: '⚕️', label: 'Professional Approvals',  route: '/admin/professional-approvals' },
+    { icon: '📋', label: 'Audit Log',               route: '/admin/audit-log' },
   ];
 
   get userName(): string    { return this.auth.user()?.name ?? 'Admin'; }

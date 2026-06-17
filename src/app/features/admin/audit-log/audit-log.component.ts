@@ -1,5 +1,5 @@
 import { Component, inject, signal, computed } from '@angular/core';
-import { ApplicationsService, AuditEntry, AuditAction, OrgType } from '../../../core/applications/applications.service';
+import { ApplicationsService, AuditEntry, AuditAction, AuditSubjectType } from '../../../core/applications/applications.service';
 
 type FilterTab = 'all' | AuditAction;
 
@@ -50,8 +50,10 @@ export class AuditLogComponent {
     return { submitted: 'Submitted', approved: 'Approved', rejected: 'Rejected' }[action];
   }
 
-  typeLabel(type: OrgType): string {
-    return type === 'ngo' ? 'NGO' : 'HMO';
+  typeLabel(type: AuditSubjectType): string {
+    if (type === 'ngo') return 'NGO';
+    if (type === 'hmo') return 'HMO';
+    return 'Professional';
   }
 
   formatDate(iso: string): string {
