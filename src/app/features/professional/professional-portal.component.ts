@@ -24,6 +24,7 @@ export class ProfessionalPortalComponent {
   private readonly router = inject(Router);
 
   readonly navItems: NavItem[] = [
+    { icon: '🏠', label: 'Dashboard',  route: '/professional/dashboard' },
     { icon: '🤝', label: 'Community',  route: '/professional/community' },
     { icon: '⚕️', label: 'My Profile', route: '/professional/profile' },
   ];

@@ -7,7 +7,13 @@ export const PROFESSIONAL_ROUTES: Routes = [
     path: '',
     component: ProfessionalPortalComponent,
     children: [
-      { path: '', redirectTo: 'community', pathMatch: 'full' },
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      {
+        path: 'dashboard',
+        canActivate: [professionalApprovedGuard],
+        loadComponent: () =>
+          import('./dashboard/professional-dashboard.component').then(m => m.ProfessionalDashboardComponent),
+      },
       {
         path: 'pending',
         loadComponent: () =>

@@ -1,0 +1,82 @@
+<div class="dashboard">
+
+  <!-- Header -->
+  <div class="dash-header">
+    <div>
+      <h1 class="dash-header__title">Welcome back, {{ displayName }}</h1>
+      <p class="dash-header__sub">Your community activity at a glance</p>
+    </div>
+    <a class="dash-primary-btn" routerLink="/professional/community">+ New Post</a>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-row">
+    @for (stat of stats; track stat.label) {
+      <div class="stat-card" [class.stat-card--accent]="stat.accent">
+        <span class="stat-card__icon" aria-hidden="true">{{ stat.icon }}</span>
+        <span class="stat-card__value">{{ stat.value }}</span>
+        <span class="stat-card__label">{{ stat.label }}</span>
+        @if (stat.trend) {
+          <span class="stat-card__trend">{{ stat.trend }}</span>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- Content row -->
+  <div class="content-row">
+
+    <!-- Recent posts -->
+    <div class="panel">
+      <div class="panel__header">
+        <span class="panel__title">Your Recent Posts</span>
+        <a class="panel__link" routerLink="/professional/community">View all</a>
+      </div>
+      <div class="post-list">
+        @for (post of recentPosts; track post.title) {
+          <div class="post-item">
+            <div class="post-item__body">
+              <span
+                class="post-item__community"
+                [style.color]="post.communityColor"
+                [style.border-color]="post.communityColor + '44'"
+                [style.background]="post.communityColor + '15'">
+                {{ post.community }}
+              </span>
+              <p class="post-item__title">{{ post.title }}</p>
+              <span class="post-item__time">{{ post.timeAgo }}</span>
+            </div>
+            <div class="post-item__stats">
+              <span class="post-item__stat">❤️ {{ post.likes }}</span>
+              <span class="post-item__stat">💬 {{ post.comments }}</span>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Threads needing attention -->
+    <div class="panel">
+      <div class="panel__header">
+        <span class="panel__title">Threads Needing Attention</span>
+        <a class="panel__link" routerLink="/professional/community">Browse</a>
+      </div>
+      <div class="thread-list">
+        @for (thread of activeThreads; track thread.title) {
+          <div class="thread-item">
+            <div class="thread-item__top">
+              <span class="thread-item__tag" [class.thread-item__tag--urgent]="thread.urgent">
+                {{ thread.urgent ? '🚨' : '' }} {{ thread.tag }}
+              </span>
+              <span class="thread-item__replies">{{ thread.replies }} replies</span>
+            </div>
+            <p class="thread-item__title">{{ thread.title }}</p>
+            <span class="thread-item__community">{{ thread.community }}</span>
+          </div>
+        }
+      </div>
+    </div>
+
+  </div>
+
+</div>

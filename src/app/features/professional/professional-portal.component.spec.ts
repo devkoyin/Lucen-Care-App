@@ -16,8 +16,8 @@ describe('ProfessionalPortalComponent', () => {
 
   it('creates', () => expect(fixture.componentInstance).toBeTruthy());
 
-  it('only exposes Community and My Profile in the nav — no dashboard or funding', () => {
+  it('exposes Dashboard, Community, and My Profile in the nav', () => {
     const labels = fixture.componentInstance.navItems.map(i => i.label);
-    expect(labels).toEqual(['Community', 'My Profile']);
+    expect(labels).toEqual(['Dashboard', 'Community', 'My Profile']);
   });
 });
