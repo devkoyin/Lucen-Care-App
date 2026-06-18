@@ -1,0 +1,90 @@
+<lc-onboarding-shell
+  [currentStep]="currentStep"
+  [totalSteps]="totalSteps"
+  [stepLabels]="stepLabels"
+  [stepTitle]="stepTitle"
+  [canContinue]="canContinue"
+  [continueLabel]="continueLabel"
+  role="benefactor"
+  (back)="back()"
+  (continue)="next()">
+
+  @switch (currentStep) {
+    @case (1) {
+      <div class="step-content" [formGroup]="step1Form">
+        <lc-form-field label="Full name" id="benef-name">
+          <input id="benef-name" type="text" formControlName="fullName" placeholder="Your legal full name" />
+        </lc-form-field>
+        <lc-form-field label="Phone" id="benef-phone">
+          <input id="benef-phone" type="tel" formControlName="phone" placeholder="Contact phone number" />
+        </lc-form-field>
+        <lc-form-field label="Why do you want to support patients?" id="benef-reason" hint="Minimum 20 characters">
+          <textarea id="benef-reason" formControlName="reasonForSupport" rows="4" placeholder="Tell us what motivates you to contribute to patient communities…"></textarea>
+        </lc-form-field>
+      </div>
+    }
+    @case (2) {
+      <div class="step-content" [formGroup]="step2Form">
+        <div class="id-info">
+          <div class="id-info__icon" aria-hidden="true">🪪</div>
+          <p class="id-info__title">Identity verification</p>
+          <p class="id-info__desc">To issue your Verified Benefactor badge, we need to confirm your identity. Our team will review a government-issued ID (national ID, passport or driving licence) during the admin review process. You'll receive further instructions by email after submission.</p>
+        </div>
+        <label class="consent-item">
+          <input type="checkbox" formControlName="idConsent" />
+          <div class="consent-item__text">
+            <span class="consent-item__label">
+              I understand and consent to identity verification
+              <span class="consent-item__req">Required</span>
+            </span>
+            <span class="consent-item__desc">I confirm I am prepared to provide a government-issued ID for review by the Lucen Care admin team.</span>
+          </div>
+        </label>
+      </div>
+    }
+    @case (3) {
+      <div class="step-content" [formGroup]="step3Form">
+        <div class="consent-list">
+          <label class="consent-item">
+            <input type="checkbox" formControlName="termsConsent" />
+            <div class="consent-item__text">
+              <span class="consent-item__label">
+                Terms of Service
+                <span class="consent-item__req">Required</span>
+              </span>
+              <span class="consent-item__desc">I agree to the Lucen Care Terms of Service and confirm that the information I've provided is accurate.</span>
+            </div>
+          </label>
+          <label class="consent-item">
+            <input type="checkbox" formControlName="codeOfConductConsent" />
+            <div class="consent-item__text">
+              <span class="consent-item__label">
+                Community code of conduct
+                <span class="consent-item__req">Required</span>
+              </span>
+              <span class="consent-item__desc">I agree to engage respectfully in patient communities, respect privacy, and follow Lucen Care's community guidelines.</span>
+            </div>
+          </label>
+        </div>
+        <p class="upload-note">
+          <span class="upload-note__icon" aria-hidden="true">📎</span>
+          Our team will review your identity document and application within 48 hours. You'll receive an activation email once approved.
+        </p>
+      </div>
+    }
+    @case (4) {
+      <div class="step-content step-content--pending">
+        <div class="pending-icon" aria-hidden="true">⏳</div>
+        <p class="pending-title">Application submitted</p>
+        <p class="pending-desc">Thank you, <strong>{{ fullName }}</strong>. Our team will verify your identity within 48 hours. You'll receive an activation email once your Verified Benefactor badge is granted.</p>
+        <div class="pending-info">
+          <span class="pending-info__item">✓ Personal details captured</span>
+          <span class="pending-info__item">✓ ID verification consent recorded</span>
+          <span class="pending-info__item">✓ Terms agreed</span>
+          <span class="pending-info__item">◎ Admin verification pending</span>
+        </div>
+      </div>
+    }
+  }
+
+</lc-onboarding-shell>

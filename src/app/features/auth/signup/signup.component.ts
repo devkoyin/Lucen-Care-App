@@ -11,6 +11,7 @@ const ROLE_LABELS: Record<string, string> = {
   ngo: 'NGO',
   hmo: 'HMO',
   professional: 'Healthcare Professional',
+  benefactor: 'Benefactor',
 };
 
 function passwordMatch(control: AbstractControl): ValidationErrors | null {

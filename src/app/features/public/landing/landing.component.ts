@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 interface RoleCard {
-  role: 'patient' | 'ngo' | 'hmo' | 'professional' | 'admin';
+  role: 'patient' | 'ngo' | 'hmo' | 'professional' | 'benefactor' | 'admin';
   emoji: string;
   label: string;
   description: string;
@@ -45,6 +45,13 @@ export class LandingComponent {
       label: 'Healthcare Professional',
       description: 'Join patient communities as a verified volunteer',
       signupRoute: '/auth/professional/signup',
+    },
+    {
+      role: 'benefactor',
+      emoji: '💛',
+      label: 'Benefactor',
+      description: 'Support patients through individual funding & community',
+      signupRoute: '/auth/benefactor/signup',
     },
     {
       role: 'admin',

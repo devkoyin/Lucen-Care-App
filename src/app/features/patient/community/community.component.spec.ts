@@ -3,6 +3,7 @@ import { signal } from '@angular/core';
 import { CommunityComponent } from './community.component';
 import { AuthService } from '../../../core/auth/auth.service';
 import { ProfessionalApplicationsService } from '../../../core/applications/professional-applications.service';
+import { BenefactorApplicationsService } from '../../../core/applications/benefactor-applications.service';
 import { User } from '../../../core/auth/auth.models';
 
 describe('CommunityComponent', () => {
@@ -63,6 +64,31 @@ describe('CommunityComponent', () => {
     });
 
     component.addPost({ groupId: 'diabetes', groupLabel: 'Diabetes Support', groupColor: '#D97706', title: 'Title', content: 'Content', tags: [] });
+    const post = component.posts()[0];
+    expect(post.authorBadge).toBeUndefined();
+  });
+
+  it('tags a new post from an approved benefactor with the verified-benefactor badge', () => {
+    const benefUser: User = { id: '3', role: 'benefactor', name: 'Ada Obi', email: 'ada@test.com', status: 'active' };
+    setup(benefUser);
+    const benefApps = TestBed.inject(BenefactorApplicationsService);
+    benefApps.submit({ fullName: 'Ada Obi', email: 'ada@test.com', phone: '0800', reasonForSupport: 'I want to help', docs: [] });
+    benefApps.approve(benefApps.applications()[0].id);
+
+    component.addPost({ groupId: 'wellness', groupLabel: 'General Wellness', groupColor: '#059669', title: 'Title', content: 'Content', tags: [] });
+
+    const post = component.posts()[0];
+    expect(post.authorBadge).toBe('verified-benefactor');
+    expect(post.author).toBe('Ada Obi');
+  });
+
+  it('does not tag a benefactor post when their application is still pending', () => {
+    const benefUser: User = { id: '3', role: 'benefactor', name: 'Ada Obi', email: 'ada@test.com', status: 'pending' };
+    setup(benefUser);
+    const benefApps = TestBed.inject(BenefactorApplicationsService);
+    benefApps.submit({ fullName: 'Ada Obi', email: 'ada@test.com', phone: '0800', reasonForSupport: 'I want to help', docs: [] });
+
+    component.addPost({ groupId: 'wellness', groupLabel: 'General Wellness', groupColor: '#059669', title: 'Title', content: 'Content', tags: [] });
     const post = component.posts()[0];
     expect(post.authorBadge).toBeUndefined();
   });

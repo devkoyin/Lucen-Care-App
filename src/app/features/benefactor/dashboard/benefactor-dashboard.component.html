@@ -1,0 +1,75 @@
+<div class="dashboard">
+
+  <!-- Header -->
+  <div class="dash-header">
+    <div>
+      <h1 class="dash-header__title">Welcome back, {{ displayName }}</h1>
+      <p class="dash-header__sub">Your community activity at a glance</p>
+    </div>
+    <a class="dash-primary-btn" routerLink="/benefactor/community">+ New Post</a>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-row">
+    @for (stat of stats; track stat.label) {
+      <div class="stat-card" [class.stat-card--accent]="stat.accent">
+        <span class="stat-card__icon" aria-hidden="true">{{ stat.icon }}</span>
+        <span class="stat-card__value">{{ stat.value }}</span>
+        <span class="stat-card__label">{{ stat.label }}</span>
+        @if (stat.trend) {
+          <span class="stat-card__trend">{{ stat.trend }}</span>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- Content row -->
+  <div class="content-row">
+
+    <!-- Active threads -->
+    <div class="panel">
+      <div class="panel__header">
+        <span class="panel__title">Active Community Threads</span>
+        <a class="panel__link" routerLink="/benefactor/community">Browse all</a>
+      </div>
+      <div class="thread-list">
+        @for (thread of recentThreads; track thread.title) {
+          <div class="thread-item">
+            <div class="thread-item__top">
+              <span
+                class="thread-item__community"
+                [style.color]="thread.communityColor"
+                [style.border-color]="thread.communityColor + '44'"
+                [style.background]="thread.communityColor + '15'">
+                {{ thread.community }}
+              </span>
+              <span class="thread-item__meta">{{ thread.replies }} replies · {{ thread.timeAgo }}</span>
+            </div>
+            <p class="thread-item__title">{{ thread.title }}</p>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Impact highlights -->
+    <div class="panel">
+      <div class="panel__header">
+        <span class="panel__title">Your Impact</span>
+      </div>
+      <div class="impact-list">
+        @for (item of impactHighlights; track item.text) {
+          <div class="impact-item">
+            <span class="impact-item__icon" aria-hidden="true">{{ item.icon }}</span>
+            <span class="impact-item__text">{{ item.text }}</span>
+          </div>
+        }
+      </div>
+      <div class="badge-preview">
+        <span class="badge-preview__tag">★ Verified Benefactor</span>
+        <p class="badge-preview__desc">This badge appears on your community posts, signalling your commitment to supporting patients.</p>
+      </div>
+    </div>
+
+  </div>
+
+</div>

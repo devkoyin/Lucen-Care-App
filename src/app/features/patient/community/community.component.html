@@ -59,6 +59,11 @@
                     ✓ Verified Health Professional
                   </span>
                 }
+                @if (post.authorBadge === 'verified-benefactor') {
+                  <span class="post-card__benefactor-badge" title="Verified Benefactor">
+                    ★ Verified Benefactor
+                  </span>
+                }
               </div>
               <span class="post-card__group-badge" [style.background]="post.groupColor + '1a'" [style.color]="post.groupColor" [style.border-color]="post.groupColor + '33'">
                 {{ post.groupLabel }}

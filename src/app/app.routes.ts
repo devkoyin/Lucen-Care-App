@@ -32,6 +32,11 @@ export const routes: Routes = [
       import('./features/professional/professional.routes').then(m => m.PROFESSIONAL_ROUTES),
   },
   {
+    path: 'benefactor',
+    loadChildren: () =>
+      import('./features/benefactor/benefactor.routes').then(m => m.BENEFACTOR_ROUTES),
+  },
+  {
     path: 'admin',
     loadChildren: () =>
       import('./features/admin/admin.routes').then(m => m.ADMIN_ROUTES),

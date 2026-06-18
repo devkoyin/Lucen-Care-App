@@ -3,13 +3,14 @@ import { NewPostModalComponent, NewPostData } from './new-post-modal.component';
 import { CreateCommunityModalComponent, CreateCommunityData } from './create-community-modal.component';
 import { AuthService } from '../../../core/auth/auth.service';
 import { ProfessionalApplicationsService } from '../../../core/applications/professional-applications.service';
+import { BenefactorApplicationsService } from '../../../core/applications/benefactor-applications.service';
 
 interface CommunityPost {
   id: string;
   author: string;
   authorInitial: string;
   authorColor: string;
-  authorBadge?: 'verified-professional';
+  authorBadge?: 'verified-professional' | 'verified-benefactor';
   authorSpecialty?: string;
   groupId: string;
   groupLabel: string;
@@ -105,6 +106,17 @@ const SEED_POSTS: CommunityPost[] = [
     tags: ['HbA1c', 'Diabetes', 'LifestyleChange'],
   },
   {
+    id: 'c1b',
+    author: 'Adunola F.', authorInitial: 'A', authorColor: '#D97706',
+    authorBadge: 'verified-benefactor' as const,
+    groupId: 'wellness', groupLabel: 'General Wellness', groupColor: '#059669',
+    timeAgo: '6 hours ago',
+    title: 'How I found a way to contribute as someone who cares deeply about patient communities',
+    content: "I'm not a medical professional but I believe in what this community does. After becoming a Verified Benefactor I've been able to engage more meaningfully — sharing resources, supporting discussions, and knowing my presence here actually matters to patients navigating hard days.",
+    likes: 44, comments: 17, liked: false,
+    tags: ['Support', 'Community', 'Benefactor'],
+  },
+  {
     id: 'c7',
     author: 'Ngozi E.', authorInitial: 'N', authorColor: '#4F46E5',
     groupId: 'mental', groupLabel: 'Mental Wellness', groupColor: '#4F46E5',
@@ -142,8 +154,9 @@ const TRENDING = [
   styleUrl: './community.component.scss',
 })
 export class CommunityComponent {
-  private readonly auth     = inject(AuthService);
-  private readonly profApps = inject(ProfessionalApplicationsService);
+  private readonly auth       = inject(AuthService);
+  private readonly profApps   = inject(ProfessionalApplicationsService);
+  private readonly benefApps  = inject(BenefactorApplicationsService);
 
   readonly showNewPost = signal(false);
   readonly showCreateCommunity = signal(false);
@@ -235,7 +248,7 @@ export class CommunityComponent {
     this.setFilter('all');
   }
 
-  private currentAuthorMeta(): { name: string; initial: string; color: string; badge?: 'verified-professional'; specialty?: string } {
+  private currentAuthorMeta(): { name: string; initial: string; color: string; badge?: 'verified-professional' | 'verified-benefactor'; specialty?: string } {
     const user = this.auth.user();
     if (user?.role === 'professional') {
       const application = this.profApps.findByEmail(user.email);
@@ -246,6 +259,17 @@ export class CommunityComponent {
           color: 'var(--color-role-accent)',
           badge: 'verified-professional',
           specialty: application.specialty,
+        };
+      }
+    }
+    if (user?.role === 'benefactor') {
+      const application = this.benefApps.findByEmail(user.email);
+      if (application?.status === 'approved') {
+        return {
+          name: user.name,
+          initial: user.name.charAt(0).toUpperCase(),
+          color: '#D97706',
+          badge: 'verified-benefactor',
         };
       }
     }

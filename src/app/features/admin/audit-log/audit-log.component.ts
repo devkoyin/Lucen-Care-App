@@ -53,6 +53,7 @@ export class AuditLogComponent {
   typeLabel(type: AuditSubjectType): string {
     if (type === 'ngo') return 'NGO';
     if (type === 'hmo') return 'HMO';
+    if (type === 'benefactor') return 'Benefactor';
     return 'Professional';
   }
 

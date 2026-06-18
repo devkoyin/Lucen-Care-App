@@ -21,9 +21,9 @@ describe('LandingComponent', () => {
     expect(h1).toBeTruthy();
   });
 
-  it('renders all five role buttons', () => {
+  it('renders all six role buttons', () => {
     const cards = fixture.nativeElement.querySelectorAll('.role-btn');
-    expect(cards.length).toBe(5);
+    expect(cards.length).toBe(6);
   });
 
   it('routes each role button to the correct signup path', () => {
@@ -33,6 +33,7 @@ describe('LandingComponent', () => {
       '/auth/ngo/signup',
       '/auth/hmo/signup',
       '/auth/professional/signup',
+      '/auth/benefactor/signup',
       '/admin',
     ];
     cards.forEach((card, i) => {

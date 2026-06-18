@@ -138,6 +138,13 @@
     .role-option__radio--checked { background: #16A34A; border-color: #16A34A; color: #FFFFFF; }
   }
 
+  &--benefactor.role-option--selected {
+    background: rgba(217, 119, 6, 0.06);
+    border-color: rgba(217, 119, 6, 0.35);
+    .role-option__label { color: #92400E; }
+    .role-option__radio--checked { background: #D97706; border-color: #D97706; color: #FFFFFF; }
+  }
+
 }
 
 .role-cta {

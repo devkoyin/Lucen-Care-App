@@ -1,7 +1,7 @@
 import { Injectable, signal } from '@angular/core';
 
 export type OrgType    = 'ngo' | 'hmo';
-export type AuditSubjectType = OrgType | 'professional';
+export type AuditSubjectType = OrgType | 'professional' | 'benefactor';
 export type AppStatus  = 'pending' | 'approved' | 'rejected';
 export type AuditAction = 'submitted' | 'approved' | 'rejected';
 

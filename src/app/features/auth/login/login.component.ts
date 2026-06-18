@@ -11,6 +11,7 @@ const ROLE_LABELS: Record<string, string> = {
   ngo: 'NGO',
   hmo: 'HMO',
   professional: 'Healthcare Professional',
+  benefactor: 'Benefactor',
   admin: 'Admin',
 };
 
@@ -19,6 +20,7 @@ const ROLES: { id: Role; label: string; emoji: string }[] = [
   { id: 'ngo',          label: 'NGO',          emoji: '🤝' },
   { id: 'hmo',          label: 'HMO',          emoji: '🏛' },
   { id: 'professional', label: 'Professional', emoji: '⚕️' },
+  { id: 'benefactor',   label: 'Benefactor',   emoji: '💛' },
 ];
 
 @Component({
@@ -79,7 +81,7 @@ export class LoginComponent implements OnInit {
     this.loading     = true;
     this.serverError = '';
     const role = this.selectedRole();
-    const landing = role === 'professional' ? 'community' : 'dashboard';
+    const landing = (role === 'professional' || role === 'benefactor') ? 'community' : 'dashboard';
     this.auth.login(role, this.form.getRawValue() as LoginPayload).subscribe({
       next: () => this.router.navigate(['/', role, landing]),
       error: (e: { error?: { message?: string } }) => {

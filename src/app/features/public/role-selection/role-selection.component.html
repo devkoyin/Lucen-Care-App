@@ -12,6 +12,7 @@
           [class.role-option--ngo]="role.id === 'ngo'"
           [class.role-option--hmo]="role.id === 'hmo'"
           [class.role-option--professional]="role.id === 'professional'"
+          [class.role-option--benefactor]="role.id === 'benefactor'"
 [attr.aria-pressed]="selectedRole === role.id"
           (click)="selectRole(role.id)"
           type="button"

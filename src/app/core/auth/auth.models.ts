@@ -1,4 +1,4 @@
-export type Role = 'patient' | 'ngo' | 'hmo' | 'admin' | 'professional';
+export type Role = 'patient' | 'ngo' | 'hmo' | 'admin' | 'professional' | 'benefactor';
 
 export interface User {
   id: string;

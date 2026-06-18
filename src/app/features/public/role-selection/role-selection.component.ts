@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 
-type Role = 'patient' | 'ngo' | 'hmo' | 'admin' | 'professional';
+type Role = 'patient' | 'ngo' | 'hmo' | 'admin' | 'professional' | 'benefactor';
 
 interface RoleOption {
   id: Role;
@@ -25,6 +25,7 @@ export class RoleSelectionComponent {
     { id: 'ngo',          emoji: '🤝', label: 'NGO',                      description: 'Funding programs & patient matching' },
     { id: 'hmo',          emoji: '🏦', label: 'HMO',                      description: 'Longitudinal care management' },
     { id: 'professional', emoji: '⚕️', label: 'Healthcare Professional', description: 'Verified volunteer support in patient communities' },
+    { id: 'benefactor',   emoji: '💛', label: 'Benefactor',              description: 'Support patients through individual funding & community' },
     { id: 'admin',        emoji: '🛡️', label: 'Admin',                   description: 'Approve & manage organisation accounts' },
   ];
 

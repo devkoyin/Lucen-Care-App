@@ -53,4 +53,9 @@ export const AUTH_ROUTES: Routes = [
     loadComponent: () =>
       import('./onboarding/professional/professional-onboarding.component').then(m => m.ProfessionalOnboardingComponent),
   },
+  {
+    path: 'onboarding/benefactor',
+    loadComponent: () =>
+      import('./onboarding/benefactor/benefactor-onboarding.component').then(m => m.BenefactorOnboardingComponent),
+  },
 ];

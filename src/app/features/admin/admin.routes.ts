@@ -35,6 +35,11 @@ export const ADMIN_ROUTES: Routes = [
           import('./professional-approvals/professional-approvals.component').then(m => m.ProfessionalApprovalsComponent),
       },
       {
+        path: 'benefactor-approvals',
+        loadComponent: () =>
+          import('./benefactor-approvals/benefactor-approvals.component').then(m => m.BenefactorApprovalsComponent),
+      },
+      {
         path: 'audit-log',
         loadComponent: () =>
           import('./audit-log/audit-log.component').then(m => m.AuditLogComponent),
