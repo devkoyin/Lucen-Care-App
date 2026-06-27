@@ -1,0 +1,52 @@
+<div class="guidelines-overlay" (click)="close.emit()">
+  <div class="guidelines-modal" (click)="$event.stopPropagation()">
+
+    <div class="guidelines-modal__banner">
+      <div class="guidelines-modal__banner-content">
+        <span class="guidelines-modal__icon" aria-hidden="true">🛡️</span>
+        <h2 class="guidelines-modal__title">Community Guidelines</h2>
+      </div>
+      <button class="guidelines-modal__close" type="button" (click)="close.emit()" aria-label="Close">✕</button>
+    </div>
+
+    <div class="guidelines-modal__body">
+
+    <p class="guidelines-modal__intro">
+      These guidelines help keep our community safe, respectful, and helpful for everyone navigating their health journey.
+    </p>
+
+    <ul class="guidelines-modal__list">
+      <li class="guidelines-modal__item">
+        <span class="guidelines-modal__item-icon" aria-hidden="true">💬</span>
+        <div>
+          <strong>Share experiences, not medical advice</strong>
+          <p>You can share what worked for you, but always remind others to consult their care team before making health decisions.</p>
+        </div>
+      </li>
+      <li class="guidelines-modal__item">
+        <span class="guidelines-modal__item-icon" aria-hidden="true">🤝</span>
+        <div>
+          <strong>Be kind — everyone's journey is different</strong>
+          <p>Treat others with empathy. Chronic illness affects everyone differently; avoid judgment and comparisons.</p>
+        </div>
+      </li>
+      <li class="guidelines-modal__item">
+        <span class="guidelines-modal__item-icon" aria-hidden="true">🔒</span>
+        <div>
+          <strong>Protect your privacy</strong>
+          <p>Avoid sharing full names, location details, or other identifiers that could identify you or others.</p>
+        </div>
+      </li>
+      <li class="guidelines-modal__item">
+        <span class="guidelines-modal__item-icon" aria-hidden="true">⚕️</span>
+        <div>
+          <strong>Always consult your care team</strong>
+          <p>Community discussions are peer support, not a substitute for professional medical advice, diagnosis, or treatment.</p>
+        </div>
+      </li>
+    </ul>
+
+    </div><!-- /.guidelines-modal__body -->
+
+  </div>
+</div>

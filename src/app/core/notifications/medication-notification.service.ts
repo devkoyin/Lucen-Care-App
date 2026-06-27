@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../auth/auth.service';
-import { Medication } from '../../features/patient/medications/medications.component';
+import { Medication } from '../../features/patient/medications/medications.data';
 import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })

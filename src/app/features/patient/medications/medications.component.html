@@ -1,130 +1,47 @@
-<div class="meds-page">
+<div class="meds-portal">
 
-  <!-- ── Header ─────────────────────────────────────────────── -->
-  <div class="meds-header">
+  <!-- Header -->
+  <div class="meds-portal__topbar">
     <div>
-      <h1 class="meds-header__title">My Medications</h1>
-      <p class="meds-header__sub">Manage your prescriptions, schedule and refills</p>
+      <h1 class="meds-portal__title">My Medications</h1>
+      <p class="meds-portal__sub">Manage your prescriptions, schedule and refills</p>
     </div>
-    <button class="meds-primary-btn" type="button" (click)="showAddMed.set(true)">+ Add Medication</button>
   </div>
 
-  <!-- ── Stats bar ───────────────────────────────────────────── -->
-  <div class="meds-stats">
-    @for (s of stats(); track s.label) {
-      <div class="stat-card">
-        <span class="stat-card__icon" aria-hidden="true">{{ s.icon }}</span>
-        <span class="stat-card__value">{{ s.value }}</span>
-        <span class="stat-card__label">{{ s.label }}</span>
+  <!-- Stats -->
+  <div class="meds-portal__stats">
+    @for (s of stats; track s.label) {
+      <div class="meds-stat">
+        <span class="meds-stat__icon">{{ s.icon }}</span>
+        <span class="meds-stat__value">{{ s.value }}</span>
+        <span class="meds-stat__label">{{ s.label }}</span>
       </div>
     }
   </div>
 
-  <!-- ── Today's schedule + refill alerts ───────────────────── -->
-  <div class="meds-grid">
+  <!-- Tab nav -->
+  <nav class="meds-nav">
+    <a class="meds-nav__tab"
+       routerLink="/patient/medications/schedule"
+       routerLinkActive="meds-nav__tab--active"
+       [routerLinkActiveOptions]="{ exact: true }">
+      📅 Schedule
+    </a>
+    <a class="meds-nav__tab"
+       routerLink="/patient/medications/refills"
+       routerLinkActive="meds-nav__tab--active"
+       [routerLinkActiveOptions]="{ exact: true }">
+      🔔 Refill Alerts
+    </a>
+    <a class="meds-nav__tab"
+       routerLink="/patient/medications/all"
+       routerLinkActive="meds-nav__tab--active"
+       [routerLinkActiveOptions]="{ exact: true }">
+      💊 All Medications
+    </a>
+  </nav>
 
-    <!-- Today's schedule -->
-    <div class="widget">
-      <div class="widget__header">
-        <span class="widget__title">Today's Schedule</span>
-        <span class="widget__date">Wednesday, 4 Jun 2026</span>
-      </div>
-      <div class="widget__body">
-        @for (slot of schedule; track slot.time) {
-          <div class="time-slot">
-            <div class="time-slot__header">
-              <span class="time-slot__icon" aria-hidden="true">{{ slot.icon }}</span>
-              <span class="time-slot__label">{{ slot.label }}</span>
-              <span class="time-slot__time">{{ slot.time }}</span>
-            </div>
-            @for (dose of slot.doses; track dose.medName) {
-              <div class="dose-row">
-                <div class="dose-row__info">
-                  <span class="dose-row__name">{{ dose.medName }}</span>
-                  <span class="dose-row__meta">
-                    {{ dose.dosage }}@if (dose.note) { &nbsp;·&nbsp;{{ dose.note }} }
-                  </span>
-                </div>
-                <span class="med-badge med-badge--{{ dose.status }}">{{ statusLabel(dose.status) }}</span>
-              </div>
-            }
-          </div>
-        }
-      </div>
-    </div>
-
-    <!-- Refill alerts -->
-    <div class="widget">
-      <div class="widget__header">
-        <span class="widget__title">Refill Alerts</span>
-        <span class="refill-count">{{ refillAlerts.length }} pending</span>
-      </div>
-      <div class="widget__body">
-        @for (alert of refillAlerts; track alert.name) {
-          <div class="refill-item refill-item--{{ alert.urgency }}">
-            <div class="refill-item__left">
-              <span class="refill-item__name">{{ alert.name }}</span>
-              <span class="refill-item__pills">{{ alert.pillsLeft }} pills remaining</span>
-              <span class="refill-item__date">Refill by {{ alert.refillDate }}</span>
-            </div>
-            <button class="refill-btn refill-btn--{{ alert.urgency }}" type="button">Refill</button>
-          </div>
-        }
-        <div class="refill-ok">
-          <span class="refill-ok__icon" aria-hidden="true">✓</span>
-          <span class="refill-ok__text">All other medications have enough supply.</span>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- ── All medications ─────────────────────────────────────── -->
-  <div class="widget widget--full">
-    <div class="widget__header">
-      <span class="widget__title">All Medications</span>
-      <span class="widget__count">{{ medications().length }} active</span>
-    </div>
-    <div class="widget__body">
-      @for (med of medications(); track med.id) {
-        <div class="med-card">
-
-          <div class="med-card__left">
-            <div class="med-card__pill-icon" aria-hidden="true">💊</div>
-            <div class="med-card__info">
-              <span class="med-card__name">{{ med.name }} <span class="med-card__dosage">{{ med.dosage }}</span></span>
-              <span class="med-card__condition">{{ med.condition }}</span>
-              <span class="med-card__prescriber">{{ med.prescriber }} · {{ med.specialty }}</span>
-            </div>
-          </div>
-
-          <div class="med-card__mid">
-            <span class="med-card__freq">{{ med.frequency }}</span>
-            <span class="med-card__schedule">{{ med.schedule.join(' · ') }}</span>
-          </div>
-
-          <div class="med-card__right">
-            <div class="refill-bar">
-              <div class="refill-bar__track">
-                <div class="refill-bar__fill refill-bar__fill--{{ med.refillUrgency }}"
-                     [style.width.%]="pillPercent(med)"></div>
-              </div>
-              <span class="refill-bar__label">{{ med.pillsRemaining }} / {{ med.pillsTotal }} pills</span>
-            </div>
-            <span class="refill-date refill-date--{{ med.refillUrgency }}">
-              Refill {{ med.refillDate }}
-            </span>
-          </div>
-
-        </div>
-      }
-    </div>
-  </div>
+  <!-- Child page -->
+  <router-outlet />
 
 </div>
-
-@if (showAddMed()) {
-  <lc-add-medication-modal
-    (close)="showAddMed.set(false)"
-    (saved)="addMedication($event)" />
-}

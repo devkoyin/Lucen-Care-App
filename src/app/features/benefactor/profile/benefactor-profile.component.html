@@ -1,39 +1,37 @@
 <div class="profile-page">
-  @if (application) {
-    <div class="page-header">
-      <div>
-        <h1 class="page-header__title">My Profile</h1>
-        <p class="page-header__sub">Your verified benefactor details, as reviewed by Lucen Care</p>
-      </div>
-      <span class="status-badge status-badge--{{ application.status }}">
-        {{ application.status === 'approved' ? '★ Verified Benefactor' : application.status }}
-      </span>
+  <div class="page-header">
+    <div>
+      <h1 class="page-header__title">My Profile</h1>
+      <p class="page-header__sub">Your verified benefactor details, as reviewed by Lucen Care</p>
     </div>
+    <span class="status-badge status-badge--{{ application.status }}">
+      {{ application.status === 'approved' ? '★ Verified Benefactor' : application.status }}
+    </span>
+  </div>
 
-    <div class="profile-card">
-      <p class="profile-card__title">Personal Details</p>
-      <dl class="detail-list">
-        <dt>Full Name</dt><dd>{{ application.fullName }}</dd>
-        <dt>Email</dt><dd>{{ application.email }}</dd>
-        <dt>Phone</dt><dd>{{ application.phone }}</dd>
-      </dl>
-    </div>
+  <div class="profile-card">
+    <p class="profile-card__title">Personal Details</p>
+    <dl class="detail-list">
+      <dt>Full Name</dt><dd>{{ application.fullName }}</dd>
+      <dt>Email</dt><dd>{{ application.email }}</dd>
+      <dt>Phone</dt><dd>{{ application.phone }}</dd>
+    </dl>
+  </div>
 
-    <div class="profile-card">
-      <p class="profile-card__title">Reason for Supporting</p>
-      <p class="profile-card__bio">{{ application.reasonForSupport }}</p>
-    </div>
+  <div class="profile-card">
+    <p class="profile-card__title">Reason for Supporting</p>
+    <p class="profile-card__bio">{{ application.reasonForSupport }}</p>
+  </div>
 
-    <div class="profile-card">
-      <p class="profile-card__title">Identity Verification</p>
-      <div class="doc-list">
-        @for (doc of application.docs; track doc.label) {
-          <div class="doc-item">
-            <span class="doc-item__icon">{{ doc.submitted ? '✓' : '◎' }}</span>
-            <span class="doc-item__label">{{ doc.label }}</span>
-          </div>
-        }
-      </div>
+  <div class="profile-card">
+    <p class="profile-card__title">Identity Verification</p>
+    <div class="doc-list">
+      @for (doc of application.docs; track doc.label) {
+        <div class="doc-item">
+          <span class="doc-item__icon">{{ doc.submitted ? '✓' : '◎' }}</span>
+          <span class="doc-item__label">{{ doc.label }}</span>
+        </div>
+      }
     </div>
-  }
+  </div>
 </div>

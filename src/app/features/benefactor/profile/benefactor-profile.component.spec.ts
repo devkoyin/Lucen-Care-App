@@ -25,16 +25,17 @@ describe('BenefactorProfileComponent', () => {
 
   it('creates', () => { setup(null); expect(component).toBeTruthy(); });
 
-  it('returns undefined when no application exists', () => {
+  it('returns mock application when no real application exists', () => {
     setup({ id: '1', role: 'benefactor', name: 'Ada', email: 'ada@test.com', status: 'active' });
-    expect(component.application).toBeUndefined();
+    expect(component.application).toBeDefined();
+    expect(component.application.fullName).toBe('Adunola Fashola');
   });
 
-  it('returns application matching the current user email', () => {
+  it('returns real application matching the current user email when one exists', () => {
     const user: User = { id: '1', role: 'benefactor', name: 'Ada', email: 'ada@test.com', status: 'active' };
     setup(user);
     const apps = TestBed.inject(BenefactorApplicationsService);
     apps.submit({ fullName: 'Ada Obi', email: 'ada@test.com', phone: '0800', reasonForSupport: 'Support patients', docs: [] });
-    expect(component.application?.fullName).toBe('Ada Obi');
+    expect(component.application.fullName).toBe('Ada Obi');
   });
 });

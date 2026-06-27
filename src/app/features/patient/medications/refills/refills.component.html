@@ -1,0 +1,32 @@
+<div class="refills-page">
+
+  <div class="refills-page__header">
+    <h2 class="refills-page__title">Refill Alerts</h2>
+    <span class="refills-page__badge">{{ refillAlerts.length }} pending</span>
+  </div>
+
+  <div class="refills-list">
+    @for (alert of refillAlerts; track alert.name) {
+      <div class="refill-card refill-card--{{ alert.urgency }}">
+        <div class="refill-card__left">
+          <span class="refill-card__icon" aria-hidden="true">{{ alert.urgency === 'urgent' ? '🔴' : '🟡' }}</span>
+          <div class="refill-card__info">
+            <span class="refill-card__name">{{ alert.name }}</span>
+            <span class="refill-card__pills">{{ alert.pillsLeft }} pills remaining</span>
+            <span class="refill-card__date">Refill by {{ alert.refillDate }}</span>
+          </div>
+        </div>
+        <button class="refill-btn refill-btn--{{ alert.urgency }}" type="button">Request Refill</button>
+      </div>
+    }
+  </div>
+
+  <div class="refills-ok">
+    <span class="refills-ok__icon" aria-hidden="true">✓</span>
+    <div>
+      <p class="refills-ok__title">{{ okCount }} medication{{ okCount === 1 ? '' : 's' }} well stocked</p>
+      <p class="refills-ok__sub">No action needed for the rest of your prescriptions.</p>
+    </div>
+  </div>
+
+</div>

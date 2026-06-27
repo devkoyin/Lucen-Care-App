@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
-import { Medication, RefillUrgency } from './medications.component';
+import { Medication, RefillUrgency } from './medications.data';
 import { SpecialtySelectComponent } from '../appointments/specialty-select.component';
 
 interface TimeOption {

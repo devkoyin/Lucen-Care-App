@@ -220,18 +220,18 @@
 
   &__illustration {
     position: absolute;
-    bottom: 24px;
-    right: -24px;
-    width: 350px;
+    top: 20px;
+    right: -8px;
+    width: 265px;
     height: auto;
-    // float begins at 2 s — after the staggered entry (~1.95 s) finishes
-    animation: float 4s ease-in-out 2s infinite;
+    animation: float 5s ease-in-out 2s infinite;
 
-    .illu-fig-left   { animation: fadeUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both; }
-    .illu-fig-center { animation: fadeUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.45s both; }
-    .illu-fig-right  { animation: fadeUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.75s both; }
-    .illu-arms       { animation: fadeIn 0.45s ease               1.15s both; }
-    .illu-touch      { animation: fadeIn 0.40s ease               1.55s both; }
+    .illu-spokes  { animation: fadeIn 0.5s ease 0.2s both; }
+    .illu-centre  { animation: fadeUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both; }
+    .illu-role-1  { animation: fadeUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.55s both; }
+    .illu-role-2  { animation: fadeUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.70s both; }
+    .illu-role-3  { animation: fadeUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.85s both; }
+    .illu-role-4  { animation: fadeUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) 1.00s both; }
   }
 
   &__content {

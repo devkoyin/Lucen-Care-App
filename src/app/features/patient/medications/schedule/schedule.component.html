@@ -1,0 +1,31 @@
+<div class="schedule-page">
+
+  <div class="schedule-page__header">
+    <h2 class="schedule-page__title">Today's Schedule</h2>
+    <span class="schedule-page__date">{{ today }}</span>
+  </div>
+
+  <div class="schedule-grid">
+    @for (slot of schedule; track slot.time) {
+      <div class="time-slot">
+        <div class="time-slot__header">
+          <span class="time-slot__icon" aria-hidden="true">{{ slot.icon }}</span>
+          <span class="time-slot__label">{{ slot.label }}</span>
+          <span class="time-slot__time">{{ slot.time }}</span>
+        </div>
+        <div class="time-slot__doses">
+          @for (dose of slot.doses; track dose.medName) {
+            <div class="dose-row">
+              <div class="dose-row__info">
+                <span class="dose-row__name">{{ dose.medName }}</span>
+                <span class="dose-row__meta">{{ dose.dosage }}@if (dose.note) { &nbsp;·&nbsp;{{ dose.note }} }</span>
+              </div>
+              <span class="med-badge med-badge--{{ dose.status }}">{{ statusLabel(dose.status) }}</span>
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </div>
+
+</div>

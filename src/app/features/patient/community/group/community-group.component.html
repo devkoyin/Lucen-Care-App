@@ -1,0 +1,88 @@
+@if (group()) {
+<div class="group-page">
+
+  <!-- Header -->
+  <div class="group-header" [style.border-color]="group()!.accent + '33'">
+    <a class="group-header__back" routerLink="/patient/community/groups">← Groups</a>
+    <div class="group-header__info">
+      <span class="group-header__icon">{{ group()!.icon }}</span>
+      <div>
+        <h1 class="group-header__name">{{ group()!.name }}</h1>
+        <span class="group-header__members">{{ group()!.members.toLocaleString() }} members</span>
+      </div>
+    </div>
+    <button class="group-header__post-btn" [style.background]="group()!.accent" type="button" (click)="showNewPost.set(true)">
+      + New Post
+    </button>
+  </div>
+
+  <!-- Posts -->
+  <div class="group-feed">
+    @for (post of posts(); track post.id) {
+      <article class="post-card">
+        <div class="post-card__meta">
+          <span class="post-card__avatar" [style.background]="post.authorColor">{{ post.authorInitial }}</span>
+          <div class="post-card__author-info">
+            <span class="post-card__author">{{ post.author }}</span>
+            <span class="post-card__time">{{ post.timeAgo }}</span>
+            @if (post.authorBadge === 'verified-professional') {
+              <span class="post-card__pro-badge" [attr.title]="post.authorSpecialty ? 'Verified Health Professional · ' + post.authorSpecialty : 'Verified Health Professional'">
+                ✓ Verified Health Professional
+              </span>
+            }
+            @if (post.authorBadge === 'verified-benefactor') {
+              <span class="post-card__benefactor-badge">★ Verified Benefactor</span>
+            }
+          </div>
+        </div>
+
+        <div class="post-card__body">
+          <h3 class="post-card__title">{{ post.title }}</h3>
+          <p class="post-card__excerpt">{{ post.content }}</p>
+        </div>
+
+        <div class="post-card__tags">
+          @for (tag of post.tags; track tag) {
+            <span class="post-tag">#{{ tag }}</span>
+          }
+        </div>
+
+        <div class="post-card__actions">
+          <button class="post-action-btn" [class.post-action-btn--liked]="post.liked" type="button" (click)="toggleLike(post.id)">
+            <span>{{ post.liked ? '❤️' : '🤍' }}</span>
+            <span>{{ post.likes }}</span>
+          </button>
+          <button class="post-action-btn" type="button">
+            <span>💬</span>
+            <span>{{ post.comments }}</span>
+          </button>
+          <button class="post-action-btn" type="button">
+            <span>↗</span>
+            <span>Share</span>
+          </button>
+        </div>
+      </article>
+    } @empty {
+      <div class="group-empty">
+        <span class="group-empty__icon">{{ group()!.icon }}</span>
+        <p class="group-empty__text">No posts in {{ group()!.name }} yet. Be the first to share!</p>
+        <button class="group-header__post-btn" [style.background]="group()!.accent" type="button" (click)="showNewPost.set(true)">
+          + New Post
+        </button>
+      </div>
+    }
+  </div>
+
+</div>
+} @else {
+  <div class="group-not-found">
+    <p>Group not found.</p>
+    <a routerLink="/patient/community">← Back to Community</a>
+  </div>
+}
+
+@if (showNewPost()) {
+  <lc-new-post-modal
+    (close)="showNewPost.set(false)"
+    (posted)="addPost($event)" />
+}

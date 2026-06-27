@@ -1,0 +1,70 @@
+<div class="community-portal">
+
+  <!-- Header -->
+  <div class="community-portal__topbar">
+    <div>
+      <h1 class="community-portal__title">Community</h1>
+      <p class="community-portal__sub">Connect with others managing similar health journeys</p>
+    </div>
+    <button class="community-portal__guidelines-btn" type="button" (click)="showGuidelines.set(true)">
+      🛡️ Community Guidelines
+    </button>
+  </div>
+
+  <!-- Stats -->
+  <div class="community-portal__stats">
+    <div class="comm-stat">
+      <span class="comm-stat__icon">🤝</span>
+      <span class="comm-stat__value">5.4K+</span>
+      <span class="comm-stat__label">Members</span>
+    </div>
+    <div class="comm-stat">
+      <span class="comm-stat__icon">📝</span>
+      <span class="comm-stat__value">142</span>
+      <span class="comm-stat__label">Posts this week</span>
+    </div>
+    <div class="comm-stat">
+      <span class="comm-stat__icon">💬</span>
+      <span class="comm-stat__value">28</span>
+      <span class="comm-stat__label">Active discussions</span>
+    </div>
+    <div class="comm-stat">
+      <span class="comm-stat__icon">👥</span>
+      <span class="comm-stat__value">6</span>
+      <span class="comm-stat__label">Groups</span>
+    </div>
+  </div>
+
+  <!-- Tab nav -->
+  <nav class="community-nav">
+    <a
+      class="community-nav__tab"
+      routerLink="/patient/community/feed"
+      routerLinkActive="community-nav__tab--active"
+      [routerLinkActiveOptions]="{ exact: true }">
+      📰 Feed
+    </a>
+    <a
+      class="community-nav__tab"
+      routerLink="/patient/community/groups"
+      routerLinkActive="community-nav__tab--active"
+      [routerLinkActiveOptions]="{ exact: false }">
+      👥 Groups
+    </a>
+    <a
+      class="community-nav__tab"
+      routerLink="/patient/community/trending"
+      routerLinkActive="community-nav__tab--active"
+      [routerLinkActiveOptions]="{ exact: true }">
+      🔥 Trending
+    </a>
+  </nav>
+
+  <!-- Child page content -->
+  <router-outlet />
+
+</div>
+
+@if (showGuidelines()) {
+  <lc-guidelines-modal (close)="showGuidelines.set(false)" />
+}

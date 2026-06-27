@@ -52,52 +52,48 @@
     <!-- RIGHT: Role selector panel -->
     <div class="role-panel">
 
-      <!-- Illustration: staggered entry then soft float -->
-      <svg class="role-panel__illustration" viewBox="0 0 260 160" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <line x1="20" y1="138" x2="240" y2="138" stroke="#3AB0A1" stroke-width="1" opacity="0.25"/>
-        <!-- NGO figure (left) — purple -->
-        <g class="illu-fig-left">
-          <circle cx="65"  cy="52" r="18" fill="#C4B5FD" opacity="0.16"/>
-          <circle cx="65"  cy="52" r="11" fill="#7C3AED" opacity="0.60"/>
-          <line x1="65"  y1="63"  x2="65"  y2="106" stroke="#7C3AED" stroke-width="2.5" stroke-linecap="round" opacity="0.55"/>
-          <line x1="65"  y1="78"  x2="47"  y2="93"  stroke="#7C3AED" stroke-width="2"   stroke-linecap="round" opacity="0.40"/>
-          <line x1="65"  y1="106" x2="52"  y2="136" stroke="#7C3AED" stroke-width="2"   stroke-linecap="round" opacity="0.45"/>
-          <line x1="65"  y1="106" x2="78"  y2="136" stroke="#7C3AED" stroke-width="2"   stroke-linecap="round" opacity="0.45"/>
-          <text x="65"  y="152" text-anchor="middle" font-size="8" fill="#6D28D9" font-weight="600" font-family="system-ui,sans-serif">NGO</text>
+      <!-- Illustration: radial orbit — Patient at centre -->
+      <svg class="role-panel__illustration" viewBox="0 0 240 210" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <!-- Orbit ring -->
+        <circle cx="120" cy="112" r="72" stroke="#3AB0A1" stroke-width="1.2" opacity="0.35" stroke-dasharray="5 3"/>
+        <!-- Spokes -->
+        <g class="illu-spokes">
+          <line x1="120" y1="100" x2="120" y2="50"  stroke="#2A9D8F" stroke-width="1.1" opacity="0.35" stroke-dasharray="3 2"/>
+          <line x1="120" y1="124" x2="120" y2="174" stroke="#2A9D8F" stroke-width="1.1" opacity="0.35" stroke-dasharray="3 2"/>
+          <line x1="108" y1="112" x2="58"  y2="112" stroke="#2A9D8F" stroke-width="1.1" opacity="0.35" stroke-dasharray="3 2"/>
+          <line x1="132" y1="112" x2="182" y2="112" stroke="#2A9D8F" stroke-width="1.1" opacity="0.35" stroke-dasharray="3 2"/>
+          <line x1="111" y1="103" x2="79"  y2="62"  stroke="#2A9D8F" stroke-width="1.1" opacity="0.28" stroke-dasharray="3 2"/>
+          <line x1="129" y1="121" x2="161" y2="162" stroke="#2A9D8F" stroke-width="1.1" opacity="0.28" stroke-dasharray="3 2"/>
         </g>
-        <!-- Patient figure (center, taller) — teal -->
-        <g class="illu-fig-center">
-          <circle cx="130" cy="42" r="20" fill="#5ECFC0" opacity="0.16"/>
-          <circle cx="130" cy="42" r="13" fill="#2A9D8F" opacity="0.75"/>
-          <line x1="130" y1="55"  x2="130" y2="106" stroke="#2A9D8F" stroke-width="3"   stroke-linecap="round" opacity="0.65"/>
-          <line x1="130" y1="106" x2="117" y2="136" stroke="#2A9D8F" stroke-width="2.5" stroke-linecap="round" opacity="0.55"/>
-          <line x1="130" y1="106" x2="143" y2="136" stroke="#2A9D8F" stroke-width="2.5" stroke-linecap="round" opacity="0.55"/>
-          <text x="130" y="152" text-anchor="middle" font-size="8" fill="#2A8A7D" font-weight="600" font-family="system-ui,sans-serif">Patient</text>
+        <!-- Patient — centre -->
+        <g class="illu-centre">
+          <circle cx="120" cy="112" r="22" fill="#5ECFC0" opacity="0.13"/>
+          <circle cx="120" cy="112" r="14" fill="#2A9D8F" opacity="0.80"/>
+          <text x="120" y="133" text-anchor="middle" font-size="7" fill="#2A8A7D" font-weight="700" font-family="system-ui,sans-serif">Patient</text>
         </g>
-        <!-- HMO figure (right) — soft blue -->
-        <g class="illu-fig-right">
-          <circle cx="195" cy="52" r="18" fill="#BFDBFE" opacity="0.60"/>
-          <circle cx="195" cy="52" r="11" fill="#60A5FA" opacity="0.60"/>
-          <line x1="195" y1="63"  x2="195" y2="106" stroke="#60A5FA" stroke-width="2.5" stroke-linecap="round" opacity="0.55"/>
-          <line x1="195" y1="78"  x2="213" y2="93"  stroke="#60A5FA" stroke-width="2"   stroke-linecap="round" opacity="0.40"/>
-          <line x1="195" y1="106" x2="182" y2="136" stroke="#60A5FA" stroke-width="2"   stroke-linecap="round" opacity="0.45"/>
-          <line x1="195" y1="106" x2="208" y2="136" stroke="#60A5FA" stroke-width="2"   stroke-linecap="round" opacity="0.45"/>
-          <text x="195" y="152" text-anchor="middle" font-size="8" fill="#2563EB" font-weight="600" font-family="system-ui,sans-serif">HMO</text>
+        <!-- NGO — left -->
+        <g class="illu-role-1">
+          <circle cx="46" cy="112" r="15" fill="#C4B5FD" opacity="0.18"/>
+          <circle cx="46" cy="112" r="10" fill="#7C3AED" opacity="0.65"/>
+          <text x="46" cy="112" y="133" text-anchor="middle" font-size="7" fill="#6D28D9" font-weight="600" font-family="system-ui,sans-serif">NGO</text>
         </g>
-        <!-- Reaching arms + bridge — appear after all three figures -->
-        <g class="illu-arms">
-          <line x1="97"  y1="77" x2="163" y2="77"  stroke="#2A9D8F" stroke-width="1"   stroke-dasharray="3 2" opacity="0.18"/>
-          <line x1="65"  y1="78" x2="97"  y2="77"  stroke="#7C3AED" stroke-width="2"   stroke-linecap="round" opacity="0.60"/>
-          <line x1="130" y1="74" x2="97"  y2="77"  stroke="#2A9D8F" stroke-width="2.5" stroke-linecap="round" opacity="0.60"/>
-          <line x1="130" y1="74" x2="163" y2="77"  stroke="#2A9D8F" stroke-width="2.5" stroke-linecap="round" opacity="0.60"/>
-          <line x1="195" y1="78" x2="163" y2="77"  stroke="#60A5FA" stroke-width="2"   stroke-linecap="round" opacity="0.60"/>
+        <!-- HMO — right -->
+        <g class="illu-role-2">
+          <circle cx="194" cy="112" r="15" fill="#BFDBFE" opacity="0.32"/>
+          <circle cx="194" cy="112" r="10" fill="#60A5FA" opacity="0.68"/>
+          <text x="194" y="133" text-anchor="middle" font-size="7" fill="#2563EB" font-weight="600" font-family="system-ui,sans-serif">HMO</text>
         </g>
-        <!-- Touch points — appear last -->
-        <g class="illu-touch">
-          <circle cx="97"  cy="77" r="5.5" fill="#7C3AED" opacity="0.14"/>
-          <circle cx="97"  cy="77" r="3"   fill="#7C3AED" opacity="0.80"/>
-          <circle cx="163" cy="77" r="5.5" fill="#2A9D8F" opacity="0.14"/>
-          <circle cx="163" cy="77" r="3"   fill="#2A9D8F" opacity="0.80"/>
+        <!-- Professional — top -->
+        <g class="illu-role-3">
+          <circle cx="120" cy="38"  r="15" fill="#BBF7D0" opacity="0.26"/>
+          <circle cx="120" cy="38"  r="10" fill="#16A34A" opacity="0.68"/>
+          <text x="120" y="59" text-anchor="middle" font-size="7" fill="#15803D" font-weight="600" font-family="system-ui,sans-serif">Professional</text>
+        </g>
+        <!-- Benefactor — bottom -->
+        <g class="illu-role-4">
+          <circle cx="120" cy="186" r="15" fill="#FDE68A" opacity="0.26"/>
+          <circle cx="120" cy="186" r="10" fill="#D97706" opacity="0.68"/>
+          <text x="120" y="207" text-anchor="middle" font-size="7" fill="#92400E" font-weight="600" font-family="system-ui,sans-serif">Benefactor</text>
         </g>
       </svg>
 

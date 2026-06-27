@@ -17,6 +17,24 @@ export const PATIENT_ROUTES: Routes = [
         data: { label: 'Medications' },
         loadComponent: () =>
           import('./medications/medications.component').then(m => m.MedicationsComponent),
+        children: [
+          { path: '', redirectTo: 'schedule', pathMatch: 'full' },
+          {
+            path: 'schedule',
+            loadComponent: () =>
+              import('./medications/schedule/schedule.component').then(m => m.MedScheduleComponent),
+          },
+          {
+            path: 'refills',
+            loadComponent: () =>
+              import('./medications/refills/refills.component').then(m => m.MedRefillsComponent),
+          },
+          {
+            path: 'all',
+            loadComponent: () =>
+              import('./medications/all-medications/all-medications.component').then(m => m.AllMedicationsComponent),
+          },
+        ],
       },
       {
         path: 'appointments',
@@ -34,7 +52,30 @@ export const PATIENT_ROUTES: Routes = [
         path: 'community',
         data: { label: 'Community' },
         loadComponent: () =>
-          import('./community/community.component').then(m => m.CommunityComponent),
+          import('./community/community-portal.component').then(m => m.CommunityPortalComponent),
+        children: [
+          { path: '', redirectTo: 'feed', pathMatch: 'full' },
+          {
+            path: 'feed',
+            loadComponent: () =>
+              import('./community/community.component').then(m => m.CommunityComponent),
+          },
+          {
+            path: 'groups',
+            loadComponent: () =>
+              import('./community/groups-list/groups-list.component').then(m => m.GroupsListComponent),
+          },
+          {
+            path: 'trending',
+            loadComponent: () =>
+              import('./community/trending/trending.component').then(m => m.TrendingComponent),
+          },
+          {
+            path: 'group/:id',
+            loadComponent: () =>
+              import('./community/group/community-group.component').then(m => m.CommunityGroupComponent),
+          },
+        ],
       },
       {
         path: 'funding',

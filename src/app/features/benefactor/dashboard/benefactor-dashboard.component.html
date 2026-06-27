@@ -72,4 +72,33 @@
 
   </div>
 
+  <!-- My recent posts -->
+  <div class="panel">
+    <div class="panel__header">
+      <span class="panel__title">My Recent Posts</span>
+      <a class="panel__link" routerLink="/benefactor/community">View community</a>
+    </div>
+    <div class="post-list">
+      @for (post of recentPosts; track post.title) {
+        <div class="post-item">
+          <div class="post-item__body">
+            <span
+              class="post-item__community"
+              [style.color]="post.communityColor"
+              [style.border-color]="post.communityColor + '44'"
+              [style.background]="post.communityColor + '15'">
+              {{ post.community }}
+            </span>
+            <p class="post-item__title">{{ post.title }}</p>
+            <span class="post-item__time">{{ post.timeAgo }}</span>
+          </div>
+          <div class="post-item__stats">
+            <span class="post-item__stat">❤️ {{ post.likes }}</span>
+            <span class="post-item__stat">💬 {{ post.comments }}</span>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+
 </div>

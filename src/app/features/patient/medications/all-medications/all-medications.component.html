@@ -1,0 +1,49 @@
+<div class="all-meds-page">
+
+  <div class="all-meds-page__header">
+    <div>
+      <h2 class="all-meds-page__title">All Medications</h2>
+      <p class="all-meds-page__sub">{{ medications().length }} active prescription{{ medications().length === 1 ? '' : 's' }}</p>
+    </div>
+    <button class="meds-add-btn" type="button" (click)="showAddMed.set(true)">+ Add Medication</button>
+  </div>
+
+  <div class="med-list">
+    @for (med of medications(); track med.id) {
+      <div class="med-card">
+
+        <div class="med-card__icon-wrap" aria-hidden="true">💊</div>
+
+        <div class="med-card__info">
+          <span class="med-card__name">{{ med.name }} <span class="med-card__dosage">{{ med.dosage }}</span></span>
+          <span class="med-card__condition">{{ med.condition }}</span>
+          <span class="med-card__prescriber">{{ med.prescriber }} · {{ med.specialty }}</span>
+        </div>
+
+        <div class="med-card__schedule-col">
+          <span class="med-card__freq">{{ med.frequency }}</span>
+          <span class="med-card__times">{{ med.schedule.join(' · ') }}</span>
+        </div>
+
+        <div class="med-card__refill-col">
+          <div class="refill-bar">
+            <div class="refill-bar__track">
+              <div class="refill-bar__fill refill-bar__fill--{{ med.refillUrgency }}"
+                   [style.width.%]="pillPercent(med)"></div>
+            </div>
+            <span class="refill-bar__label">{{ med.pillsRemaining }}/{{ med.pillsTotal }} pills</span>
+          </div>
+          <span class="refill-date refill-date--{{ med.refillUrgency }}">Refill {{ med.refillDate }}</span>
+        </div>
+
+      </div>
+    }
+  </div>
+
+</div>
+
+@if (showAddMed()) {
+  <lc-add-medication-modal
+    (close)="showAddMed.set(false)"
+    (saved)="addMedication($event)" />
+}

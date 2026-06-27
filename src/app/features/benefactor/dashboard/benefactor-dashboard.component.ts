@@ -18,6 +18,15 @@ interface ActiveThread {
   timeAgo: string;
 }
 
+interface RecentPost {
+  title: string;
+  community: string;
+  communityColor: string;
+  timeAgo: string;
+  likes: number;
+  comments: number;
+}
+
 @Component({
   selector: 'lc-benefactor-dashboard',
   standalone: true,
@@ -65,6 +74,33 @@ export class BenefactorDashboardComponent {
       communityColor: '#DC2626',
       replies: 6,
       timeAgo: '2 days ago',
+    },
+  ];
+
+  readonly recentPosts: RecentPost[] = [
+    {
+      title: 'How I found a way to contribute as someone who cares deeply about patient communities',
+      community: 'General Wellness',
+      communityColor: '#059669',
+      timeAgo: '6 hours ago',
+      likes: 44,
+      comments: 17,
+    },
+    {
+      title: 'Resources for families supporting loved ones with hypertension',
+      community: 'Hypertension Hub',
+      communityColor: '#7C3AED',
+      timeAgo: '3 days ago',
+      likes: 28,
+      comments: 11,
+    },
+    {
+      title: 'Finding emotional support networks online — what worked for my family',
+      community: 'Mental Wellness',
+      communityColor: '#4F46E5',
+      timeAgo: '1 week ago',
+      likes: 36,
+      comments: 23,
     },
   ];
 

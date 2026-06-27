@@ -1,4 +1,4 @@
-.meds-portal {
+.community-portal {
   padding: var(--space-8) var(--space-10);
   display: flex;
   flex-direction: column;
@@ -7,13 +7,13 @@
 }
 
 // ── Topbar ────────────────────────────────────────────────────
-.meds-portal__topbar {
+.community-portal__topbar {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
 }
 
-.meds-portal__title {
+.community-portal__title {
   font-size: var(--text-2xl);
   font-weight: var(--font-extrabold);
   color: var(--color-text);
@@ -21,19 +21,39 @@
   margin-bottom: var(--space-1);
 }
 
-.meds-portal__sub {
+.community-portal__sub {
   font-size: var(--text-sm);
   color: var(--color-text-muted);
 }
 
+.community-portal__guidelines-btn {
+  padding: 8px var(--space-4);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-role-accent);
+  background: none;
+  color: var(--color-role-accent);
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  font-family: var(--font-family);
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background 0.15s, color 0.15s;
+
+  &:hover {
+    background: var(--color-role-accent);
+    color: #ffffff;
+  }
+}
+
 // ── Stats ─────────────────────────────────────────────────────
-.meds-portal__stats {
+.community-portal__stats {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: var(--space-4);
 }
 
-.meds-stat {
+.comm-stat {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-xl);
@@ -42,7 +62,7 @@
   flex-direction: column;
   gap: var(--space-1);
 
-  &__icon  { font-size: 20px; }
+  &__icon { font-size: 20px; }
 
   &__value {
     font-size: var(--text-xl);
@@ -52,12 +72,16 @@
     line-height: 1.2;
   }
 
-  &__label { font-size: var(--text-xs); color: var(--color-text-muted); }
+  &__label {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
 }
 
 // ── Tab nav ───────────────────────────────────────────────────
-.meds-nav {
+.community-nav {
   display: flex;
+  gap: 0;
   border-bottom: 2px solid var(--color-border);
 
   &__tab {

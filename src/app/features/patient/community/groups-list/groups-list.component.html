@@ -1,0 +1,95 @@
+<div class="groups-page">
+
+  <!-- Your Groups (joined) -->
+  @if (joinedGroups().length > 0) {
+    <section class="groups-section">
+      <div class="groups-section__header">
+        <div>
+          <h2 class="groups-section__title">Your Groups</h2>
+          <p class="groups-section__sub">{{ joinedGroups().length }} group{{ joinedGroups().length === 1 ? '' : 's' }} joined</p>
+        </div>
+        <button class="groups-create-btn" type="button" (click)="showCreateCommunity.set(true)">+ Create Group</button>
+      </div>
+      <div class="groups-grid">
+        @for (group of joinedGroups(); track group.id) {
+          <div class="group-card group-card--joined" [style.border-color]="group.accent + '55'">
+            <div class="group-card__icon-wrap" [style.background]="group.accent + '18'">
+              <span class="group-card__icon" aria-hidden="true">{{ group.icon }}</span>
+            </div>
+            <div class="group-card__body">
+              <h3 class="group-card__name">{{ group.name }}</h3>
+              <span class="group-card__members">{{ group.members.toLocaleString() }} members</span>
+              <span class="group-card__joined-badge" [style.color]="group.accent" [style.background]="group.accent + '14'" [style.border-color]="group.accent + '40'">✓ Joined</span>
+            </div>
+            <div class="group-card__actions">
+              <a
+                class="group-card__manage-btn"
+                [routerLink]="['/patient/community/group', group.id]"
+                [style.background]="group.accent">
+                Manage Group →
+              </a>
+              <button class="group-card__leave-btn" type="button" (click)="toggleJoin(group.id)">Leave</button>
+            </div>
+          </div>
+        }
+      </div>
+    </section>
+  }
+
+  <!-- Discover -->
+  <section class="groups-section">
+    <div class="groups-section__header">
+      <div>
+        <h2 class="groups-section__title">
+          {{ joinedGroups().length > 0 ? 'Discover More Groups' : 'All Groups' }}
+        </h2>
+        <p class="groups-section__sub">{{ otherGroups().length }} group{{ otherGroups().length === 1 ? '' : 's' }} available to join</p>
+      </div>
+      @if (joinedGroups().length === 0) {
+        <button class="groups-create-btn" type="button" (click)="showCreateCommunity.set(true)">+ Create Group</button>
+      }
+    </div>
+
+    @if (otherGroups().length > 0) {
+      <div class="groups-grid">
+        @for (group of otherGroups(); track group.id) {
+          <div class="group-card">
+            <div class="group-card__icon-wrap" [style.background]="group.accent + '18'">
+              <span class="group-card__icon" aria-hidden="true">{{ group.icon }}</span>
+            </div>
+            <div class="group-card__body">
+              <h3 class="group-card__name">{{ group.name }}</h3>
+              <span class="group-card__members">{{ group.members.toLocaleString() }} members</span>
+            </div>
+            <div class="group-card__actions">
+              <a
+                class="group-card__view-btn"
+                [routerLink]="['/patient/community/group', group.id]"
+                [style.border-color]="group.accent"
+                [style.color]="group.accent">
+                View Group →
+              </a>
+              <button
+                class="group-card__join-btn"
+                type="button"
+                (click)="toggleJoin(group.id)"
+                [style.border-color]="group.accent"
+                [style.color]="group.accent">
+                Join
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+    } @else {
+      <p class="groups-all-joined">You've joined all available groups!</p>
+    }
+  </section>
+
+</div>
+
+@if (showCreateCommunity()) {
+  <lc-create-community-modal
+    (close)="showCreateCommunity.set(false)"
+    (created)="createCommunity($event)" />
+}

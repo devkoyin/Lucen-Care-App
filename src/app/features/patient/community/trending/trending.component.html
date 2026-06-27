@@ -1,0 +1,23 @@
+<div class="trending-page">
+
+  <div class="trending-page__header">
+    <h2 class="trending-page__title">Trending Topics</h2>
+    <p class="trending-page__sub">What the community is talking about most right now</p>
+  </div>
+
+  <div class="trending-list">
+    @for (t of trending; track t.tag; let i = $index) {
+      <div class="trending-row">
+        <span class="trending-row__rank">{{ i + 1 }}</span>
+        <div class="trending-row__content">
+          <span class="trending-row__tag">#{{ t.tag }}</span>
+          <span class="trending-row__count">{{ t.count }} posts this week</span>
+        </div>
+        <div class="trending-row__bar-wrap" aria-hidden="true">
+          <div class="trending-row__bar" [style.width.%]="(t.count / maxCount) * 100"></div>
+        </div>
+      </div>
+    }
+  </div>
+
+</div>
