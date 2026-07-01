@@ -79,9 +79,9 @@ export class SignupComponent {
     const { name, email, password } = this.form.getRawValue();
     this.auth.signup(this.role, { name: name!, email: email!, password: password! } as SignupPayload).subscribe({
       next: () => this.router.navigate(['/auth/onboarding', this.role]),
-      error: (e: { error?: { message?: string } }) => {
+      error: (e: { error?: { message?: string, detail?: string } }) => {
         this.loading = false;
-        this.serverError = e?.error?.message ?? 'Something went wrong. Please try again.';
+        this.serverError = e?.error?.message ?? e?.error?.detail ?? 'Something went wrong. Please try again.';
       },
     });
   }

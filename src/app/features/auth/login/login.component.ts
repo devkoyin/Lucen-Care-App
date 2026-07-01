@@ -84,9 +84,9 @@ export class LoginComponent implements OnInit {
     const landing = (role === 'professional' || role === 'benefactor') ? 'community' : 'dashboard';
     this.auth.login(role, this.form.getRawValue() as LoginPayload).subscribe({
       next: () => this.router.navigate(['/', role, landing]),
-      error: (e: { error?: { message?: string } }) => {
+      error: (e: { error?: { message?: string, detail?: string } }) => {
         this.loading = false;
-        this.serverError = e?.error?.message ?? 'Something went wrong. Please try again.';
+        this.serverError = e?.error?.message ?? e?.error?.detail ?? 'Something went wrong. Please try again.';
       },
     });
   }

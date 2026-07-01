@@ -81,15 +81,18 @@ export class BenefactorOnboardingComponent {
   }
 
   private submitApplication(): void {
-    const user = this.auth.user();
-    const v1   = this.step1Form.value;
-    this.apps.submit({
+    const v1 = this.step1Form.value;
+
+    this.apps.submitToApi({
       fullName:         v1.fullName!,
-      email:            user?.email ?? '',
       phone:            v1.phone!,
       reasonForSupport: v1.reasonForSupport!,
-      docs: [{ label: 'Government-issued ID', submitted: this.step2Form.value.idConsent === true }],
+      idConsent: true,
+      termsConsent: true,
+      codeOfConductConsent: true,
+    }).subscribe({
+      next: () => this.currentStep++,
+      error: () => this.currentStep++,
     });
-    this.currentStep++;
   }
 }

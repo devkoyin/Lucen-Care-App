@@ -1,4 +1,7 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, inject } from '@angular/core';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { ApiService } from '../api/api.service';
 
 export type OrgType    = 'ngo' | 'hmo';
 export type AuditSubjectType = OrgType | 'professional' | 'benefactor';
@@ -63,6 +66,7 @@ const AUDIT_KEY = 'lc_audit_log';
 
 @Injectable({ providedIn: 'root' })
 export class ApplicationsService {
+  private readonly api = inject(ApiService);
   private readonly _applications = signal<OrgApplication[]>(this.loadApps());
   private readonly _auditLog     = signal<AuditEntry[]>(this.loadAudit());
 
@@ -119,6 +123,22 @@ export class ApplicationsService {
     return this._applications().filter(
       a => a.status === status && new Date(a.submittedAt).getTime() >= cutoff
     ).length;
+  }
+
+  submitNgoToApi(payload: {
+    orgName: string; registrationNumber: string; focusAreas: string; website?: string;
+    operatingRegions: string; headOfficeCountry: string; programDescription: string;
+    termsConsent: true; dataProcessingConsent: true;
+  }): Observable<unknown> {
+    return this.api.post<{ data: unknown }>('/auth/onboarding/ngo', payload).pipe(map(r => r));
+  }
+
+  submitHmoToApi(payload: {
+    orgName: string; licenceNumber: string; contactPhone: string;
+    coverageRegion: string; enrolledPatientCount: string; specialtyFocus?: string;
+    baaAcknowledgement: true; termsConsent: true;
+  }): Observable<unknown> {
+    return this.api.post<{ data: unknown }>('/auth/onboarding/hmo', payload).pipe(map(r => r));
   }
 
   addAudit(entry: Omit<AuditEntry, 'id' | 'timestamp'>): void {
