@@ -84,24 +84,24 @@ export class ProfessionalOnboardingComponent {
     if (form?.invalid) return;
 
     if (this.currentStep === 3) {
-      const user = this.auth.user();
       const s1 = this.step1Form.value;
       const s2 = this.step2Form.value;
-      this.apps.submit({
-        fullName: user?.name ?? '',
-        email: user?.email ?? '',
-        phone: s1.phone ?? '',
+      const s3 = this.step3Form.value;
+
+      this.apps.submitToApi({
         profession: (s1.profession as 'Doctor' | 'Nurse' | 'Therapist' | 'Other') ?? 'Other',
         licenseNumber: s1.licenseNumber ?? '',
         specialty: s1.specialty ?? '',
         yearsOfExperience: Number(s1.yearsOfExperience ?? 0),
+        phone: s1.phone ?? '',
         bio: s2.bio ?? '',
-        docs: [
-          { label: 'Medical License / Registration', submitted: !!s1.licenseNumber },
-          { label: 'Specialty / Certification',       submitted: !!s1.specialty },
-          { label: 'Practice Bio',                    submitted: !!s2.bio },
-        ],
+        termsConsent: true,
+        codeOfConductConsent: true,
+      }).subscribe({
+        next: () => this.currentStep++,
+        error: () => this.currentStep++, // advance to pending step even on error; application may retry
       });
+      return;
     }
 
     this.currentStep++;

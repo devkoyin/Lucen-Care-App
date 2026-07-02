@@ -1,5 +1,8 @@
 import { Injectable, signal, inject } from '@angular/core';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { ApplicationsService, AppDoc } from './applications.service';
+import { ApiService } from '../api/api.service';
 
 export type ProfessionalAppStatus = 'pending' | 'approved' | 'rejected';
 export type Profession = 'Doctor' | 'Nurse' | 'Therapist' | 'Other';
@@ -28,6 +31,7 @@ const PROF_APPS_KEY = 'lc_professional_applications';
 
 @Injectable({ providedIn: 'root' })
 export class ProfessionalApplicationsService {
+  private readonly api = inject(ApiService);
   private readonly orgApps = inject(ApplicationsService);
   private readonly _applications = signal<ProfessionalApplication[]>(this.loadApps());
 
@@ -64,6 +68,14 @@ export class ProfessionalApplicationsService {
     if (app) {
       this.orgApps.addAudit({ action: 'rejected', orgName: app.fullName, orgType: 'professional', applicationId: id, actor: reviewedBy, reason });
     }
+  }
+
+  submitToApi(payload: {
+    profession: Profession; licenseNumber: string; specialty: string;
+    yearsOfExperience: number; phone: string; bio: string;
+    termsConsent: true; codeOfConductConsent: true;
+  }): Observable<unknown> {
+    return this.api.post<{ data: unknown }>('/auth/onboarding/professional', payload).pipe(map(r => r));
   }
 
   findByEmail(email: string): ProfessionalApplication | undefined {

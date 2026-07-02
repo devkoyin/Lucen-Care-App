@@ -17,6 +17,9 @@ export class PatientOnboardingComponent {
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
 
+  loading = false;
+  serverError = '';
+
   currentStep = 1;
   readonly totalSteps = 4;
   readonly stepLabels = ['Account type', 'Health profile', 'Privacy & consent', 'Welcome'];
@@ -81,6 +84,43 @@ export class PatientOnboardingComponent {
     const form = this.currentForm;
     form?.markAllAsTouched();
     if (form?.invalid) return;
+
+    if (this.currentStep === 3) {
+      this.submitOnboarding();
+      return;
+    }
+
     this.currentStep++;
+  }
+
+  private submitOnboarding(): void {
+    const s1 = this.step1Form.value;
+    const s2 = this.step2Form.value;
+    const s3 = this.step3Form.value;
+
+    this.loading = true;
+    this.serverError = '';
+
+    this.auth.submitPatientOnboarding({
+      accountType: s1.accountType ?? '',
+      dateOfBirth: s2.dateOfBirth ?? '',
+      biologicalSex: s2.biologicalSex ?? '',
+      country: s2.country ?? '',
+      conditions: s2.conditions ?? '',
+      primaryLanguage: s2.primaryLanguage ?? '',
+      termsConsent: s3.termsConsent ?? false,
+      ngoConsent: s3.ngoConsent ?? false,
+      researchConsent: s3.researchConsent ?? false,
+    }).subscribe({
+      next: () => {
+        this.loading = false;
+        this.currentStep++;
+      },
+      error: (e: { error?: { detail?: string; errors?: Array<{ message: string }> } }) => {
+        this.loading = false;
+        const firstError = e?.error?.errors?.[0]?.message;
+        this.serverError = firstError ?? e?.error?.detail ?? 'Something went wrong. Please try again.';
+      },
+    });
   }
 }

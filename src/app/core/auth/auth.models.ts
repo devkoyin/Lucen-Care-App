@@ -17,4 +17,17 @@ export interface SignupPayload {
   name: string;
   email: string;
   password: string;
+  role: Role;
+}
+
+export interface PatientOnboardingPayload {
+  accountType: string;
+  dateOfBirth: string;
+  biologicalSex: string;
+  country: string;
+  conditions: string;
+  primaryLanguage: string;
+  termsConsent: boolean;
+  ngoConsent: boolean;
+  researchConsent: boolean;
 }

@@ -85,27 +85,24 @@ export class NgoOnboardingComponent {
     if (form?.invalid) return;
 
     if (this.currentStep === 3) {
-      const user = this.auth.user();
-      const s1   = this.step1Form.value;
-      const s2   = this.step2Form.value;
-      this.apps.submit({
-        type: 'ngo',
-        contactPerson: user?.name  ?? '',
-        email:         user?.email ?? '',
+      const s1 = this.step1Form.value;
+      const s2 = this.step2Form.value;
+
+      this.apps.submitNgoToApi({
         orgName:            s1.orgName            ?? '',
-        registrationNo:     s1.registrationNumber ?? '',
+        registrationNumber: s1.registrationNumber ?? '',
         focusAreas:         s1.focusAreas         ?? '',
-        website:            s1.website            ?? '',
+        website:            s1.website            ?? undefined,
         operatingRegions:   s2.operatingRegions   ?? '',
         headOfficeCountry:  s2.headOfficeCountry  ?? '',
         programDescription: s2.programDescription ?? '',
-        docs: [
-          { label: 'Registration Number',  submitted: !!(s1.registrationNumber) },
-          { label: 'Focus Areas',          submitted: !!(s1.focusAreas) },
-          { label: 'Operating Regions',    submitted: !!(s2.operatingRegions) },
-          { label: 'Program Description',  submitted: !!(s2.programDescription) },
-        ],
+        termsConsent: true,
+        dataProcessingConsent: true,
+      }).subscribe({
+        next: () => this.currentStep++,
+        error: () => this.currentStep++,
       });
+      return;
     }
 
     this.currentStep++;

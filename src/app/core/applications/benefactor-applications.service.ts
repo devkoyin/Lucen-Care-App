@@ -1,5 +1,8 @@
 import { Injectable, signal, inject } from '@angular/core';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { ApplicationsService, AppDoc } from './applications.service';
+import { ApiService } from '../api/api.service';
 
 export type BenefactorAppStatus = 'pending' | 'approved' | 'rejected';
 
@@ -23,6 +26,7 @@ const BENEF_APPS_KEY = 'lc_benefactor_applications';
 
 @Injectable({ providedIn: 'root' })
 export class BenefactorApplicationsService {
+  private readonly api = inject(ApiService);
   private readonly orgApps = inject(ApplicationsService);
   private readonly _applications = signal<BenefactorApplication[]>(this.loadApps());
 
@@ -59,6 +63,13 @@ export class BenefactorApplicationsService {
     if (app) {
       this.orgApps.addAudit({ action: 'rejected', orgName: app.fullName, orgType: 'benefactor', applicationId: id, actor: reviewedBy, reason });
     }
+  }
+
+  submitToApi(payload: {
+    fullName: string; phone: string; reasonForSupport: string;
+    idConsent: true; termsConsent: true; codeOfConductConsent: true;
+  }): Observable<unknown> {
+    return this.api.post<{ data: unknown }>('/auth/onboarding/benefactor', payload).pipe(map(r => r));
   }
 
   findByEmail(email: string): BenefactorApplication | undefined {
