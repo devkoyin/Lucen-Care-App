@@ -116,10 +116,10 @@ export class PatientOnboardingComponent {
         this.loading = false;
         this.currentStep++;
       },
-      error: (e: { error?: { detail?: string; errors?: Array<{ message: string }> } }) => {
+      error: (e: { error?: { message?: string; errors?: Array<{ message: string }> } }) => {
         this.loading = false;
         const firstError = e?.error?.errors?.[0]?.message;
-        this.serverError = firstError ?? e?.error?.detail ?? 'Something went wrong. Please try again.';
+        this.serverError = firstError ?? e?.error?.message ?? 'Something went wrong. Please try again.';
       },
     });
   }
