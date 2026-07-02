@@ -14,8 +14,6 @@ interface WrappedResponse<T> {
   traceId: string;
 }
 
-const ADMIN_EMAIL    = 'admin@lucencare.com';
-const ADMIN_PASSWORD = 'Admin@1234';
 const USER_KEY       = 'lc_auth_user';
 const TOKEN_KEY      = 'lc_auth_token';
 
@@ -41,14 +39,6 @@ export class AuthService {
   }
 
   login(role: Role, payload: LoginPayload): Observable<User> {
-    if (role === 'admin') {
-      if (payload.email !== ADMIN_EMAIL || payload.password !== ADMIN_PASSWORD) {
-        return throwError(() => ({ error: { message: 'Invalid email or password.' } }));
-      }
-      const adminUser: User = { id: 'admin-1', role: 'admin', name: 'Lucen Admin', email: payload.email, status: 'active' };
-      this.persistUser(adminUser);
-      return new Observable(sub => { sub.next(adminUser); sub.complete(); });
-    }
 
     return this.api.post<WrappedResponse<AuthApiResponse>>('/auth/login', payload).pipe(
       map(res => {
