@@ -1,0 +1,58 @@
+<div class="claims-page">
+
+  <div class="claims-page__header">
+    <div>
+      <h2 class="claims-page__title">Treatment Claims</h2>
+      <p class="claims-page__sub">Claims submitted by your healthcare providers</p>
+    </div>
+    <button class="claims-reimburse-btn" type="button">↩ Reimbursement request</button>
+  </div>
+
+  <div class="claims-summary">
+    <div class="claims-summary__item">
+      <span class="claims-summary__value">{{ claims().length }}</span>
+      <span class="claims-summary__label">Total claims</span>
+    </div>
+    <div class="claims-summary__item claims-summary__item--approved">
+      <span class="claims-summary__value">{{ formatAmount(totalApproved()) }}</span>
+      <span class="claims-summary__label">Total approved</span>
+    </div>
+    <div class="claims-summary__item">
+      <span class="claims-summary__value">{{ pendingCount() }}</span>
+      <span class="claims-summary__label">Awaiting review</span>
+    </div>
+  </div>
+
+  <div class="claims-filters">
+    @for (f of [['all','All claims'],['Approved','Approved'],['Pending','Pending'],['Rejected','Rejected']]; track f[0]) {
+      <button class="claims-filter-btn"
+              [class.claims-filter-btn--active]="filter() === f[0]"
+              type="button"
+              (click)="setFilter($any(f[0]))">
+        {{ f[1] }}
+      </button>
+    }
+  </div>
+
+  <div class="claims-list">
+    @for (claim of filtered(); track claim.id) {
+      <div class="claim-row">
+        <div class="claim-row__left">
+          <p class="claim-row__desc">{{ claim.description }}</p>
+          <p class="claim-row__meta">{{ claim.date }} &middot; {{ claim.plan }}</p>
+        </div>
+        <div class="claim-row__right">
+          <span class="claim-row__amount">{{ formatAmount(claim.amount) }}</span>
+          <span class="claim-row__status"
+                [style.color]="statusColor(claim.status)"
+                [style.background]="statusColor(claim.status) + '18'">
+            {{ claim.status }}
+          </span>
+        </div>
+      </div>
+    } @empty {
+      <div class="claims-empty">No claims match this filter.</div>
+    }
+  </div>
+
+</div>

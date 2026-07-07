@@ -1,0 +1,10 @@
+{
+  "/groq-api": {
+    "target": "https://api.groq.com",
+    "secure": true,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/groq-api": ""
+    }
+  }
+}

@@ -1,0 +1,35 @@
+<div class="expertise-page">
+  <div class="expertise-page__header">
+    <div>
+      <h2 class="expertise-page__title">Your Expertise Areas</h2>
+      <p class="expertise-page__sub">Based on your posts, answers, and community endorsements</p>
+    </div>
+    <div class="expertise-page__totals">
+      <span class="expertise-page__total">{{ totalPosts }} posts</span>
+      <span class="expertise-page__total expertise-page__total--accent">{{ totalEndorsements }} endorsements</span>
+    </div>
+  </div>
+
+  <div class="expertise-grid">
+    @for (area of areas; track area.name) {
+      <div class="expertise-card">
+        <span class="expertise-card__icon">{{ area.icon }}</span>
+        <div class="expertise-card__body">
+          <p class="expertise-card__name">{{ area.name }}</p>
+          <p class="expertise-card__meta">{{ area.postCount }} posts</p>
+          <div class="expertise-card__bar-wrap">
+            <div class="expertise-card__bar"
+                 [style.width.%]="(area.endorsements / totalEndorsements) * 100">
+            </div>
+          </div>
+          <p class="expertise-card__endorsements">{{ area.endorsements }} endorsements</p>
+        </div>
+      </div>
+    }
+  </div>
+
+  <div class="expertise-cta">
+    <p class="expertise-cta__text">Grow your expertise by answering more patient questions in these areas.</p>
+    <a class="expertise-cta__btn" routerLink="/professional/community">Go to Community</a>
+  </div>
+</div>
