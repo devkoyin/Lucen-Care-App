@@ -17,7 +17,8 @@ if (fs.existsSync(envFile)) {
     });
 }
 
-const groqApiKey = envVars['GROQ_API_KEY'] ?? '';
+// process.env takes priority so Vercel/Netlify env vars work at build time
+const groqApiKey = process.env['GROQ_API_KEY'] || envVars['GROQ_API_KEY'] || '';
 
 const content = `export const environment = {
   production: false,
