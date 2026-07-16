@@ -1,0 +1,113 @@
+.preauth-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  padding-top: var(--space-4);
+  max-width: 760px;
+
+  &__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-4);
+  }
+
+  &__title {
+    font-size: var(--text-base);
+    font-weight: var(--font-extrabold);
+    color: var(--color-text);
+    letter-spacing: var(--tracking-tight);
+    margin: 0 0 var(--space-1);
+  }
+
+  &__sub { font-size: var(--text-xs); color: var(--color-text-muted); margin: 0; }
+}
+
+.preauth-new-btn {
+  padding: 9px var(--space-5);
+  background: var(--color-role-accent);
+  color: #ffffff;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-weight: var(--font-extrabold);
+  font-family: var(--font-family);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: opacity 0.15s;
+  &:hover { opacity: 0.9; }
+}
+
+.preauth-status-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+}
+
+.preauth-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-4);
+  border-radius: var(--radius-xl);
+  border: 1px solid transparent;
+
+  &--approved { background: rgba(5,150,105,0.06); border-color: rgba(5,150,105,0.20); }
+  &--review   { background: rgba(37,99,235,0.05); border-color: rgba(37,99,235,0.18); }
+  &--pending  { background: rgba(217,119,6,0.06); border-color: rgba(217,119,6,0.20); }
+
+  &__count { font-size: var(--text-2xl); font-weight: var(--font-extrabold); color: var(--color-text); }
+  &__label { font-size: var(--text-xs); color: var(--color-text-muted); }
+}
+
+.preauth-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.preauth-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-5) var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+
+  &__top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-4);
+  }
+
+  &__procedure {
+    font-size: var(--text-base);
+    font-weight: var(--font-extrabold);
+    color: var(--color-text);
+    margin-bottom: 4px;
+  }
+
+  &__meta { font-size: var(--text-xs); color: var(--color-text-muted); }
+
+  &__note {
+    font-size: var(--text-xs);
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    padding: var(--space-3) var(--space-4);
+    background: var(--color-bg);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border);
+  }
+}
+
+.preauth-status {
+  font-size: 11px;
+  font-weight: var(--font-bold);
+  padding: 4px var(--space-3);
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+  flex-shrink: 0;
+}

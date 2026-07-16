@@ -1,0 +1,49 @@
+<div class="preauth-page">
+
+  <div class="preauth-page__header">
+    <div>
+      <h2 class="preauth-page__title">Pre-Authorization Requests</h2>
+      <p class="preauth-page__sub">Your doctors submit these on your behalf for procedures requiring HMO approval</p>
+    </div>
+    <button class="preauth-new-btn" type="button">+ New Request</button>
+  </div>
+
+  <div class="preauth-status-row">
+    <div class="preauth-stat preauth-stat--approved">
+      <span class="preauth-stat__count">{{ approvedCount() }}</span>
+      <span class="preauth-stat__label">Approved</span>
+    </div>
+    <div class="preauth-stat preauth-stat--review">
+      <span class="preauth-stat__count">{{ underReviewCount() }}</span>
+      <span class="preauth-stat__label">Under Review</span>
+    </div>
+    <div class="preauth-stat preauth-stat--pending">
+      <span class="preauth-stat__count">{{ pendingCount() }}</span>
+      <span class="preauth-stat__label">Pending</span>
+    </div>
+  </div>
+
+  <div class="preauth-list">
+    @for (req of requests(); track req.id) {
+      <div class="preauth-card">
+        <div class="preauth-card__top">
+          <div class="preauth-card__info">
+            <p class="preauth-card__procedure">{{ req.procedure }}</p>
+            <p class="preauth-card__meta">
+              Requested by {{ req.requestedBy }} &middot; {{ req.requestDate }} &middot; {{ req.plan }}
+            </p>
+          </div>
+          <span class="preauth-status"
+                [style.color]="statusColor(req.status)"
+                [style.background]="statusColor(req.status) + '18'">
+            {{ req.status }}
+          </span>
+        </div>
+        @if (req.note) {
+          <p class="preauth-card__note">{{ req.note }}</p>
+        }
+      </div>
+    }
+  </div>
+
+</div>

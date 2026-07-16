@@ -1,0 +1,42 @@
+<div class="providers-page">
+
+  <div class="providers-page__header">
+    <div>
+      <h2 class="providers-page__title">Accredited Providers</h2>
+      <p class="providers-page__sub">Healthcare facilities that accept your insurance plans</p>
+    </div>
+  </div>
+
+  <div class="providers-search">
+    <span class="providers-search__icon" aria-hidden="true">🔍</span>
+    <input class="providers-search__input"
+           type="search"
+           placeholder="Search by name, area or plan..."
+           [value]="searchQuery()"
+           (input)="searchQuery.set($any($event.target).value)" />
+  </div>
+
+  <div class="providers-grid">
+    @for (prov of filtered(); track prov.id) {
+      <div class="provider-card">
+        <div class="provider-card__icon" aria-hidden="true">🏥</div>
+        <div class="provider-card__body">
+          <p class="provider-card__name">{{ prov.name }}</p>
+          <p class="provider-card__meta">{{ prov.type }} &middot; {{ prov.area }}</p>
+          <div class="provider-card__plans">
+            @for (plan of prov.plans; track plan) {
+              <span class="provider-plan-chip">{{ plan }}</span>
+            }
+          </div>
+        </div>
+        <div class="provider-card__right">
+          <span class="provider-card__distance">📍 {{ prov.distance }}</span>
+          <button class="provider-directions-btn" type="button">Directions →</button>
+        </div>
+      </div>
+    } @empty {
+      <div class="providers-empty">No providers match your search.</div>
+    }
+  </div>
+
+</div>

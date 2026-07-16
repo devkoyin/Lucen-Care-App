@@ -1,0 +1,92 @@
+<div class="plans-page">
+
+  <div class="plans-page__header">
+    <div>
+      <h2 class="plans-page__title">Active Plans</h2>
+      <p class="plans-page__sub">{{ plans.length }} active health coverage plan{{ plans.length === 1 ? '' : 's' }}</p>
+    </div>
+    <button class="plans-add-btn" type="button">+ Add Plan</button>
+  </div>
+
+  <div class="plan-list">
+    @for (plan of plans; track plan.id) {
+      <div class="plan-card">
+        <div class="plan-card__header">
+          <div class="plan-card__header-left">
+            <span class="plan-card__type-badge"
+                  [style.background]="plan.typeColor + '18'"
+                  [style.color]="plan.typeColor"
+                  [style.border-color]="plan.typeColor + '33'">
+              {{ plan.type }}
+            </span>
+            <div>
+              <p class="plan-card__name">{{ plan.name }}</p>
+              <p class="plan-card__provider">{{ plan.provider }} &middot; {{ plan.memberNumber }}</p>
+            </div>
+          </div>
+          <div class="plan-card__renewal">
+            <span class="plan-card__active-dot" aria-hidden="true"></span>
+            Active &middot; Renews {{ plan.renewalDate }}
+          </div>
+        </div>
+        <div class="plan-card__coverage">
+          @for (item of plan.coverageItems; track item.label) {
+            <div class="coverage-row">
+              <span class="coverage-row__label">{{ item.label }}</span>
+              <span class="coverage-row__value">{{ item.value }}</span>
+            </div>
+          }
+        </div>
+        <div class="plan-card__actions">
+          <button class="plan-action-btn" type="button">📲 Show HMO card</button>
+          <button class="plan-action-btn" type="button">📞 Contact {{ plan.provider }}</button>
+          <button class="plan-action-btn" type="button">📋 Request referral</button>
+        </div>
+      </div>
+    }
+  </div>
+
+  <div class="plans-page__section-title">Assistance Programmes</div>
+  <p class="plans-page__section-sub">NGO and pharmaceutical support available to you</p>
+
+  <div class="program-list">
+    @for (prog of programs(); track prog.id) {
+      <div class="program-card" [class.program-card--enrolled]="prog.enrolled">
+        <div class="program-card__header">
+          <div>
+            <div class="program-card__name-row">
+              <h3 class="program-card__name">{{ prog.name }}</h3>
+              @if (prog.enrolled) {
+                <span class="program-card__enrolled-badge">Enrolled</span>
+              }
+            </div>
+            <span class="program-card__org-badge"
+                  [style.background]="prog.orgColor + '18'"
+                  [style.color]="prog.orgColor"
+                  [style.border-color]="prog.orgColor + '33'">
+              {{ prog.orgType }} · {{ prog.org }}
+            </span>
+          </div>
+          <button class="program-enroll-btn"
+                  [class.program-enroll-btn--enrolled]="prog.enrolled"
+                  type="button"
+                  (click)="toggleEnroll(prog.id)">
+            {{ prog.enrolled ? 'Leave' : 'Enrol' }}
+          </button>
+        </div>
+        <p class="program-card__desc">{{ prog.description }}</p>
+        <div class="program-card__meta">
+          <div class="program-meta-item">
+            <span class="program-meta-item__label">Covers</span>
+            <span class="program-meta-item__value">{{ prog.covers }}</span>
+          </div>
+          <div class="program-meta-item">
+            <span class="program-meta-item__label">Eligibility</span>
+            <span class="program-meta-item__value">{{ prog.eligibility }}</span>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+
+</div>

@@ -114,7 +114,7 @@
   }
 
   &--signout {
-    color: var(--sidebar-text-muted);
+    color: var(--sidebar-text-secondary);
     font-weight: var(--font-bold);
   }
 
@@ -125,4 +125,5 @@
 .shell__main {
   background: var(--color-bg);
   overflow-y: auto;
+  padding: var(--space-8) var(--space-10);
 }
