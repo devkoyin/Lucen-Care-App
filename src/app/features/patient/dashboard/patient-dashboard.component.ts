@@ -1,7 +1,8 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/auth/auth.service';
 import { AppointmentsService } from '../appointments/appointments.service';
+import { PatientService, MedicationEntry } from '../../../core/patients/patient.service';
 
 type MedStatus = 'taken' | 'pending' | 'later';
 
@@ -19,9 +20,10 @@ interface Medication {
   templateUrl: './patient-dashboard.component.html',
   styleUrl: './patient-dashboard.component.scss',
 })
-export class PatientDashboardComponent {
-  private readonly auth = inject(AuthService);
-  readonly apptService = inject(AppointmentsService);
+export class PatientDashboardComponent implements OnInit {
+  private readonly auth           = inject(AuthService);
+  private readonly patientService = inject(PatientService);
+  readonly apptService            = inject(AppointmentsService);
 
   get greeting(): string { return this.auth.user()?.name ?? 'there'; }
 
@@ -36,22 +38,41 @@ export class PatientDashboardComponent {
     { icon: '💰', label: 'Browse Funding',   route: '/patient/funding' },
   ];
 
-  readonly upcomingPreview = computed(() => this.apptService.upcoming().slice(0, 3));
+  // Upcoming appointments still come from AppointmentsService (localStorage mock until backend has the endpoint)
+  get upcomingPreview() { return this.apptService.upcoming().slice(0, 3); }
 
-  readonly nextUrgency = computed(() => {
+  get nextUrgency() {
     const next = this.apptService.nextAppointment();
     return next ? this.apptService.urgency(next.isoDate) : null;
-  });
+  }
 
-  readonly medications: Medication[] = [
-    { name: 'Metformin 500mg',  dosage: 'Twice daily', nextDue: '8:00 PM today',    status: 'taken'   },
-    { name: 'Lisinopril 10mg',  dosage: 'Once daily',  nextDue: '8:00 PM today',    status: 'pending' },
-    { name: 'Aspirin 75mg',     dosage: 'Once daily',  nextDue: 'Tomorrow 8:00 AM', status: 'later'   },
-  ];
+  readonly medications = signal<Medication[]>([]);
+  readonly fundingMatches = signal<number>(0);
 
-  readonly fundingMatches = 2;
+  ngOnInit(): void {
+    this.patientService.getProfile().subscribe({
+      next: profile => {
+        if (profile.medicationList?.length) {
+          this.medications.set(this.toMedicationDisplay(profile.medicationList));
+        }
+      },
+    });
+
+    this.patientService.getEnrollments().subscribe({
+      next: result => this.fundingMatches.set(result.enrollments.length),
+    });
+  }
 
   statusLabel(status: MedStatus): string {
     return { taken: 'Taken', pending: 'Due', later: 'Later' }[status];
+  }
+
+  private toMedicationDisplay(meds: MedicationEntry[]): Medication[] {
+    return meds.map(m => ({
+      name: m.name,
+      dosage: m.dosage,
+      nextDue: m.frequency,
+      status: 'pending' as MedStatus,
+    }));
   }
 }
