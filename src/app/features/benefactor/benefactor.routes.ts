@@ -13,6 +13,29 @@ export const BENEFACTOR_ROUTES: Routes = [
         canActivate: [benefactorApprovedGuard],
         loadComponent: () =>
           import('./dashboard/benefactor-dashboard.component').then(m => m.BenefactorDashboardComponent),
+        children: [
+          { path: '', redirectTo: 'threads', pathMatch: 'full' },
+          {
+            path: 'threads',
+            loadComponent: () =>
+              import('./dashboard/community-threads/community-threads.component').then(m => m.BenCommunityThreadsComponent),
+          },
+          {
+            path: 'impact',
+            loadComponent: () =>
+              import('./dashboard/impact/impact.component').then(m => m.BenImpactComponent),
+          },
+          {
+            path: 'contributions',
+            loadComponent: () =>
+              import('./dashboard/contributions/contributions.component').then(m => m.BenContributionsComponent),
+          },
+          {
+            path: 'posts',
+            loadComponent: () =>
+              import('./dashboard/my-posts/my-posts.component').then(m => m.BenMyPostsComponent),
+          },
+        ],
       },
       {
         path: 'pending',

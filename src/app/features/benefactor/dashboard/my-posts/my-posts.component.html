@@ -1,0 +1,35 @@
+<div class="my-posts-page">
+  <div class="my-posts-page__header">
+    <h2 class="my-posts-page__title">My Posts</h2>
+    <p class="my-posts-page__sub">Articles and discussions you've shared with the community</p>
+  </div>
+
+  <div class="post-list">
+    @for (p of posts; track p.id) {
+      <div class="post-card">
+        <div class="post-card__top">
+          <span class="post-card__community"
+                [style.color]="p.communityColor"
+                [style.border-color]="p.communityColor + '44'"
+                [style.background]="p.communityColor + '15'">
+            {{ p.community }}
+          </span>
+          <span class="post-card__time">{{ p.timeAgo }}</span>
+        </div>
+        <p class="post-card__title">{{ p.title }}</p>
+        <div class="post-card__footer">
+          <span class="post-card__stat">❤️ {{ p.likes }}</span>
+          <span class="post-card__stat">💬 {{ p.comments }}</span>
+          <button class="post-card__btn">View Post</button>
+        </div>
+      </div>
+    }
+  </div>
+
+  @if (posts.length === 0) {
+    <div class="my-posts-page__empty">
+      <p>You haven't posted yet. Share your experience with the community.</p>
+      <button class="my-posts-page__cta">Write First Post</button>
+    </div>
+  }
+</div>
