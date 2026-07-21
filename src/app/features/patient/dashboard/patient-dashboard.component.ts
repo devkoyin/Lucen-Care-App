@@ -2,15 +2,15 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/auth/auth.service';
 import { AppointmentsService } from '../appointments/appointments.service';
-import { PatientService, MedicationEntry } from '../../../core/patients/patient.service';
-
-type MedStatus = 'taken' | 'pending' | 'later';
+import { PatientService } from '../../../core/patients/patient.service';
+import { DoseStatus, ScheduleSlot } from '../../../core/medications/medications.models';
+import { MedicationsService } from '../../../core/medications/medications.service';
 
 interface Medication {
   name: string;
   dosage: string;
   nextDue: string;
-  status: MedStatus;
+  status: DoseStatus;
 }
 
 @Component({
@@ -21,9 +21,10 @@ interface Medication {
   styleUrl: './patient-dashboard.component.scss',
 })
 export class PatientDashboardComponent implements OnInit {
-  private readonly auth           = inject(AuthService);
-  private readonly patientService = inject(PatientService);
-  readonly apptService            = inject(AppointmentsService);
+  private readonly auth               = inject(AuthService);
+  private readonly patientService     = inject(PatientService);
+  private readonly medicationsService = inject(MedicationsService);
+  readonly apptService                = inject(AppointmentsService);
 
   get greeting(): string { return this.auth.user()?.name ?? 'there'; }
 
@@ -50,12 +51,8 @@ export class PatientDashboardComponent implements OnInit {
   readonly fundingMatches = signal<number>(0);
 
   ngOnInit(): void {
-    this.patientService.getProfile().subscribe({
-      next: profile => {
-        if (profile.medicationList?.length) {
-          this.medications.set(this.toMedicationDisplay(profile.medicationList));
-        }
-      },
+    this.medicationsService.getSchedule().subscribe({
+      next: slots => this.medications.set(this.toMedicationDisplay(slots)),
     });
 
     this.patientService.getEnrollments().subscribe({
@@ -63,16 +60,18 @@ export class PatientDashboardComponent implements OnInit {
     });
   }
 
-  statusLabel(status: MedStatus): string {
-    return { taken: 'Taken', pending: 'Due', later: 'Later' }[status];
+  statusLabel(status: DoseStatus): string {
+    return { taken: 'Taken', pending: 'Due', later: 'Later', skipped: 'Skipped' }[status];
   }
 
-  private toMedicationDisplay(meds: MedicationEntry[]): Medication[] {
-    return meds.map(m => ({
-      name: m.name,
-      dosage: m.dosage,
-      nextDue: m.frequency,
-      status: 'pending' as MedStatus,
-    }));
+  private toMedicationDisplay(slots: ScheduleSlot[]): Medication[] {
+    return slots.flatMap(slot =>
+      slot.doses.map(dose => ({
+        name: dose.medName,
+        dosage: dose.dosage,
+        nextDue: slot.time,
+        status: dose.status,
+      })),
+    );
   }
 }

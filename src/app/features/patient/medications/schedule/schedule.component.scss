@@ -92,4 +92,6 @@
   &--pending { background: rgba(180,83,9,0.10);   color: #92400E; border: 1px solid rgba(180,83,9,0.20); }
   &--later   { background: rgba(15,45,74,0.05);   color: var(--color-text-muted); border: 1px solid var(--color-border); }
   &--skipped { background: rgba(220,38,38,0.08);  color: #991B1B; border: 1px solid rgba(220,38,38,0.18); }
+
+  &--clickable { font: inherit; cursor: pointer; }
 }

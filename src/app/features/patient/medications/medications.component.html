@@ -10,7 +10,7 @@
 
   <!-- Stats -->
   <div class="meds-portal__stats">
-    @for (s of stats; track s.label) {
+    @for (s of stats(); track s.label) {
       <div class="meds-stat">
         <span class="meds-stat__icon">{{ s.icon }}</span>
         <span class="meds-stat__value">{{ s.value }}</span>

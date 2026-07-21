@@ -1,5 +1,6 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { Medication, RefillUrgency, SEED_MEDICATIONS } from '../medications.data';
+import { CreateMedicationPayload, Medication, RefillUrgency } from '../../../../core/medications/medications.models';
+import { MedicationsService } from '../../../../core/medications/medications.service';
 import { AddMedicationModalComponent } from '../add-medication-modal.component';
 import { MedicationNotificationService } from '../../../../core/notifications/medication-notification.service';
 
@@ -11,18 +12,21 @@ import { MedicationNotificationService } from '../../../../core/notifications/me
   styleUrl: './all-medications.component.scss',
 })
 export class AllMedicationsComponent implements OnInit {
+  private readonly medicationsService = inject(MedicationsService);
   private readonly notifService = inject(MedicationNotificationService);
 
   readonly showAddMed  = signal(false);
-  readonly medications = signal<Medication[]>(SEED_MEDICATIONS);
+  readonly medications = signal<Medication[]>([]);
 
   ngOnInit(): void {
-    this.notifService.register(this.medications());
+    this.medicationsService.getMedications().subscribe(meds => this.medications.set(meds));
+    this.notifService.register();
   }
 
-  addMedication(med: Medication): void {
-    this.medications.update(list => [med, ...list]);
-    this.notifService.register(this.medications());
+  addMedication(payload: CreateMedicationPayload): void {
+    this.medicationsService.createMedication(payload).subscribe(med => {
+      this.medications.update(list => [med, ...list]);
+    });
   }
 
   pillPercent(med: Medication): number {

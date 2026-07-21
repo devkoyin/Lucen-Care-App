@@ -6,7 +6,7 @@
   </div>
 
   <div class="schedule-grid">
-    @for (slot of schedule; track slot.time) {
+    @for (slot of schedule(); track slot.time) {
       <div class="time-slot">
         <div class="time-slot__header">
           <span class="time-slot__icon" aria-hidden="true">{{ slot.icon }}</span>
@@ -14,13 +14,18 @@
           <span class="time-slot__time">{{ slot.time }}</span>
         </div>
         <div class="time-slot__doses">
-          @for (dose of slot.doses; track dose.medName) {
+          @for (dose of slot.doses; track dose.doseLogId) {
             <div class="dose-row">
               <div class="dose-row__info">
                 <span class="dose-row__name">{{ dose.medName }}</span>
                 <span class="dose-row__meta">{{ dose.dosage }}@if (dose.note) { &nbsp;·&nbsp;{{ dose.note }} }</span>
               </div>
-              <span class="med-badge med-badge--{{ dose.status }}">{{ statusLabel(dose.status) }}</span>
+              @if (dose.status !== 'taken') {
+                <button class="med-badge med-badge--{{ dose.status }} med-badge--clickable" type="button"
+                        (click)="markTaken(dose, slot.time)">{{ statusLabel(dose.status) }}</button>
+              } @else {
+                <span class="med-badge med-badge--{{ dose.status }}">{{ statusLabel(dose.status) }}</span>
+              }
             </div>
           }
         </div>
