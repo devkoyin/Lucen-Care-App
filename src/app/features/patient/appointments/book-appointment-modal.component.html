@@ -67,11 +67,16 @@
                     placeholder="e.g. Fast for 8 hours, bring medication list…"></textarea>
         </div>
 
+        @if (error()) {
+          <p class="bam-field__error">{{ error() }}</p>
+        }
       </div>
 
       <div class="bam-card__footer">
         <button type="button" class="bam-cancel-btn" (click)="close.emit()">Cancel</button>
-        <button type="submit" class="bam-save-btn" [disabled]="f.invalid || !form.specialty">Save Appointment</button>
+        <button type="submit" class="bam-save-btn" [disabled]="f.invalid || !form.specialty || submitting()">
+          {{ submitting() ? 'Saving…' : 'Save Appointment' }}
+        </button>
       </div>
     </form>
 

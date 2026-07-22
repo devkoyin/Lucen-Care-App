@@ -1,4 +1,4 @@
-export type DoseStatus = 'taken' | 'pending' | 'later' | 'skipped';
+export type DoseStatus = 'taken' | 'pending' | 'due_now' | 'later' | 'skipped';
 export type RefillUrgency = 'urgent' | 'upcoming' | 'ok';
 
 export interface Medication {
@@ -85,4 +85,16 @@ const SLOT_META: Record<string, { label: string; icon: string }> = {
 
 export function slotMeta(time: string): { label: string; icon: string } {
   return SLOT_META[time] ?? { label: time, icon: '⏰' };
+}
+
+const DOSE_STATUS_LABELS: Record<DoseStatus, string> = {
+  taken: 'Taken',
+  pending: 'Upcoming',
+  due_now: 'Due now',
+  later: 'Later',
+  skipped: 'Skipped',
+};
+
+export function doseStatusLabel(status: DoseStatus): string {
+  return DOSE_STATUS_LABELS[status];
 }
