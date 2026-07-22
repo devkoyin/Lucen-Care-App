@@ -28,7 +28,7 @@ export class PatientPortalComponent {
   readonly navItems: NavItem[] = [
     { icon: '🏠', label: 'Dashboard', route: '/patient/dashboard' },
     { icon: '💊', label: 'Medications', route: '/patient/medications' },
-    { icon: '📅', label: 'Appointments', route: '/patient/appointments' },
+    { icon: '📅', label: 'Appointments', route: '/patient/appointments', liveIcon: 'calendar' },
     { icon: '🤖', label: 'AI Health Chat', route: '/patient/ai-chat' },
     { icon: '🤝', label: 'Community', route: '/patient/community' },
     { icon: '💰', label: 'Funding', route: '/patient/funding' },

@@ -23,7 +23,11 @@
           [routerLink]="item.route"
           routerLinkActive="nav-item--active"
         >
-          <span class="nav-item__icon" aria-hidden="true">{{ item.icon }}</span>
+          @if (item.liveIcon === 'calendar') {
+            <lc-calendar-icon class="nav-item__icon" [size]="15" />
+          } @else {
+            <span class="nav-item__icon" aria-hidden="true">{{ item.icon }}</span>
+          }
           <span class="nav-item__label">{{ item.label }}</span>
         </a>
       }

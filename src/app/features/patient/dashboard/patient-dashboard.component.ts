@@ -1,10 +1,12 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/auth/auth.service';
-import { AppointmentsService } from '../appointments/appointments.service';
+import { AppointmentsService } from '../../../core/appointments/appointments.service';
+import { Appointment, UrgencyLevel, upcomingAppointments, urgency } from '../../../core/appointments/appointments.models';
 import { PatientService } from '../../../core/patients/patient.service';
-import { DoseStatus, ScheduleSlot } from '../../../core/medications/medications.models';
+import { DoseStatus, ScheduleSlot, doseStatusLabel } from '../../../core/medications/medications.models';
 import { MedicationsService } from '../../../core/medications/medications.service';
+import { CalendarIconComponent } from '../../../shared/components/calendar-icon/calendar-icon.component';
 
 interface Medication {
   name: string;
@@ -13,10 +15,17 @@ interface Medication {
   status: DoseStatus;
 }
 
+interface QuickAction {
+  icon: string;
+  label: string;
+  route: string;
+  liveIcon?: 'calendar';
+}
+
 @Component({
   selector: 'lc-patient-dashboard',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, CalendarIconComponent],
   templateUrl: './patient-dashboard.component.html',
   styleUrl: './patient-dashboard.component.scss',
 })
@@ -24,7 +33,7 @@ export class PatientDashboardComponent implements OnInit {
   private readonly auth               = inject(AuthService);
   private readonly patientService     = inject(PatientService);
   private readonly medicationsService = inject(MedicationsService);
-  readonly apptService                = inject(AppointmentsService);
+  private readonly appointmentsService = inject(AppointmentsService);
 
   get greeting(): string { return this.auth.user()?.name ?? 'there'; }
 
@@ -32,20 +41,20 @@ export class PatientDashboardComponent implements OnInit {
     weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
   });
 
-  readonly quickActions = [
+  readonly quickActions: QuickAction[] = [
     { icon: '💊', label: 'Add Medication',  route: '/patient/medications' },
-    { icon: '📅', label: 'Book Appointment', route: '/patient/appointments' },
+    { icon: '📅', label: 'Book Appointment', route: '/patient/appointments', liveIcon: 'calendar' },
     { icon: '🤖', label: 'Ask AI',           route: '/patient/ai-chat' },
     { icon: '💰', label: 'Browse Funding',   route: '/patient/funding' },
   ];
 
-  // Upcoming appointments still come from AppointmentsService (localStorage mock until backend has the endpoint)
-  get upcomingPreview() { return this.apptService.upcoming().slice(0, 3); }
+  readonly statusLabel = doseStatusLabel;
 
-  get nextUrgency() {
-    const next = this.apptService.nextAppointment();
-    return next ? this.apptService.urgency(next.isoDate) : null;
-  }
+  readonly upcomingAppointments = signal<Appointment[]>([]);
+  get upcomingPreview() { return this.upcomingAppointments().slice(0, 3); }
+
+  readonly nextAppointmentUrgency = signal<UrgencyLevel>(null);
+  get nextUrgency() { return this.nextAppointmentUrgency(); }
 
   readonly medications = signal<Medication[]>([]);
   readonly fundingMatches = signal<number>(0);
@@ -58,10 +67,14 @@ export class PatientDashboardComponent implements OnInit {
     this.patientService.getEnrollments().subscribe({
       next: result => this.fundingMatches.set(result.enrollments.length),
     });
-  }
 
-  statusLabel(status: DoseStatus): string {
-    return { taken: 'Taken', pending: 'Due', later: 'Later', skipped: 'Skipped' }[status];
+    this.appointmentsService.getAppointments().subscribe({
+      next: list => {
+        const upcoming = upcomingAppointments(list);
+        this.upcomingAppointments.set(upcoming);
+        this.nextAppointmentUrgency.set(upcoming[0] ? urgency(upcoming[0].isoDate) : null);
+      },
+    });
   }
 
   private toMedicationDisplay(slots: ScheduleSlot[]): Medication[] {

@@ -1,6 +1,7 @@
-import { Component, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, inject, signal } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
-import { Appointment, AppointmentsService } from './appointments.service';
+import { AppointmentsService } from '../../../core/appointments/appointments.service';
+import { Appointment } from '../../../core/appointments/appointments.models';
 import { ColorSelectComponent, ColorSelectOption } from './color-select.component';
 
 function timeToInput(displayTime: string): string {
@@ -62,15 +63,25 @@ export class RescheduleModalComponent implements OnInit {
     } as Record<string, string>)[type] ?? '📋';
   }
 
+  readonly submitting = signal(false);
+  readonly error = signal<string | null>(null);
+
   submit(f: NgForm): void {
     if (f.invalid) return;
-    this.service.reschedule(this.appointment.id, {
+    this.submitting.set(true);
+    this.error.set(null);
+    this.service.rescheduleAppointment(this.appointment.id, {
       isoDate: this.form.isoDate,
       time24: this.form.time24,
       duration: this.form.duration,
       note: this.form.note.trim() || undefined,
+    }).subscribe({
+      next: () => this.close.emit(),
+      error: () => {
+        this.submitting.set(false);
+        this.error.set('Could not reschedule this appointment. Please try again.');
+      },
     });
-    this.close.emit();
   }
 
   onOverlayClick(event: MouseEvent): void {

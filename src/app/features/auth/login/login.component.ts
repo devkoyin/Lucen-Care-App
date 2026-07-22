@@ -49,7 +49,7 @@ export class LoginComponent implements OnInit {
   serverError = '';
 
   ngOnInit(): void {
-    this.selectedRole.set(this.role);
+    this.selectedRole.set(this.role ?? 'patient');
   }
 
   get roleName(): string {
@@ -83,7 +83,10 @@ export class LoginComponent implements OnInit {
     const role = this.selectedRole();
     const landing = (role === 'professional' || role === 'benefactor') ? 'community' : 'dashboard';
     this.auth.login(role, this.form.getRawValue() as LoginPayload).subscribe({
-      next: () => this.router.navigate(['/', role, landing]),
+      next: () => {
+        this.loading = false;
+        this.router.navigate(['/', role, landing]);
+      },
       error: (e: { error?: { message?: string } }) => {
         this.loading = false;
         this.serverError = e?.error?.message ?? 'Something went wrong. Please try again.';

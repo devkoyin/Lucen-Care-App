@@ -1,5 +1,5 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { DoseStatus, ScheduledDose, ScheduleSlot } from '../../../../core/medications/medications.models';
+import { ScheduledDose, ScheduleSlot, doseStatusLabel } from '../../../../core/medications/medications.models';
 import { MedicationsService } from '../../../../core/medications/medications.service';
 
 @Component({
@@ -13,15 +13,10 @@ export class MedScheduleComponent implements OnInit {
 
   readonly schedule = signal<ScheduleSlot[]>([]);
   readonly today = new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+  readonly statusLabel = doseStatusLabel;
 
   ngOnInit(): void {
     this.loadSchedule();
-  }
-
-  //backend should return due now status within 30 mins before and any time after the 
-  // scheduled time. 
-  statusLabel(status: DoseStatus): string {
-    return { taken: 'Taken', pending: 'Due now', later: 'Later', skipped: 'Skipped' }[status];
   }
 
   markTaken(dose: ScheduledDose, scheduledTime: string): void {

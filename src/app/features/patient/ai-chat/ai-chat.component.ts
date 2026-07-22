@@ -1,6 +1,7 @@
-import { Component, ElementRef, ViewChild, computed, inject, signal } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { AppointmentsService } from '../appointments/appointments.service';
+import { AppointmentsService } from '../../../core/appointments/appointments.service';
+import { Appointment, upcomingAppointments, urgency } from '../../../core/appointments/appointments.models';
 import { ClaudeService, ChatMessage } from '../../../core/api/claude.service';
 import { environment } from '../../../../environments/environment';
 
@@ -26,8 +27,8 @@ const SUGGESTIONS = [
   templateUrl: './ai-chat.component.html',
   styleUrl: './ai-chat.component.scss',
 })
-export class AiChatComponent {
-  private readonly apptService = inject(AppointmentsService);
+export class AiChatComponent implements OnInit {
+  private readonly appointmentsService = inject(AppointmentsService);
   private readonly claude      = inject(ClaudeService);
 
   @ViewChild('messagesEl') private messagesEl!: ElementRef<HTMLDivElement>;
@@ -38,15 +39,23 @@ export class AiChatComponent {
   readonly suggestions = SUGGESTIONS;
   inputText = '';
 
-  readonly nextAppt = computed(() => this.apptService.nextAppointment());
+  readonly nextAppt = signal<Appointment | null>(null);
 
   readonly contextLine = computed(() => {
     const next = this.nextAppt();
     if (!next) return null;
-    const u = this.apptService.urgency(next.isoDate);
+    const u = urgency(next.isoDate);
     const when = u === 'today' ? 'Today' : u === 'tomorrow' ? 'Tomorrow' : `${next.day} ${next.dayNum} ${next.month}`;
     return `${next.provider} · ${when} · ${next.time}`;
   });
+
+  ngOnInit(): void {
+    this.appointmentsService.getAppointments().subscribe({
+      next: list => {
+        this.nextAppt.set(upcomingAppointments(list)[0] ?? null);
+      },
+    });
+  }
 
   send(text?: string): void {
     const content = (text ?? this.inputText).trim();

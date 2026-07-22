@@ -1,17 +1,19 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { NgClass } from '@angular/common';
+import { CalendarIconComponent } from '../../components/calendar-icon/calendar-icon.component';
 
 export interface NavItem {
   icon: string;
   label: string;
   route: string;
+  liveIcon?: 'calendar';
 }
 
 @Component({
   selector: 'lc-sidebar-shell',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, NgClass],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, NgClass, CalendarIconComponent],
   templateUrl: './sidebar-shell.component.html',
   styleUrl: './sidebar-shell.component.scss',
 })

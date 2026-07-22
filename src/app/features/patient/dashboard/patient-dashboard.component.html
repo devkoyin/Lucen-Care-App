@@ -13,7 +13,11 @@
   <div class="quick-actions">
     @for (action of quickActions; track action.label) {
       <a class="quick-action" [routerLink]="action.route">
-        <span class="quick-action__icon" aria-hidden="true">{{ action.icon }}</span>
+        @if (action.liveIcon === 'calendar') {
+          <lc-calendar-icon class="quick-action__icon" [size]="24" />
+        } @else {
+          <span class="quick-action__icon" aria-hidden="true">{{ action.icon }}</span>
+        }
         <span class="quick-action__label">{{ action.label }}</span>
       </a>
     }

@@ -22,10 +22,12 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, ne
     ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } })
     : req;
 
+  const isLogout = req.url.includes('/auth/logout');
+
   return next(authReq).pipe(
     catchError((err: HttpErrorResponse) => {
-      if (err.status === 401 && !isPublic) {
-        return handle401(authService, router, req, next);
+      if (err.status === 401 && !isPublic && !isLogout) {
+        return handle401(authService, router, req, next, token);
       }
       return throwError(() => err);
     }),
@@ -37,6 +39,7 @@ function handle401(
   router: Router,
   req: HttpRequest<unknown>,
   next: HttpHandlerFn,
+  tokenAtRequestTime: string | null,
 ) {
   if (isRefreshing) {
     return refreshSubject.pipe(
@@ -59,8 +62,13 @@ function handle401(
     }),
     catchError(refreshErr => {
       isRefreshing = false;
-      authService.signOut();
-      router.navigate(['/auth/login']);
+      // If the session has already moved on (e.g. the user logged back in
+      // while this stale request was in flight), don't clobber the newer
+      // session or bounce them back to the login page.
+      if (authService.getAccessToken() === tokenAtRequestTime) {
+        authService.signOut();
+        router.navigate(['/auth/login']);
+      }
       return throwError(() => refreshErr);
     }),
   );
