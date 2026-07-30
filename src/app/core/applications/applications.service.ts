@@ -25,6 +25,8 @@ export interface OrgApplication {
 
   // NGO-specific
   registrationNo?: string;
+  tin?: string;
+  scumlNumber?: string;
   focusAreas?: string;
   website?: string;
   operatingRegions?: string;

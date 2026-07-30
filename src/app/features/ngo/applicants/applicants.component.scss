@@ -5,6 +5,9 @@
   gap: var(--space-6);
   max-width: 1200px;
   animation: fadeSlideUp 0.4s cubic-bezier(0.22,1,0.36,1) both;
+
+  @media (max-width: 1024px) { padding: var(--space-6) var(--space-6); }
+  @media (max-width: 768px)  { padding: var(--space-4) var(--space-4); gap: var(--space-4); }
 }
 
 .app-header {
@@ -12,6 +15,7 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: var(--space-4);
+  flex-wrap: wrap;
 
   &__title {
     font-size: var(--text-2xl);
@@ -28,6 +32,7 @@
     align-items: center;
     gap: var(--space-3);
     flex-shrink: 0;
+    flex-wrap: wrap;
   }
 
   &__badge {
@@ -57,8 +62,16 @@
   &:focus { border-color: var(--color-role-accent); }
 }
 
-.app-select { min-width: 200px; cursor: pointer; }
-.app-search { width: 220px; }
+.app-select {
+  min-width: 200px;
+  cursor: pointer;
+  @media (max-width: 480px) { min-width: 0; width: 100%; }
+}
+
+.app-search {
+  width: 220px;
+  @media (max-width: 480px) { width: 100%; }
+}
 .app-search::placeholder { color: var(--color-text-muted); }
 
 // ── Tabs ──────────────────────────────────────────────────────
@@ -89,12 +102,14 @@
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-xl);
-  overflow: hidden;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .app-table {
   width: 100%;
   border-collapse: collapse;
+  min-width: 640px;
 
   thead {
     background: var(--color-bg);

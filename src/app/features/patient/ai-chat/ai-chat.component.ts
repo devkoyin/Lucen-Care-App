@@ -2,6 +2,7 @@ import { Component, ElementRef, ViewChild, computed, inject, signal } from '@ang
 import { FormsModule } from '@angular/forms';
 import { AppointmentsService } from '../appointments/appointments.service';
 import { ClaudeService, ChatMessage } from '../../../core/api/claude.service';
+import { AuthService } from '../../../core/auth/auth.service';
 import { environment } from '../../../../environments/environment';
 
 interface UiMessage {
@@ -29,6 +30,7 @@ const SUGGESTIONS = [
 export class AiChatComponent {
   private readonly apptService = inject(AppointmentsService);
   private readonly claude      = inject(ClaudeService);
+  private readonly authService = inject(AuthService);
 
   @ViewChild('messagesEl') private messagesEl!: ElementRef<HTMLDivElement>;
 
@@ -37,6 +39,11 @@ export class AiChatComponent {
   readonly isTyping    = signal(false);
   readonly suggestions = SUGGESTIONS;
   inputText = '';
+
+  readonly firstName = computed(() => {
+    const name = this.authService.user()?.name ?? '';
+    return name.split(' ')[0];
+  });
 
   readonly nextAppt = computed(() => this.apptService.nextAppointment());
 
@@ -61,7 +68,7 @@ export class AiChatComponent {
       content: m.text,
     }));
 
-    this.claude.chat(history).subscribe({
+    this.claude.chat(history, this.firstName()).subscribe({
       next: reply => {
         this.isTyping.set(false);
         this.addUiMessage('assistant', reply);

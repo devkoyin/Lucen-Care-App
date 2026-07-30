@@ -1,110 +1,13 @@
 <div class="dashboard">
-
-  <!-- Header -->
   <div class="dash-header">
     <div>
       <h1 class="dash-header__title">Dashboard</h1>
       <p class="dash-header__sub">Operations overview for {{ orgName }}</p>
     </div>
   </div>
-
-  <!-- Stats -->
-  <div class="stats-row">
-    @for (stat of stats; track stat.label) {
-      <a class="stat-card" [class.stat-card--warn]="stat.warn" [routerLink]="stat.route">
-        <span class="stat-card__icon" aria-hidden="true">{{ stat.icon }}</span>
-        <span class="stat-card__value">{{ stat.value }}</span>
-        <span class="stat-card__label">{{ stat.label }}</span>
-      </a>
-    }
+  <div class="coming-soon">
+    <div class="coming-soon__icon">🚀</div>
+    <h2 class="coming-soon__title">Coming Soon</h2>
+    <p class="coming-soon__desc">Your HMO dashboard is being built. Live stats, pre-authorisations, claims, and member insights will appear here.</p>
   </div>
-
-  <!-- Content grid -->
-  <div class="content-grid">
-
-    <!-- Pending pre-auths -->
-    <div class="panel">
-      <div class="panel__header">
-        <span class="panel__title">Pending Pre-Authorisations</span>
-        <a class="panel__link" routerLink="/hmo/pre-auth">View all →</a>
-      </div>
-      <div class="preauth-list">
-        @for (pa of pendingPreAuths; track pa.patient) {
-          <div class="preauth-row">
-            <div class="preauth-row__avatar">{{ pa.initial }}</div>
-            <div class="preauth-row__info">
-              <p class="preauth-row__name">{{ pa.patient }} — {{ pa.procedure }}</p>
-              <p class="preauth-row__meta">{{ pa.doctor }} · {{ pa.hospital }} · {{ pa.date }}</p>
-            </div>
-            <span class="status-pill"
-                  [style.color]="preAuthStatusColor(pa.status)"
-                  [style.background]="preAuthStatusColor(pa.status) + '18'">
-              {{ pa.status }}
-            </span>
-          </div>
-        }
-      </div>
-    </div>
-
-    <!-- Pending claims -->
-    <div class="panel">
-      <div class="panel__header">
-        <span class="panel__title">Claims Requiring Action</span>
-        <a class="panel__link" routerLink="/hmo/claims">View all →</a>
-      </div>
-      <div class="claims-list">
-        @for (claim of pendingClaims; track claim.id) {
-          <div class="claim-row">
-            <div class="claim-row__info">
-              <p class="claim-row__id">{{ claim.id }}</p>
-              <p class="claim-row__desc">{{ claim.description }}</p>
-              <p class="claim-row__meta">{{ claim.hospital }} · {{ claim.patient }} · {{ claim.date }}</p>
-            </div>
-            <div class="claim-row__right">
-              <span class="claim-row__amount">{{ formatAmount(claim.amount) }}</span>
-              <span class="status-pill"
-                    [style.color]="claim.status === 'Pending' ? '#D97706' : '#2563EB'"
-                    [style.background]="(claim.status === 'Pending' ? '#D97706' : '#2563EB') + '18'">
-                {{ claim.status }}
-              </span>
-            </div>
-          </div>
-        }
-      </div>
-    </div>
-
-    <!-- High utilisation members -->
-    <div class="panel panel--full">
-      <div class="panel__header">
-        <span class="panel__title">High Utilisation Members</span>
-        <a class="panel__link" routerLink="/hmo/members">View all →</a>
-      </div>
-      <div class="util-list">
-        @for (m of highUtilMembers; track m.name) {
-          <div class="util-row">
-            <div class="util-row__avatar">{{ m.initial }}</div>
-            <div class="util-row__info">
-              <p class="util-row__name">{{ m.name }}</p>
-              <p class="util-row__meta">{{ m.plan }} Plan · {{ m.conditions }}</p>
-            </div>
-            <div class="util-row__bar-group">
-              <div class="util-bar">
-                <div class="util-bar__fill"
-                     [style.width.%]="utilisationPct(m.utilisation, m.limit)"
-                     [style.background]="utilisationColor(utilisationPct(m.utilisation, m.limit))">
-                </div>
-              </div>
-              <span class="util-row__pct"
-                    [style.color]="utilisationColor(utilisationPct(m.utilisation, m.limit))">
-                {{ utilisationPct(m.utilisation, m.limit) }}%
-              </span>
-            </div>
-            <span class="util-row__amount">{{ formatAmount(m.utilisation) }}</span>
-          </div>
-        }
-      </div>
-    </div>
-
-  </div>
-
 </div>

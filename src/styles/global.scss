@@ -99,3 +99,34 @@ select {
 .anim-delay-4 { animation-delay: 0.32s; }
 .anim-delay-5 { animation-delay: 0.40s; }
 .anim-delay-6 { animation-delay: 0.48s; }
+
+// ── Coming soon placeholder ────────────────────────────────────
+.coming-soon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 80px 24px;
+  text-align: center;
+  flex: 1;
+
+  &__icon {
+    font-size: 52px;
+    opacity: 0.8;
+  }
+
+  &__title {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--color-text);
+    letter-spacing: -0.5px;
+  }
+
+  &__desc {
+    font-size: 14px;
+    color: var(--color-text-muted);
+    max-width: 420px;
+    line-height: 1.7;
+  }
+}

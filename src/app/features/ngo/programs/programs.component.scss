@@ -5,6 +5,9 @@
   gap: var(--space-6);
   max-width: 1000px;
   animation: fadeSlideUp 0.4s cubic-bezier(0.22,1,0.36,1) both;
+
+  @media (max-width: 1024px) { padding: var(--space-6) var(--space-6); }
+  @media (max-width: 768px)  { padding: var(--space-4) var(--space-4); gap: var(--space-4); }
 }
 
 .prog-header {
@@ -12,6 +15,7 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: var(--space-4);
+  flex-wrap: wrap;
 
   &__title {
     font-size: var(--text-2xl);
@@ -85,6 +89,7 @@
     align-items: flex-start;
     gap: var(--space-5);
     padding: var(--space-4) var(--space-5);
+    flex-wrap: wrap;
   }
 
   &__main { flex: 1; min-width: 0; }
@@ -94,6 +99,7 @@
     align-items: baseline;
     gap: var(--space-3);
     margin-bottom: var(--space-3);
+    flex-wrap: wrap;
   }
 
   &__name {
@@ -199,6 +205,9 @@
 .prog-detail-row {
   display: flex;
   gap: var(--space-8);
+  flex-wrap: wrap;
+
+  @media (max-width: 480px) { gap: var(--space-4); }
 }
 
 .prog-detail-item {

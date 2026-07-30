@@ -26,6 +26,8 @@ export class NgoOnboardingComponent {
   readonly step1Form = this.fb.group({
     orgName: ['', Validators.required],
     registrationNumber: ['', Validators.required],
+    tin: ['', Validators.required],
+    scumlNumber: ['', Validators.required],
     focusAreas: ['', Validators.required],
     website: [''],
   });
@@ -94,6 +96,8 @@ export class NgoOnboardingComponent {
         email:         user?.email ?? '',
         orgName:            s1.orgName            ?? '',
         registrationNo:     s1.registrationNumber ?? '',
+        tin:                s1.tin                ?? '',
+        scumlNumber:        s1.scumlNumber        ?? '',
         focusAreas:         s1.focusAreas         ?? '',
         website:            s1.website            ?? '',
         operatingRegions:   s2.operatingRegions   ?? '',
@@ -101,6 +105,8 @@ export class NgoOnboardingComponent {
         programDescription: s2.programDescription ?? '',
         docs: [
           { label: 'Registration Number',  submitted: !!(s1.registrationNumber) },
+          { label: 'TIN',                  submitted: !!(s1.tin) },
+          { label: 'SCUML Certificate No.', submitted: !!(s1.scumlNumber) },
           { label: 'Focus Areas',          submitted: !!(s1.focusAreas) },
           { label: 'Operating Regions',    submitted: !!(s2.operatingRegions) },
           { label: 'Program Description',  submitted: !!(s2.programDescription) },

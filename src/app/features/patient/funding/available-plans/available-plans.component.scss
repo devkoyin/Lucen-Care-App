@@ -289,25 +289,6 @@
 .program-full-badge   { color: #2563EB; background: #2563EB18; border-color: #2563EB33; }
 .program-paused-badge { color: #6B7280; background: #6B728018; border-color: #6B728033; }
 
-.plans-empty {
-  padding: var(--space-10) var(--space-6);
-  text-align: center;
-
-  &__text {
-    font-size: var(--text-sm);
-    color: var(--color-text-muted);
-    margin: 0 0 var(--space-2);
-  }
-
-  &__hint {
-    font-size: var(--text-xs);
-    color: var(--color-text-muted);
-    margin: 0;
-
-    strong { color: var(--color-text-secondary); }
-  }
-}
-
 .program-meta-item {
   display: flex;
   flex-direction: column;

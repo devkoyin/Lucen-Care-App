@@ -1,10 +1,76 @@
+// ── Shell layout ────────────────────────────────────────────────
 .shell {
   display: grid;
   grid-template-columns: var(--sidebar-width) 1fr;
   min-height: 100vh;
   background: var(--color-bg);
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    grid-template-rows: 56px 1fr;
+  }
 }
 
+// ── Mobile topbar ───────────────────────────────────────────────
+.mobile-topbar {
+  display: none;
+
+  @media (max-width: 768px) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--space-5);
+    background: var(--sidebar-bg);
+    border-bottom: 1px solid var(--sidebar-border-color);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    height: 56px;
+  }
+
+  &__brand {
+    color: var(--sidebar-active-border);
+    font-weight: var(--font-extrabold);
+    font-size: var(--text-sm);
+    letter-spacing: var(--tracking-wider);
+  }
+
+  &__burger {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: var(--space-2);
+    background: none;
+    border: none;
+    cursor: pointer;
+
+    span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--sidebar-text);
+      border-radius: 2px;
+      transition: background 0.15s;
+    }
+
+    &:hover span { background: var(--sidebar-active-border); }
+  }
+}
+
+// ── Sidebar overlay (mobile) ────────────────────────────────────
+.sidebar-overlay {
+  display: none;
+
+  @media (max-width: 768px) {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 110;
+  }
+}
+
+// ── Sidebar ─────────────────────────────────────────────────────
 .sidebar {
   background: var(--sidebar-bg);
   border-right: 1px solid var(--sidebar-border-color);
@@ -14,6 +80,20 @@
   top: 0;
   height: 100vh;
   overflow-y: auto;
+
+  @media (max-width: 768px) {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100dvh;
+    width: 260px;
+    z-index: 120;
+    transform: translateX(-100%);
+    transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+    border-right: 1px solid var(--sidebar-border-color);
+
+    &--open { transform: translateX(0); }
+  }
 
   &__brand {
     padding: 20px 18px 14px;
@@ -85,6 +165,7 @@
   }
 }
 
+// ── Nav items ───────────────────────────────────────────────────
 .nav-item {
   display: flex;
   align-items: center;
@@ -122,8 +203,19 @@
   &__label { font-size: var(--text-sm); }
 }
 
+// ── Main content ────────────────────────────────────────────────
 .shell__main {
   background: var(--color-bg);
   overflow-y: auto;
   padding: var(--space-8) var(--space-10);
+  min-width: 0;
+
+  @media (max-width: 1024px) {
+    padding: var(--space-6) var(--space-6);
+  }
+
+  @media (max-width: 768px) {
+    padding: var(--space-4) var(--space-4);
+    overflow-y: unset;
+  }
 }
