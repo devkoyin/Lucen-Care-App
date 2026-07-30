@@ -83,26 +83,16 @@ export const PATIENT_ROUTES: Routes = [
         loadComponent: () =>
           import('./funding/funding.component').then(m => m.FundingComponent),
         children: [
-          { path: '', redirectTo: 'plans', pathMatch: 'full' },
+          { path: '', redirectTo: 'available', pathMatch: 'full' },
+          {
+            path: 'available',
+            loadComponent: () =>
+              import('./funding/available-plans/available-plans.component').then(m => m.AvailablePlansComponent),
+          },
           {
             path: 'plans',
             loadComponent: () =>
               import('./funding/active-plans/active-plans.component').then(m => m.ActivePlansComponent),
-          },
-          {
-            path: 'claims',
-            loadComponent: () =>
-              import('./funding/claims/claims.component').then(m => m.TreatmentClaimsComponent),
-          },
-          {
-            path: 'pre-auth',
-            loadComponent: () =>
-              import('./funding/pre-auth/pre-auth.component').then(m => m.PreAuthComponent),
-          },
-          {
-            path: 'providers',
-            loadComponent: () =>
-              import('./funding/providers/providers.component').then(m => m.AccreditedProvidersComponent),
           },
         ],
       },

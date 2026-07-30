@@ -1,5 +1,19 @@
 <div class="shell" [ngClass]="portalClass">
-  <aside class="sidebar" aria-label="Portal navigation">
+
+  <!-- Mobile topbar -->
+  <header class="mobile-topbar">
+    <span class="mobile-topbar__brand">LUCEN CARE</span>
+    <button class="mobile-topbar__burger" type="button" (click)="toggleMenu()" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <!-- Sidebar overlay (mobile) -->
+  @if (menuOpen()) {
+    <div class="sidebar-overlay" (click)="closeMenu()"></div>
+  }
+
+  <aside class="sidebar" [class.sidebar--open]="menuOpen()" aria-label="Portal navigation">
     <!-- Brand -->
     <div class="sidebar__brand">
       <span class="sidebar__brand-name">LUCEN CARE</span>
@@ -22,6 +36,7 @@
           class="nav-item"
           [routerLink]="item.route"
           routerLinkActive="nav-item--active"
+          (click)="closeMenu()"
         >
           <span class="nav-item__icon" aria-hidden="true">{{ item.icon }}</span>
           <span class="nav-item__label">{{ item.label }}</span>
@@ -31,18 +46,18 @@
 
     <!-- Bottom -->
     <div class="sidebar__bottom">
-      <a class="nav-item" routerLink="./settings" aria-label="Settings">
+      <a class="nav-item" routerLink="./settings" aria-label="Settings" (click)="closeMenu()">
         <span class="nav-item__icon" aria-hidden="true">⚙️</span>
         <span class="nav-item__label">Settings</span>
       </a>
-      <button class="nav-item nav-item--signout" type="button" aria-label="Sign out" (click)="signOut.emit()">
+      <button class="nav-item nav-item--signout" type="button" aria-label="Sign out" (click)="signOut.emit(); closeMenu()">
         <span class="nav-item__icon" aria-hidden="true">🚪</span>
         <span class="nav-item__label">Sign out</span>
       </button>
     </div>
   </aside>
 
-  <div class="shell__main">
+  <div class="shell__main" (click)="menuOpen() && closeMenu()">
     <router-outlet />
   </div>
 </div>

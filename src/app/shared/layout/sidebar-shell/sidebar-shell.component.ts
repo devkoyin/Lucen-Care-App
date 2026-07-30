@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { NgClass } from '@angular/common';
 
@@ -23,4 +23,9 @@ export class SidebarShellComponent {
   @Input() userRole = '';
   @Input() navItems: NavItem[] = [];
   @Output() signOut = new EventEmitter<void>();
+
+  readonly menuOpen = signal(false);
+
+  toggleMenu(): void { this.menuOpen.update(v => !v); }
+  closeMenu(): void  { this.menuOpen.set(false); }
 }

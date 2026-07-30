@@ -5,12 +5,17 @@
   gap: var(--space-8);
   max-width: 1100px;
   animation: fadeSlideUp 0.4s cubic-bezier(0.22,1,0.36,1) both;
+
+  @media (max-width: 1024px) { padding: var(--space-6) var(--space-6); }
+  @media (max-width: 768px)  { padding: var(--space-4) var(--space-4); gap: var(--space-5); }
 }
 
 .dash-header {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
 
   &__title {
     color: var(--color-text);
@@ -43,6 +48,9 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: var(--space-4);
+
+  @media (max-width: 700px) { grid-template-columns: repeat(2, 1fr); gap: var(--space-3); }
+  @media (max-width: 400px) { grid-template-columns: 1fr; }
 }
 
 .stat-card {
@@ -86,6 +94,8 @@
   display: grid;
   grid-template-columns: 1.2fr 0.8fr;
   gap: var(--space-6);
+
+  @media (max-width: 768px) { grid-template-columns: 1fr; gap: var(--space-4); }
 }
 
 .panel {
@@ -116,9 +126,15 @@
   }
 }
 
+.table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 .applicant-table {
   width: 100%;
   border-collapse: collapse;
+  min-width: 480px;
 
   th {
     text-align: left;

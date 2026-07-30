@@ -53,68 +53,9 @@ export interface NetworkProvider {
   distance: string;
 }
 
-export const SEED_PLANS: CoveragePlan[] = [
-  {
-    id: 'p1',
-    name: 'Comprehensive Care Plan',
-    provider: 'Hygeia HMO',
-    type: 'HMO',
-    typeColor: '#2563EB',
-    memberNumber: 'HYG-2024-084721',
-    renewalDate: 'Dec 2026',
-    coverageItems: [
-      { label: 'GP Consultations',   value: '100% covered' },
-      { label: 'Specialist Visits',  value: '80% covered'  },
-      { label: 'Prescription Drugs', value: '70% covered'  },
-      { label: 'Lab & Diagnostics',  value: '75% covered'  },
-      { label: 'Annual limit',       value: '₦2,000,000'   },
-    ],
-  },
-  {
-    id: 'p2',
-    name: 'Basic Plus Scheme',
-    provider: 'NHIS',
-    type: 'Government',
-    typeColor: '#059669',
-    memberNumber: 'NHIS-LGS-39182',
-    renewalDate: 'Mar 2027',
-    coverageItems: [
-      { label: 'Primary Care',       value: 'Fully covered' },
-      { label: 'Generic Medicines',  value: 'Fully covered' },
-      { label: 'Specialist Visits',  value: '50% covered'   },
-      { label: 'Annual limit',       value: '₦500,000'      },
-    ],
-  },
-];
+export const SEED_PLANS: CoveragePlan[] = [];
 
-export const SEED_PRE_AUTHS: PreAuthRequest[] = [
-  {
-    id: 'pa1',
-    procedure: 'Echocardiogram',
-    requestedBy: 'Dr. James Obi',
-    requestDate: '20 May 2026',
-    plan: 'Hygeia HMO',
-    status: 'Approved',
-    note: 'Valid for 60 days. Book at any accredited cardiac centre.',
-  },
-  {
-    id: 'pa2',
-    procedure: 'Physiotherapy — 10 sessions',
-    requestedBy: 'Dr. Sarah Chen',
-    requestDate: '1 Jun 2026',
-    plan: 'Hygeia HMO',
-    status: 'Under Review',
-  },
-  {
-    id: 'pa3',
-    procedure: 'Upper GI Endoscopy',
-    requestedBy: 'Dr. Amina Bello',
-    requestDate: '3 Jun 2026',
-    plan: 'Hygeia HMO',
-    status: 'Pending',
-    note: 'Awaiting receipt of referral letter from your GP.',
-  },
-];
+export const SEED_PRE_AUTHS: PreAuthRequest[] = [];
 
 export const SEED_PROGRAMS: AssistanceProgram[] = [
   {
@@ -163,18 +104,6 @@ export const SEED_PROGRAMS: AssistanceProgram[] = [
   },
 ];
 
-export const SEED_CLAIMS: ProviderClaim[] = [
-  { id: 'cl1', description: 'Lisinopril 10mg × 90 tabs',    date: '28 May 2026', amount: 4800,  plan: 'Hygeia HMO', status: 'Approved' },
-  { id: 'cl2', description: 'Cardiology consult — Dr. Obi', date: '14 May 2026', amount: 35000, plan: 'Hygeia HMO', status: 'Pending'  },
-  { id: 'cl3', description: 'HbA1c blood test',             date: '2 May 2026',  amount: 12500, plan: 'NHIS',       status: 'Approved' },
-  { id: 'cl4', description: 'Atorvastatin 20mg × 30 tabs',  date: '18 Apr 2026', amount: 3200,  plan: 'Hygeia HMO', status: 'Approved' },
-  { id: 'cl5', description: 'Physiotherapy × 3 sessions',   date: '5 Apr 2026',  amount: 22000, plan: 'Hygeia HMO', status: 'Rejected' },
-];
+export const SEED_CLAIMS: ProviderClaim[] = [];
 
-export const SEED_PROVIDERS: NetworkProvider[] = [
-  { id: 'np1', name: 'Reddington Hospital',  type: 'Private Hospital',  area: 'Victoria Island', plans: ['Hygeia HMO'],         distance: '3.2 km' },
-  { id: 'np2', name: 'Lagoon Hospitals',     type: 'Private Hospital',  area: 'Victoria Island', plans: ['Hygeia HMO', 'NHIS'], distance: '4.7 km' },
-  { id: 'np3', name: 'EKO Hospital',         type: 'Private Hospital',  area: 'Ikeja',           plans: ['Hygeia HMO', 'NHIS'], distance: '8.1 km' },
-  { id: 'np4', name: 'St. Nicholas Hospital',type: 'Private Hospital',  area: 'Lagos Island',    plans: ['Hygeia HMO'],         distance: '5.5 km' },
-  { id: 'np5', name: 'LUTH',                 type: 'Teaching Hospital', area: 'Idi-Araba',       plans: ['NHIS'],               distance: '9.4 km' },
-];
+export const SEED_PROVIDERS: NetworkProvider[] = [];

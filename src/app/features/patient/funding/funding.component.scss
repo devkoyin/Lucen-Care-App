@@ -3,11 +3,14 @@
   flex-direction: column;
   gap: var(--space-6);
 
+  @media (max-width: 768px) { gap: var(--space-4); }
+
   &__topbar {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
     gap: var(--space-4);
+    flex-wrap: wrap;
   }
 
   &__title {
@@ -25,7 +28,8 @@
     grid-template-columns: repeat(4, 1fr);
     gap: var(--space-4);
 
-    @media (max-width: 700px) { grid-template-columns: repeat(2, 1fr); }
+    @media (max-width: 700px) { grid-template-columns: repeat(2, 1fr); gap: var(--space-3); }
+    @media (max-width: 400px) { grid-template-columns: 1fr; }
   }
 }
 
