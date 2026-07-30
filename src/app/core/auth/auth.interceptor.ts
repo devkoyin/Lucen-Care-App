@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { throwError, BehaviorSubject } from 'rxjs';
 import { catchError, filter, switchMap, take } from 'rxjs/operators';
 import { AuthService } from './auth.service';
+import { environment } from '../../../environments/environment';
 
 // Endpoints that should NOT have Authorization header (they are the auth endpoints themselves)
 const PUBLIC_PATHS = ['/auth/login', '/auth/signup', '/auth/refresh', '/auth/forgot-password', '/auth/reset-password', '/auth/request-otp'];
@@ -14,6 +15,12 @@ const refreshSubject = new BehaviorSubject<string | null>(null);
 export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, next: HttpHandlerFn) => {
   const authService = inject(AuthService);
   const router = inject(Router);
+
+  // Only manage auth for requests to our own API — third-party calls (e.g. the
+  // Groq proxy) set their own Authorization header and have their own 401 semantics.
+  if (!req.url.startsWith(environment.apiUrl)) {
+    return next(req);
+  }
 
   const isPublic = PUBLIC_PATHS.some(path => req.url.includes(path));
   const token = authService.getAccessToken();
