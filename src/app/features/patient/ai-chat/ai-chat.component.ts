@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { AppointmentsService } from '../../../core/appointments/appointments.service';
 import { Appointment, upcomingAppointments, urgency } from '../../../core/appointments/appointments.models';
 import { ClaudeService, ChatMessage } from '../../../core/api/claude.service';
+import { AuthService } from '../../../core/auth/auth.service';
 import { environment } from '../../../../environments/environment';
 
 interface UiMessage {
@@ -30,6 +31,7 @@ const SUGGESTIONS = [
 export class AiChatComponent implements OnInit {
   private readonly appointmentsService = inject(AppointmentsService);
   private readonly claude      = inject(ClaudeService);
+  private readonly authService = inject(AuthService);
 
   @ViewChild('messagesEl') private messagesEl!: ElementRef<HTMLDivElement>;
 
@@ -40,6 +42,12 @@ export class AiChatComponent implements OnInit {
   inputText = '';
 
   readonly nextAppt = signal<Appointment | null>(null);
+  readonly firstName = computed(() => {
+    const name = this.authService.user()?.name ?? '';
+    return name.split(' ')[0];
+  });
+
+  // readonly nextAppt = computed(() => this.apptService.nextAppointment());
 
   readonly contextLine = computed(() => {
     const next = this.nextAppt();
@@ -70,7 +78,7 @@ export class AiChatComponent implements OnInit {
       content: m.text,
     }));
 
-    this.claude.chat(history).subscribe({
+    this.claude.chat(history, this.firstName()).subscribe({
       next: reply => {
         this.isTyping.set(false);
         this.addUiMessage('assistant', reply);

@@ -31,28 +31,30 @@
         <span class="panel__title">Recent Applicants</span>
         <a class="panel__link" routerLink="/ngo/applicants">View all</a>
       </div>
-      <table class="applicant-table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Condition</th>
-            <th>Program</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (app of applicants; track app.name) {
+      <div class="table-scroll">
+        <table class="applicant-table">
+          <thead>
             <tr>
-              <td class="applicant-table__name">{{ app.name }}</td>
-              <td class="applicant-table__condition">{{ app.condition }}</td>
-              <td class="applicant-table__program">{{ app.program }}</td>
-              <td>
-                <span class="status-badge status-badge--{{ app.status }}">{{ statusLabel(app.status) }}</span>
-              </td>
+              <th>Name</th>
+              <th>Condition</th>
+              <th>Program</th>
+              <th>Status</th>
             </tr>
-          }
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            @for (app of applicants; track app.name) {
+              <tr>
+                <td class="applicant-table__name">{{ app.name }}</td>
+                <td class="applicant-table__condition">{{ app.condition }}</td>
+                <td class="applicant-table__program">{{ app.program }}</td>
+                <td>
+                  <span class="status-badge status-badge--{{ app.status }}">{{ statusLabel(app.status) }}</span>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <!-- Programs at a glance -->

@@ -5,6 +5,9 @@
   gap: var(--space-8);
   max-width: 1100px;
   animation: fadeSlideUp 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+
+  @media (max-width: 1024px) { padding: var(--space-6) var(--space-6); gap: var(--space-6); }
+  @media (max-width: 768px)  { padding: var(--space-4) var(--space-4); gap: var(--space-5); }
 }
 
 // ── Header ────────────────────────────────────────────────────
@@ -48,6 +51,9 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: var(--space-4);
+
+  @media (max-width: 768px) { grid-template-columns: repeat(2, 1fr); gap: var(--space-3); }
+  @media (max-width: 400px) { grid-template-columns: 1fr; }
 }
 
 .stat-card {
@@ -401,6 +407,7 @@
   font-family: var(--font-family);
   cursor: pointer;
   transition: background 0.15s, opacity 0.15s;
+  white-space: nowrap;
 
   &--ghost {
     background: transparent;
@@ -414,5 +421,136 @@
     border: 1px solid rgba(220, 38, 38, 0.25);
     color: #DC2626;
     &:hover { background: rgba(220, 38, 38, 0.06); }
+  }
+}
+
+// ══ MOBILE RESPONSIVE ═════════════════════════════════════════
+
+@media (max-width: 640px) {
+
+  // Header: allow wrapping so button drops to second line if needed
+  .appts-header {
+    flex-wrap: wrap;
+    gap: var(--space-2);
+
+    &__title { font-size: var(--text-xl); }
+    &__sub   { font-size: 12px; }
+  }
+
+  .appts-primary-btn {
+    font-size: 12px;
+    padding: 7px 14px;
+  }
+
+  // Keep stats 2-column on all mobile sizes
+  .appts-stats { grid-template-columns: repeat(2, 1fr) !important; gap: var(--space-3); }
+
+  .stat-card {
+    padding: var(--space-4);
+    &__value { font-size: var(--text-xl); }
+    &__icon  { font-size: 17px; }
+  }
+
+  .widget__header { padding: var(--space-3) var(--space-4); }
+
+  // ── Upcoming appointment cards ─────────────────────────────
+  // Push time+actions to their own full-width bottom row
+  .appt-card {
+    flex-wrap: wrap;
+    padding: 14px 16px;
+    gap: 8px 10px;
+
+    &__date   { width: 36px; }
+    &__daynum { font-size: 20px; }
+    &__month, &__day { font-size: 9px; }
+
+    &__type-icon { width: 36px; height: 36px; font-size: 17px; }
+
+    &__provider  { font-size: 13.5px; }
+    &__specialty { font-size: 12px; }
+    &__facility  { font-size: 11px; }
+    &__note      { font-size: 11px; }
+
+    // Right col (time + actions) → own row below info
+    &__right {
+      order: 10;
+      width: 100%;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 10px;
+      margin-top: 2px;
+      border-top: 1px solid var(--color-border);
+      gap: var(--space-3);
+      flex-shrink: unset;
+    }
+
+    &__time-block {
+      flex-direction: row;
+      align-items: center;
+      gap: 6px;
+    }
+
+    &__time     { font-size: 13px; }
+    &__duration { font-size: 11px; color: var(--color-text-muted); }
+
+    &__actions { gap: var(--space-2); }
+  }
+
+  .appt-action-btn {
+    padding: 5px 10px;
+    font-size: 11px;
+  }
+
+  // ── Past appointment rows ──────────────────────────────────
+  .past-appt-row {
+    flex-wrap: wrap;
+    padding: 10px 16px;
+    gap: 5px 8px;
+    align-items: center;
+
+    &__date   { width: 28px; }
+    &__daynum { font-size: 13px; }
+    &__month  { font-size: 9px; }
+
+    &__type-icon { width: 26px; height: 26px; font-size: 12px; }
+
+    &__info { min-width: 100px; flex: 1; }
+    &__provider { font-size: 12.5px; }
+    &__meta     { font-size: 10px; }
+  }
+
+  .appt-badge {
+    font-size: 10px;
+    padding: 2px 6px;
+  }
+
+  // Reminder banner: tighter on mobile
+  .reminder-banner {
+    padding: var(--space-3) var(--space-4);
+    gap: var(--space-2);
+
+    &__title  { font-size: 12.5px; }
+    &__detail { font-size: 11px; }
+  }
+}
+
+// ── Very narrow (≤ 400px) ─────────────────────────────────────
+@media (max-width: 400px) {
+
+  .appts-page { padding: var(--space-3) var(--space-3); gap: var(--space-4); }
+
+  .appt-card {
+    padding: 12px 12px;
+    gap: 6px 8px;
+  }
+
+  // On the narrowest phones, the note text can be very long –
+  // limit it to 2 lines so it doesn't dominate the card
+  .appt-card__note {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 }

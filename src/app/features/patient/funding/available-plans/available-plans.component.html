@@ -2,20 +2,22 @@
 
   <div class="plans-page__header">
     <div>
-      <h2 class="plans-page__title">Active Plans</h2>
-      <p class="plans-page__sub">{{ appliedPrograms().length }} programme{{ appliedPrograms().length === 1 ? '' : 's' }} you have applied to</p>
+      <h2 class="plans-page__title">Available Plans</h2>
+      <p class="plans-page__sub">{{ programs().length }} assistance programme{{ programs().length === 1 ? '' : 's' }} from NGO partners</p>
     </div>
   </div>
 
   <div class="program-list">
-    @for (prog of appliedPrograms(); track prog.id) {
-      <div class="program-card program-card--enrolled">
+    @for (prog of programs(); track prog.id) {
+      <div class="program-card" [class.program-card--enrolled]="isApplied(prog.id)">
 
         <div class="program-card__header">
           <div>
             <div class="program-card__name-row">
               <h3 class="program-card__name">{{ prog.name }}</h3>
-              <span class="program-card__enrolled-badge">Applied</span>
+              @if (isApplied(prog.id)) {
+                <span class="program-card__enrolled-badge">Applied</span>
+              }
             </div>
             <span class="program-card__focus-badge"
                   [style.background]="statusColor(prog.status) + '18'"
@@ -25,11 +27,18 @@
             </span>
           </div>
 
-          <button class="program-enroll-btn program-enroll-btn--enrolled"
-                  type="button"
-                  (click)="withdraw(prog.id)">
-            Withdraw
-          </button>
+          @if (prog.status === 'Full') {
+            <span class="program-full-badge">Full</span>
+          } @else if (prog.status === 'Paused') {
+            <span class="program-paused-badge">Paused</span>
+          } @else {
+            <button class="program-enroll-btn"
+                    [class.program-enroll-btn--enrolled]="isApplied(prog.id)"
+                    type="button"
+                    (click)="toggleApply(prog.id)">
+              {{ isApplied(prog.id) ? 'Withdraw' : 'Apply' }}
+            </button>
+          }
         </div>
 
         <p class="program-card__desc">{{ prog.description }}</p>
@@ -55,10 +64,7 @@
 
       </div>
     } @empty {
-      <div class="plans-empty">
-        <p class="plans-empty__text">You have not applied to any programmes yet.</p>
-        <p class="plans-empty__hint">Browse <strong>Available Plans</strong> to find programmes you qualify for.</p>
-      </div>
+      <p class="plans-page__sub">No programmes available at this time.</p>
     }
   </div>
 

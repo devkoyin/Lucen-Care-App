@@ -16,17 +16,37 @@ export class AllMedicationsComponent implements OnInit {
   private readonly notifService = inject(MedicationNotificationService);
 
   readonly showAddMed  = signal(false);
-  readonly medications = signal<Medication[]>([]);
+  readonly editingMed  = signal<Medication | null>(null);
+  readonly medications = signal<Medication[]>(SEED_MEDICATIONS);
 
   ngOnInit(): void {
     this.medicationsService.getMedications().subscribe(meds => this.medications.set(meds));
     this.notifService.register();
   }
 
-  addMedication(payload: CreateMedicationPayload): void {
-    this.medicationsService.createMedication(payload).subscribe(med => {
-      this.medications.update(list => [med, ...list]);
+  openAdd(): void {
+    this.editingMed.set(null);
+    this.showAddMed.set(true);
+  }
+
+  openEdit(med: Medication): void {
+    this.showAddMed.set(false);
+    this.editingMed.set(med);
+  }
+
+  closeModal(): void {
+    this.showAddMed.set(false);
+    this.editingMed.set(null);
+  }
+
+  saveMedication(med: Medication): void {
+    this.medications.update(list => {
+      const idx = list.findIndex(m => m.id === med.id);
+      return idx >= 0
+        ? list.map(m => m.id === med.id ? med : m)
+        : [med, ...list];
     });
+    this.notifService.register(this.medications());
   }
 
   pillPercent(med: Medication): number {

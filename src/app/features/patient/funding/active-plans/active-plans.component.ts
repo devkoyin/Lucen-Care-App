@@ -1,6 +1,5 @@
-import { Component } from '@angular/core';
-import { CoveragePlan, SEED_PLANS, SEED_PROGRAMS, AssistanceProgram } from '../funding.data';
-import { signal } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
+import { NgoProgramsService, NgoProgram } from '../../../../core/programs/ngo-programs.service';
 
 @Component({
   selector: 'lc-active-plans',
@@ -10,14 +9,13 @@ import { signal } from '@angular/core';
   styleUrl: './active-plans.component.scss',
 })
 export class ActivePlansComponent {
-  readonly plans    = SEED_PLANS;
-  readonly programs = signal<AssistanceProgram[]>(SEED_PROGRAMS);
+  private readonly svc = inject(NgoProgramsService);
 
-  readonly enrolledCount = this.programs().filter(p => p.enrolled).length;
+  readonly appliedPrograms = computed(() =>
+    this.svc.programs().filter(p => this.svc.isApplied(p.id))
+  );
 
-  toggleEnroll(id: string): void {
-    this.programs.update(list =>
-      list.map(p => p.id === id ? { ...p, enrolled: !p.enrolled } : p)
-    );
-  }
+  withdraw(id: string): void { this.svc.toggleApply(id); }
+  slotsAvailable(p: NgoProgram): number { return this.svc.slotsAvailable(p); }
+  statusColor(s: NgoProgram['status']): string { return this.svc.statusColor(s); }
 }

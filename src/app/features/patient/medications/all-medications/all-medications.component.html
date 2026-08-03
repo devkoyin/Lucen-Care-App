@@ -5,7 +5,7 @@
       <h2 class="all-meds-page__title">All Medications</h2>
       <p class="all-meds-page__sub">{{ medications().length }} active prescription{{ medications().length === 1 ? '' : 's' }}</p>
     </div>
-    <button class="meds-add-btn" type="button" (click)="showAddMed.set(true)">+ Add Medication</button>
+    <button class="meds-add-btn" type="button" (click)="openAdd()">+ Add Medication</button>
   </div>
 
   <div class="med-list">
@@ -36,14 +36,19 @@
           <span class="refill-date refill-date--{{ med.refillUrgency }}">Refill {{ med.refillDate }}</span>
         </div>
 
+        <button class="med-card__edit-btn" type="button" (click)="openEdit(med)" [attr.aria-label]="'Edit ' + med.name">
+          ✏️
+        </button>
+
       </div>
     }
   </div>
 
 </div>
 
-@if (showAddMed()) {
+@if (showAddMed() || editingMed()) {
   <lc-add-medication-modal
-    (close)="showAddMed.set(false)"
-    (saved)="addMedication($event)" />
+    [editMed]="editingMed()"
+    (close)="closeModal()"
+    (saved)="saveMedication($event)" />
 }

@@ -5,6 +5,9 @@
   gap: var(--space-6);
   max-width: 1100px;
   animation: fadeSlideUp 0.4s cubic-bezier(0.22,1,0.36,1) both;
+
+  @media (max-width: 1024px) { padding: var(--space-6) var(--space-6); }
+  @media (max-width: 768px)  { padding: var(--space-4) var(--space-4); gap: var(--space-4); }
 }
 
 .map-header {
@@ -23,6 +26,9 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: var(--space-4);
+
+  @media (max-width: 700px) { grid-template-columns: repeat(2, 1fr); gap: var(--space-3); }
+  @media (max-width: 400px) { grid-template-columns: 1fr; }
 }
 
 .map-stat-card {

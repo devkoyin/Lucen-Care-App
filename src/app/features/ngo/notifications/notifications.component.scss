@@ -5,6 +5,9 @@
   gap: var(--space-6);
   max-width: 780px;
   animation: fadeSlideUp 0.4s cubic-bezier(0.22,1,0.36,1) both;
+
+  @media (max-width: 1024px) { padding: var(--space-6) var(--space-6); }
+  @media (max-width: 768px)  { padding: var(--space-4) var(--space-4); gap: var(--space-4); }
 }
 
 .notif-header {

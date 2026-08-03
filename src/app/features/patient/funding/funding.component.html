@@ -2,13 +2,13 @@
 
   <div class="funding-portal__topbar">
     <div>
-      <h1 class="funding-portal__title">Funding &amp; Coverage</h1>
-      <p class="funding-portal__sub">Your health plans, claims, pre-authorisation requests, and accredited providers</p>
+      <h1 class="funding-portal__title">Funding</h1>
+      <p class="funding-portal__sub">Your active assistance programs</p>
     </div>
   </div>
 
   <div class="funding-portal__stats">
-    @for (s of stats; track s.label) {
+    @for (s of stats(); track s.label) {
       <div class="fund-stat">
         <span class="fund-stat__icon">{{ s.icon }}</span>
         <span class="fund-stat__value">{{ s.value }}</span>
@@ -25,22 +25,10 @@
       📋 Active Plans
     </a>
     <a class="funding-nav__tab"
-       routerLink="/patient/funding/claims"
+       routerLink="/patient/funding/available"
        routerLinkActive="funding-nav__tab--active"
        [routerLinkActiveOptions]="{ exact: true }">
-      🧾 Treatment Claims
-    </a>
-    <a class="funding-nav__tab"
-       routerLink="/patient/funding/pre-auth"
-       routerLinkActive="funding-nav__tab--active"
-       [routerLinkActiveOptions]="{ exact: true }">
-      🔐 Pre-Authorization
-    </a>
-    <a class="funding-nav__tab"
-       routerLink="/patient/funding/providers"
-       routerLinkActive="funding-nav__tab--active"
-       [routerLinkActiveOptions]="{ exact: true }">
-      🏥 Accredited Providers
+      🔍 Available Plans
     </a>
   </nav>
 

@@ -1,105 +1,162 @@
 <div class="amm-overlay" (click)="onOverlayClick($event)">
   <div class="amm-card" role="dialog" aria-modal="true" aria-labelledby="amm-title">
 
-    <div class="amm-card__header">
-      <span class="amm-card__title" id="amm-title">Add Medication</span>
-      <button class="amm-card__close" type="button" (click)="close.emit()" aria-label="Close">&#x2715;</button>
+    <!-- ── Header ─────────────────────────────────────────────── -->
+    <div class="amm-header">
+      <div class="amm-header__icon-wrap">
+        <span class="amm-header__icon">{{ isEditMode ? '✏️' : '💊' }}</span>
+      </div>
+      <div>
+        <h2 class="amm-header__title" id="amm-title">{{ isEditMode ? 'Edit Medication' : 'Add Medication' }}</h2>
+        <p class="amm-header__sub">{{ isEditMode ? 'Update your prescription details' : 'Track your prescription and schedule' }}</p>
+      </div>
+      <button class="amm-header__close" type="button" (click)="close.emit()" aria-label="Close">&#x2715;</button>
     </div>
 
     <form #f="ngForm" (ngSubmit)="submit(f)" novalidate>
-      <div class="amm-card__body">
+      <div class="amm-body">
 
-        <!-- Name + Dosage -->
-        <div class="amm-row">
-          <div class="amm-field">
-            <label for="amm-name">Medication name</label>
-            <input id="amm-name" type="text" name="name"
-                   [(ngModel)]="form.name" required
-                   placeholder="e.g. Metformin">
-          </div>
-          <div class="amm-field">
-            <label for="amm-dosage">Dosage / Strength</label>
-            <input id="amm-dosage" type="text" name="dosage"
-                   [(ngModel)]="form.dosage" required
-                   placeholder="e.g. 500 mg">
+        <!-- ── Section: Medication Details ───────────────────── -->
+        <div class="amm-section">
+          <span class="amm-section__label">Medication Details</span>
+          <div class="amm-section__card">
+
+            <div class="amm-row">
+              <div class="amm-field">
+                <label for="amm-name">
+                  <span class="amm-field__icon">🏷️</span> Medication name
+                </label>
+                <input id="amm-name" type="text" name="name"
+                       [(ngModel)]="form.name" required
+                       placeholder="e.g. Metformin">
+              </div>
+              <div class="amm-field">
+                <label for="amm-dosage">
+                  <span class="amm-field__icon">⚖️</span> Dosage / Strength
+                </label>
+                <input id="amm-dosage" type="text" name="dosage"
+                       [(ngModel)]="form.dosage" required
+                       placeholder="e.g. 500 mg">
+              </div>
+            </div>
+
+            <div class="amm-row">
+              <div class="amm-field">
+                <label for="amm-condition">
+                  <span class="amm-field__icon">🩺</span> Condition being treated
+                </label>
+                <input id="amm-condition" type="text" name="condition"
+                       [(ngModel)]="form.condition" required
+                       placeholder="e.g. Type 2 Diabetes">
+              </div>
+              <div class="amm-field">
+                <label for="amm-frequency">
+                  <span class="amm-field__icon">🔁</span> Frequency
+                </label>
+                <select id="amm-frequency" name="frequency" [(ngModel)]="form.frequency" required
+                        (ngModelChange)="onFrequencyChange()">
+                  @for (opt of frequencyOptions; track opt) {
+                    <option [value]="opt">{{ opt }}</option>
+                  }
+                </select>
+              </div>
+            </div>
+
+            <div class="amm-row">
+              <div class="amm-field">
+                <label for="amm-prescriber">
+                  <span class="amm-field__icon">👨‍⚕️</span> Prescriber
+                </label>
+                <input id="amm-prescriber" type="text" name="prescriber"
+                       [(ngModel)]="form.prescriber" required
+                       placeholder="e.g. Dr. Sarah Chen">
+              </div>
+              <div class="amm-field">
+                <label>
+                  <span class="amm-field__icon">🏥</span> Specialty
+                </label>
+                <lc-specialty-select [value]="form.specialty" (valueChange)="form.specialty = $event" />
+              </div>
+            </div>
+
           </div>
         </div>
 
-        <!-- Condition + Frequency -->
-        <div class="amm-row">
-          <div class="amm-field">
-            <label for="amm-condition">Condition being treated</label>
-            <input id="amm-condition" type="text" name="condition"
-                   [(ngModel)]="form.condition" required
-                   placeholder="e.g. Type 2 Diabetes">
-          </div>
-          <div class="amm-field">
-            <label for="amm-frequency">Frequency</label>
-            <select id="amm-frequency" name="frequency" [(ngModel)]="form.frequency" required>
-              @for (opt of frequencyOptions; track opt) {
-                <option [value]="opt">{{ opt }}</option>
+        <!-- ── Section: Doses time ────────────────────────────── -->
+        <div class="amm-section">
+          <span class="amm-section__label">Doses time</span>
+          <div class="amm-section__card">
+            <div class="amm-dose-times">
+              @for (i of slotIndices; track i) {
+                <div class="amm-dose-slot">
+                  @if (slotCount > 1) {
+                    <span class="amm-dose-slot__label">Dose {{ i + 1 }}</span>
+                  }
+                  @if (form.frequency === 'Weekly') {
+                    <div class="amm-dose-weekly">
+                      <select class="amm-dose-day" name="weeklyDay" [(ngModel)]="weeklyDay" required>
+                        <option value="" disabled>Day</option>
+                        @for (day of weekDays; track day) {
+                          <option [value]="day">{{ day }}</option>
+                        }
+                      </select>
+                      <input class="amm-dose-input" type="time" [name]="'doseTime' + i"
+                             [(ngModel)]="doseTimes[i]" required>
+                    </div>
+                  } @else {
+                    <input class="amm-dose-input" type="time" [name]="'doseTime' + i"
+                           [(ngModel)]="doseTimes[i]" required>
+                  }
+                </div>
               }
-            </select>
+            </div>
           </div>
         </div>
 
-        <!-- Prescriber + Specialty -->
-        <div class="amm-row">
-          <div class="amm-field">
-            <label for="amm-prescriber">Prescriber</label>
-            <input id="amm-prescriber" type="text" name="prescriber"
-                   [(ngModel)]="form.prescriber" required
-                   placeholder="e.g. Dr. Sarah Chen">
-          </div>
-          <div class="amm-field">
-            <label>Specialty</label>
-            <lc-specialty-select [value]="form.specialty" (valueChange)="form.specialty = $event" />
-          </div>
-        </div>
+        <!-- ── Section: Supply & Reminders ───────────────────── -->
+        <div class="amm-section">
+          <span class="amm-section__label">Supply & Reminders</span>
+          <div class="amm-section__card">
 
-        <!-- Schedule times -->
-        <div class="amm-field">
-          <label>Dose times <span class="amm-field__hint">Select at least one</span></label>
-          <div class="amm-times">
-            @for (opt of timeOptions; track opt.time) {
-              <button type="button" class="amm-time-chip"
-                      [class.amm-time-chip--active]="opt.checked"
-                      (click)="toggleTime(opt)">
-                <span>{{ opt.icon }}</span>
-                <span>{{ opt.label }}</span>
-                <span class="amm-time-chip__time">{{ opt.time }}</span>
-              </button>
-            }
-          </div>
-        </div>
+            <div class="amm-row">
+              <div class="amm-field">
+                <label for="amm-pills">
+                  <span class="amm-field__icon">💊</span> Pills in current supply
+                </label>
+                <input id="amm-pills" type="number" name="pillsTotal"
+                       [(ngModel)]="form.pillsTotal" required min="1"
+                       placeholder="e.g. 30">
+              </div>
+              <div class="amm-field">
+                <label for="amm-refill">
+                  <span class="amm-field__icon">📅</span> Next refill date
+                </label>
+                <input id="amm-refill" type="date" name="refillDateISO"
+                       [(ngModel)]="form.refillDateISO" [min]="todayISO" required>
+              </div>
+            </div>
 
-        <!-- Pills + Refill date -->
-        <div class="amm-row">
-          <div class="amm-field">
-            <label for="amm-pills">Pills in current supply</label>
-            <input id="amm-pills" type="number" name="pillsTotal"
-                   [(ngModel)]="form.pillsTotal" required min="1"
-                   placeholder="e.g. 30">
-          </div>
-          <div class="amm-field">
-            <label for="amm-refill">Next refill date</label>
-            <input id="amm-refill" type="date" name="refillDateISO"
-                   [(ngModel)]="form.refillDateISO" [min]="todayISO" required>
-          </div>
-        </div>
+            <div class="amm-field">
+              <label for="amm-note">
+                <span class="amm-field__icon">📝</span> Note
+                <span class="amm-field__optional">(optional)</span>
+              </label>
+              <textarea id="amm-note" name="note" [(ngModel)]="form.note"
+                        placeholder="e.g. take with food, avoid grapefruit…"></textarea>
+            </div>
 
-        <!-- Note -->
-        <div class="amm-field">
-          <label for="amm-note">Note <span class="amm-field__optional">(optional)</span></label>
-          <textarea id="amm-note" name="note" [(ngModel)]="form.note"
-                    placeholder="e.g. take with food, avoid grapefruit…"></textarea>
+          </div>
         </div>
 
       </div>
 
-      <div class="amm-card__footer">
+      <!-- ── Footer ─────────────────────────────────────────── -->
+      <div class="amm-footer">
         <button type="button" class="amm-cancel-btn" (click)="close.emit()">Cancel</button>
-        <button type="submit" class="amm-save-btn" [disabled]="!isValid">Save Medication</button>
+        <button type="submit" class="amm-save-btn" [disabled]="!isValid">
+          <span>{{ isEditMode ? 'Save Changes' : 'Save Medication' }}</span>
+          <span class="amm-save-btn__icon">→</span>
+        </button>
       </div>
     </form>
 

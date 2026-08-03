@@ -4,6 +4,8 @@
   height: calc(100vh - var(--space-8) * 2);
   background: var(--color-bg);
   animation: fadeSlideUp 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+
+  @media (max-width: 768px) { height: calc(100dvh - 56px); }
 }
 
 // ── Header ─────────────────────────────────────────────────────
@@ -15,6 +17,8 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
+
+  @media (max-width: 768px) { padding: var(--space-3) var(--space-4); }
 
   &__title-row {
     display: flex;
@@ -94,6 +98,8 @@
   flex-direction: column;
   gap: var(--space-4);
   scroll-behavior: smooth;
+
+  @media (max-width: 768px) { padding: var(--space-4) var(--space-4); }
 }
 
 // Welcome state
@@ -180,6 +186,8 @@
 
   &__bubble {
     max-width: 68%;
+
+    @media (max-width: 480px) { max-width: 88%; }
     padding: var(--space-3) var(--space-4);
     display: flex;
     flex-direction: column;
@@ -236,6 +244,8 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
+
+  @media (max-width: 768px) { padding: var(--space-3) var(--space-4); }
 
   &__chips {
     display: flex;
@@ -371,6 +381,50 @@
   color: var(--color-text-muted);
   border-color: var(--color-border);
 }
+
+// Lucy avatar
+.lucy-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #1d7a6d, #3ab0a1);
+  color: #ffffff;
+  font-weight: 800;
+  font-family: var(--font-family);
+  border-radius: 50%;
+  line-height: 1;
+  flex-shrink: 0;
+  font-size: 14px;
+  width: 32px;
+  height: 32px;
+
+  &--lg {
+    width: 56px;
+    height: 56px;
+    font-size: 24px;
+    opacity: 1;
+  }
+
+  &--xl {
+    width: 64px;
+    height: 64px;
+    font-size: 28px;
+    opacity: 0.9;
+  }
+}
+
+// Header icon override
+.chat-header__icon.lucy-avatar {
+  width: 40px;
+  height: 40px;
+  font-size: 18px;
+}
+
+// Welcome icon override — remove the emoji opacity
+.chat-welcome__icon.lucy-avatar { opacity: 1; font-size: unset; }
+
+// Coming soon icon override
+.chat-coming-soon__icon.lucy-avatar { font-size: unset; }
 
 // Input row
 .chat-input-row {
