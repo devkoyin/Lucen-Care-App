@@ -1,17 +1,20 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
-import { LoginPayload, PatientOnboardingPayload, Role, SignupPayload, User } from './auth.models';
+import { map, catchError, shareReplay, tap } from 'rxjs/operators';
+import {
+  LoginPayload,
+  MeResponse,
+  PatientOnboardingPayload,
+  Role,
+  SignupPayload,
+  User,
+} from './auth.models';
 import { ApiService } from '../api/api.service';
+import { WrappedResponse } from '../api/wrapped-response.model';
 
 interface AuthApiResponse {
   accessToken: string;
   user: User;
-}
-
-interface WrappedResponse<T> {
-  data: T;
-  traceId: string;
 }
 
 const USER_KEY       = 'lc_auth_user';
@@ -26,6 +29,12 @@ export class AuthService {
 
   readonly user = this._user.asReadonly();
 
+  // GET /auth/me is hit by route guards, which can fire several times during a
+  // single navigation. Share one in-flight/most-recent result until invalidated.
+  private me$?: Observable<MeResponse>;
+  private readonly _me = signal<MeResponse | null>(null);
+  readonly meState = this._me.asReadonly();
+
   isAuthenticated(): boolean {
     return this._user() !== null;
   }
@@ -38,13 +47,18 @@ export class AuthService {
     return this._accessToken();
   }
 
+  /**
+   * `role` is sent as part of the credential, not as a hint — the API rejects an
+   * account signing in from a portal that is not its own with the same generic
+   * 401 as a wrong password.
+   */
   login(role: Role, payload: LoginPayload): Observable<User> {
-
-    return this.api.post<WrappedResponse<AuthApiResponse>>('/auth/login', payload).pipe(
+    return this.api.post<WrappedResponse<AuthApiResponse>>('/auth/login', { ...payload, role }).pipe(
       map(res => {
         const { accessToken, user } = res.data;
         this.persistToken(accessToken);
         this.persistUser(user);
+        this.invalidateMe();
         return user;
       }),
       catchError(err => throwError(() => err)),
@@ -57,14 +71,50 @@ export class AuthService {
         const { accessToken, user } = res.data;
         this.persistToken(accessToken);
         this.persistUser(user);
+        this.invalidateMe();
         return user;
       }),
       catchError(err => throwError(() => err)),
     );
   }
 
+  /**
+   * Live account state — status, plus the application or organisation for this
+   * role. The access token carries no status claim, so this is how the client
+   * learns an admin has approved (or rejected) the account.
+   */
+  me(forceRefresh = false): Observable<MeResponse> {
+    if (forceRefresh) this.invalidateMe();
+
+    this.me$ ??= this.api.getData<MeResponse>('/auth/me').pipe(
+      tap(me => {
+        this._me.set(me);
+        // Keep the cached user in step with the server's view of it.
+        this.persistUser({
+          id: me.id,
+          role: me.role,
+          name: me.name ?? this._user()?.name ?? '',
+          email: me.email,
+          status: me.status,
+        });
+      }),
+      shareReplay({ bufferSize: 1, refCount: false }),
+      catchError(err => {
+        this.me$ = undefined; // never cache a failure
+        return throwError(() => err);
+      }),
+    );
+
+    return this.me$;
+  }
+
+  invalidateMe(): void {
+    this.me$ = undefined;
+    this._me.set(null);
+  }
+
   submitPatientOnboarding(payload: PatientOnboardingPayload): Observable<unknown> {
-    return this.api.post('/auth/onboarding/patient', payload);
+    return this.api.postData<unknown>('/auth/onboarding/patient', payload);
   }
 
   refreshToken(): Observable<string> {
@@ -85,6 +135,7 @@ export class AuthService {
     }
     this._user.set(null);
     this._accessToken.set(null);
+    this.invalidateMe();
     localStorage.removeItem(USER_KEY);
     localStorage.removeItem(TOKEN_KEY);
   }

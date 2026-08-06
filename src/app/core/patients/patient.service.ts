@@ -3,6 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ApiService } from '../api/api.service';
+import { WrappedResponse } from '../api/wrapped-response.model';
 
 export interface PatientProfile {
   id: string;
@@ -35,11 +36,6 @@ export interface PatientEnrollment {
   programExpiresAt: string;
   status: string;
   createdAt: string;
-}
-
-interface WrappedResponse<T> {
-  data: T;
-  traceId: string;
 }
 
 interface EnrollmentListData {

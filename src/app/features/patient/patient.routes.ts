@@ -1,10 +1,12 @@
 import { Routes } from '@angular/router';
 import { PatientPortalComponent } from './patient-portal.component';
+import { roleGuard } from '../../core/auth/role.guard';
 
 export const PATIENT_ROUTES: Routes = [
   {
     path: '',
     component: PatientPortalComponent,
+    canActivate: [roleGuard('patient', ['/auth', 'patient', 'login'])],
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       {

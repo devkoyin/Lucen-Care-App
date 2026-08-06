@@ -1,7 +1,12 @@
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { MedicationStats } from '../../../core/medications/medications.models';
 import { MedicationsService } from '../../../core/medications/medications.service';
+
+/** Shown until the first stats response lands, or if it fails. */
+const EMPTY_STATS: MedicationStats = {
+  activeMeds: 0, takenToday: 0, dueToday: 0, adherenceStreakDays: 0,
+};
 
 @Component({
   selector: 'lc-medications',
@@ -13,12 +18,10 @@ import { MedicationsService } from '../../../core/medications/medications.servic
 export class MedicationsComponent implements OnInit {
   private readonly medicationsService = inject(MedicationsService);
 
-  private readonly medStats = signal<MedicationStats>({
-    activeMeds: 0, takenToday: 0, dueToday: 0, adherenceStreakDays: 0,
-  });
-
+  // Read from the service rather than a local copy, so a mutation in a child route
+  // (adding a medication, marking a dose taken) is reflected here without a reload.
   readonly stats = computed(() => {
-    const s = this.medStats();
+    const s = this.medicationsService.stats() ?? EMPTY_STATS;
     return [
       { value: String(s.activeMeds), label: 'Active Meds', icon: '💊' },
       { value: String(s.takenToday), label: 'Taken Today', icon: '✅' },
@@ -28,6 +31,6 @@ export class MedicationsComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    this.medicationsService.getStats().subscribe(s => this.medStats.set(s));
+    this.medicationsService.refreshStats();
   }
 }

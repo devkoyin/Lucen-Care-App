@@ -1,8 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '../../../../core/auth/auth.service';
 import { ApplicationsService } from '../../../../core/applications/applications.service';
+import { apiErrorMessage } from '../../../../core/api/wrapped-response.model';
 import { OnboardingShellComponent } from '../onboarding-shell/onboarding-shell.component';
 import { FormFieldComponent } from '../../../../shared/components/form-field/form-field.component';
 
@@ -15,11 +15,13 @@ import { FormFieldComponent } from '../../../../shared/components/form-field/for
 })
 export class HmoOnboardingComponent {
   private readonly fb   = inject(FormBuilder);
-  private readonly auth = inject(AuthService);
   private readonly apps = inject(ApplicationsService);
   private readonly router = inject(Router);
 
   currentStep = 1;
+  submitting = false;
+  serverError = '';
+
   readonly totalSteps = 4;
   readonly stepLabels = ['Organisation', 'Coverage area', 'BAA & consent', 'Verification'];
 
@@ -84,25 +86,42 @@ export class HmoOnboardingComponent {
     if (form?.invalid) return;
 
     if (this.currentStep === 3) {
-      const s1 = this.step1Form.value;
-      const s2 = this.step2Form.value;
-
-      this.apps.submitHmoToApi({
-        orgName:              s1.orgName              ?? '',
-        licenceNumber:        s1.licenceNumber        ?? '',
-        contactPhone:         s1.contactPhone         ?? '',
-        coverageRegion:       s2.coverageRegion       ?? '',
-        enrolledPatientCount: s2.enrolledPatientCount ?? '',
-        specialtyFocus:       s2.specialtyFocus       ?? undefined,
-        baaAcknowledgement: true,
-        termsConsent: true,
-      }).subscribe({
-        next: () => this.currentStep++,
-        error: () => this.currentStep++,
-      });
+      this.submitOnboarding();
       return;
     }
 
     this.currentStep++;
+  }
+
+  private submitOnboarding(): void {
+    const s1 = this.step1Form.value;
+    const s2 = this.step2Form.value;
+    const s3 = this.step3Form.value;
+
+    this.submitting = true;
+    this.serverError = '';
+
+    const specialtyFocus = s2.specialtyFocus?.trim();
+
+    this.apps.submitHmoToApi({
+      orgName:              s1.orgName              ?? '',
+      licenceNumber:        s1.licenceNumber        ?? '',
+      contactPhone:         s1.contactPhone         ?? '',
+      coverageRegion:       s2.coverageRegion       ?? '',
+      enrolledPatientCount: s2.enrolledPatientCount ?? '',
+      // Omit the key rather than send an empty optional field.
+      ...(specialtyFocus ? { specialtyFocus } : {}),
+      baaAcknowledgement: s3.baaAcknowledgement ?? false,
+      termsConsent:       s3.termsConsent       ?? false,
+    }).subscribe({
+      next: () => {
+        this.submitting = false;
+        this.currentStep++;
+      },
+      error: (e: unknown) => {
+        this.submitting = false;
+        this.serverError = apiErrorMessage(e);
+      },
+    });
   }
 }

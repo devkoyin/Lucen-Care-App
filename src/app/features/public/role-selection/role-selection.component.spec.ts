@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Router, provideRouter } from '@angular/router';
 import { RoleSelectionComponent } from './role-selection.component';
 
@@ -8,7 +9,7 @@ describe('RoleSelectionComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RoleSelectionComponent],
+      imports: [HttpClientTestingModule, RoleSelectionComponent],
       providers: [provideRouter([])],
     }).compileComponents();
     fixture = TestBed.createComponent(RoleSelectionComponent);

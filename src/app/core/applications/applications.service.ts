@@ -1,12 +1,23 @@
 import { Injectable, signal, inject } from '@angular/core';
+import { HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { ApiService } from '../api/api.service';
+import { WrappedResponse } from '../api/wrapped-response.model';
+import { HmoOnboardingPayload, NgoOnboardingPayload } from '../auth/auth.models';
+import {
+  AUDIT_ACTION_MAP,
+  AUDIT_SUBJECT_MAP,
+  AuditAction,
+  AuditSubjectType,
+} from './audit-labels';
 
-export type OrgType    = 'ngo' | 'hmo';
-export type AuditSubjectType = OrgType | 'professional' | 'benefactor';
-export type AppStatus  = 'pending' | 'approved' | 'rejected';
-export type AuditAction = 'submitted' | 'approved' | 'rejected';
+export type OrgType   = 'ngo' | 'hmo';
+export type AppStatus = 'pending' | 'approved' | 'rejected';
+
+// Re-exported for the admin components, which import the row type and its
+// vocabulary from one place. The definitions live in audit-labels.ts.
+export type { AuditAction, AuditSubjectType };
 
 export interface AppDoc {
   label: string;
@@ -43,7 +54,8 @@ export interface OrgApplication {
   enrolledPatientCount?: string;
   specialtyFocus?: string;
 
-  // Document checklist
+  // Document checklist — derived client-side from which fields the applicant
+  // supplied. The API stores the values, not a checklist.
   docs: AppDoc[];
 
   // Review
@@ -63,51 +75,215 @@ export interface AuditEntry {
   reason?: string;
 }
 
-const APPS_KEY  = 'lc_applications';
-const AUDIT_KEY = 'lc_audit_log';
+/** Shape returned by GET /organizations. */
+interface ApiOrganization {
+  id: string;
+  name: string;
+  type: OrgType;
+  status: 'pending_verification' | 'active' | 'suspended' | 'rejected';
+  contactEmail: string;
+  contactPerson?: string;
+  createdAt: string;
+  verifiedAt?: string;
+  verifiedBy?: string;
+  rejectionReason?: string;
+  registrationNumber?: string;
+  tin?: string;
+  scumlNumber?: string;
+  focusAreas?: string;
+  website?: string;
+  operatingRegions?: string;
+  headOfficeCountry?: string;
+  programDescription?: string;
+  licenceNumber?: string;
+  contactPhone?: string;
+  coverageRegion?: string;
+  enrolledPatientCount?: string;
+  specialtyFocus?: string;
+}
+
+/** Shape returned by GET /admin/audit. */
+interface ApiAuditLog {
+  id: string;
+  actorId: string;
+  actorName?: string;
+  actorEmail?: string;
+  action: string;
+  resourceId: string;
+  resourceType: string;
+  /**
+   * Resolved server-side by AuditService.attachResource(), but only for allowlisted
+   * resource types — patient, medication and consent rows are deliberately unnamed
+   * (see src/common/constants/auditable-resources.ts in the backend), as is any row
+   * whose subject has since been deleted. Always fall back to `resourceId`.
+   */
+  resourceName?: string;
+  /** 'ngo' | 'hmo' for organisation rows. Absent for every other resource type. */
+  resourceSubtype?: string;
+  metadata?: { reason?: string };
+  createdAt: string;
+}
+
+const ORG_STATUS_MAP: Record<ApiOrganization['status'], AppStatus> = {
+  pending_verification: 'pending',
+  active: 'approved',
+  rejected: 'rejected',
+  // A suspended org was approved at some point; it is not awaiting review.
+  suspended: 'approved',
+};
+
+function toOrgApplication(o: ApiOrganization): OrgApplication {
+  const docs: AppDoc[] =
+    o.type === 'ngo'
+      ? [
+          { label: 'Registration Number',    submitted: !!o.registrationNumber },
+          { label: 'TIN',                    submitted: !!o.tin },
+          { label: 'SCUML Certificate No.',  submitted: !!o.scumlNumber },
+          { label: 'Focus Areas',            submitted: !!o.focusAreas },
+          { label: 'Operating Regions',      submitted: !!o.operatingRegions },
+          { label: 'Program Description',    submitted: !!o.programDescription },
+        ]
+      : [
+          { label: 'Licence Number',         submitted: !!o.licenceNumber },
+          { label: 'Contact Phone',          submitted: !!o.contactPhone },
+          { label: 'Coverage Region',        submitted: !!o.coverageRegion },
+          { label: 'Enrolled Patient Count', submitted: !!o.enrolledPatientCount },
+        ];
+
+  return {
+    id: o.id,
+    type: o.type,
+    status: ORG_STATUS_MAP[o.status] ?? 'pending',
+    submittedAt: o.createdAt,
+    contactPerson: o.contactPerson ?? o.contactEmail,
+    email: o.contactEmail,
+    orgName: o.name,
+    registrationNo: o.registrationNumber,
+    tin: o.tin,
+    scumlNumber: o.scumlNumber,
+    focusAreas: o.focusAreas,
+    website: o.website,
+    operatingRegions: o.operatingRegions,
+    headOfficeCountry: o.headOfficeCountry,
+    programDescription: o.programDescription,
+    licenceNo: o.licenceNumber,
+    contactPhone: o.contactPhone,
+    coverageRegion: o.coverageRegion,
+    enrolledPatientCount: o.enrolledPatientCount,
+    specialtyFocus: o.specialtyFocus,
+    docs,
+    rejectionReason: o.rejectionReason,
+    reviewedAt: o.verifiedAt,
+    reviewedBy: o.verifiedBy,
+  };
+}
+
+/** 'ngo' | 'hmo' from the server, guarded so an unexpected value cannot mislabel. */
+function toOrgSubject(subtype?: string): AuditSubjectType | undefined {
+  return subtype === 'ngo' || subtype === 'hmo' ? subtype : undefined;
+}
+
+function toAuditEntry(a: ApiAuditLog): AuditEntry {
+  return {
+    id: a.id,
+    // Unmapped actions used to fall through to 'submitted'; 'login' is the honest
+    // default now, since every legacy row that lacked a mapping was a login.
+    action: AUDIT_ACTION_MAP[a.action] ?? 'login',
+    // The server names allowlisted subjects; the ULID is the fallback for the ones
+    // it deliberately does not (patient, medication, consent) and for deleted rows.
+    orgName: a.resourceName ?? a.resourceId,
+    // Organisations carry their ngo/hmo subtype, so an HMO no longer wears an NGO badge.
+    orgType: toOrgSubject(a.resourceSubtype) ?? AUDIT_SUBJECT_MAP[a.resourceType] ?? 'user',
+    applicationId: a.resourceId,
+    actor: a.actorName ?? a.actorEmail ?? a.actorId,
+    timestamp: a.createdAt,
+    reason: a.metadata?.reason,
+  };
+}
 
 @Injectable({ providedIn: 'root' })
 export class ApplicationsService {
   private readonly api = inject(ApiService);
-  private readonly _applications = signal<OrgApplication[]>(this.loadApps());
-  private readonly _auditLog     = signal<AuditEntry[]>(this.loadAudit());
+  private readonly _applications   = signal<OrgApplication[]>([]);
+  private readonly _auditLog       = signal<AuditEntry[]>([]);
+  private readonly _recentActivity = signal<AuditEntry[]>([]);
+  private readonly _auditCursor    = signal<string | undefined>(undefined);
+  private readonly _loading        = signal(false);
+  private readonly _auditLoading   = signal(false);
 
-  readonly applications = this._applications.asReadonly();
-  readonly auditLog     = this._auditLog.asReadonly();
+  readonly applications   = this._applications.asReadonly();
+  readonly auditLog       = this._auditLog.asReadonly();
+  readonly recentActivity = this._recentActivity.asReadonly();
+  readonly auditLoading   = this._auditLoading.asReadonly();
+  readonly loading        = this._loading.asReadonly();
 
-  submit(app: Omit<OrgApplication, 'id' | 'status' | 'submittedAt'>): void {
-    const newApp: OrgApplication = {
-      ...app,
-      id: `app-${Date.now()}`,
-      status: 'pending',
-      submittedAt: new Date().toISOString(),
-    };
-    const updated = [...this._applications(), newApp];
-    this._applications.set(updated);
-    this.saveApps(updated);
-    this.addAudit({
-      action: 'submitted',
-      orgName: newApp.orgName,
-      orgType: newApp.type,
-      applicationId: newApp.id,
-      actor: 'System',
-    });
+  /** Set while the audit log has a further page to fetch. */
+  readonly auditCursor = this._auditCursor.asReadonly();
+
+  /** GET /organizations — platform admin only. Loads both NGOs and HMOs. */
+  load(): Observable<OrgApplication[]> {
+    this._loading.set(true);
+    return this.api.getData<ApiOrganization[]>('/organizations', new HttpParams().set('limit', 50)).pipe(
+      map(orgs => orgs.map(toOrgApplication)),
+      tap({
+        next: apps => { this._applications.set(apps); this._loading.set(false); },
+        error: () => this._loading.set(false),
+      }),
+    );
   }
 
-  approve(id: string, reviewedBy = 'Admin'): void {
-    const app = this._applications().find(a => a.id === id);
-    this.patch(id, { status: 'approved', reviewedBy, reviewedAt: new Date().toISOString() });
-    if (app) {
-      this.addAudit({ action: 'approved', orgName: app.orgName, orgType: app.type, applicationId: id, actor: reviewedBy });
-    }
+  /**
+   * GET /admin/audit — keyset paginated, newest first.
+   *
+   * Pass the current `auditCursor()` to fetch the next page, which is APPENDED;
+   * calling with no cursor starts over. Reads the wrapped response directly rather
+   * than via getData so `meta.cursor` is visible.
+   */
+  loadAuditLog(opts: { cursor?: string; limit?: number } = {}): Observable<AuditEntry[]> {
+    let params = new HttpParams().set('limit', opts.limit ?? 50);
+    if (opts.cursor) params = params.set('cursor', opts.cursor);
+
+    this._auditLoading.set(true);
+    return this.api.get<WrappedResponse<ApiAuditLog[]>>('/admin/audit', params).pipe(
+      tap({
+        next: res => this._auditCursor.set(res.meta?.cursor),
+        error: () => this._auditLoading.set(false),
+      }),
+      map(res => res.data.map(toAuditEntry)),
+      tap(entries => {
+        this._auditLog.update(existing => (opts.cursor ? [...existing, ...entries] : entries));
+        this._auditLoading.set(false);
+      }),
+    );
   }
 
-  reject(id: string, reason: string, reviewedBy = 'Admin'): void {
-    const app = this._applications().find(a => a.id === id);
-    this.patch(id, { status: 'rejected', rejectionReason: reason, reviewedBy, reviewedAt: new Date().toISOString() });
-    if (app) {
-      this.addAudit({ action: 'rejected', orgName: app.orgName, orgType: app.type, applicationId: id, actor: reviewedBy, reason });
-    }
+  /**
+   * The dashboard's Recent Activity panel — the newest handful of audit events.
+   *
+   * Deliberately a separate signal from `auditLog`: sharing one would leave the
+   * Audit Log page showing this short page, and its event count reading 6.
+   */
+  loadRecentActivity(limit = 6): Observable<AuditEntry[]> {
+    return this.api
+      .getData<ApiAuditLog[]>('/admin/audit', new HttpParams().set('limit', limit))
+      .pipe(
+        map(rows => rows.map(toAuditEntry)),
+        tap(entries => this._recentActivity.set(entries)),
+      );
+  }
+
+  // Org review uses AdminApproveDto — { status, reason } — which is a DIFFERENT
+  // shape from the application review endpoints' { action, reason }.
+  approve(id: string): Observable<unknown> {
+    return this.api
+      .patchData<unknown>(`/admin/organizations/${id}`, { status: 'approved' })
+      .pipe(tap(() => this.load().subscribe({ error: () => {} })));
+  }
+
+  reject(id: string, reason: string): Observable<unknown> {
+    return this.api
+      .patchData<unknown>(`/admin/organizations/${id}`, { status: 'rejected', reason })
+      .pipe(tap(() => this.load().subscribe({ error: () => {} })));
   }
 
   byType(type: OrgType): OrgApplication[] {
@@ -120,55 +296,25 @@ export class ApplicationsService {
     ).length;
   }
 
+  /**
+   * "Approved (30d)" means approved in the window, not registered in it — so this
+   * measures `reviewedAt` where there is one. Filtering on `submittedAt` missed an
+   * org approved yesterday that had registered months earlier.
+   */
   recentCount(status: AppStatus, days = 30): number {
     const cutoff = Date.now() - days * 24 * 60 * 60 * 1000;
-    return this._applications().filter(
-      a => a.status === status && new Date(a.submittedAt).getTime() >= cutoff
-    ).length;
+    return this._applications().filter(a => {
+      if (a.status !== status) return false;
+      const at = a.reviewedAt ?? a.submittedAt;
+      return new Date(at).getTime() >= cutoff;
+    }).length;
   }
 
-  submitNgoToApi(payload: {
-    orgName: string; registrationNumber: string; focusAreas: string; website?: string;
-    operatingRegions: string; headOfficeCountry: string; programDescription: string;
-    termsConsent: true; dataProcessingConsent: true;
-  }): Observable<unknown> {
-    return this.api.post<{ data: unknown }>('/auth/onboarding/ngo', payload).pipe(map(r => r));
+  submitNgoToApi(payload: NgoOnboardingPayload): Observable<unknown> {
+    return this.api.postData<unknown>('/auth/onboarding/ngo', payload);
   }
 
-  submitHmoToApi(payload: {
-    orgName: string; licenceNumber: string; contactPhone: string;
-    coverageRegion: string; enrolledPatientCount: string; specialtyFocus?: string;
-    baaAcknowledgement: true; termsConsent: true;
-  }): Observable<unknown> {
-    return this.api.post<{ data: unknown }>('/auth/onboarding/hmo', payload).pipe(map(r => r));
-  }
-
-  addAudit(entry: Omit<AuditEntry, 'id' | 'timestamp'>): void {
-    const newEntry: AuditEntry = { ...entry, id: `audit-${Date.now()}`, timestamp: new Date().toISOString() };
-    const updated = [newEntry, ...this._auditLog()];
-    this._auditLog.set(updated);
-    this.saveAudit(updated);
-  }
-
-  private patch(id: string, changes: Partial<OrgApplication>): void {
-    const updated = this._applications().map(a => a.id === id ? { ...a, ...changes } : a);
-    this._applications.set(updated);
-    this.saveApps(updated);
-  }
-
-  private saveApps(apps: OrgApplication[]): void {
-    localStorage.setItem(APPS_KEY, JSON.stringify(apps));
-  }
-
-  private saveAudit(log: AuditEntry[]): void {
-    localStorage.setItem(AUDIT_KEY, JSON.stringify(log));
-  }
-
-  private loadApps(): OrgApplication[] {
-    try { return JSON.parse(localStorage.getItem(APPS_KEY) ?? '[]'); } catch { return []; }
-  }
-
-  private loadAudit(): AuditEntry[] {
-    try { return JSON.parse(localStorage.getItem(AUDIT_KEY) ?? '[]'); } catch { return []; }
+  submitHmoToApi(payload: HmoOnboardingPayload): Observable<unknown> {
+    return this.api.postData<unknown>('/auth/onboarding/hmo', payload);
   }
 }

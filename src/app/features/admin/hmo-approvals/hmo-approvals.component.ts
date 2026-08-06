@@ -1,18 +1,24 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { ApplicationsService, OrgApplication, AppStatus } from '../../../core/applications/applications.service';
-import { AuthService } from '../../../core/auth/auth.service';
+import { ReasonNoteComponent } from '../../../shared/components/reason-note/reason-note.component';
 
 type FilterTab = 'all' | AppStatus;
 
 @Component({
   selector: 'lc-hmo-approvals',
   standalone: true,
+  imports: [ReasonNoteComponent],
   templateUrl: './hmo-approvals.component.html',
   styleUrl: './hmo-approvals.component.scss',
 })
-export class HmoApprovalsComponent {
+export class HmoApprovalsComponent implements OnInit {
   private readonly appsService = inject(ApplicationsService);
-  private readonly auth        = inject(AuthService);
+
+  readonly loading = this.appsService.loading;
+
+  ngOnInit(): void {
+    this.appsService.load().subscribe({ error: () => {} });
+  }
 
   readonly tabs: { id: FilterTab; label: string }[] = [
     { id: 'all',      label: 'All' },
@@ -44,7 +50,7 @@ export class HmoApprovalsComponent {
   }
 
   approve(id: string): void {
-    this.appsService.approve(id, this.auth.user()?.name ?? 'Admin');
+    this.appsService.approve(id).subscribe({ error: () => {} });
     this.expandedId.set(null);
   }
 
@@ -54,7 +60,10 @@ export class HmoApprovalsComponent {
   }
 
   confirmReject(id: string): void {
-    this.appsService.reject(id, this.rejectReason(), this.auth.user()?.name ?? 'Admin');
+    // The API rejects a reject-without-reason with a 422.
+    const reason = this.rejectReason().trim();
+    if (!reason) return;
+    this.appsService.reject(id, reason).subscribe({ error: () => {} });
     this.rejectingId.set(null);
     this.expandedId.set(null);
   }

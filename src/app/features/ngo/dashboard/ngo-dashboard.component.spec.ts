@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { provideRouter } from '@angular/router';
 import { signal } from '@angular/core';
 import { NgoDashboardComponent } from './ngo-dashboard.component';
@@ -14,7 +15,7 @@ describe('NgoDashboardComponent', () => {
       user: signal(mockUser),
     });
     await TestBed.configureTestingModule({
-      imports: [NgoDashboardComponent],
+      imports: [HttpClientTestingModule, NgoDashboardComponent],
       providers: [provideRouter([]), { provide: AuthService, useValue: authSpy }],
     }).compileComponents();
     fixture = TestBed.createComponent(NgoDashboardComponent);

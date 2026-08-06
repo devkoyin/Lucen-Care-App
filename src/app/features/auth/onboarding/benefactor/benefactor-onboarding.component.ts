@@ -1,8 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '../../../../core/auth/auth.service';
 import { BenefactorApplicationsService } from '../../../../core/applications/benefactor-applications.service';
+import { apiErrorMessage } from '../../../../core/api/wrapped-response.model';
 import { OnboardingShellComponent } from '../onboarding-shell/onboarding-shell.component';
 import { FormFieldComponent } from '../../../../shared/components/form-field/form-field.component';
 
@@ -16,10 +16,12 @@ import { FormFieldComponent } from '../../../../shared/components/form-field/for
 export class BenefactorOnboardingComponent {
   private readonly fb     = inject(FormBuilder);
   private readonly router = inject(Router);
-  private readonly auth   = inject(AuthService);
   private readonly apps   = inject(BenefactorApplicationsService);
 
   currentStep = 1;
+  submitting = false;
+  serverError = '';
+
   readonly totalSteps = 4;
   readonly stepLabels = ['Personal details', 'Identity verification', 'Terms & consent', 'Verification'];
 
@@ -82,17 +84,34 @@ export class BenefactorOnboardingComponent {
 
   private submitApplication(): void {
     const v1 = this.step1Form.value;
+    const v2 = this.step2Form.value;
+    const v3 = this.step3Form.value;
+
+    this.submitting = true;
+    this.serverError = '';
 
     this.apps.submitToApi({
-      fullName:         v1.fullName!,
-      phone:            v1.phone!,
-      reasonForSupport: v1.reasonForSupport!,
-      idConsent: true,
-      termsConsent: true,
-      codeOfConductConsent: true,
+      fullName:         v1.fullName ?? '',
+      phone:            v1.phone ?? '',
+      reasonForSupport: v1.reasonForSupport ?? '',
+      idConsent:            v2.idConsent            ?? false,
+      termsConsent:         v3.termsConsent         ?? false,
+      codeOfConductConsent: v3.codeOfConductConsent ?? false,
     }).subscribe({
-      next: () => this.currentStep++,
-      error: () => this.currentStep++,
+      next: () => {
+        this.submitting = false;
+        this.currentStep++;
+      },
+      error: (e: { status?: number }) => {
+        this.submitting = false;
+        // 409 means an application already exists for this user — the submission
+        // succeeded on an earlier attempt, so show the pending step.
+        if (e?.status === 409) {
+          this.currentStep++;
+          return;
+        }
+        this.serverError = apiErrorMessage(e);
+      },
     });
   }
 }

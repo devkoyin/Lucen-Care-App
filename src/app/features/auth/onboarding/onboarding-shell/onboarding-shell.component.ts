@@ -18,6 +18,10 @@ export class OnboardingShellComponent {
   @Input() canContinue = true;
   @Input() continueLabel = 'Continue';
   @Input() role: Role = 'patient';
+  /** Server-side failure message for the current step. Empty string hides the banner. */
+  @Input() serverError = '';
+  /** True while a submit is in flight — blocks double submission. */
+  @Input() submitting = false;
   @Output() back = new EventEmitter<void>();
   @Output() continue = new EventEmitter<void>();
 

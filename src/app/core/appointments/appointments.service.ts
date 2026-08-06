@@ -14,8 +14,7 @@ import {
   formatTime,
   typeToCode,
 } from './appointments.models';
-
-interface WrappedResponse<T> { data: T; traceId: string; }
+import { WrappedResponse } from '../api/wrapped-response.model';
 
 interface RawAppointment {
   id: string;

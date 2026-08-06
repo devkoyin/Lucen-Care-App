@@ -3,6 +3,8 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { Router } from '@angular/router';
 import { AuthService } from '../../../../core/auth/auth.service';
 import { ProfessionalApplicationsService } from '../../../../core/applications/professional-applications.service';
+import { apiErrorMessage } from '../../../../core/api/wrapped-response.model';
+import { Profession } from '../../../../core/auth/auth.models';
 import { OnboardingShellComponent } from '../onboarding-shell/onboarding-shell.component';
 import { FormFieldComponent } from '../../../../shared/components/form-field/form-field.component';
 
@@ -20,6 +22,9 @@ export class ProfessionalOnboardingComponent {
   private readonly router = inject(Router);
 
   currentStep = 1;
+  submitting = false;
+  serverError = '';
+
   readonly totalSteps = 4;
   readonly stepLabels = ['Professional info', 'Credentials', 'Terms & consent', 'Verification'];
 
@@ -32,7 +37,9 @@ export class ProfessionalOnboardingComponent {
   });
 
   readonly step2Form = this.fb.group({
-    bio: ['', Validators.required],
+    // minLength mirrors the backend DTO's @MinLength(10) so a too-short bio is
+    // caught here rather than coming back as a 422.
+    bio: ['', [Validators.required, Validators.minLength(10)]],
   });
 
   readonly step3Form = this.fb.group({
@@ -84,26 +91,46 @@ export class ProfessionalOnboardingComponent {
     if (form?.invalid) return;
 
     if (this.currentStep === 3) {
-      const s1 = this.step1Form.value;
-      const s2 = this.step2Form.value;
-      const s3 = this.step3Form.value;
-
-      this.apps.submitToApi({
-        profession: (s1.profession as 'Doctor' | 'Nurse' | 'Therapist' | 'Other') ?? 'Other',
-        licenseNumber: s1.licenseNumber ?? '',
-        specialty: s1.specialty ?? '',
-        yearsOfExperience: Number(s1.yearsOfExperience ?? 0),
-        phone: s1.phone ?? '',
-        bio: s2.bio ?? '',
-        termsConsent: true,
-        codeOfConductConsent: true,
-      }).subscribe({
-        next: () => this.currentStep++,
-        error: () => this.currentStep++, // advance to pending step even on error; application may retry
-      });
+      this.submitApplication();
       return;
     }
 
     this.currentStep++;
+  }
+
+  private submitApplication(): void {
+    const s1 = this.step1Form.value;
+    const s2 = this.step2Form.value;
+    const s3 = this.step3Form.value;
+
+    this.submitting = true;
+    this.serverError = '';
+
+    this.apps.submitToApi({
+      profession: (s1.profession as Profession) ?? 'Other',
+      licenseNumber: s1.licenseNumber ?? '',
+      specialty: s1.specialty ?? '',
+      yearsOfExperience: Number(s1.yearsOfExperience ?? 0),
+      phone: s1.phone ?? '',
+      bio: s2.bio ?? '',
+      termsConsent: s3.termsConsent ?? false,
+      codeOfConductConsent: s3.codeOfConductConsent ?? false,
+    }).subscribe({
+      next: () => {
+        this.submitting = false;
+        this.currentStep++;
+      },
+      error: (e: { status?: number }) => {
+        this.submitting = false;
+        // 409 means an application already exists for this user — the submission
+        // succeeded on an earlier attempt, so show the pending step rather than
+        // an error the applicant can do nothing about.
+        if (e?.status === 409) {
+          this.currentStep++;
+          return;
+        }
+        this.serverError = apiErrorMessage(e);
+      },
+    });
   }
 }

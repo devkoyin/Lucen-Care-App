@@ -5,6 +5,12 @@
     <span class="schedule-page__date">{{ today }}</span>
   </div>
 
+  @if (loadError()) {
+    <p class="schedule-page__error" role="alert">
+      Could not load today's schedule. Check your connection and try again.
+    </p>
+  }
+
   <div class="schedule-grid">
     @for (slot of schedule(); track slot.time) {
       <div class="time-slot">
@@ -30,6 +36,12 @@
           }
         </div>
       </div>
+    } @empty {
+      @if (!loadError()) {
+        <p class="schedule-page__empty">
+          No doses scheduled for today. Medications you add will appear here.
+        </p>
+      }
     }
   </div>
 

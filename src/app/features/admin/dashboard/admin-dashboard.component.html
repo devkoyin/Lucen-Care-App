@@ -14,9 +14,6 @@
       <div class="stat-card" [class.stat-card--accent]="stat.accent">
         <span class="stat-card__label">{{ stat.label }}</span>
         <span class="stat-card__value">{{ stat.value }}</span>
-        @if (stat.trend) {
-          <span class="stat-card__trend">{{ stat.trend }}</span>
-        }
       </div>
     }
   </div>
@@ -49,28 +46,38 @@
       <span class="panel__title">Recent Activity</span>
       <a class="panel__link" routerLink="/admin/audit-log">View all</a>
     </div>
-    <table class="activity-table">
-      <thead>
-        <tr>
-          <th>Organisation</th>
-          <th>Type</th>
-          <th>Action</th>
-          <th>Actor</th>
-          <th>Time</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (item of activity; track item.orgName + item.time) {
+    @if (activity().length > 0) {
+      <table class="activity-table">
+        <thead>
           <tr>
-            <td class="activity-table__name">{{ item.orgName }}</td>
-            <td><span class="type-badge type-badge--{{ item.type.toLowerCase() }}">{{ item.type }}</span></td>
-            <td><span class="status-badge status-badge--{{ actionClass(item.action) }}">{{ actionLabel(item.action) }}</span></td>
-            <td class="activity-table__actor">{{ item.actor }}</td>
-            <td class="activity-table__time">{{ item.time }}</td>
+            <th>Subject</th>
+            <th>Type</th>
+            <th>Action</th>
+            <th>Actor</th>
+            <th>Time</th>
           </tr>
-        }
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          @for (item of activity(); track item.id) {
+            <tr>
+              <td class="activity-table__name">{{ item.orgName }}</td>
+              <td><span class="type-badge type-badge--{{ item.orgType }}">{{ typeLabel(item.orgType) }}</span></td>
+              <td><span class="status-badge status-badge--{{ actionClass(item.action) }}">{{ actionLabel(item.action) }}</span></td>
+              <td class="activity-table__actor">{{ item.actor }}</td>
+              <td class="activity-table__time">{{ timeAgo(item.timestamp) }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    } @else {
+      <div class="activity-empty">
+        <span class="activity-empty__icon">📋</span>
+        <p class="activity-empty__title">No activity yet</p>
+        <p class="activity-empty__sub">
+          Events will appear here as organisations apply and applications are reviewed.
+        </p>
+      </div>
+    }
   </div>
 
 </div>

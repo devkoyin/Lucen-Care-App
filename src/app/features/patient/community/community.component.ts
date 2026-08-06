@@ -2,8 +2,6 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NewPostModalComponent, NewPostData } from './new-post-modal.component';
 import { AuthService } from '../../../core/auth/auth.service';
-import { ProfessionalApplicationsService } from '../../../core/applications/professional-applications.service';
-import { BenefactorApplicationsService } from '../../../core/applications/benefactor-applications.service';
 import { CommunityPost, SEED_POSTS } from './community.data';
 
 @Component({
@@ -15,8 +13,6 @@ import { CommunityPost, SEED_POSTS } from './community.data';
 })
 export class CommunityComponent {
   private readonly auth      = inject(AuthService);
-  private readonly profApps  = inject(ProfessionalApplicationsService);
-  private readonly benefApps = inject(BenefactorApplicationsService);
 
   readonly showNewPost = signal(false);
   readonly posts       = signal<CommunityPost[]>(SEED_POSTS);
@@ -74,33 +70,27 @@ export class CommunityComponent {
 
   private currentAuthorMeta(): { name: string; initial: string; color: string; badge?: 'verified-professional' | 'verified-benefactor'; specialty?: string } {
     const user = this.auth.user();
-    if (user?.role === 'professional') {
-      const application = this.profApps.findByEmail(user.email);
-      if (application?.status === 'approved') {
-        return {
-          name: user.name,
-          initial: user.name.charAt(0).toUpperCase(),
-          color: 'var(--color-role-accent)',
-          badge: 'verified-professional',
-          specialty: application.specialty,
-        };
-      }
+    // Verification status comes from the server (GET /auth/me), not a local cache —
+    // an admin approval happens long after the access token was issued.
+    const me = this.auth.meState();
+    const application = me?.application;
+    const name = me?.name ?? user?.name ?? 'You';
+    const initial = name.charAt(0).toUpperCase();
+
+    if (me?.role === 'professional' && application?.status === 'approved') {
+      return {
+        name,
+        initial,
+        color: 'var(--color-role-accent)',
+        badge: 'verified-professional',
+        specialty: application.specialty,
+      };
     }
-    if (user?.role === 'benefactor') {
-      const application = this.benefApps.findByEmail(user.email);
-      if (application?.status === 'approved') {
-        return {
-          name: user.name,
-          initial: user.name.charAt(0).toUpperCase(),
-          color: '#D97706',
-          badge: 'verified-benefactor',
-        };
-      }
+
+    if (me?.role === 'benefactor' && application?.status === 'approved') {
+      return { name, initial, color: '#D97706', badge: 'verified-benefactor' };
     }
-    return {
-      name: user?.name ?? 'You',
-      initial: (user?.name ?? 'Y').charAt(0).toUpperCase(),
-      color: 'var(--color-role-accent)',
-    };
+
+    return { name, initial, color: 'var(--color-role-accent)' };
   }
 }
