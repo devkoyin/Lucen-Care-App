@@ -168,10 +168,13 @@
   padding: 2px 8px;
   border-radius: var(--radius-full);
 
-  &--new { background: rgba(10, 110, 82, 0.1); color: #065F46; border: 1px solid rgba(10, 110, 82, 0.2); }
-  &--reviewing { background: rgba(180, 83, 9, 0.1); color: #92400E; border: 1px solid rgba(180, 83, 9, 0.2); }
+  // Modifiers are the real EnrollmentStatus values now, not the fixture's labels.
+  &--active { background: rgba(10, 110, 82, 0.1); color: #065F46; border: 1px solid rgba(10, 110, 82, 0.2); }
+  &--waitlisted { background: rgba(180, 83, 9, 0.1); color: #92400E; border: 1px solid rgba(180, 83, 9, 0.2); }
   &--selected { background: rgba(29, 78, 216, 0.1); color: #1D4ED8; border: 1px solid rgba(29, 78, 216, 0.2); }
   &--rejected { background: rgba(220, 38, 38, 0.08); color: #DC2626; border: 1px solid rgba(220, 38, 38, 0.2); }
+  &--revoked_by_patient,
+  &--expired { background: rgba(107, 114, 128, 0.1); color: #6B7280; border: 1px solid rgba(107, 114, 128, 0.2); }
 }
 
 .program-list {
@@ -218,10 +221,47 @@
   &__fill {
     height: 100%;
     border-radius: var(--radius-full);
+    background: var(--color-role-accent);
     transition: width 0.3s ease;
-
-    &--active { background: var(--color-role-accent); }
-    &--closing { background: #F4A261; }
-    &--full { background: #EF4444; }
   }
+}
+
+
+// ── States the fixture never needed ───────────────────────────
+.dash-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-12) var(--space-6);
+  text-align: center;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+
+  &__icon  { font-size: 32px; }
+  &__title { margin: 0; font-size: var(--text-base); font-weight: var(--font-semibold); color: var(--color-text); }
+  &__sub   { margin: 0 0 var(--space-2); font-size: var(--text-sm); color: var(--color-text-muted); }
+}
+
+.dash-retry {
+  padding: 7px var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: none;
+  font-family: var(--font-family);
+  font-size: var(--text-sm);
+  font-weight: var(--font-bold);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+
+  &:hover { border-color: var(--color-role-accent); color: var(--color-role-accent); }
+}
+
+.applicant-table__empty,
+.program-list__empty {
+  padding: var(--space-8) var(--space-4);
+  text-align: center;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
 }

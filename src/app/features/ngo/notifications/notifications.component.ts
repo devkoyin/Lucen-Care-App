@@ -1,89 +1,134 @@
-import { Component, computed, signal } from '@angular/core';
+import { DatePipe } from '@angular/common';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { Router } from '@angular/router';
 
-type NotifType = 'application' | 'program' | 'budget' | 'system';
+import { apiErrorMessage } from '../../../core/api/wrapped-response.model';
+import {
+  AppNotification,
+  NotificationCategory,
+  NotificationsService,
+  categoryColor,
+  categoryIcon,
+  categoryLabel,
+} from '../../../core/notifications/notifications.service';
 
-interface Notification {
-  id: string;
-  type: NotifType;
-  title: string;
-  body: string;
-  timestamp: string;
-  read: boolean;
-  actionLabel?: string;
-}
-
-const SEED: Notification[] = [
-  { id: 'N-001', type: 'application', title: 'New application — Fatima Yusuf', body: 'Fatima Yusuf submitted an application for the Chronic Care Fund (Type 2 Diabetes). Income verification pending.', timestamp: '3 Jun 2026, 9:14 AM', read: false, actionLabel: 'Review' },
-  { id: 'N-002', type: 'application', title: 'New application — Kwame Asante', body: 'Kwame Asante applied to the Sickle Cell Support Fund. HbSS genotype confirmation attached.', timestamp: '31 May 2026, 2:48 PM', read: false, actionLabel: 'Review' },
-  { id: 'N-003', type: 'program',     title: 'Cardiac Support Program nearing capacity', body: '22 of 25 slots are now filled. Only 3 slots remaining. Deadline: 30 Jun 2026.', timestamp: '30 May 2026, 10:05 AM', read: false },
-  { id: 'N-004', type: 'budget',      title: 'Cardiac Support Program — 90% budget utilised', body: '₦10.8M of ₦12M disbursed to date. At current rate, budget may be exhausted before deadline.', timestamp: '28 May 2026, 4:20 PM', read: true },
-  { id: 'N-005', type: 'application', title: 'Application selected — Musa Ibrahim', body: 'Musa Ibrahim has been selected for the Cardiac Support Program. Onboarding details have been sent to his coordinator.', timestamp: '25 May 2026, 11:30 AM', read: true },
-  { id: 'N-006', type: 'application', title: 'Application rejected — Blessing Nwachukwu', body: 'Blessing Nwachukwu\'s application for the Chronic Care Fund was rejected: household income above eligibility threshold.', timestamp: '20 May 2026, 3:15 PM', read: true },
-  { id: 'N-007', type: 'program',     title: 'Child Nutrition Fund is now Full', body: 'All 15 slots for the Child Nutrition Fund have been filled. New applications will be automatically waitlisted.', timestamp: '18 May 2026, 8:00 AM', read: true },
-  { id: 'N-008', type: 'system',      title: 'Monthly disbursement report ready', body: 'The May 2026 disbursement report has been generated. Total: ₦4.2M across 6 active programs.', timestamp: '1 May 2026, 7:00 AM', read: true, actionLabel: 'View Report' },
-  { id: 'N-009', type: 'budget',      title: 'Budget renewal — Respiratory Aid Initiative', body: 'GlaxoSmithKline Nigeria CSR has confirmed continued funding for the Respiratory Aid Initiative through Dec 2026.', timestamp: '15 Apr 2026, 2:00 PM', read: true },
-  { id: 'N-010', type: 'system',      title: 'Maternal Health Initiative launched', body: 'The Maternal Health Initiative is now live with 30 available slots. Funded by USAID Nigeria. Coordinator: Mrs. Bisi Lawal.', timestamp: '1 Apr 2026, 9:00 AM', read: true },
-];
-
-type TypeFilter = 'all' | NotifType;
+type CategoryFilter = 'all' | NotificationCategory;
 
 @Component({
   selector: 'lc-notifications',
   standalone: true,
-  imports: [],
+  imports: [DatePipe],
   templateUrl: './notifications.component.html',
   styleUrl: './notifications.component.scss',
 })
-export class NotificationsComponent {
-  readonly notifications = signal<Notification[]>(SEED);
-  readonly typeFilter = signal<TypeFilter>('all');
+export class NotificationsComponent implements OnInit {
+  private readonly svc = inject(NotificationsService);
+  private readonly router = inject(Router);
 
-  readonly tabs: { label: string; key: TypeFilter }[] = [
-    { label: 'All',          key: 'all'         },
-    { label: 'Applications', key: 'application' },
-    { label: 'Programs',     key: 'program'     },
-    { label: 'Budget',       key: 'budget'      },
-    { label: 'System',       key: 'system'      },
-  ];
+  readonly notifications = this.svc.notifications;
+  readonly unreadCount = this.svc.unreadCount;
+  readonly hasMore = this.svc.hasMore;
 
-  readonly filtered = computed(() => {
-    const f = this.typeFilter();
-    return f === 'all' ? this.notifications() : this.notifications().filter(n => n.type === f);
+  readonly filter = signal<CategoryFilter>('all');
+  readonly loading = signal(true);
+  readonly loadingMore = signal(false);
+  readonly loadError = signal(false);
+  readonly actionError = signal<string | null>(null);
+
+  /**
+   * Tabs follow the data. An NGO never receives a `care` notification, so a fixed
+   * tab row would leave one permanently empty.
+   */
+  readonly tabs = computed<{ label: string; key: CategoryFilter }[]>(() => {
+    const present = new Set(this.notifications().map(n => n.category));
+    const ordered: NotificationCategory[] = ['application', 'program', 'care', 'system'];
+    return [
+      { label: 'All', key: 'all' as CategoryFilter },
+      ...ordered.filter(c => present.has(c)).map(c => ({ label: categoryLabel(c), key: c as CategoryFilter })),
+    ];
   });
 
-  readonly unreadCount = computed(() =>
-    this.notifications().filter(n => !n.read).length
-  );
+  readonly filtered = computed(() => {
+    const f = this.filter();
+    return f === 'all' ? this.notifications() : this.notifications().filter(n => n.category === f);
+  });
 
-  setFilter(f: TypeFilter): void { this.typeFilter.set(f); }
+  ngOnInit(): void {
+    this.reload();
+  }
 
-  markRead(id: string): void {
-    this.notifications.update(list =>
-      list.map(n => n.id === id ? { ...n, read: true } : n)
-    );
+  reload(): void {
+    this.loading.set(true);
+    this.svc.load().subscribe({
+      next: () => {
+        this.loadError.set(false);
+        this.loading.set(false);
+      },
+      error: () => {
+        this.loadError.set(true);
+        this.loading.set(false);
+      },
+    });
+  }
+
+  loadMore(): void {
+    if (this.loadingMore()) return;
+    this.loadingMore.set(true);
+    this.svc.loadMore().subscribe({
+      next: () => this.loadingMore.set(false),
+      error: (err: unknown) => {
+        this.loadingMore.set(false);
+        this.actionError.set(apiErrorMessage(err, 'Could not load older notifications.'));
+      },
+    });
+  }
+
+  setFilter(f: CategoryFilter): void {
+    this.filter.set(f);
+  }
+
+  /** Opening a notification marks it read and, where there is one, follows its link. */
+  open(n: AppNotification): void {
+    if (!n.read) {
+      this.svc.markRead(n.id).subscribe({
+        error: (err: unknown) =>
+          this.actionError.set(apiErrorMessage(err, 'Could not mark that as read.')),
+      });
+    }
+    const link = this.linkFor(n);
+    if (link) this.router.navigate(link.path, { queryParams: link.queryParams });
   }
 
   markAllRead(): void {
-    this.notifications.update(list => list.map(n => ({ ...n, read: true })));
+    this.svc.markAllRead().subscribe({
+      error: (err: unknown) =>
+        this.actionError.set(apiErrorMessage(err, 'Could not mark everything as read.')),
+    });
   }
 
-  typeIcon(t: NotifType): string {
-    const map: Record<NotifType, string> = {
-      application: '👤',
-      program:     '📋',
-      budget:      '💰',
-      system:      '⚙️',
-    };
-    return map[t];
+  actionLabel(n: AppNotification): string | null {
+    return this.linkFor(n) ? 'Review' : null;
   }
 
-  typeColor(t: NotifType): string {
-    const map: Record<NotifType, string> = {
-      application: '#059669',
-      program:     '#2563EB',
-      budget:      '#D97706',
-      system:      '#6B7280',
-    };
-    return map[t];
+  /**
+   * Built here rather than server-side: the API returns ids, and only the client
+   * knows its own routes.
+   */
+  private linkFor(
+    n: AppNotification,
+  ): { path: string[]; queryParams?: Record<string, string> } | null {
+    const programId = n.payload?.['programId'];
+    if (n.type === 'enrollment_application' && typeof programId === 'string') {
+      return { path: ['/ngo/applicants'], queryParams: { programId } };
+    }
+    return null;
+  }
+
+  icon(category: NotificationCategory): string {
+    return categoryIcon(category);
+  }
+
+  color(category: NotificationCategory): string {
+    return categoryColor(category);
   }
 }

@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../../../core/auth/auth.service';
 import { OnboardingShellComponent } from '../onboarding-shell/onboarding-shell.component';
 import { FormFieldComponent } from '../../../../shared/components/form-field/form-field.component';
+import { NIGERIA_STATES } from '../../../../core/geo/nigeria';
 
 @Component({
   selector: 'lc-patient-onboarding',
@@ -32,9 +33,19 @@ export class PatientOnboardingComponent {
     dateOfBirth: ['', Validators.required],
     biologicalSex: ['', Validators.required],
     country: ['', Validators.required],
+    // Optional by design: the state list is Nigeria-shaped, and a patient elsewhere
+    // must still be able to finish onboarding.
+    locationState: [''],
     conditions: [''],
     primaryLanguage: ['', Validators.required],
   });
+
+  readonly states = NIGERIA_STATES;
+
+  /** The state list only makes sense for Nigeria; other countries skip it. */
+  get showState(): boolean {
+    return this.step2Form.controls.country.value === 'NG';
+  }
 
   readonly step3Form = this.fb.group({
     termsConsent: [false, Validators.requiredTrue],
@@ -106,6 +117,9 @@ export class PatientOnboardingComponent {
       dateOfBirth: s2.dateOfBirth ?? '',
       biologicalSex: s2.biologicalSex ?? '',
       country: s2.country ?? '',
+      // Absent rather than empty: forbidNonWhitelisted is fine with a missing
+      // optional key, but an empty string would be stored as a real location.
+      ...(s2.locationState ? { locationState: s2.locationState } : {}),
       conditions: s2.conditions ?? '',
       primaryLanguage: s2.primaryLanguage ?? '',
       termsConsent: s3.termsConsent ?? false,

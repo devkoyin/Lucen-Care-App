@@ -1,0 +1,123 @@
+<div class="cp-page">
+
+  <div class="cp-header">
+    <div>
+      <h1 class="cp-header__title">New Program</h1>
+      <p class="cp-header__sub">
+        Programmes are reviewed by the LucenCare team before patients can see them.
+      </p>
+    </div>
+    <a class="cp-cancel" routerLink="/ngo/programs">Cancel</a>
+  </div>
+
+  <p class="cp-legend">Fields marked <span class="cp-legend__star">*</span> are required.</p>
+
+  <form class="cp-form" [formGroup]="form" (ngSubmit)="submit()">
+
+    <section class="cp-section">
+      <span class="cp-section__label">Programme details</span>
+
+      <lc-form-field
+        label="Programme name"
+        id="cp-title"
+        [required]="true"
+        [error]="form.controls.title.touched && form.controls.title.invalid ? 'Give the programme a name.' : ''">
+        <input id="cp-title" type="text" formControlName="title" placeholder="e.g. Chronic Care Fund">
+      </lc-form-field>
+
+      <lc-form-field label="Focus" id="cp-focus" hint="A short summary, e.g. “Diabetes · Hypertension”">
+        <input id="cp-focus" type="text" formControlName="focus" placeholder="e.g. Diabetes · Hypertension">
+      </lc-form-field>
+
+      <lc-form-field label="Description" id="cp-desc">
+        <textarea id="cp-desc" rows="3" formControlName="description"
+                  placeholder="What the programme covers and who it is for."></textarea>
+      </lc-form-field>
+
+      <div class="cp-row">
+        <lc-form-field label="Donor / Funder" id="cp-donor">
+          <input id="cp-donor" type="text" formControlName="donor">
+        </lc-form-field>
+        <lc-form-field label="Coordinator" id="cp-coord">
+          <input id="cp-coord" type="text" formControlName="coordinator">
+        </lc-form-field>
+      </div>
+    </section>
+
+    <section class="cp-section">
+      <span class="cp-section__label">Funding &amp; capacity</span>
+      <div class="cp-row">
+        <lc-form-field label="Total budget (₦)" id="cp-budget" hint="Leave blank if not yet fixed">
+          <input id="cp-budget" type="number" min="0" step="1000" formControlName="budgetTotal">
+        </lc-form-field>
+        <lc-form-field label="Patient places" id="cp-slots" hint="Leave blank for no cap">
+          <input id="cp-slots" type="number" min="0" step="1" formControlName="slotsTotal">
+        </lc-form-field>
+      </div>
+
+      <lc-form-field
+        label="Applications close"
+        id="cp-expires"
+        [required]="true"
+        [error]="form.controls.expiresAt.touched && form.controls.expiresAt.invalid ? 'Choose a closing date.' : ''">
+        <input id="cp-expires" type="date" formControlName="expiresAt" [min]="minExpiry()">
+      </lc-form-field>
+    </section>
+
+    <section class="cp-section">
+      <span class="cp-section__label">Who qualifies</span>
+      <p class="cp-section__hint">
+        Only these fields are matched against patient records. Anything else would match everyone.
+      </p>
+
+      <div class="cp-row cp-row--criterion">
+        <lc-form-field label="Field" id="cp-field">
+          <select id="cp-field" formControlName="criterionField">
+            @for (f of criterionFields; track f.value) {
+              <option [value]="f.value">{{ f.label }}</option>
+            }
+          </select>
+        </lc-form-field>
+
+        <lc-form-field label="Condition" id="cp-op">
+          <select id="cp-op" formControlName="criterionOperator">
+            @for (o of operators; track o.value) {
+              <option [value]="o.value">{{ o.label }}</option>
+            }
+          </select>
+        </lc-form-field>
+
+        <lc-form-field
+          label="Value"
+          id="cp-value"
+          [required]="true"
+          hint="Separate multiple values with commas"
+          [error]="form.controls.criterionValue.touched && form.controls.criterionValue.invalid ? 'Enter a value to match on.' : ''">
+          <input id="cp-value" type="text" formControlName="criterionValue"
+                 placeholder="e.g. Diabetes, Hypertension">
+        </lc-form-field>
+      </div>
+    </section>
+
+    <!-- Both the failure and the "what is left" summary sit beside the button: the
+         required fields are spread over three sections, and a banner at the top of
+         the page is off-screen by the time anyone presses Create. -->
+    @if (error()) {
+      <p class="cp-error" role="alert">{{ error() }}</p>
+    }
+
+    <div class="cp-actions">
+      @if (missing().length) {
+        <p class="cp-todo" role="status">
+          Still needed: {{ missing().join(', ') }}
+        </p>
+      }
+      <a class="cp-cancel-btn" routerLink="/ngo/programs">Cancel</a>
+      <button class="cp-submit" type="submit" [disabled]="!canSubmit()">
+        {{ submitting() ? 'Creating…' : 'Create programme' }}
+      </button>
+    </div>
+
+  </form>
+
+</div>

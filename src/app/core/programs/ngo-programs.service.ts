@@ -1,156 +1,179 @@
-import { Injectable, signal, computed } from '@angular/core';
+import { HttpParams } from '@angular/common/http';
+import { Injectable, computed, inject, signal } from '@angular/core';
+import { Observable } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 
-export type ProgramStatus = 'Active' | 'Closing' | 'Full' | 'Paused';
+import { ApiService } from '../api/api.service';
+import { WrappedResponse } from '../api/wrapped-response.model';
 
+/**
+ * The operational state of a programme, derived server-side from pausedAt, slot
+ * counts and expiry. Distinct from the platform review state — a programme can be
+ * approved AND full at the same time, which one combined field could not express.
+ */
+export type ProgramLifecycle = 'Draft' | 'Active' | 'Closing' | 'Full' | 'Paused' | 'Expired';
+
+/** Platform review state, as stored. */
+export type ProgramReviewStatus = 'pending_review' | 'approved' | 'rejected' | 'expired';
+
+/** A programme as GET /organizations/:orgId/programs returns it. */
 export interface NgoProgram {
   id: string;
-  name: string;
-  focus: string;
-  description: string;
-  eligibility: string;
+  orgId: string;
+  title: string;
+  type: string;
+  status: ProgramReviewStatus;
+  lifecycle: ProgramLifecycle;
+  eligibilityCriteria: Array<{ field: string; operator: string; value: unknown }>;
+  expiresAt: string;
+  description?: string;
+  focus?: string;
+  donor?: string;
+  coordinator?: string;
+  /** MINOR units (kobo) — run through toNaira before display. */
+  budgetTotal?: number;
+  budgetDisbursed: number;
+  slotsTotal?: number;
+  slotsFilled: number;
+  slotsAvailable: number;
+  pausedAt?: string | null;
+}
+
+/** GET /organizations/:orgId/stats — dashboard headline numbers, counted in SQL. */
+export interface OrgStats {
+  activePrograms: number;
+  totalPrograms: number;
+  totalApplicants: number;
+  pendingReview: number;
+  selectedPatients: number;
+  waitlisted: number;
+  rejected: number;
+  /** MINOR units (kobo) — run through toNaira before display. */
   budgetTotal: number;
   budgetDisbursed: number;
   slotsTotal: number;
   slotsFilled: number;
-  status: ProgramStatus;
-  deadline: string;
-  donor: string;
-  coordinator: string;
 }
 
-const SEED: NgoProgram[] = [
-  {
-    id: 'PRG-001',
-    name: 'Chronic Care Fund',
-    focus: 'Diabetes · Hypertension',
-    description: 'Subsidised medication and quarterly specialist consultations for low-income adults managing Type 2 Diabetes or hypertension across Lagos and Abuja.',
-    eligibility: 'Confirmed diagnosis, monthly household income ≤ ₦80,000, Nigerian citizen aged 18+.',
-    budgetTotal:    18500000,
-    budgetDisbursed: 11200000,
-    slotsTotal:  50,
-    slotsFilled: 34,
-    status: 'Active',
-    deadline: '31 Aug 2026',
-    donor: 'Bill & Melinda Gates Foundation',
-    coordinator: 'Dr. Amina Bello',
-  },
-  {
-    id: 'PRG-002',
-    name: 'Cardiac Support Program',
-    focus: 'Heart Disease · Post-surgical Rehab',
-    description: 'Covers diagnostic procedures (ECG, Echo), medication, and physiotherapy for patients with confirmed coronary artery disease or post-cardiac surgery.',
-    eligibility: 'Cardiologist referral required. Income-verified. Prioritised by clinical urgency score.',
-    budgetTotal:    12000000,
-    budgetDisbursed: 10800000,
-    slotsTotal:  25,
-    slotsFilled: 22,
-    status: 'Closing',
-    deadline: '30 Jun 2026',
-    donor: 'Tony Elumelu Foundation',
-    coordinator: 'Mrs. Ngozi Okafor',
-  },
-  {
-    id: 'PRG-003',
-    name: 'Respiratory Aid Initiative',
-    focus: 'Asthma · COPD',
-    description: 'Provides inhalers, nebulisers, and twice-yearly pulmonology visits for adults and children with chronic respiratory conditions in urban areas.',
-    eligibility: 'Spirometry-confirmed diagnosis. Ages 6–65. Residents of Lagos, Kano, or Port Harcourt.',
-    budgetTotal:     9200000,
-    budgetDisbursed:  3100000,
-    slotsTotal:  40,
-    slotsFilled: 18,
-    status: 'Active',
-    deadline: '31 Dec 2026',
-    donor: 'GlaxoSmithKline Nigeria CSR',
-    coordinator: 'Mr. Seun Adeyemi',
-  },
-  {
-    id: 'PRG-004',
-    name: 'Child Nutrition Fund',
-    focus: 'Malnutrition · Under-5 Health',
-    description: 'Therapeutic feeding support, vitamin supplementation, and monthly paediatric reviews for children under 5 with moderate to severe acute malnutrition.',
-    eligibility: 'Confirmed SAM/MAM by MUAC screening. Children aged 6 months to 5 years.',
-    budgetTotal:     6800000,
-    budgetDisbursed:  6800000,
-    slotsTotal:  15,
-    slotsFilled: 15,
-    status: 'Full',
-    deadline: 'Closed',
-    donor: 'UNICEF Nigeria',
-    coordinator: 'Dr. Kemi Balogun',
-  },
-  {
-    id: 'PRG-005',
-    name: 'Sickle Cell Support Fund',
-    focus: 'Sickle Cell Disease',
-    description: 'Covers hydroxyurea prescriptions, annual transcranial doppler screening, and crisis hospitalisation top-ups for patients with HbSS or HbSC genotype.',
-    eligibility: 'Genotype confirmation (HbSS or HbSC). All ages. Financial hardship assessment required.',
-    budgetTotal:    11000000,
-    budgetDisbursed:  2900000,
-    slotsTotal:  20,
-    slotsFilled:  8,
-    status: 'Active',
-    deadline: '31 Oct 2026',
-    donor: 'Sickle Cell Association of Nigeria',
-    coordinator: 'Dr. Funke Oladipo',
-  },
-  {
-    id: 'PRG-006',
-    name: 'Maternal Health Initiative',
-    focus: 'Prenatal Care · Safe Delivery',
-    description: 'Free antenatal visits, iron/folic acid supplementation, and subsidised facility delivery for low-income pregnant women in underserved communities.',
-    eligibility: 'Confirmed pregnancy before 20 weeks gestation. Household income ≤ ₦60,000/month.',
-    budgetTotal:     8400000,
-    budgetDisbursed:  3200000,
-    slotsTotal:  30,
-    slotsFilled: 12,
-    status: 'Active',
-    deadline: '31 Mar 2027',
-    donor: 'USAID Nigeria',
-    coordinator: 'Mrs. Bisi Lawal',
-  },
-];
+/**
+ * GET /organizations/:orgId/patient-map — applicants per state.
+ *
+ * Aggregates only: the API returns counts, never a patient's own location, because
+ * location is deliberately absent from the consented snapshot.
+ */
+export interface PatientMapRow {
+  state: string;
+  selected: number;
+  inReview: number;
+  waitlisted: number;
+  total: number;
+  topCondition?: string;
+}
 
+export interface CreateProgramPayload {
+  title: string;
+  type: 'ngo_funding';
+  eligibilityCriteria: Array<{ field: string; operator: string; value: unknown }>;
+  expiresAt: string;
+  description?: string;
+  focus?: string;
+  donor?: string;
+  coordinator?: string;
+  budgetTotal?: number;
+  slotsTotal?: number;
+}
+
+/**
+ * `type` and `eligibilityCriteria` are absent by design: the API refuses to change
+ * who qualifies once patients have applied under the original terms.
+ */
+export type UpdateProgramPayload = Partial<
+  Omit<CreateProgramPayload, 'type' | 'eligibilityCriteria'>
+> & { paused?: boolean };
+
+/** Money crosses the wire in kobo so it cannot drift; convert once, at the edge. */
+export function toNaira(minorUnits?: number): number {
+  return (minorUnits ?? 0) / 100;
+}
+
+export function toKobo(naira: number): number {
+  return Math.round(naira * 100);
+}
+
+/**
+ * An NGO's own programmes, from the API.
+ *
+ * Replaces a hardcoded SEED array that was shared with the patient portal via a root
+ * singleton — so editing a fixture changed both, and the NGO's pause button would
+ * have silently mutated what patients saw in Available Plans.
+ */
 @Injectable({ providedIn: 'root' })
 export class NgoProgramsService {
-  private readonly _programs = signal<NgoProgram[]>(SEED);
-  private readonly _appliedIds = signal<Set<string>>(new Set());
+  private readonly api = inject(ApiService);
 
+  private readonly _programs = signal<NgoProgram[]>([]);
   readonly programs = this._programs.asReadonly();
 
+  private readonly _stats = signal<OrgStats | null>(null);
+  readonly stats = this._stats.asReadonly();
+
   readonly activePrograms = computed(() =>
-    this._programs().filter(p => p.status === 'Active' || p.status === 'Closing')
+    this._programs().filter(p => p.lifecycle === 'Active' || p.lifecycle === 'Closing'),
   );
 
-  isApplied(id: string): boolean {
-    return this._appliedIds().has(id);
+  load(orgId: string, limit = 50): Observable<NgoProgram[]> {
+    return this.api
+      .get<WrappedResponse<NgoProgram[]>>(
+        `/organizations/${orgId}/programs`,
+        new HttpParams().set('limit', limit),
+      )
+      .pipe(map(r => r.data), tap(programs => this._programs.set(programs)));
   }
 
-  toggleApply(id: string): void {
-    this._appliedIds.update(set => {
-      const next = new Set(set);
-      next.has(id) ? next.delete(id) : next.add(id);
-      return next;
-    });
+  loadStats(orgId: string): Observable<OrgStats> {
+    return this.api
+      .get<WrappedResponse<OrgStats>>(`/organizations/${orgId}/stats`)
+      .pipe(map(r => r.data), tap(stats => this._stats.set(stats)));
   }
 
-  setStatus(id: string, status: ProgramStatus): void {
-    this._programs.update(list =>
-      list.map(p => p.id === id ? { ...p, status } : p)
-    );
+  loadPatientMap(orgId: string): Observable<PatientMapRow[]> {
+    return this.api
+      .get<WrappedResponse<PatientMapRow[]>>(`/organizations/${orgId}/patient-map`)
+      .pipe(map(r => r.data));
+  }
+
+  create(payload: CreateProgramPayload): Observable<NgoProgram> {
+    return this.api
+      .post<WrappedResponse<NgoProgram>>('/programs', payload)
+      .pipe(map(r => r.data), tap(created => this._programs.update(list => [...list, created])));
+  }
+
+  update(id: string, payload: UpdateProgramPayload): Observable<NgoProgram> {
+    return this.api
+      .patch<WrappedResponse<NgoProgram>>(`/programs/${id}`, payload)
+      .pipe(map(r => r.data), tap(updated => this.replace(updated)));
+  }
+
+  setPaused(id: string, paused: boolean): Observable<NgoProgram> {
+    return this.update(id, { paused });
   }
 
   slotsAvailable(p: NgoProgram): number {
-    return p.slotsTotal - p.slotsFilled;
+    return p.slotsAvailable;
   }
 
-  statusColor(s: ProgramStatus): string {
-    const map: Record<ProgramStatus, string> = {
-      Active:  '#059669',
-      Closing: '#D97706',
-      Full:    '#2563EB',
-      Paused:  '#6B7280',
-    };
-    return map[s];
+  /** Guarded: an uncapped programme must render 0%, never NaN. */
+  fillPercent(p: NgoProgram): number {
+    if (!p.slotsTotal) return 0;
+    return Math.min(100, Math.round((p.slotsFilled / p.slotsTotal) * 100));
+  }
+
+  budgetPercent(p: NgoProgram): number {
+    if (!p.budgetTotal) return 0;
+    return Math.min(100, Math.round((p.budgetDisbursed / p.budgetTotal) * 100));
+  }
+
+  private replace(program: NgoProgram): void {
+    this._programs.update(list => list.map(p => (p.id === program.id ? program : p)));
   }
 }
