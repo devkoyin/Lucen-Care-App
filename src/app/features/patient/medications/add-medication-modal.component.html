@@ -54,7 +54,7 @@
                   <span class="amm-field__icon">🔁</span> Frequency
                 </label>
                 <select id="amm-frequency" name="frequency" [(ngModel)]="form.frequency" required
-                        (ngModelChange)="onFrequencyChange()">
+                        (ngModelChange)="onFrequencyChange($event)">
                   @for (opt of frequencyOptions; track opt) {
                     <option [value]="opt">{{ opt }}</option>
                   }
@@ -76,6 +76,11 @@
                   <span class="amm-field__icon">🏥</span> Specialty
                 </label>
                 <lc-specialty-select [value]="form.specialty" (valueChange)="form.specialty = $event" />
+                <!-- lc-specialty-select is not a ControlValueAccessor, so the form
+                     cannot flag it — isValid requires it, hence an explicit message. -->
+                @if (f.submitted && !form.specialty) {
+                  <p class="amm-field__error" role="alert">Select a specialty.</p>
+                }
               </div>
             </div>
 
@@ -152,11 +157,19 @@
 
       <!-- ── Footer ─────────────────────────────────────────── -->
       <div class="amm-footer">
-        <button type="button" class="amm-cancel-btn" (click)="close.emit()">Cancel</button>
-        <button type="submit" class="amm-save-btn" [disabled]="!isValid">
-          <span>{{ isEditMode ? 'Save Changes' : 'Save Medication' }}</span>
-          <span class="amm-save-btn__icon">→</span>
-        </button>
+        @if (error()) {
+          <p class="amm-error" role="alert">{{ error() }}</p>
+        } @else if (f.submitted && !isValid) {
+          <p class="amm-error" role="alert">{{ missingFieldsMessage }}</p>
+        }
+        <div class="amm-footer__actions">
+          <button type="button" class="amm-cancel-btn" [disabled]="submitting()" (click)="close.emit()">Cancel</button>
+          <!-- Gated on exactly what submit() checks, so an enabled button always acts. -->
+          <button type="submit" class="amm-save-btn" [disabled]="f.invalid || !isValid || submitting()">
+            <span>{{ submitting() ? 'Saving…' : (isEditMode ? 'Save Changes' : 'Save Medication') }}</span>
+            @if (!submitting()) { <span class="amm-save-btn__icon">→</span> }
+          </button>
+        </div>
       </div>
     </form>
 

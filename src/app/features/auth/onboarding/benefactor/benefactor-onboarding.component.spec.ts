@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { provideRouter } from '@angular/router';
 import { BenefactorOnboardingComponent } from './benefactor-onboarding.component';
 
@@ -9,7 +10,7 @@ describe('BenefactorOnboardingComponent', () => {
   beforeEach(async () => {
     localStorage.clear();
     await TestBed.configureTestingModule({
-      imports: [BenefactorOnboardingComponent],
+      imports: [HttpClientTestingModule, BenefactorOnboardingComponent],
       providers: [provideRouter([])],
     }).compileComponents();
     fixture = TestBed.createComponent(BenefactorOnboardingComponent);

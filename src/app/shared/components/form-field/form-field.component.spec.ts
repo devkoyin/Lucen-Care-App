@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FormFieldComponent } from './form-field.component';
 
 describe('FormFieldComponent', () => {
@@ -6,7 +7,7 @@ describe('FormFieldComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FormFieldComponent],
+      imports: [HttpClientTestingModule, FormFieldComponent],
     }).compileComponents();
     fixture = TestBed.createComponent(FormFieldComponent);
   });

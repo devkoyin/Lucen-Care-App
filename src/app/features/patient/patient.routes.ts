@@ -1,16 +1,34 @@
 import { Routes } from '@angular/router';
 import { PatientPortalComponent } from './patient-portal.component';
+import { roleGuard } from '../../core/auth/role.guard';
 
 export const PATIENT_ROUTES: Routes = [
   {
     path: '',
     component: PatientPortalComponent,
+    canActivate: [roleGuard('patient', ['/auth', 'patient', 'login'])],
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       {
         path: 'dashboard',
         loadComponent: () =>
           import('./dashboard/patient-dashboard.component').then(m => m.PatientDashboardComponent),
+      },
+      {
+        // Without an edit path, anything added to the patient record after someone
+        // onboarded — location, most recently — could never be filled in.
+        path: 'profile',
+        data: { label: 'My Profile' },
+        loadComponent: () =>
+          import('./profile/patient-profile.component').then(m => m.PatientProfileComponent),
+      },
+      {
+        // The only place a patient can change their mind about sharing. Without it
+        // a purpose declined at onboarding stayed declined forever.
+        path: 'privacy',
+        data: { label: 'Privacy' },
+        loadComponent: () =>
+          import('./consents/consents.component').then(m => m.PatientConsentsComponent),
       },
       {
         path: 'medications',

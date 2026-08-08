@@ -1,7 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { provideRouter } from '@angular/router';
 import { of } from 'rxjs';
 import { SignupComponent } from './signup.component';
+import { SignupPayload } from '../../../core/auth/auth.models';
 import { AuthService } from '../../../core/auth/auth.service';
 import { User } from '../../../core/auth/auth.models';
 
@@ -16,7 +18,7 @@ describe('SignupComponent', () => {
     authSpy.signup.and.returnValue(of(mockUser));
 
     await TestBed.configureTestingModule({
-      imports: [SignupComponent],
+      imports: [HttpClientTestingModule, SignupComponent],
       providers: [
         provideRouter([]),
         { provide: AuthService, useValue: authSpy },
@@ -51,7 +53,7 @@ describe('SignupComponent', () => {
   it('calls auth.signup on valid submit', () => {
     fixture.componentInstance.form.setValue({ name: 'Alice', email: 'a@b.com', password: 'password123', confirmPassword: 'password123' });
     fixture.componentInstance.submit();
-    expect(authSpy.signup).toHaveBeenCalledWith('patient', { name: 'Alice', email: 'a@b.com', password: 'password123' });
+    expect(authSpy.signup).toHaveBeenCalledWith('patient', { name: 'Alice', email: 'a@b.com', password: 'password123' } as SignupPayload);
   });
 
   it('does not submit when form is invalid', () => {

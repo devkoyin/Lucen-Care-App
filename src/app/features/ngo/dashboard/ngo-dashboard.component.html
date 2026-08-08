@@ -9,79 +9,103 @@
     <a class="dash-primary-btn" routerLink="/ngo/programs/create">+ New Program</a>
   </div>
 
-  <!-- Stats row -->
-  <div class="stats-row">
-    @for (stat of stats; track stat.label) {
-      <div class="stat-card" [class.stat-card--accent]="stat.accent">
-        <span class="stat-card__label">{{ stat.label }}</span>
-        <span class="stat-card__value">{{ stat.value }}</span>
-        @if (stat.trend) {
-          <span class="stat-card__trend">{{ stat.trend }}</span>
-        }
-      </div>
-    }
-  </div>
+  @if (loadError()) {
+    <div class="dash-state">
+      <span class="dash-state__icon" aria-hidden="true">⚠️</span>
+      <p class="dash-state__title">Could not load your dashboard</p>
+      <p class="dash-state__sub">Check your connection and try again.</p>
+      <button class="dash-retry" type="button" (click)="load()">Retry</button>
+    </div>
+  } @else {
 
-  <!-- Content row -->
-  <div class="content-row">
+    <!-- Stats row -->
+    <div class="stats-row">
+      @for (stat of stats(); track stat.label) {
+        <div class="stat-card" [class.stat-card--accent]="stat.accent">
+          <span class="stat-card__label">{{ stat.label }}</span>
+          <span class="stat-card__value">{{ stat.value }}</span>
+          @if (stat.hint) {
+            <span class="stat-card__trend">{{ stat.hint }}</span>
+          }
+        </div>
+      } @empty {
+        <div class="stat-card">
+          <span class="stat-card__label">Loading…</span>
+          <span class="stat-card__value">—</span>
+        </div>
+      }
+    </div>
 
-    <!-- Recent applicants -->
-    <div class="panel">
-      <div class="panel__header">
-        <span class="panel__title">Recent Applicants</span>
-        <a class="panel__link" routerLink="/ngo/applicants">View all</a>
-      </div>
-      <div class="table-scroll">
-        <table class="applicant-table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Condition</th>
-              <th>Program</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (app of applicants; track app.name) {
+    <!-- Content row -->
+    <div class="content-row">
+
+      <!-- Recent applicants -->
+      <div class="panel">
+        <div class="panel__header">
+          <span class="panel__title">Recent Applicants</span>
+          <a class="panel__link" routerLink="/ngo/applicants">View all</a>
+        </div>
+        <div class="table-scroll">
+          <table class="applicant-table">
+            <thead>
               <tr>
-                <td class="applicant-table__name">{{ app.name }}</td>
-                <td class="applicant-table__condition">{{ app.condition }}</td>
-                <td class="applicant-table__program">{{ app.program }}</td>
-                <td>
-                  <span class="status-badge status-badge--{{ app.status }}">{{ statusLabel(app.status) }}</span>
-                </td>
+                <th>Name</th>
+                <th>Condition</th>
+                <th>Program</th>
+                <th>Status</th>
               </tr>
-            }
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              @for (app of recent(); track app.id) {
+                <tr>
+                  <td class="applicant-table__name">{{ app.name }}</td>
+                  <td class="applicant-table__condition">{{ app.condition }}</td>
+                  <td class="applicant-table__program">{{ app.programTitle }}</td>
+                  <td>
+                    <span class="status-badge status-badge--{{ app.status }}">{{ statusLabel(app.status) }}</span>
+                  </td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td class="applicant-table__empty" colspan="4">
+                    {{ loading() ? 'Loading applicants…' : 'No applications yet.' }}
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
 
-    <!-- Programs at a glance -->
-    <div class="panel">
-      <div class="panel__header">
-        <span class="panel__title">Programs at a Glance</span>
-        <a class="panel__link" routerLink="/ngo/programs">View all</a>
-      </div>
-      <div class="program-list">
-        @for (prog of programs; track prog.name) {
-          <div class="program-item">
-            <div class="program-item__top">
-              <span class="program-item__name">{{ prog.name }}</span>
-              <span class="program-item__count">{{ prog.filled }}/{{ prog.total }}</span>
-            </div>
-            <div class="program-bar">
-              <div
-                class="program-bar__fill program-bar__fill--{{ prog.status }}"
-                [style.width.%]="fillPercent(prog)">
+      <!-- Programs at a glance -->
+      <div class="panel">
+        <div class="panel__header">
+          <span class="panel__title">Programs at a Glance</span>
+          <a class="panel__link" routerLink="/ngo/programs">View all</a>
+        </div>
+        <div class="program-list">
+          @for (prog of programs(); track prog.id) {
+            <div class="program-item">
+              <div class="program-item__top">
+                <span class="program-item__name">{{ prog.title }}</span>
+                <span class="program-item__count">
+                  {{ prog.slotsFilled }}@if (prog.slotsTotal) {/{{ prog.slotsTotal }}}
+                </span>
               </div>
+              <div class="program-bar">
+                <div class="program-bar__fill" [style.width.%]="fillPercent(prog)"></div>
+              </div>
+              <span class="program-item__status">{{ prog.lifecycle }}</span>
             </div>
-            <span class="program-item__status">{{ prog.status === 'full' ? 'Full' : prog.status === 'closing' ? 'Closing soon' : 'Active' }}</span>
-          </div>
-        }
+          } @empty {
+            <p class="program-list__empty">
+              {{ loading() ? 'Loading programmes…' : 'You have not created a programme yet.' }}
+            </p>
+          }
+        </div>
       </div>
-    </div>
 
-  </div>
+    </div>
+  }
 
 </div>

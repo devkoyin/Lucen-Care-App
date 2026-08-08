@@ -1,26 +1,24 @@
 import { HttpParams } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Injectable, inject, signal } from '@angular/core';
+import { Observable, of } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
 
 import { ApiService } from '../api/api.service';
 import {
   CreateMedicationPayload,
   DoseStatus,
+  LoggableDoseStatus,
   Medication,
   MedicationStats,
   RefillAlert,
   RefillUrgency,
   ScheduleSlot,
+  UpdateMedicationPayload,
   calcRefillUrgency,
   formatRefillDate,
   slotMeta,
 } from './medications.models';
-
-interface WrappedResponse<T> {
-  data: T;
-  traceId: string;
-}
+import { WrappedResponse } from '../api/wrapped-response.model';
 
 interface RawMedication {
   id: string;
@@ -53,6 +51,7 @@ interface RawRefillAlertsResponse {
 @Injectable({ providedIn: 'root' })
 export class MedicationsService {
   private readonly api = inject(ApiService);
+  private readonly _stats = signal<MedicationStats | null>(null);
 
   getMedications(): Observable<Medication[]> {
     return this.api
@@ -66,7 +65,7 @@ export class MedicationsService {
       .pipe(map(r => toMedication(r.data)));
   }
 
-  updateMedication(id: string, payload: Partial<CreateMedicationPayload>): Observable<Medication> {
+  updateMedication(id: string, payload: UpdateMedicationPayload): Observable<Medication> {
     return this.api
       .patch<WrappedResponse<RawMedication>>(`/medications/${id}`, payload)
       .pipe(map(r => toMedication(r.data)));
@@ -91,7 +90,14 @@ export class MedicationsService {
     );
   }
 
-  logDose(medicationId: string, scheduledTime: string, status: DoseStatus, doseDate?: string): Observable<void> {
+  // Narrowed to the statuses the API accepts: 'due_now' is a read-time display
+  // overlay and the backend's @IsIn rejects it with a 422.
+  logDose(
+    medicationId: string,
+    scheduledTime: string,
+    status: LoggableDoseStatus,
+    doseDate?: string,
+  ): Observable<void> {
     return this.api
       .post(`/medications/${medicationId}/doses/log`, { scheduledTime, status, doseDate })
       .pipe(map(() => undefined));
@@ -118,7 +124,21 @@ export class MedicationsService {
   }
 
   getStats(): Observable<MedicationStats> {
-    return this.api.get<WrappedResponse<MedicationStats>>('/medications/stats').pipe(map(r => r.data));
+    return this.api
+      .get<WrappedResponse<MedicationStats>>('/medications/stats')
+      .pipe(map(r => r.data), tap(stats => this._stats.set(stats)));
+  }
+
+  /**
+   * Shared so the routed shell's stat tiles and its child routes read one source.
+   * Without this, adding a medication left "Active Meds" showing its pre-add value
+   * until a full page reload — the shell and the child had no channel between them.
+   */
+  readonly stats = this._stats.asReadonly();
+
+  /** Call after any successful mutation. Failures leave the last known stats up. */
+  refreshStats(): void {
+    this.getStats().pipe(catchError(() => of(null))).subscribe();
   }
 
   registerReminders(timezone: string): Observable<void> {

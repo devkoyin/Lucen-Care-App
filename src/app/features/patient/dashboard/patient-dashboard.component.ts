@@ -42,7 +42,8 @@ export class PatientDashboardComponent implements OnInit {
   });
 
   readonly quickActions: QuickAction[] = [
-    { icon: '💊', label: 'Add Medication',  route: '/patient/medications' },
+    // /patient/medications redirects to the Schedule tab, which has no Add button.
+    { icon: '💊', label: 'Add Medication',  route: '/patient/medications/all' },
     { icon: '📅', label: 'Book Appointment', route: '/patient/appointments', liveIcon: 'calendar' },
     { icon: '🤖', label: 'Ask AI',           route: '/patient/ai-chat' },
     { icon: '💰', label: 'Browse Funding',   route: '/patient/funding' },

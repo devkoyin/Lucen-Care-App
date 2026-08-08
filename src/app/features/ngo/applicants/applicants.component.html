@@ -3,94 +3,167 @@
   <div class="app-header">
     <div>
       <h1 class="app-header__title">Applicants</h1>
-      <p class="app-header__sub">{{ applicants().length }} total applications across all programs</p>
+      <p class="app-header__sub">
+        @if (selectedProgram(); as prog) {
+          {{ applicants().length }} application{{ applicants().length === 1 ? '' : 's' }} to {{ prog.title }}
+          @if (prog.slotsTotal) { · {{ prog.slotsFilled }} of {{ prog.slotsTotal }} places filled }
+        } @else {
+          Applications to your programmes
+        }
+      </p>
     </div>
     <div class="app-header__controls">
-      @if (pendingCount() > 0) {
-        <span class="app-header__badge">{{ pendingCount() }} awaiting review</span>
+      @if (countFor('active') > 0) {
+        <span class="app-header__badge">{{ countFor('active') }} awaiting review</span>
       }
-      <select class="app-select" (change)="setProgram($event)">
-        @for (opt of programOptions; track opt.value) {
-          <option [value]="opt.value">{{ opt.label }}</option>
+      <select class="app-select" aria-label="Programme"
+              [value]="selectedProgramId() ?? ''"
+              (change)="selectProgram($any($event.target).value)">
+        @for (prog of programs(); track prog.id) {
+          <option [value]="prog.id">{{ programLabel(prog) }}</option>
         }
       </select>
-      <input class="app-search" type="search" placeholder="Search name or condition…"
-             (input)="setSearch($event)" />
+      <input class="app-search" type="search" aria-label="Search applicants"
+             placeholder="Search name or condition…"
+             [value]="search()" (input)="search.set($any($event.target).value)" />
     </div>
   </div>
 
+  @if (actionError()) {
+    <p class="app-alert app-alert--error" role="alert">{{ actionError() }}</p>
+  }
+  @if (isFull() && !loading()) {
+    <p class="app-alert">
+      This programme is full — move someone to the waiting list to free a place before selecting anyone else.
+    </p>
+  }
+
   <!-- Status tabs -->
   <div class="app-tabs">
-    @for (tab of statusTabs; track tab.key) {
-      <button class="app-tab" [class.app-tab--active]="statusFilter() === tab.key"
-              type="button" (click)="setStatus(tab.key)">
-        {{ tab.label }}
+    @for (tab of tabs; track tab.key) {
+      <button class="app-tab" [class.app-tab--active]="activeTab() === tab.key"
+              type="button" (click)="setTab(tab.key)">
+        {{ tab.label }} <span class="app-tab__count">{{ countFor(tab.key) }}</span>
       </button>
     }
   </div>
 
-  <!-- Table -->
-  <div class="app-table-wrap">
-    <table class="app-table">
-      <thead>
-        <tr>
-          <th>Applicant</th>
-          <th>Condition</th>
-          <th>Program</th>
-          <th>Monthly Cost</th>
-          <th>Applied</th>
-          <th>Status</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (app of filtered(); track app.id) {
-          <tr [class.app-table__row--selected]="app.status === 'Selected'">
-            <td>
-              <div class="app-cell">
-                <div class="app-cell__avatar">{{ app.initial }}</div>
-                <div>
-                  <div class="app-cell__name">{{ app.name }}</div>
-                  <div class="app-cell__meta">{{ app.age }}yo {{ app.gender === 'F' ? 'Female' : 'Male' }} · {{ app.state }}</div>
-                </div>
-              </div>
-            </td>
-            <td>
-              <div class="app-condition">{{ app.condition }}</div>
-              @if (app.note) {
-                <div class="app-note">{{ app.note }}</div>
-              }
-            </td>
-            <td class="td-muted">{{ app.programName }}</td>
-            <td class="td-cost">{{ formatAmount(app.monthlyCost) }}/mo</td>
-            <td class="td-muted">{{ app.appliedDate }}</td>
-            <td>
-              <span class="app-status"
-                    [style.color]="statusColor(app.status)"
-                    [style.background]="statusColor(app.status) + '18'">
-                {{ app.status }}
-              </span>
-            </td>
-            <td>
-              <div class="app-actions">
-                @if (app.status === 'New') {
-                  <button class="app-btn app-btn--review" type="button" (click)="review(app.id)">Review</button>
-                }
-                @if (app.status === 'New' || app.status === 'In Review') {
-                  <button class="app-btn app-btn--select"   type="button" (click)="select(app.id)">Select</button>
-                  <button class="app-btn app-btn--waitlist" type="button" (click)="waitlist(app.id)">Waitlist</button>
-                  <button class="app-btn app-btn--reject"   type="button" (click)="reject(app.id)">Reject</button>
-                }
-              </div>
-            </td>
-          </tr>
-        } @empty {
+  @if (loading()) {
+    <div class="app-state">
+      <span class="app-state__icon" aria-hidden="true">⏳</span>
+      <p class="app-state__title">Loading applicants…</p>
+    </div>
+  } @else if (loadError()) {
+    <div class="app-state">
+      <span class="app-state__icon" aria-hidden="true">⚠️</span>
+      <p class="app-state__title">Could not load applicants</p>
+      <p class="app-state__sub">Check your connection and try again.</p>
+    </div>
+  } @else if (programs().length === 0) {
+    <div class="app-state">
+      <span class="app-state__icon" aria-hidden="true">📋</span>
+      <p class="app-state__title">You have no programmes yet</p>
+      <p class="app-state__sub">Create a programme before patients can apply to it.</p>
+    </div>
+  } @else {
+    <div class="app-table-wrap">
+      <table class="app-table">
+        <thead>
           <tr>
-            <td class="app-empty" colspan="7">No applicants match this filter.</td>
+            <th>Applicant</th>
+            <th>Conditions</th>
+            <th>Applied</th>
+            <th>Status</th>
+            <th>Actions</th>
           </tr>
-        }
-      </tbody>
-    </table>
-  </div>
+        </thead>
+        <tbody>
+          @for (a of filtered(); track a.id) {
+            <tr [class.app-table__row--selected]="a.status === 'selected'">
+              <td>
+                <div class="app-cell">
+                  <div class="app-cell__avatar">{{ initialFor(a) }}</div>
+                  <div>
+                    <div class="app-cell__name">{{ a.sharedDataSnapshot.name || 'Unnamed applicant' }}</div>
+                    @if (a.sharedDataSnapshot.address) {
+                      <div class="app-cell__meta">{{ a.sharedDataSnapshot.address }}</div>
+                    }
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="app-tags">
+                  @for (tag of a.sharedDataSnapshot.conditionTags ?? []; track tag) {
+                    <span class="app-tag">{{ tag }}</span>
+                  } @empty {
+                    <span class="app-cell__meta">Not shared</span>
+                  }
+                </div>
+              </td>
+              <td class="td-muted">{{ a.createdAt | date: 'd MMM y' }}</td>
+              <td>
+                <lc-badge [color]="statusTone(a.status)">{{ statusLabel(a.status) }}</lc-badge>
+                @if (a.status === 'rejected' && a.rejectionReason) {
+                  <div class="app-note">{{ a.rejectionReason }}</div>
+                }
+              </td>
+              <td>
+                <div class="app-actions">
+                  @if (canReview(a)) {
+                    @if (a.status !== 'selected') {
+                      <button class="app-btn app-btn--select" type="button"
+                              [disabled]="isBusy(a) || isFull()"
+                              [attr.title]="isFull() ? 'Programme is full' : null"
+                              (click)="select(a)">Select</button>
+                    }
+                    @if (a.status !== 'waitlisted') {
+                      <button class="app-btn app-btn--waitlist" type="button"
+                              [disabled]="isBusy(a)" (click)="waitlist(a)">Waitlist</button>
+                    }
+                    @if (a.status !== 'rejected') {
+                      <button class="app-btn app-btn--reject" type="button"
+                              [disabled]="isBusy(a)" (click)="startReject(a)">Reject</button>
+                    }
+                  } @else {
+                    <span class="app-cell__meta">—</span>
+                  }
+                </div>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td class="app-empty" colspan="5">
+                @if (applicants().length === 0) {
+                  No applications to this programme yet.
+                } @else {
+                  No applicants match this filter.
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
 
 </div>
+
+@if (rejecting(); as applicant) {
+  <lc-confirm-modal
+    title="Reject this applicant?"
+    message="The reason you give is emailed to the applicant and shown on their Funding page."
+    confirmLabel="Reject applicant"
+    [danger]="true"
+    [submitting]="isBusy(applicant)"
+    [error]="actionError()"
+    (confirm)="confirmReject()"
+    (cancel)="cancelReject()">
+    <label class="app-reason">
+      <span class="app-reason__label">Reason</span>
+      <textarea class="app-reason__input" rows="3"
+                placeholder="e.g. Outside the programme's catchment area"
+                [value]="rejectReason()"
+                (input)="rejectReason.set($any($event.target).value)"></textarea>
+    </label>
+  </lc-confirm-modal>
+}

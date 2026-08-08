@@ -204,6 +204,14 @@
   &--hmo { background: rgba(96,165,250,0.12); color: #2563EB; border: 1px solid rgba(96,165,250,0.25); }
   &--professional { background: rgba(22,163,74,0.10); color: #15803D; border: 1px solid rgba(22,163,74,0.25); }
   &--benefactor   { background: rgba(217,119,6,0.10); color: #92400E; border: 1px solid rgba(217,119,6,0.25); }
+
+  // Audit rows also cover programs, studies and non-application subjects.
+  &--program,
+  &--study { background: rgba(180,83,9,0.10); color: #92400E; border: 1px solid rgba(180,83,9,0.20); }
+  &--user,
+  &--patient,
+  &--medication,
+  &--consent { background: rgba(100,116,139,0.10); color: var(--color-text-secondary); border: 1px solid var(--color-border); }
 }
 
 .action-badge {
@@ -223,7 +231,9 @@
     flex-shrink: 0;
   }
 
-  &--submitted {
+  // Modifiers are tones (see auditActionTone), not raw action names — nine actions
+  // share these four visual states.
+  &--pending {
     background: rgba(180,83,9,0.10);
     color: #92400E;
     border: 1px solid rgba(180,83,9,0.20);
@@ -243,6 +253,40 @@
     border: 1px solid rgba(220,38,38,0.20);
     .action-badge__dot { background: #DC2626; }
   }
+
+  // Exports, sign-ins and refill requests — informational, not an outcome.
+  &--neutral {
+    background: rgba(100,116,139,0.10);
+    color: var(--color-text-secondary);
+    border: 1px solid var(--color-border);
+    .action-badge__dot { background: var(--color-text-muted); }
+  }
+}
+
+.log-panel__more {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-4);
+  border-top: 1px solid var(--color-border);
+}
+
+.load-more {
+  padding: var(--space-2) var(--space-5);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  color: var(--color-text);
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s;
+
+  &:hover:not(:disabled) {
+    border-color: var(--color-role-border);
+    box-shadow: var(--shadow-sm);
+  }
+
+  &:disabled { opacity: 0.6; cursor: default; }
 }
 
 .empty-state {

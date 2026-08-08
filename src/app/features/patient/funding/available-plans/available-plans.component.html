@@ -3,69 +3,118 @@
   <div class="plans-page__header">
     <div>
       <h2 class="plans-page__title">Available Plans</h2>
-      <p class="plans-page__sub">{{ programs().length }} assistance programme{{ programs().length === 1 ? '' : 's' }} from NGO partners</p>
+      <p class="plans-page__sub">
+        {{ programs().length }} assistance programme{{ programs().length === 1 ? '' : 's' }} from NGO partners
+      </p>
     </div>
   </div>
 
-  <div class="program-list">
-    @for (prog of programs(); track prog.id) {
-      <div class="program-card" [class.program-card--enrolled]="isApplied(prog.id)">
+  <!-- The one failure the patient can fix themselves gets a route, not just a message. -->
+  @if (needsConsent()) {
+    <div class="plans-consent-prompt" role="alert">
+      <p class="plans-consent-prompt__text">{{ applyError() }}</p>
+      <a class="plans-consent-prompt__link" routerLink="/patient/privacy">Manage sharing settings →</a>
+    </div>
+  } @else if (applyError()) {
+    <p class="plans-page__error" role="alert">{{ applyError() }}</p>
+  }
 
-        <div class="program-card__header">
-          <div>
-            <div class="program-card__name-row">
-              <h3 class="program-card__name">{{ prog.name }}</h3>
-              @if (isApplied(prog.id)) {
-                <span class="program-card__enrolled-badge">Applied</span>
+  @if (loading()) {
+    <div class="plans-state">
+      <span class="plans-state__icon" aria-hidden="true">⏳</span>
+      <p class="plans-state__title">Loading programmes…</p>
+    </div>
+  } @else if (loadError()) {
+    <div class="plans-state">
+      <span class="plans-state__icon" aria-hidden="true">⚠️</span>
+      <p class="plans-state__title">Could not load programmes</p>
+      <p class="plans-state__sub">Check your connection and try again.</p>
+      <button class="program-enroll-btn" type="button" (click)="reload()">Retry</button>
+    </div>
+  } @else {
+    <div class="program-list">
+      @for (prog of programs(); track prog.id) {
+        <div class="program-card" [class.program-card--enrolled]="isApplied(prog.id)">
+
+          <div class="program-card__header">
+            <div>
+              <div class="program-card__name-row">
+                <h3 class="program-card__name">{{ prog.title }}</h3>
+                @if (isApplied(prog.id)) {
+                  <span class="program-card__enrolled-badge">Applied</span>
+                } @else if (isFull(prog)) {
+                  <span class="program-card__full-badge">No places left</span>
+                }
+              </div>
+              <!-- Every detail is guarded: a programme created before these fields
+                   were collected must still render a clean card. -->
+              @if (prog.orgName) {
+                <p class="program-card__org">Run by {{ prog.orgName }}</p>
+              }
+              <!-- "Supports" rather than the bare value: a pill reading
+                   "Diabetes · Hypertension" gives no clue what it is asserting. -->
+              @if (prog.focus) {
+                <span class="program-card__focus-badge">Supports: {{ prog.focus }}</span>
               }
             </div>
-            <span class="program-card__focus-badge"
-                  [style.background]="statusColor(prog.status) + '18'"
-                  [style.color]="statusColor(prog.status)"
-                  [style.border-color]="statusColor(prog.status) + '33'">
-              {{ prog.status }} · {{ prog.focus }}
-            </span>
+
+            @if (isApplied(prog.id)) {
+              <span class="program-applied-note">Application submitted</span>
+            } @else if (isFull(prog)) {
+              <!-- Still listed so patients can see what exists, but the API refuses
+                   the application with a 409, so the button would only ever fail. -->
+              <span class="program-applied-note">Closed to new applications</span>
+            } @else {
+              <button class="program-enroll-btn"
+                      type="button"
+                      [disabled]="applyingId() === prog.id"
+                      (click)="apply(prog)">
+                {{ applyingId() === prog.id ? 'Applying…' : 'Apply' }}
+              </button>
+            }
           </div>
 
-          @if (prog.status === 'Full') {
-            <span class="program-full-badge">Full</span>
-          } @else if (prog.status === 'Paused') {
-            <span class="program-paused-badge">Paused</span>
-          } @else {
-            <button class="program-enroll-btn"
-                    [class.program-enroll-btn--enrolled]="isApplied(prog.id)"
-                    type="button"
-                    (click)="toggleApply(prog.id)">
-              {{ isApplied(prog.id) ? 'Withdraw' : 'Apply' }}
-            </button>
+          <!-- Labelled like every other fact on the card. An unlabelled paragraph
+               between a title and a meta grid reads as decoration. -->
+          @if (prog.description) {
+            <div class="program-card__section">
+              <span class="program-card__section-label">What this covers</span>
+              <p class="program-card__desc">{{ prog.description }}</p>
+            </div>
           }
+
+          <div class="program-card__meta">
+            <div class="program-meta-item">
+              <span class="program-meta-item__label">Closes</span>
+              <span class="program-meta-item__value">{{ prog.expiresAt | date: 'd MMM y' }}</span>
+            </div>
+            <div class="program-meta-item">
+              <span class="program-meta-item__label">Places</span>
+              <span class="program-meta-item__value">{{ placesLabel(prog) }}</span>
+            </div>
+            @if (prog.donor) {
+              <div class="program-meta-item">
+                <span class="program-meta-item__label">Funded by</span>
+                <span class="program-meta-item__value">{{ prog.donor }}</span>
+              </div>
+            }
+            @if (prog.coordinator) {
+              <div class="program-meta-item">
+                <span class="program-meta-item__label">Coordinator</span>
+                <span class="program-meta-item__value">{{ prog.coordinator }}</span>
+              </div>
+            }
+          </div>
+
         </div>
-
-        <p class="program-card__desc">{{ prog.description }}</p>
-
-        <div class="program-card__meta">
-          <div class="program-meta-item">
-            <span class="program-meta-item__label">Eligibility</span>
-            <span class="program-meta-item__value">{{ prog.eligibility }}</span>
-          </div>
-          <div class="program-meta-item">
-            <span class="program-meta-item__label">Slots available</span>
-            <span class="program-meta-item__value">{{ slotsAvailable(prog) }} of {{ prog.slotsTotal }}</span>
-          </div>
-          <div class="program-meta-item">
-            <span class="program-meta-item__label">Deadline</span>
-            <span class="program-meta-item__value">{{ prog.deadline }}</span>
-          </div>
-          <div class="program-meta-item">
-            <span class="program-meta-item__label">Coordinator</span>
-            <span class="program-meta-item__value">{{ prog.coordinator }}</span>
-          </div>
+      } @empty {
+        <div class="plans-state">
+          <span class="plans-state__icon" aria-hidden="true">🤝</span>
+          <p class="plans-state__title">No programmes available right now</p>
+          <p class="plans-state__sub">Check back later — new funding programmes are added regularly.</p>
         </div>
-
-      </div>
-    } @empty {
-      <p class="plans-page__sub">No programmes available at this time.</p>
-    }
-  </div>
+      }
+    </div>
+  }
 
 </div>

@@ -32,6 +32,8 @@ export class PatientPortalComponent {
     { icon: '🤖', label: 'AI Health Chat', route: '/patient/ai-chat' },
     { icon: '🤝', label: 'Community', route: '/patient/community' },
     { icon: '💰', label: 'Funding', route: '/patient/funding' },
+    { icon: '🔒', label: 'Privacy', route: '/patient/privacy' },
+    { icon: '👤', label: 'My Profile', route: '/patient/profile' },
   ];
 
   get userName(): string { return this.auth.user()?.name ?? 'User'; }

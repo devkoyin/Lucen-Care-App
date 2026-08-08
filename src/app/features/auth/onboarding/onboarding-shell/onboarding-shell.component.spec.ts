@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { provideRouter } from '@angular/router';
 import { OnboardingShellComponent } from './onboarding-shell.component';
 
@@ -7,7 +8,7 @@ describe('OnboardingShellComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [OnboardingShellComponent],
+      imports: [HttpClientTestingModule, OnboardingShellComponent],
       providers: [provideRouter([])],
     }).compileComponents();
     fixture = TestBed.createComponent(OnboardingShellComponent);

@@ -1,54 +1,102 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { provideRouter } from '@angular/router';
 import { BenefactorApprovalsComponent } from './benefactor-approvals.component';
 import { BenefactorApplicationsService } from '../../../core/applications/benefactor-applications.service';
+import { environment } from '../../../../environments/environment';
 
-const BASE = {
+const LIST_URL = `${environment.apiUrl}/admin/applications/benefactor`;
+const apiApp = {
+  id: 'BEN1', userId: 'U1', status: 'pending', submittedAt: '2026-03-12T09:24:00.000Z',
   fullName: 'Ada Obi', email: 'ada@test.com', phone: '0800',
-  reasonForSupport: 'I want to help', docs: [{ label: 'Government-issued ID', submitted: true }],
+  reasonForSupport: 'I want to help', idConsentGiven: true,
 };
 
 describe('BenefactorApprovalsComponent', () => {
   let fixture: ComponentFixture<BenefactorApprovalsComponent>;
   let component: BenefactorApprovalsComponent;
-  let svc: BenefactorApplicationsService;
+  let http: HttpTestingController;
 
   beforeEach(async () => {
-    localStorage.clear();
     await TestBed.configureTestingModule({
-      imports: [BenefactorApprovalsComponent],
+      imports: [BenefactorApprovalsComponent, HttpClientTestingModule],
       providers: [provideRouter([])],
     }).compileComponents();
+
     fixture = TestBed.createComponent(BenefactorApprovalsComponent);
     component = fixture.componentInstance;
-    svc = TestBed.inject(BenefactorApplicationsService);
-    fixture.detectChanges();
+    http = TestBed.inject(HttpTestingController);
+    TestBed.inject(BenefactorApplicationsService);
   });
 
-  it('creates', () => expect(component).toBeTruthy());
+  afterEach(() => http.verify());
 
-  it('shows zero applications by default', () => expect(component.filtered.length).toBe(0));
+  /** Runs ngOnInit and answers the resulting list request. */
+  function init(rows: unknown[] = []) {
+    fixture.detectChanges();
+    http.expectOne(r => r.url === LIST_URL).flush({ data: rows, traceId: 't' });
+    fixture.detectChanges();
+  }
 
-  it('lists pending applications', () => {
-    svc.submit(BASE);
+  it('creates', () => {
+    init();
+    expect(component).toBeTruthy();
+  });
+
+  it('loads applications from the API on init', () => {
+    init([apiApp]);
     expect(component.filtered.length).toBe(1);
     expect(component.filtered[0].status).toBe('pending');
   });
 
-  it('approve changes status to approved', () => {
-    svc.submit(BASE);
-    const id = svc.applications()[0].id;
-    component.approve(id);
-    expect(svc.applications()[0].status).toBe('approved');
+  it('shows nothing when the API returns an empty list', () => {
+    init();
+    expect(component.filtered.length).toBe(0);
   });
 
-  it('confirmReject rejects with reason', () => {
-    svc.submit(BASE);
-    const id = svc.applications()[0].id;
-    component.startReject(id);
+  it('filters by the active tab', () => {
+    init([apiApp, { ...apiApp, id: 'X2', status: 'approved' }]);
+
+    component.setTab('pending');
+    expect(component.filtered.length).toBe(1);
+    expect(component.countFor('approved')).toBe(1);
+  });
+
+  it('approve() sends the review request and refetches the list', () => {
+    init([apiApp]);
+
+    component.approve('BEN1');
+
+    const req = http.expectOne(`${environment.apiUrl}/admin/applications/benefactor/BEN1/review`);
+    expect(req.request.method).toBe('PATCH');
+    expect(req.request.body).toEqual({ action: 'approve' });
+    req.flush({ data: {}, traceId: 't' });
+
+    http.expectOne(r => r.url === LIST_URL).flush({ data: [], traceId: 't' });
+  });
+
+  it('confirmReject() sends the entered reason', () => {
+    init([apiApp]);
+
+    component.startReject('BEN1');
     component.rejectReason.set('Invalid ID');
-    component.confirmReject(id);
-    expect(svc.applications()[0].status).toBe('rejected');
-    expect(svc.applications()[0].rejectionReason).toBe('Invalid ID');
+    component.confirmReject('BEN1');
+
+    const req = http.expectOne(`${environment.apiUrl}/admin/applications/benefactor/BEN1/review`);
+    expect(req.request.body).toEqual({ action: 'reject', reason: 'Invalid ID' });
+    req.flush({ data: {}, traceId: 't' });
+
+    http.expectOne(r => r.url === LIST_URL).flush({ data: [], traceId: 't' });
+  });
+
+  // The API returns 422 for a reject with no reason, so don't send one.
+  it('confirmReject() does not fire a request when the reason is blank', () => {
+    init([apiApp]);
+
+    component.startReject('BEN1');
+    component.rejectReason.set('   ');
+    component.confirmReject('BEN1');
+
+    expect(http.match(`${environment.apiUrl}/admin/applications/benefactor/BEN1/review`).length).toBe(0);
   });
 });

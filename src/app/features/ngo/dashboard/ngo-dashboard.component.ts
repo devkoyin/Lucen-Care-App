@@ -1,28 +1,37 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { forkJoin, of } from 'rxjs';
+import { catchError, switchMap } from 'rxjs/operators';
+
 import { AuthService } from '../../../core/auth/auth.service';
+import {
+  Applicant,
+  ApplicantsService,
+  EnrollmentStatus,
+  applicantStatusLabel,
+} from '../../../core/programs/applicants.service';
+import { NgoProgram, NgoProgramsService } from '../../../core/programs/ngo-programs.service';
 
 interface StatCard {
   label: string;
   value: string | number;
-  trend?: string;
+  hint?: string;
   accent?: boolean;
 }
 
-interface Applicant {
+/** One row of the Recent Applicants panel, flattened across programmes. */
+interface RecentApplicant {
+  id: string;
   name: string;
   condition: string;
-  program: string;
-  status: 'new' | 'reviewing' | 'selected' | 'rejected';
-  appliedDays: number;
+  programTitle: string;
+  status: EnrollmentStatus;
+  createdAt: string;
 }
 
-interface Program {
-  name: string;
-  filled: number;
-  total: number;
-  status: 'active' | 'closing' | 'full';
-}
+/** How many programmes' queues the recent list samples — one request each. */
+const RECENT_PROGRAM_SAMPLE = 5;
+const RECENT_ROWS = 6;
 
 @Component({
   selector: 'lc-ngo-dashboard',
@@ -31,38 +40,102 @@ interface Program {
   templateUrl: './ngo-dashboard.component.html',
   styleUrl: './ngo-dashboard.component.scss',
 })
-export class NgoDashboardComponent {
+export class NgoDashboardComponent implements OnInit {
   private readonly auth = inject(AuthService);
+  private readonly programsSvc = inject(NgoProgramsService);
+  private readonly applicantsSvc = inject(ApplicantsService);
 
-  get orgName(): string { return this.auth.user()?.name ?? 'your organisation'; }
+  readonly loading = signal(true);
+  readonly loadError = signal(false);
+  readonly programs = this.programsSvc.programs;
+  readonly recent = signal<RecentApplicant[]>([]);
 
-  readonly stats: StatCard[] = [
-    { label: 'Active Programs', value: 6, trend: '+1 this month' },
-    { label: 'Total Applicants', value: 214, trend: '+18 this week' },
-    { label: 'Selected Patients', value: 89 },
-    { label: 'Pending Review', value: 43, accent: true },
-  ];
-
-  readonly applicants: Applicant[] = [
-    { name: 'Fatima Yusuf', condition: 'Type 2 Diabetes', program: 'Chronic Care Fund', status: 'new', appliedDays: 1 },
-    { name: 'Emmanuel Okafor', condition: 'Hypertension', program: 'Cardiac Support', status: 'reviewing', appliedDays: 3 },
-    { name: 'Grace Mensah', condition: 'Asthma', program: 'Respiratory Aid', status: 'selected', appliedDays: 5 },
-    { name: 'Kwame Asante', condition: 'Sickle Cell', program: 'Sickle Cell Fund', status: 'new', appliedDays: 1 },
-    { name: 'Amara Diallo', condition: 'Malnutrition', program: 'Child Health', status: 'reviewing', appliedDays: 2 },
-  ];
-
-  readonly programs: Program[] = [
-    { name: 'Chronic Care Fund', filled: 34, total: 50, status: 'active' },
-    { name: 'Cardiac Support Program', filled: 22, total: 25, status: 'closing' },
-    { name: 'Respiratory Aid Initiative', filled: 18, total: 40, status: 'active' },
-    { name: 'Child Nutrition Fund', filled: 15, total: 15, status: 'full' },
-  ];
-
-  statusLabel(status: Applicant['status']): string {
-    return { new: 'New', reviewing: 'In Review', selected: 'Selected', rejected: 'Rejected' }[status];
+  get orgName(): string {
+    return this.auth.user()?.name ?? 'your organisation';
   }
 
-  fillPercent(p: Program): number {
-    return Math.round((p.filled / p.total) * 100);
+  readonly stats = computed<StatCard[]>(() => {
+    const s = this.programsSvc.stats();
+    if (!s) return [];
+    return [
+      { label: 'Active Programs', value: s.activePrograms, hint: `${s.totalPrograms} in total` },
+      { label: 'Total Applicants', value: s.totalApplicants },
+      { label: 'Selected Patients', value: s.selectedPatients },
+      { label: 'Pending Review', value: s.pendingReview, accent: true },
+    ];
+  });
+
+  ngOnInit(): void {
+    this.load();
+  }
+
+  load(): void {
+    this.loading.set(true);
+    this.auth
+      .me()
+      .pipe(
+        switchMap(me =>
+          me.orgId
+            ? forkJoin([this.programsSvc.loadStats(me.orgId), this.programsSvc.load(me.orgId)])
+            : of(null),
+        ),
+        catchError(() => of(null)),
+      )
+      .subscribe(result => {
+        if (result === null) {
+          this.loadError.set(true);
+          this.loading.set(false);
+          return;
+        }
+        this.loadError.set(false);
+        this.loading.set(false);
+        this.loadRecentApplicants();
+      });
+  }
+
+  /**
+   * The applicant queue is per-programme, so "recent across the org" means sampling
+   * the newest programmes rather than one call. Bounded deliberately — a chatty
+   * dashboard is worse than a slightly shorter list.
+   */
+  private loadRecentApplicants(): void {
+    const sample = this.programs().slice(0, RECENT_PROGRAM_SAMPLE);
+    if (sample.length === 0) {
+      this.recent.set([]);
+      return;
+    }
+
+    forkJoin(
+      sample.map(p =>
+        this.applicantsSvc
+          .load(p.id, 20)
+          // One failing programme must not blank the whole panel.
+          .pipe(catchError(() => of([] as Applicant[]))),
+      ),
+    ).subscribe(results => {
+      const rows: RecentApplicant[] = results.flatMap((applicants, i) =>
+        applicants.map(a => ({
+          id: a.id,
+          name: a.sharedDataSnapshot.name || 'Unnamed applicant',
+          condition: (a.sharedDataSnapshot.conditionTags ?? [])[0] ?? '—',
+          programTitle: sample[i].title,
+          status: a.status,
+          createdAt: a.createdAt,
+        })),
+      );
+
+      // ULIDs and ISO timestamps both sort lexicographically; newest first.
+      rows.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+      this.recent.set(rows.slice(0, RECENT_ROWS));
+    });
+  }
+
+  statusLabel(status: EnrollmentStatus): string {
+    return applicantStatusLabel(status);
+  }
+
+  /** Guarded inside the service: an uncapped programme renders 0%, never NaN. */
+  fillPercent(p: NgoProgram): number {
+    return this.programsSvc.fillPercent(p);
   }
 }

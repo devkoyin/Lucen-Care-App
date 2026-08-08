@@ -1,14 +1,5 @@
-import { inject } from '@angular/core';
-import { CanActivateFn, Router } from '@angular/router';
-import { AuthService } from './auth.service';
+import { CanActivateFn } from '@angular/router';
+import { roleGuard } from './role.guard';
 
-export const adminGuard: CanActivateFn = () => {
-  const auth   = inject(AuthService);
-  const router = inject(Router);
-
-  if (auth.isAuthenticated() && auth.role() === 'admin') {
-    return true;
-  }
-
-  return router.createUrlTree(['/admin/login']);
-};
+/** The admin portal has its own login route rather than one under /auth/:role/login. */
+export const adminGuard: CanActivateFn = roleGuard('admin', ['/admin/login']);

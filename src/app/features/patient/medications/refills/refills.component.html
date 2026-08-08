@@ -5,6 +5,15 @@
     <span class="refills-page__badge">{{ refillAlerts().length }} pending</span>
   </div>
 
+  @if (loadError()) {
+    <p class="refills-page__error" role="alert">
+      Could not load refill alerts. Check your connection and try again.
+    </p>
+  }
+  @if (requestError()) {
+    <p class="refills-page__error" role="alert">{{ requestError() }}</p>
+  }
+
   <div class="refills-list">
     @for (alert of refillAlerts(); track alert.medicationId) {
       <div class="refill-card refill-card--{{ alert.urgency }}">

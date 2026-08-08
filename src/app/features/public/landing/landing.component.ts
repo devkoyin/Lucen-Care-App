@@ -1,8 +1,12 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
+/**
+ * Admin is deliberately absent: the portal is internal, reached only by typing
+ * /admin/login, and must not be advertised on a public page.
+ */
 interface RoleCard {
-  role: 'patient' | 'ngo' | 'hmo' | 'professional' | 'benefactor' | 'admin';
+  role: 'patient' | 'ngo' | 'hmo' | 'professional' | 'benefactor';
   emoji: string;
   label: string;
   description: string;
@@ -52,13 +56,6 @@ export class LandingComponent {
       label: 'Benefactor',
       description: 'Support patients through individual funding & community',
       signupRoute: '/auth/benefactor/signup',
-    },
-    {
-      role: 'admin',
-      emoji: '🛡️',
-      label: 'Admin',
-      description: 'Approve & manage organisation accounts',
-      signupRoute: '/admin',
     },
   ];
 }

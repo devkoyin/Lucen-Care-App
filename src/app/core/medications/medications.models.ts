@@ -1,4 +1,10 @@
 export type DoseStatus = 'taken' | 'pending' | 'due_now' | 'later' | 'skipped';
+
+/**
+ * The subset a client may write. Mirrors LOGGABLE_DOSE_STATUSES on the backend:
+ * 'due_now' is a read-time overlay only and POSTing it returns 422.
+ */
+export type LoggableDoseStatus = Exclude<DoseStatus, 'due_now'>;
 export type RefillUrgency = 'urgent' | 'upcoming' | 'ok';
 
 export interface Medication {
@@ -30,6 +36,15 @@ export interface CreateMedicationPayload {
   refillDate: string; // ISO date YYYY-MM-DD
   notes?: string;
 }
+
+/**
+ * Mirrors the backend's UpdateMedicationDto, which accepts everything the create DTO
+ * does plus `pillsRemaining` — needed so lowering pillsTotal can bring the remaining
+ * count down with it. The API runs forbidNonWhitelisted, so no other field may be sent.
+ */
+export type UpdateMedicationPayload = Partial<CreateMedicationPayload> & {
+  pillsRemaining?: number;
+};
 
 export interface ScheduledDose {
   doseLogId: string;
@@ -76,15 +91,37 @@ export function formatRefillDate(refillDateISO: string): string {
   });
 }
 
-const SLOT_META: Record<string, { label: string; icon: string }> = {
-  '8:00 AM': { label: 'Morning', icon: '🌅' },
-  '2:00 PM': { label: 'Afternoon', icon: '☀️' },
-  '8:00 PM': { label: 'Evening', icon: '🌆' },
-  '10:00 PM': { label: 'Bedtime', icon: '🌙' },
-};
+/**
+ * Matches the backend's DOSE_TIME_PATTERN: a 12-hour label, optionally prefixed
+ * with a weekday for weekly medications — '8:00 AM' or 'Monday · 8:00 AM'.
+ */
+const DOSE_TIME_PATTERN = /^(?:([A-Za-z]+)\s*·\s*)?(\d{1,2}):(\d{2})\s*(AM|PM)$/i;
 
+/** Minutes since midnight for a dose label, or undefined if unparseable. */
+export function doseTimeMinutes(time: string): number | undefined {
+  const match = DOSE_TIME_PATTERN.exec(time.trim());
+  if (!match) return undefined;
+
+  let hour = Number(match[2]) % 12;
+  if (match[4].toUpperCase() === 'PM') hour += 12;
+  return hour * 60 + Number(match[3]);
+}
+
+/**
+ * Groups a dose time into a part of day. Derived from the hour rather than looked up,
+ * because dose times are free-form — a fixed 4-entry table fell through to the raw
+ * time and a generic ⏰ for anything else, losing the grouping the Schedule tab is
+ * built around.
+ */
 export function slotMeta(time: string): { label: string; icon: string } {
-  return SLOT_META[time] ?? { label: time, icon: '⏰' };
+  const minutes = doseTimeMinutes(time);
+  if (minutes === undefined) return { label: time, icon: '⏰' };
+
+  const hour = Math.floor(minutes / 60);
+  if (hour < 12) return { label: 'Morning', icon: '🌅' };
+  if (hour < 17) return { label: 'Afternoon', icon: '☀️' };
+  if (hour < 21) return { label: 'Evening', icon: '🌆' };
+  return { label: 'Bedtime', icon: '🌙' };
 }
 
 const DOSE_STATUS_LABELS: Record<DoseStatus, string> = {

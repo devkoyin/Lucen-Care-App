@@ -1,5 +1,10 @@
 <div class="field" [class.field--error]="error">
-  <label class="field__label" [for]="id">{{ label }}</label>
+  <label class="field__label" [for]="id">
+    {{ label }}
+    @if (required) {
+      <span class="field__required" title="Required">*</span>
+    }
+  </label>
   <ng-content />
   @if (error) {
     <span class="field__error" role="alert">{{ error }}</span>

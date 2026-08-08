@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { provideRouter } from '@angular/router';
 import { signal } from '@angular/core';
 import { PatientDashboardComponent } from './patient-dashboard.component';
@@ -15,7 +16,7 @@ describe('PatientDashboardComponent', () => {
     });
 
     await TestBed.configureTestingModule({
-      imports: [PatientDashboardComponent],
+      imports: [HttpClientTestingModule, PatientDashboardComponent],
       providers: [provideRouter([]), { provide: AuthService, useValue: authSpy }],
     }).compileComponents();
 
@@ -26,11 +27,15 @@ describe('PatientDashboardComponent', () => {
   it('creates', () => expect(fixture.componentInstance).toBeTruthy());
   it('shows greeting with user name', () => expect(fixture.componentInstance.greeting).toBe('Alice'));
   it('renders 4 quick actions', () => expect(fixture.nativeElement.querySelectorAll('.quick-action').length).toBe(4));
-  it('renders 3 appointments', () => expect(fixture.nativeElement.querySelectorAll('.appt-item').length).toBe(3));
-  it('renders 3 medications', () => expect(fixture.nativeElement.querySelectorAll('.med-item').length).toBe(3));
+  // Appointments and medications now come from the API, not seed data; with no
+  // response flushed the lists are empty.
+  it('renders the empty appointments state before the API responds', () =>
+    expect(fixture.nativeElement.querySelector('.appt-item--empty')).toBeTruthy());
+  it('renders no medications before the API responds', () =>
+    expect(fixture.nativeElement.querySelectorAll('.med-item').length).toBe(0));
   it('statusLabel returns correct text', () => {
     expect(fixture.componentInstance.statusLabel('taken')).toBe('Taken');
-    expect(fixture.componentInstance.statusLabel('pending')).toBe('Due');
+    expect(fixture.componentInstance.statusLabel('pending')).toBe('Upcoming');
     expect(fixture.componentInstance.statusLabel('later')).toBe('Later');
   });
 });

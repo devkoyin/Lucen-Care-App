@@ -39,10 +39,14 @@
       <ng-content />
     </div>
 
+    @if (serverError) {
+      <p class="onboarding__error" role="alert">{{ serverError }}</p>
+    }
+
     <!-- Navigation -->
     <footer class="onboarding__nav">
       @if (currentStep > 1) {
-        <button type="button" class="onboarding__back-btn" (click)="back.emit()">
+        <button type="button" class="onboarding__back-btn" [disabled]="submitting" (click)="back.emit()">
           ← Back
         </button>
       } @else {
@@ -51,10 +55,10 @@
       <button
         type="button"
         class="onboarding__continue-btn"
-        [disabled]="!canContinue"
+        [disabled]="!canContinue || submitting"
         (click)="continue.emit()"
       >
-        {{ continueLabel }}
+        {{ submitting ? 'Submitting…' : continueLabel }}
       </button>
     </footer>
 

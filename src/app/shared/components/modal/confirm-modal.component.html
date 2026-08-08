@@ -10,6 +10,9 @@
     <!-- Body -->
     <div class="cm-card__body">
       <p class="cm-message">{{ message }}</p>
+      <!-- Optional: lets a caller collect input alongside the confirmation, e.g. the
+           reason an NGO must give when rejecting. Existing callers project nothing. -->
+      <ng-content />
       @if (error) {
         <p class="cm-error">{{ error }}</p>
       }
