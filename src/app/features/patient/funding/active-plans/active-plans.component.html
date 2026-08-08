@@ -58,8 +58,20 @@
                   @if (app.orgName) {
                     <p class="program-card__org">{{ app.orgName }}</p>
                   }
+                  @if (app.programFocus) {
+                    <span class="program-card__focus-badge">Supports: {{ app.programFocus }}</span>
+                  }
                 </div>
               </div>
+
+              <!-- The same detail the patient read before applying — otherwise the
+                   application they are reviewing is a title and two dates. -->
+              @if (app.programDescription) {
+                <div class="program-card__section">
+                  <span class="program-card__section-label">What this covers</span>
+                  <p class="program-card__desc">{{ app.programDescription }}</p>
+                </div>
+              }
 
               <div class="program-card__meta">
                 <div class="program-meta-item">
@@ -76,6 +88,18 @@
                   <span class="program-meta-item__label">Programme closes</span>
                   <span class="program-meta-item__value">{{ app.programExpiresAt | date: 'd MMM y' }}</span>
                 </div>
+                @if (app.programDonor) {
+                  <div class="program-meta-item">
+                    <span class="program-meta-item__label">Funded by</span>
+                    <span class="program-meta-item__value">{{ app.programDonor }}</span>
+                  </div>
+                }
+                @if (app.programCoordinator) {
+                  <div class="program-meta-item">
+                    <span class="program-meta-item__label">Coordinator</span>
+                    <span class="program-meta-item__value">{{ app.programCoordinator }}</span>
+                  </div>
+                }
               </div>
 
               @if (app.status === 'rejected' && app.rejectionReason) {

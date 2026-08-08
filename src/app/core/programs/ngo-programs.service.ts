@@ -7,14 +7,25 @@ import { ApiService } from '../api/api.service';
 import { WrappedResponse } from '../api/wrapped-response.model';
 
 /**
- * The operational state of a programme, derived server-side from pausedAt, slot
- * counts and expiry. Distinct from the platform review state — a programme can be
- * approved AND full at the same time, which one combined field could not express.
+ * The single label on a programme card, derived server-side.
+ *
+ * Before approval it mirrors the review state one-for-one; after approval it
+ * reports the operational state, which is a second axis (an approved programme can
+ * be Full or Paused at the same time). 'Draft' used to cover pending_review AND
+ * rejected, so an NGO could not tell "waiting on the platform" from "rejected".
  */
-export type ProgramLifecycle = 'Draft' | 'Active' | 'Closing' | 'Full' | 'Paused' | 'Expired';
+export type ProgramLifecycle =
+  | 'Draft'
+  | 'In review'
+  | 'Not approved'
+  | 'Active'
+  | 'Closing'
+  | 'Full'
+  | 'Paused'
+  | 'Expired';
 
 /** Platform review state, as stored. */
-export type ProgramReviewStatus = 'pending_review' | 'approved' | 'rejected' | 'expired';
+export type ProgramReviewStatus = 'draft' | 'pending_review' | 'approved' | 'rejected' | 'expired';
 
 /** A programme as GET /organizations/:orgId/programs returns it. */
 export interface NgoProgram {
@@ -37,6 +48,9 @@ export interface NgoProgram {
   slotsFilled: number;
   slotsAvailable: number;
   pausedAt?: string | null;
+  /** Set by the platform when a submission is turned down. */
+  rejectionReason?: string | null;
+  reviewedAt?: string | null;
 }
 
 /** GET /organizations/:orgId/stats — dashboard headline numbers, counted in SQL. */
@@ -87,9 +101,14 @@ export interface CreateProgramPayload {
  * `type` and `eligibilityCriteria` are absent by design: the API refuses to change
  * who qualifies once patients have applied under the original terms.
  */
-export type UpdateProgramPayload = Partial<
-  Omit<CreateProgramPayload, 'type' | 'eligibilityCriteria'>
-> & { paused?: boolean };
+/**
+ * What the API accepts depends on the review state: a draft, in-review or rejected
+ * programme takes everything here; an approved one takes only `paused` and a LATER
+ * `expiresAt`, and refuses the rest with a 422.
+ */
+export type UpdateProgramPayload = Partial<Omit<CreateProgramPayload, 'type'>> & {
+  paused?: boolean;
+};
 
 /** Money crosses the wire in kobo so it cannot drift; convert once, at the edge. */
 export function toNaira(minorUnits?: number): number {
@@ -156,6 +175,21 @@ export class NgoProgramsService {
 
   setPaused(id: string, paused: boolean): Observable<NgoProgram> {
     return this.update(id, { paused });
+  }
+
+  /** One programme, for the edit screen. */
+  getOne(id: string): Observable<NgoProgram> {
+    return this.api.get<WrappedResponse<NgoProgram>>(`/programs/${id}`).pipe(map(r => r.data));
+  }
+
+  /**
+   * Hand a draft — or a rejected programme that has been fixed — to the platform.
+   * Creating no longer submits, so this is the only route into the review queue.
+   */
+  submit(id: string): Observable<NgoProgram> {
+    return this.api
+      .post<WrappedResponse<NgoProgram>>(`/programs/${id}/submit`, {})
+      .pipe(map(r => r.data), tap(updated => this.replace(updated)));
   }
 
   slotsAvailable(p: NgoProgram): number {

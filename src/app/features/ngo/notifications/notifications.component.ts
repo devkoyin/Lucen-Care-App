@@ -121,6 +121,11 @@ export class NotificationsComponent implements OnInit {
     if (n.type === 'enrollment_application' && typeof programId === 'string') {
       return { path: ['/ngo/applicants'], queryParams: { programId } };
     }
+    // An approval or rejection is only actionable on the programmes list — where
+    // the reason is shown and Resubmit lives.
+    if (n.type === 'program_reviewed') {
+      return { path: ['/ngo/programs'] };
+    }
     return null;
   }
 

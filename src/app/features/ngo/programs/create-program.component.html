@@ -2,13 +2,31 @@
 
   <div class="cp-header">
     <div>
-      <h1 class="cp-header__title">New Program</h1>
+      <h1 class="cp-header__title">{{ isEdit() ? 'Edit Program' : 'New Program' }}</h1>
       <p class="cp-header__sub">
-        Programmes are reviewed by the LucenCare team before patients can see them.
+        @if (isEdit()) {
+          Changes are saved to your programme. Submit it for review from the Programmes list.
+        } @else {
+          Saved as a draft only your organisation can see. Submit it for review when it is ready.
+        }
       </p>
     </div>
     <a class="cp-cancel" routerLink="/ngo/programs">Cancel</a>
   </div>
+
+  @if (loadError()) {
+    <p class="cp-error" role="alert">
+      Could not load this programme. Go back to
+      <a routerLink="/ngo/programs">Programmes</a> and try again.
+    </p>
+  }
+
+  @if (locked()) {
+    <p class="cp-alert" role="status">
+      This programme is approved and live, so its terms are fixed — patients have applied
+      under them. You can extend the closing date here, or pause it from the Programmes list.
+    </p>
+  }
 
   <p class="cp-legend">Fields marked <span class="cp-legend__star">*</span> are required.</p>
 
@@ -114,7 +132,13 @@
       }
       <a class="cp-cancel-btn" routerLink="/ngo/programs">Cancel</a>
       <button class="cp-submit" type="submit" [disabled]="!canSubmit()">
-        {{ submitting() ? 'Creating…' : 'Create programme' }}
+        @if (submitting()) {
+          Saving…
+        } @else if (isEdit()) {
+          Save changes
+        } @else {
+          Save draft
+        }
       </button>
     </div>
 

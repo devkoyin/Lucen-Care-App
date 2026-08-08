@@ -1,0 +1,155 @@
+<div class="approvals">
+
+  <!-- Header -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-header__title">Funding Programmes</h1>
+      <p class="page-header__sub">
+        Review programmes NGOs have submitted. Patients cannot see a programme until it is approved.
+      </p>
+    </div>
+  </div>
+
+  @if (actionError()) {
+    <p class="approvals-error" role="alert">{{ actionError() }}</p>
+  }
+
+  <!-- Filter tabs -->
+  <div class="filter-tabs">
+    @for (tab of tabs; track tab.id) {
+      <button
+        class="filter-tab"
+        [class.filter-tab--active]="activeTab() === tab.id"
+        (click)="setTab(tab.id)">
+        {{ tab.label }}
+        <span class="filter-tab__count">{{ countFor(tab.id) }}</span>
+      </button>
+    }
+  </div>
+
+  <!-- Submissions list -->
+  <div class="app-list">
+    @if (loading() && submissions().length === 0) {
+      <div class="empty-state">Loading submissions…</div>
+    } @else if (loadError()) {
+      <div class="empty-state">
+        Could not load the review queue.
+        <button class="btn-ghost" (click)="reload()">Retry</button>
+      </div>
+    }
+
+    @for (prog of filtered(); track prog.id) {
+      <div class="app-card" [class.app-card--expanded]="expandedId() === prog.id">
+
+        <!-- Row summary -->
+        <div class="app-card__row" (click)="toggleExpand(prog.id)">
+          <div class="app-card__main">
+            <span class="app-card__name">{{ prog.title }}</span>
+            <span class="app-card__meta">
+              {{ prog.orgName }}
+              @if (prog.focus) { · {{ prog.focus }} }
+            </span>
+          </div>
+          <div class="app-card__meta-col">
+            <span class="app-card__reg">{{ budgetLabel(prog) }}</span>
+            <span class="app-card__date">Submitted {{ formatDate(prog.createdAt) }}</span>
+          </div>
+          <div class="app-card__docs-col">
+            <span class="docs-badge docs-badge--complete">
+              {{ prog.slotsTotal ? prog.slotsTotal + ' places' : 'Uncapped' }}
+            </span>
+          </div>
+          <span class="status-badge status-badge--{{ prog.status }}">
+            {{ statusLabel(prog.status) }}
+          </span>
+          <span class="app-card__chevron" [class.app-card__chevron--open]="expandedId() === prog.id">›</span>
+        </div>
+
+        <!-- Expanded detail -->
+        @if (expandedId() === prog.id) {
+          <div class="app-card__detail">
+
+            <div class="detail-grid">
+              <div class="detail-section">
+                <p class="detail-section__title">Programme</p>
+                <dl class="detail-list">
+                  <dt>Title</dt><dd>{{ prog.title }}</dd>
+                  <dt>Focus</dt><dd>{{ prog.focus || '—' }}</dd>
+                  <dt>Description</dt><dd>{{ prog.description || '—' }}</dd>
+                  <dt>Donor / Funder</dt><dd>{{ prog.donor || '—' }}</dd>
+                  <dt>Coordinator</dt><dd>{{ prog.coordinator || '—' }}</dd>
+                  <dt>Budget</dt><dd>{{ budgetLabel(prog) }}</dd>
+                  <dt>Places</dt><dd>{{ prog.slotsTotal ?? 'Uncapped' }}</dd>
+                  <dt>Applications close</dt><dd>{{ formatDate(prog.expiresAt) }}</dd>
+                </dl>
+              </div>
+
+              <div class="detail-section">
+                <p class="detail-section__title">Submitting organisation</p>
+                <dl class="detail-list">
+                  <dt>Organisation</dt><dd>{{ prog.orgName }}</dd>
+                  <dt>Contact</dt><dd>{{ prog.orgContactEmail }}</dd>
+                </dl>
+
+                <!-- Who the programme will match. The one thing a reviewer must read:
+                     an over-broad criterion means it matches everyone on the platform. -->
+                <p class="detail-section__title">Who qualifies</p>
+                <div class="doc-list">
+                  @for (c of prog.eligibilityCriteria; track $index) {
+                    <div class="doc-item">
+                      <span class="doc-item__icon">•</span>
+                      <span class="doc-item__label">{{ criterionLabel(c) }}</span>
+                    </div>
+                  } @empty {
+                    <div class="doc-item">
+                      <span class="doc-item__icon">⚠</span>
+                      <span class="doc-item__label doc-item__label--missing">
+                        No criteria — this would match every consenting patient
+                      </span>
+                    </div>
+                  }
+                </div>
+              </div>
+            </div>
+
+            @if (prog.status === 'rejected' && prog.rejectionReason) {
+              <lc-reason-note>{{ prog.rejectionReason }}</lc-reason-note>
+            }
+
+            @if (rejectingId() === prog.id) {
+              <div class="reject-form">
+                <label class="reject-form__label" for="reason-{{ prog.id }}">Rejection reason</label>
+                <textarea
+                  id="reason-{{ prog.id }}"
+                  class="reject-form__textarea"
+                  rows="3"
+                  placeholder="The NGO sees this on its own Programmes page — say what needs to change…"
+                  [value]="rejectReason()"
+                  (input)="rejectReason.set($any($event.target).value)">
+                </textarea>
+                <div class="reject-form__actions">
+                  <button class="btn-ghost" (click)="cancelReject()">Cancel</button>
+                  <button class="btn-danger" [disabled]="!rejectReason().trim()" (click)="confirmReject(prog.id)">Confirm Rejection</button>
+                </div>
+              </div>
+            }
+
+            @if (prog.status === 'pending_review' && rejectingId() !== prog.id) {
+              <div class="app-card__actions">
+                <button class="btn-approve" (click)="approve(prog.id)">✓ Approve</button>
+                <button class="btn-reject" (click)="startReject(prog.id)">✕ Reject</button>
+              </div>
+            }
+
+          </div>
+        }
+
+      </div>
+    }
+
+    @if (!loading() && !loadError() && filtered().length === 0) {
+      <div class="empty-state">No programmes in this category.</div>
+    }
+  </div>
+
+</div>

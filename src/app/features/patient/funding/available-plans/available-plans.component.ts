@@ -5,6 +5,7 @@ import { RouterLink } from '@angular/router';
 import { ApiErrorBody } from '../../../../core/api/wrapped-response.model';
 import {
   BrowsableProgram,
+  isFull,
   PatientProgramsService,
 } from '../../../../core/programs/patient-programs.service';
 
@@ -53,8 +54,20 @@ export class AvailablePlansComponent implements OnInit {
     return this.svc.isApplied(id);
   }
 
+  /** Every place taken — the card stays, the button does not. */
+  isFull(program: BrowsableProgram): boolean {
+    return isFull(program);
+  }
+
+  /** An uncapped programme has no number to show, so it says so. */
+  placesLabel(program: BrowsableProgram): string {
+    if (program.slotsTotal == null) return 'Unlimited';
+    const left = Math.max(0, program.slotsTotal - program.slotsFilled);
+    return left === 0 ? 'None left' : `${left} of ${program.slotsTotal} left`;
+  }
+
   apply(program: BrowsableProgram): void {
-    if (this.isApplied(program.id) || this.applyingId()) return;
+    if (this.isApplied(program.id) || this.isFull(program) || this.applyingId()) return;
 
     this.applyingId.set(program.id);
     this.applyError.set(null);

@@ -53,6 +53,21 @@ describe('LoginComponent', () => {
     expect(authSpy.login).not.toHaveBeenCalled();
   });
 
+  it('does not offer admin in the role switcher', () => {
+    expect(fixture.componentInstance.roles.some(r => r.id === 'admin')).toBeFalse();
+  });
+
+  it('falls back to patient when the URL asks for the admin portal', () => {
+    // /auth/admin/login must not become a second admin door — the portal has its
+    // own login at /admin/login.
+    const f = TestBed.createComponent(LoginComponent);
+    f.componentInstance.role = 'admin';
+    f.detectChanges();
+
+    expect(f.componentInstance.selectedRole()).toBe('patient');
+    expect(f.nativeElement.textContent).not.toContain('Sign in as Admin');
+  });
+
   it('navigates professionals to the community page instead of dashboard', () => {
     const router = TestBed.inject(Router);
     const navSpy = spyOn(router, 'navigate');

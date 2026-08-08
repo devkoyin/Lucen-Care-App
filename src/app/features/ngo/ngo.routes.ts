@@ -26,6 +26,14 @@ export const NGO_ROUTES: Routes = [
           import('./programs/create-program.component').then(m => m.CreateProgramComponent),
       },
       {
+        // Same component in edit mode: one form, one set of validators, one payload
+        // mapper. Also declared before the bare 'programs' route.
+        path: 'programs/:id/edit',
+        canActivate: [verifiedGuard('ngo', '/ngo/pending')],
+        loadComponent: () =>
+          import('./programs/create-program.component').then(m => m.CreateProgramComponent),
+      },
+      {
         path: 'programs',
         canActivate: [verifiedGuard('ngo', '/ngo/pending')],
         loadComponent: () =>

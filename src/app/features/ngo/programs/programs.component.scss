@@ -287,3 +287,22 @@
 
 // The Pause/Resume buttons can now actually be busy.
 .prog-btn:disabled { opacity: 0.6; cursor: default; }
+
+// ── Draft → review → live ─────────────────────────────────────
+.prog-note {
+  margin: 0;
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-role-surface);
+  border-radius: var(--radius-md);
+  font-size: var(--text-xs);
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+}
+
+.prog-btn--submit {
+  background: var(--color-role-accent);
+  border-color: var(--color-role-accent);
+  color: #FFFFFF;
+
+  &:hover:not(:disabled) { opacity: 0.9; }
+}

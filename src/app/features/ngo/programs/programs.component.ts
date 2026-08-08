@@ -11,32 +11,40 @@ import {
   ProgramLifecycle,
   toNaira,
 } from '../../../core/programs/ngo-programs.service';
+import { ReasonNoteComponent } from '../../../shared/components/reason-note/reason-note.component';
 
 type StatusFilter = 'all' | ProgramLifecycle;
 
-/** Filter tabs mirror the derived lifecycle, not the platform review state. */
+/**
+ * Filter tabs follow the lifecycle label, which now reports the review state before
+ * approval — Draft, In review and Not approved were previously one bucket.
+ */
 const TABS: { label: string; key: StatusFilter }[] = [
-  { label: 'All',     key: 'all' },
-  { label: 'Active',  key: 'Active' },
-  { label: 'Closing', key: 'Closing' },
-  { label: 'Full',    key: 'Full' },
-  { label: 'Paused',  key: 'Paused' },
-  { label: 'Draft',   key: 'Draft' },
+  { label: 'All',          key: 'all' },
+  { label: 'Draft',        key: 'Draft' },
+  { label: 'In review',    key: 'In review' },
+  { label: 'Active',       key: 'Active' },
+  { label: 'Closing',      key: 'Closing' },
+  { label: 'Full',         key: 'Full' },
+  { label: 'Paused',       key: 'Paused' },
+  { label: 'Not approved', key: 'Not approved' },
 ];
 
 const LIFECYCLE_COLOR: Record<ProgramLifecycle, string> = {
-  Active:  '#059669',
-  Closing: '#D97706',
-  Full:    '#2563EB',
-  Paused:  '#6B7280',
-  Draft:   '#7C3AED',
-  Expired: '#991B1B',
+  Active:         '#059669',
+  Closing:        '#D97706',
+  Full:           '#2563EB',
+  Paused:         '#6B7280',
+  Draft:          '#7C3AED',
+  'In review':    '#2563EB',
+  'Not approved': '#DC2626',
+  Expired:        '#991B1B',
 };
 
 @Component({
   selector: 'lc-programs',
   standalone: true,
-  imports: [RouterLink, DatePipe],
+  imports: [RouterLink, DatePipe, ReasonNoteComponent],
   templateUrl: './programs.component.html',
   styleUrl: './programs.component.scss',
 })
@@ -111,6 +119,41 @@ export class ProgramsComponent implements OnInit {
         );
       },
     });
+  }
+
+  /**
+   * Hand a draft, or a fixed-up rejection, to the platform.
+   *
+   * Creating a programme deliberately does not do this: an NGO edits until it is
+   * ready, and only then does anyone else see it.
+   */
+  submit(program: NgoProgram): void {
+    if (this.busyId()) return;
+
+    this.busyId.set(program.id);
+    this.actionError.set(null);
+    this.svc.submit(program.id).subscribe({
+      next: () => this.busyId.set(null),
+      error: (err: unknown) => {
+        this.busyId.set(null);
+        this.actionError.set(apiErrorMessage(err, 'Could not submit this programme for review.'));
+      },
+    });
+  }
+
+  /** Only a programme the platform has not yet approved can still be changed. */
+  canEdit(program: NgoProgram): boolean {
+    return program.lifecycle === 'Draft'
+      || program.lifecycle === 'In review'
+      || program.lifecycle === 'Not approved';
+  }
+
+  canSubmit(program: NgoProgram): boolean {
+    return program.lifecycle === 'Draft' || program.lifecycle === 'Not approved';
+  }
+
+  submitLabel(program: NgoProgram): string {
+    return program.lifecycle === 'Not approved' ? 'Resubmit' : 'Submit for review';
   }
 
   isBusy(program: NgoProgram): boolean {

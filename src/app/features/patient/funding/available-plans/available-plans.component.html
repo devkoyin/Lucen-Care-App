@@ -42,12 +42,28 @@
                 <h3 class="program-card__name">{{ prog.title }}</h3>
                 @if (isApplied(prog.id)) {
                   <span class="program-card__enrolled-badge">Applied</span>
+                } @else if (isFull(prog)) {
+                  <span class="program-card__full-badge">No places left</span>
                 }
               </div>
+              <!-- Every detail is guarded: a programme created before these fields
+                   were collected must still render a clean card. -->
+              @if (prog.orgName) {
+                <p class="program-card__org">Run by {{ prog.orgName }}</p>
+              }
+              <!-- "Supports" rather than the bare value: a pill reading
+                   "Diabetes · Hypertension" gives no clue what it is asserting. -->
+              @if (prog.focus) {
+                <span class="program-card__focus-badge">Supports: {{ prog.focus }}</span>
+              }
             </div>
 
             @if (isApplied(prog.id)) {
               <span class="program-applied-note">Application submitted</span>
+            } @else if (isFull(prog)) {
+              <!-- Still listed so patients can see what exists, but the API refuses
+                   the application with a 409, so the button would only ever fail. -->
+              <span class="program-applied-note">Closed to new applications</span>
             } @else {
               <button class="program-enroll-btn"
                       type="button"
@@ -58,11 +74,36 @@
             }
           </div>
 
+          <!-- Labelled like every other fact on the card. An unlabelled paragraph
+               between a title and a meta grid reads as decoration. -->
+          @if (prog.description) {
+            <div class="program-card__section">
+              <span class="program-card__section-label">What this covers</span>
+              <p class="program-card__desc">{{ prog.description }}</p>
+            </div>
+          }
+
           <div class="program-card__meta">
             <div class="program-meta-item">
               <span class="program-meta-item__label">Closes</span>
               <span class="program-meta-item__value">{{ prog.expiresAt | date: 'd MMM y' }}</span>
             </div>
+            <div class="program-meta-item">
+              <span class="program-meta-item__label">Places</span>
+              <span class="program-meta-item__value">{{ placesLabel(prog) }}</span>
+            </div>
+            @if (prog.donor) {
+              <div class="program-meta-item">
+                <span class="program-meta-item__label">Funded by</span>
+                <span class="program-meta-item__value">{{ prog.donor }}</span>
+              </div>
+            }
+            @if (prog.coordinator) {
+              <div class="program-meta-item">
+                <span class="program-meta-item__label">Coordinator</span>
+                <span class="program-meta-item__value">{{ prog.coordinator }}</span>
+              </div>
+            }
           </div>
 
         </div>

@@ -9,6 +9,7 @@ const ORGS_URL = `${API}/organizations`;
 const AUDIT_URL = `${API}/admin/audit`;
 const PROF_URL = `${API}/admin/applications/professional`;
 const BEN_URL = `${API}/admin/applications/benefactor`;
+const PROGRAMS_URL = `${API}/admin/programs`;
 
 function auditRow(overrides: Record<string, unknown> = {}) {
   return {
@@ -74,18 +75,20 @@ describe('AdminDashboardComponent', () => {
 
   afterEach(() => http.verify());
 
-  /** Runs ngOnInit and answers all four requests it fires. */
+  /** Runs ngOnInit and answers all five requests it fires. */
   function init(opts: {
     orgs?: unknown[];
     audit?: unknown[];
     professional?: unknown[];
     benefactor?: unknown[];
+    programs?: unknown[];
   } = {}) {
     fixture.detectChanges();
     http.expectOne(r => r.url === ORGS_URL).flush({ data: opts.orgs ?? [], traceId: 't' });
     http.expectOne(r => r.url === AUDIT_URL).flush({ data: opts.audit ?? [], traceId: 't' });
     http.expectOne(r => r.url === PROF_URL).flush({ data: opts.professional ?? [], traceId: 't' });
     http.expectOne(r => r.url === BEN_URL).flush({ data: opts.benefactor ?? [], traceId: 't' });
+    http.expectOne(r => r.url === PROGRAMS_URL).flush({ data: opts.programs ?? [], traceId: 't' });
     fixture.detectChanges();
   }
 
@@ -115,6 +118,7 @@ describe('AdminDashboardComponent', () => {
       req.flush({ data: [], traceId: 't' });
       http.expectOne(r => r.url === PROF_URL).flush({ data: [], traceId: 't' });
       http.expectOne(r => r.url === BEN_URL).flush({ data: [], traceId: 't' });
+      http.expectOne(r => r.url === PROGRAMS_URL).flush({ data: [], traceId: 't' });
     });
 
     // The mock could never be empty, so this state had no rendering at all.
@@ -179,10 +183,23 @@ describe('AdminDashboardComponent', () => {
       expect(byLabel.get('Pending Benefactors')).toBe(1);
     });
 
-    it('renders all six cards', () => {
+    it('renders a card per queue, including programmes', () => {
       init();
-      expect(component.stats.length).toBe(6);
-      expect(fixture.nativeElement.querySelectorAll('.stat-card').length).toBe(6);
+      expect(component.stats.length).toBe(7);
+      expect(fixture.nativeElement.querySelectorAll('.stat-card').length).toBe(7);
+      expect(fixture.nativeElement.textContent).toContain('Pending Programmes');
+    });
+
+    // Programmes were the one reviewable thing with no admin surface at all.
+    it('counts programmes awaiting review', () => {
+      init({
+        programs: [
+          { id: 'P1', status: 'pending_review', title: 'A', orgName: 'Hope', eligibilityCriteria: [] },
+          { id: 'P2', status: 'approved', title: 'B', orgName: 'Hope', eligibilityCriteria: [] },
+        ],
+      });
+
+      expect(component.programPendingCount).toBe(1);
     });
 
     // Deliberately load() and not load('pending'), so the approvals pages that share
@@ -196,6 +213,8 @@ describe('AdminDashboardComponent', () => {
       expect(prof.request.params.has('status')).toBeFalse();
       prof.flush({ data: [], traceId: 't' });
 
+      http.expectOne(r => r.url === PROGRAMS_URL).flush({ data: [], traceId: 't' });
+
       const ben = http.expectOne(r => r.url === BEN_URL);
       expect(ben.request.params.has('status')).toBeFalse();
       ben.flush({ data: [], traceId: 't' });
@@ -204,7 +223,7 @@ describe('AdminDashboardComponent', () => {
 
   it('survives every request failing', () => {
     fixture.detectChanges();
-    for (const url of [ORGS_URL, AUDIT_URL, PROF_URL, BEN_URL]) {
+    for (const url of [ORGS_URL, AUDIT_URL, PROF_URL, BEN_URL, PROGRAMS_URL]) {
       http
         .expectOne(r => r.url === url)
         .flush({ message: 'boom' }, { status: 500, statusText: 'Server Error' });

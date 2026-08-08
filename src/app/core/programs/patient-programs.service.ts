@@ -6,13 +6,40 @@ import { map, tap } from 'rxjs/operators';
 import { ApiService } from '../api/api.service';
 import { WrappedResponse } from '../api/wrapped-response.model';
 
-/** A programme as GET /programs/browse returns it, post-select-fix. */
+/**
+ * A programme as GET /programs/browse returns it.
+ *
+ * The detail fields are what the NGO wrote to explain the programme; every one is
+ * nullable, and a programme created before they were collected has none — so the
+ * card guards each of them rather than rendering a row of em-dashes.
+ *
+ * Budget and eligibility criteria are deliberately not returned: see
+ * BrowsableProgram on the API side for why.
+ */
 export interface BrowsableProgram {
   id: string;
   orgId: string;
+  /** Joined from the organisation — orgId alone is an opaque ULID. */
+  orgName?: string | null;
   title: string;
   type: string;
   expiresAt: string;
+  /** Absent means uncapped. Present and met means the programme is closed to new applications. */
+  slotsTotal?: number | null;
+  slotsFilled: number;
+  description?: string | null;
+  focus?: string | null;
+  donor?: string | null;
+  coordinator?: string | null;
+}
+
+/**
+ * A programme with every place taken. It stays listed — seeing what exists is
+ * useful — but the API refuses the application with a 409, so Apply is disabled.
+ * (Paused programmes are filtered out server-side and never reach this list.)
+ */
+export function isFull(program: BrowsableProgram): boolean {
+  return program.slotsTotal != null && program.slotsFilled >= program.slotsTotal;
 }
 
 /** Mirrors the backend EnrollmentStatus. */
@@ -36,6 +63,12 @@ export interface PatientEnrollment {
   programTitle: string;
   programType: string;
   programExpiresAt: string;
+  // The same detail the patient read before applying, so the application stays
+  // legible afterwards.
+  programDescription?: string | null;
+  programFocus?: string | null;
+  programDonor?: string | null;
+  programCoordinator?: string | null;
   orgName?: string | null;
 }
 

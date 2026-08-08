@@ -166,4 +166,86 @@ describe('ProgramsComponent', () => {
     expect(component.filtered().length).toBe(1);
     expect(component.filtered()[0].lifecycle).toBe('Full');
   });
+
+  // Draft → In review → Active is the whole point of the new status machine, and
+  // all three states used to render as one indistinguishable "Draft".
+  describe('draft and review states', () => {
+    it('offers Edit and Submit on a draft', () => {
+      init([program({ status: 'draft', lifecycle: 'Draft' })]);
+      const p = component.programs()[0];
+
+      expect(component.canEdit(p)).toBeTrue();
+      expect(component.canSubmit(p)).toBeTrue();
+      expect(component.submitLabel(p)).toBe('Submit for review');
+      expect(fixture.nativeElement.textContent).toContain('Submit for review');
+    });
+
+    it('offers Edit but not Submit while it is with the platform', () => {
+      init([program({ status: 'pending_review', lifecycle: 'In review' })]);
+      const p = component.programs()[0];
+
+      expect(component.canEdit(p)).toBeTrue();
+      expect(component.canSubmit(p)).toBeFalse();
+    });
+
+    it('offers Resubmit on a rejection, and shows the reason', () => {
+      init([
+        program({
+          status: 'rejected',
+          lifecycle: 'Not approved',
+          rejectionReason: 'Eligibility too broad',
+        }),
+      ]);
+
+      expect(component.submitLabel(component.programs()[0])).toBe('Resubmit');
+      expect(fixture.nativeElement.textContent).toContain('Rejection reason:');
+      expect(fixture.nativeElement.textContent).toContain('Eligibility too broad');
+    });
+
+    it('locks an approved programme to pause and applicants', () => {
+      init([program({ status: 'approved', lifecycle: 'Active' })]);
+      const p = component.programs()[0];
+
+      expect(component.canEdit(p)).toBeFalse();
+      expect(component.canSubmit(p)).toBeFalse();
+      expect(fixture.nativeElement.textContent).toContain('Applicants');
+    });
+
+    // Nobody can apply to a programme that is not live, so the queue link would
+    // only ever lead to an empty screen.
+    it('hides the Applicants link until the programme is approved', () => {
+      init([program({ status: 'draft', lifecycle: 'Draft' })]);
+
+      expect(fixture.nativeElement.textContent).not.toContain('Applicants');
+    });
+
+    it('submits a draft and reflects the new state', () => {
+      init([program({ status: 'draft', lifecycle: 'Draft' })]);
+
+      component.submit(component.programs()[0]);
+
+      const req = http.expectOne(`${environment.apiUrl}/programs/${program().id}/submit`);
+      expect(req.request.method).toBe('POST');
+      req.flush({
+        data: program({ status: 'pending_review', lifecycle: 'In review' }),
+        traceId: 't',
+      });
+
+      expect(component.programs()[0].lifecycle).toBe('In review');
+      expect(component.busyId()).toBeNull();
+    });
+
+    it('reports the API reason when a submission is refused', () => {
+      init([program({ status: 'draft', lifecycle: 'Draft' })]);
+
+      component.submit(component.programs()[0]);
+      http.expectOne(r => r.method === 'POST').flush(
+        { status: 409, message: 'This programme is already awaiting review' },
+        { status: 409, statusText: 'Conflict' },
+      );
+      fixture.detectChanges();
+
+      expect(component.actionError()).toContain('already awaiting review');
+    });
+  });
 });

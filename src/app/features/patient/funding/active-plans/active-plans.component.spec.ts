@@ -16,6 +16,10 @@ function row(over: Record<string, unknown> = {}) {
     programTitle: 'Chronic Care Fund',
     programType: 'ngo_funding',
     programExpiresAt: '2026-09-01T00:00:00.000Z',
+    programDescription: 'Covers the full cost of monthly medication.',
+    programFocus: 'Diabetes · Hypertension',
+    programDonor: 'GSK Nigeria CSR',
+    programCoordinator: 'Mrs Bisi Lawal',
     orgName: 'Hope Foundation',
     ...over,
   };
@@ -148,6 +152,37 @@ describe('ActivePlansComponent', () => {
       fixture.detectChanges();
 
       expect(component.withdrawTarget()).toBeNull();
+    });
+  });
+
+  // What the patient read before applying should still be legible afterwards.
+  describe('programme detail on the application', () => {
+    it('carries the description, focus, donor and coordinator', () => {
+      init();
+      const text = fixture.nativeElement.textContent as string;
+
+      expect(text).toContain('Covers the full cost of monthly medication');
+      // Labelled, not bare — the same wording the browse card uses.
+      expect(text).toContain('What this covers');
+      expect(text).toContain('Supports Diabetes · Hypertension');
+      expect(text).toContain('GSK Nigeria CSR');
+      expect(text).toContain('Mrs Bisi Lawal');
+    });
+
+    it('renders cleanly for a programme that has none of them', () => {
+      init([
+        row({
+          programDescription: null,
+          programFocus: null,
+          programDonor: null,
+          programCoordinator: null,
+        }),
+      ]);
+
+      const text = fixture.nativeElement.textContent as string;
+      expect(text).toContain('Chronic Care Fund');
+      expect(text).not.toContain('Funded by');
+      expect(text).not.toContain('null');
     });
   });
 });

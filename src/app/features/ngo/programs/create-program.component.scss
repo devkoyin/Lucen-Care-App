@@ -135,3 +135,15 @@
   &:hover:not(:disabled) { opacity: 0.9; }
   &:disabled { opacity: 0.6; cursor: default; }
 }
+
+// Explains why most of the form is read-only on an approved programme.
+.cp-alert {
+  margin: 0;
+  padding: var(--space-3) var(--space-4);
+  background: rgba(217, 119, 6, 0.08);
+  border: 1px solid rgba(217, 119, 6, 0.25);
+  border-radius: var(--radius-md);
+  color: #B45309;
+  font-size: var(--text-sm);
+  line-height: 1.6;
+}

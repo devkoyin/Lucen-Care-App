@@ -3,6 +3,7 @@ import { RouterLink } from '@angular/router';
 import { ApplicationsService, AuditEntry } from '../../../core/applications/applications.service';
 import { ProfessionalApplicationsService } from '../../../core/applications/professional-applications.service';
 import { BenefactorApplicationsService } from '../../../core/applications/benefactor-applications.service';
+import { ProgramApprovalsService } from '../../../core/programs/program-approvals.service';
 import {
   auditActionLabel,
   auditActionTone,
@@ -29,6 +30,7 @@ export class AdminDashboardComponent implements OnInit {
   private readonly appsService = inject(ApplicationsService);
   private readonly professionalService = inject(ProfessionalApplicationsService);
   private readonly benefactorService = inject(BenefactorApplicationsService);
+  private readonly programApprovals = inject(ProgramApprovalsService);
 
   ngOnInit(): void {
     this.appsService.load().subscribe({ error: () => {} });
@@ -37,6 +39,7 @@ export class AdminDashboardComponent implements OnInit {
     // and leaving a pending-only list behind would hide their approved/rejected tabs.
     this.professionalService.load().subscribe({ error: () => {} });
     this.benefactorService.load().subscribe({ error: () => {} });
+    this.programApprovals.load().subscribe({ error: () => {} });
   }
 
   /** Real audit events from GET /admin/audit, newest first. */
@@ -56,6 +59,7 @@ export class AdminDashboardComponent implements OnInit {
       { label: 'Pending HMOs',          value: this.appsService.pendingCount('hmo'), accent: true },
       { label: 'Pending Professionals', value: this.professionalPendingCount(), accent: true },
       { label: 'Pending Benefactors',   value: this.benefactorPendingCount(), accent: true },
+      { label: 'Pending Programmes',    value: this.programApprovals.pendingCount(), accent: true },
       { label: 'Approved (30d)',        value: this.appsService.recentCount('approved', 30) },
       { label: 'Rejected (30d)',        value: this.appsService.recentCount('rejected', 30) },
     ];
@@ -63,6 +67,7 @@ export class AdminDashboardComponent implements OnInit {
 
   get ngoPendingCount(): number { return this.appsService.pendingCount('ngo'); }
   get hmoPendingCount(): number { return this.appsService.pendingCount('hmo'); }
+  get programPendingCount(): number { return this.programApprovals.pendingCount(); }
 
   trackEntry(_: number, entry: AuditEntry): string { return entry.id; }
 

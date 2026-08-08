@@ -11,6 +11,11 @@
     <a class="prog-primary-btn" routerLink="/ngo/programs/create">+ New Program</a>
   </div>
 
+  <p class="prog-note">
+    A new programme starts as a draft that only your organisation can see. Submit it for
+    review and the LucenCare team approves it before patients can find and apply to it.
+  </p>
+
   @if (actionError()) {
     <p class="prog-error" role="alert">{{ actionError() }}</p>
   }
@@ -94,6 +99,15 @@
                 {{ prog.lifecycle }}
               </span>
               <div class="prog-actions" (click)="$event.stopPropagation()">
+                @if (canEdit(prog)) {
+                  <a class="prog-btn prog-btn--view" [routerLink]="['/ngo/programs', prog.id, 'edit']">Edit</a>
+                }
+                @if (canSubmit(prog)) {
+                  <button class="prog-btn prog-btn--submit" type="button"
+                          [disabled]="isBusy(prog)" (click)="submit(prog)">
+                    {{ isBusy(prog) ? 'Submitting…' : submitLabel(prog) }}
+                  </button>
+                }
                 @if (prog.lifecycle === 'Paused') {
                   <button class="prog-btn prog-btn--resume" type="button"
                           [disabled]="isBusy(prog)" (click)="setPaused(prog, false)">
@@ -105,12 +119,18 @@
                     {{ isBusy(prog) ? 'Saving…' : 'Pause' }}
                   </button>
                 }
-                <a class="prog-btn prog-btn--view"
-                   [routerLink]="['/ngo/applicants']"
-                   [queryParams]="{ programId: prog.id }">Applicants</a>
+                @if (prog.status === 'approved') {
+                  <a class="prog-btn prog-btn--view"
+                     [routerLink]="['/ngo/applicants']"
+                     [queryParams]="{ programId: prog.id }">Applicants</a>
+                }
               </div>
             </div>
           </div>
+
+          @if (prog.lifecycle === 'Not approved' && prog.rejectionReason) {
+            <lc-reason-note>{{ prog.rejectionReason }}</lc-reason-note>
+          }
 
           @if (expandedId() === prog.id) {
             <div class="prog-card__detail" (click)="$event.stopPropagation()">
@@ -133,7 +153,10 @@
                 </div>
                 <div class="prog-detail-item">
                   <span class="prog-detail-item__label">Review status</span>
-                  <span class="prog-detail-item__value">{{ prog.status }}</span>
+                  <span class="prog-detail-item__value">
+                    {{ prog.lifecycle }}
+                    @if (prog.reviewedAt) { · reviewed {{ prog.reviewedAt | date: 'd MMM y' }} }
+                  </span>
                 </div>
               </div>
             </div>

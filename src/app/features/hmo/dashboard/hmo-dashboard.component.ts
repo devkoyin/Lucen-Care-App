@@ -34,7 +34,7 @@ interface HighUtilMember {
 @Component({
   selector: 'lc-hmo-dashboard',
   standalone: true,
-  imports: [RouterLink],
+  // imports: [RouterLink], //fix error in log.
   templateUrl: './hmo-dashboard.component.html',
   styleUrl: './hmo-dashboard.component.scss',
 })

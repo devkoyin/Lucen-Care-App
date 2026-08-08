@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { Router, provideRouter } from '@angular/router';
+import { ActivatedRoute, Router, provideRouter } from '@angular/router';
 
 import { CreateProgramComponent } from './create-program.component';
 import { environment } from '../../../../environments/environment';
@@ -229,6 +229,148 @@ describe('CreateProgramComponent', () => {
       );
 
       expect(component.error()).toContain('awaiting verification');
+    });
+  });
+
+  // Edit mode reuses this component: one form, one set of validators, one payload
+  // mapper. The route param is the only thing that switches it.
+  describe('edit mode', () => {
+    const PROGRAM_ID = '01PROGRAM0000000000000001';
+
+    function existing(over: Record<string, unknown> = {}) {
+      return {
+        id: PROGRAM_ID,
+        orgId: '01ORG00000000000000000001',
+        title: 'Chronic Care Fund',
+        type: 'ngo_funding',
+        status: 'draft',
+        lifecycle: 'Draft',
+        eligibilityCriteria: [{ field: 'conditionTags', operator: 'in', value: ['Diabetes', 'Asthma'] }],
+        expiresAt: '2026-12-01T00:00:00.000Z',
+        description: 'Covers medication costs.',
+        focus: 'Diabetes',
+        budgetTotal: 1_850_000_000,
+        budgetDisbursed: 0,
+        slotsTotal: 50,
+        slotsFilled: 0,
+        slotsAvailable: 50,
+        ...over,
+      };
+    }
+
+    async function buildEdit(program: Record<string, unknown> = existing()) {
+      TestBed.resetTestingModule();
+      await TestBed.configureTestingModule({
+        imports: [CreateProgramComponent, HttpClientTestingModule],
+        providers: [
+          provideRouter([]),
+          {
+            provide: ActivatedRoute,
+            useValue: { snapshot: { paramMap: new Map([['id', PROGRAM_ID]]) } },
+          },
+        ],
+      }).compileComponents();
+
+      fixture = TestBed.createComponent(CreateProgramComponent);
+      component = fixture.componentInstance;
+      http = TestBed.inject(HttpTestingController);
+      router = TestBed.inject(Router);
+      spyOn(router, 'navigate');
+
+      fixture.detectChanges();
+      http.expectOne(`${PROGRAMS}/${PROGRAM_ID}`).flush({ data: program, traceId: 't' });
+      fixture.detectChanges();
+    }
+
+    it('prefills the form from the programme, in naira', async () => {
+      await buildEdit();
+
+      expect(component.isEdit()).toBeTrue();
+      expect(component.form.controls.title.value).toBe('Chronic Care Fund');
+      // Stored in kobo, edited in naira.
+      expect(component.form.controls.budgetTotal.value).toBe(18_500_000);
+      expect(component.form.controls.expiresAt.value).toBe('2026-12-01');
+      // A list criterion round-trips through the comma-separated input.
+      expect(component.form.controls.criterionValue.value).toBe('Diabetes, Asthma');
+    });
+
+    it('PATCHes instead of creating, and returns to the list', async () => {
+      await buildEdit();
+      component.form.patchValue({ title: 'Renamed Fund' });
+
+      component.submit();
+
+      const req = http.expectOne(`${PROGRAMS}/${PROGRAM_ID}`);
+      expect(req.request.method).toBe('PATCH');
+      expect(req.request.body.title).toBe('Renamed Fund');
+      // `type` is not editable, so it must not travel.
+      expect('type' in req.request.body).toBeFalse();
+      req.flush({ data: existing(), traceId: 't' });
+
+      expect(router.navigate).toHaveBeenCalledWith(['/ngo/programs']);
+    });
+
+    it('carries changed eligibility criteria while still a draft', async () => {
+      await buildEdit();
+      component.form.patchValue({ criterionValue: 'Hypertension' });
+
+      component.submit();
+
+      const req = http.expectOne(`${PROGRAMS}/${PROGRAM_ID}`);
+      expect(req.request.body.eligibilityCriteria).toEqual([
+        { field: 'conditionTags', operator: 'in', value: ['Hypertension'] },
+      ]);
+      req.flush({ data: existing(), traceId: 't' });
+    });
+
+    // Patients have applied under the approved terms, so the API accepts only the
+    // closing date — sending the rest would earn a 422 listing every locked field.
+    describe('on an approved programme', () => {
+      it('locks the form and explains why', async () => {
+        await buildEdit(existing({ status: 'approved', lifecycle: 'Active' }));
+
+        expect(component.locked()).toBeTrue();
+        expect(component.form.controls.title.disabled).toBeTrue();
+        expect(component.form.controls.expiresAt.enabled).toBeTrue();
+        expect(fixture.nativeElement.textContent).toContain('its terms are fixed');
+      });
+
+      it('sends only the closing date', async () => {
+        await buildEdit(existing({ status: 'approved', lifecycle: 'Active' }));
+        component.form.controls.expiresAt.setValue('2027-03-01');
+
+        component.submit();
+
+        const req = http.expectOne(`${PROGRAMS}/${PROGRAM_ID}`);
+        expect(Object.keys(req.request.body)).toEqual(['expiresAt']);
+        req.flush({ data: existing(), traceId: 't' });
+      });
+    });
+
+    it('shows an error when the programme cannot be loaded', async () => {
+      TestBed.resetTestingModule();
+      await TestBed.configureTestingModule({
+        imports: [CreateProgramComponent, HttpClientTestingModule],
+        providers: [
+          provideRouter([]),
+          {
+            provide: ActivatedRoute,
+            useValue: { snapshot: { paramMap: new Map([['id', PROGRAM_ID]]) } },
+          },
+        ],
+      }).compileComponents();
+
+      fixture = TestBed.createComponent(CreateProgramComponent);
+      component = fixture.componentInstance;
+      http = TestBed.inject(HttpTestingController);
+      spyOn(TestBed.inject(Router), 'navigate');
+
+      fixture.detectChanges();
+      http.expectOne(`${PROGRAMS}/${PROGRAM_ID}`).flush({}, { status: 500, statusText: 'Error' });
+      fixture.detectChanges();
+
+      expect(component.loadError()).toBeTrue();
+      expect(fixture.nativeElement.textContent).toContain('Could not load this programme');
     });
   });
 });

@@ -1,13 +1,16 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { apiErrorMessage } from '../../../core/api/wrapped-response.model';
 import {
   CreateProgramPayload,
+  NgoProgram,
   NgoProgramsService,
+  UpdateProgramPayload,
   toKobo,
+  toNaira,
 } from '../../../core/programs/ngo-programs.service';
 import { FormFieldComponent } from '../../../shared/components/form-field/form-field.component';
 
@@ -58,16 +61,27 @@ const FIELD_LABELS: Record<string, string> = {
   templateUrl: './create-program.component.html',
   styleUrl: './create-program.component.scss',
 })
-export class CreateProgramComponent {
+export class CreateProgramComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly svc = inject(NgoProgramsService);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
 
   readonly criterionFields = CRITERION_FIELDS;
   readonly operators = OPERATORS;
 
   readonly submitting = signal(false);
   readonly error = signal<string | null>(null);
+
+  // Edit mode reuses this whole component: one form, one set of validators, one
+  // payload mapper. A second near-identical screen would drift within a release.
+  readonly programId = signal<string | null>(null);
+  readonly loading = signal(false);
+  readonly loadError = signal(false);
+  /** Approved programmes are frozen apart from the closing date — the API 422s the rest. */
+  readonly locked = signal(false);
+
+  readonly isEdit = computed(() => this.programId() !== null);
 
   readonly form = this.fb.nonNullable.group({
     title: ['', Validators.required],
@@ -104,10 +118,63 @@ export class CreateProgramComponent {
       .map(([name]) => FIELD_LABELS[name] ?? name);
   });
 
-  readonly canSubmit = computed(() => this.missing().length === 0 && !this.submitting());
+  readonly canSubmit = computed(
+    () => this.missing().length === 0 && !this.submitting() && !this.loading(),
+  );
+
+  ngOnInit(): void {
+    const id = this.route.snapshot.paramMap.get('id');
+    if (!id) return;
+
+    this.programId.set(id);
+    this.loading.set(true);
+    this.svc.getOne(id).subscribe({
+      next: (program) => {
+        this.prefill(program);
+        this.loading.set(false);
+      },
+      error: () => {
+        this.loadError.set(true);
+        this.loading.set(false);
+      },
+    });
+  }
+
+  private prefill(program: NgoProgram): void {
+    // Only the first criterion is editable here, matching the create form. A
+    // programme with several keeps the rest untouched — the payload only carries
+    // what this form can express, so nothing is silently dropped.
+    const criterion = program.eligibilityCriteria?.[0];
+    const value = Array.isArray(criterion?.value)
+      ? (criterion.value as unknown[]).join(', ')
+      : String(criterion?.value ?? '');
+
+    this.form.patchValue({
+      title: program.title,
+      focus: program.focus ?? '',
+      description: program.description ?? '',
+      donor: program.donor ?? '',
+      coordinator: program.coordinator ?? '',
+      budgetTotal: program.budgetTotal != null ? toNaira(program.budgetTotal) : null,
+      slotsTotal: program.slotsTotal ?? null,
+      expiresAt: program.expiresAt.slice(0, 10),
+      criterionField: criterion?.field ?? 'conditionTags',
+      criterionOperator: criterion?.operator ?? 'in',
+      criterionValue: value,
+    });
+
+    if (program.status === 'approved') {
+      this.locked.set(true);
+      // Disabled controls drop out of the payload too, so a locked field cannot be
+      // sent even by a client that ignores the visual state.
+      for (const [name, control] of Object.entries(this.form.controls)) {
+        if (name !== 'expiresAt') control.disable({ emitEvent: false });
+      }
+    }
+  }
 
   submit(): void {
-    if (this.submitting()) return;
+    if (this.submitting() || this.loading()) return;
 
     // Never refuse in silence: the button is only reachable in this state via
     // Enter or a stale disabled binding, and a click that does nothing at all
@@ -147,13 +214,27 @@ export class CreateProgramComponent {
     this.submitting.set(true);
     this.error.set(null);
 
-    this.svc.create(payload).subscribe({
+    const id = this.programId();
+    const request = id
+      ? this.svc.update(id, this.editPayload(payload))
+      : this.svc.create(payload);
+
+    request.subscribe({
       next: () => this.router.navigate(['/ngo/programs']),
       error: (err: unknown) => {
         this.submitting.set(false);
         this.error.set(this.messageFor(err));
       },
     });
+  }
+
+  /**
+   * An approved programme accepts only the closing date; sending the rest would
+   * earn a 422 naming every locked field, which is not the NGO's mistake to read.
+   */
+  private editPayload(payload: CreateProgramPayload): UpdateProgramPayload {
+    const { type: _type, ...rest } = payload;
+    return this.locked() ? { expiresAt: payload.expiresAt } : rest;
   }
 
   /**

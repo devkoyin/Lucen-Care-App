@@ -61,7 +61,11 @@
     </div>
   </aside>
 
-  <div class="shell__main" (click)="menuOpen() && closeMenu()">
+  <!-- Must call a void method, never `menuOpen() && closeMenu()`: Angular calls
+       preventDefault() whenever a listener expression evaluates to false, so with
+       the menu shut that guard cancelled the default action of every click in the
+       routed page — including submitting a form. -->
+  <div class="shell__main" (click)="handleMainClick()">
     <router-outlet />
   </div>
 </div>
