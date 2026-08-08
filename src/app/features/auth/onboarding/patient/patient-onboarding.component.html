@@ -69,6 +69,17 @@
             <option value="other">Other</option>
           </select>
         </lc-form-field>
+        @if (showState) {
+          <lc-form-field label="State (optional)" id="ob-state"
+                         hint="Helps us show you programmes running in your area">
+            <select id="ob-state" formControlName="locationState">
+              <option value="">Select...</option>
+              @for (state of states; track state) {
+                <option [value]="state">{{ state }}</option>
+              }
+            </select>
+          </lc-form-field>
+        }
         <lc-form-field label="Known conditions (optional)" id="ob-conditions" hint="e.g. Diabetes, Hypertension">
           <input id="ob-conditions" type="text" formControlName="conditions" placeholder="Leave blank if none" />
         </lc-form-field>

@@ -1,6 +1,6 @@
 import { Component, computed, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { NgoProgramsService } from '../../../core/programs/ngo-programs.service';
+import { PatientProgramsService } from '../../../core/programs/patient-programs.service';
 
 @Component({
   selector: 'lc-funding',
@@ -10,14 +10,21 @@ import { NgoProgramsService } from '../../../core/programs/ngo-programs.service'
   styleUrl: './funding.component.scss',
 })
 export class FundingComponent {
-  private readonly programsSvc = inject(NgoProgramsService);
+  private readonly programsSvc = inject(PatientProgramsService);
 
+  // Derived from the same real feeds the child routes load, so the tiles cannot
+  // disagree with the lists beneath them.
   readonly stats = computed(() => {
-    const progs = this.programsSvc.programs();
-    const available = progs.filter(p => p.status === 'Active' || p.status === 'Closing').length;
+    const available = this.programsSvc.programs().length;
+    const enrollments = this.programsSvc.enrollments();
+    // A decision is the thing a patient is waiting for, so it gets its own tile
+    // rather than being folded into a single "applied" count.
+    const awaiting = enrollments.filter(e => e.status === 'active' || e.status === 'waitlisted').length;
+    const selected = enrollments.filter(e => e.status === 'selected').length;
     return [
-      { value: String(progs.length),  label: 'Total programmes', icon: '🤝' },
-      { value: String(available),     label: 'Accepting applications', icon: '✅' },
+      { value: String(available), label: 'Programmes open', icon: '🤝' },
+      { value: String(awaiting),  label: 'Awaiting a decision', icon: '⏳' },
+      { value: String(selected),  label: 'Selected', icon: '✅' },
     ];
   });
 }

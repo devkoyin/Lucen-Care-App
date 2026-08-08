@@ -34,6 +34,13 @@
         <span class="action-btn__badge">{{ hmoPendingCount }} pending</span>
       }
     </a>
+    <a class="action-btn action-btn--primary" routerLink="/admin/program-approvals">
+      <span class="action-btn__icon">🤝</span>
+      Review Funding Programmes
+      @if (programPendingCount > 0) {
+        <span class="action-btn__badge">{{ programPendingCount }} pending</span>
+      }
+    </a>
     <a class="action-btn" routerLink="/admin/audit-log">
       <span class="action-btn__icon">📋</span>
       View Audit Log

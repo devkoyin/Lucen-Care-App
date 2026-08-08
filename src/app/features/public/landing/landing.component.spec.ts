@@ -22,9 +22,17 @@ describe('LandingComponent', () => {
     expect(h1).toBeTruthy();
   });
 
-  it('renders all six role buttons', () => {
+  it('renders all five public role buttons', () => {
     const cards = fixture.nativeElement.querySelectorAll('.role-btn');
-    expect(cards.length).toBe(6);
+    expect(cards.length).toBe(5);
+  });
+
+  it('does not advertise the admin portal', () => {
+    const hrefs: string[] = Array.from(
+      fixture.nativeElement.querySelectorAll('.role-btn') as NodeListOf<HTMLAnchorElement>,
+      (a: HTMLAnchorElement) => a.getAttribute('href') ?? '',
+    );
+    expect(hrefs.some(h => h.includes('admin'))).toBeFalse();
   });
 
   it('routes each role button to the correct signup path', () => {
@@ -35,7 +43,6 @@ describe('LandingComponent', () => {
       '/auth/hmo/signup',
       '/auth/professional/signup',
       '/auth/benefactor/signup',
-      '/admin',
     ];
     cards.forEach((card, i) => {
       expect(card.getAttribute('href')).toBe(expected[i]);

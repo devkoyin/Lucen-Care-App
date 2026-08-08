@@ -32,6 +32,12 @@ export interface PatientOnboardingPayload {
   dateOfBirth: string;
   biologicalSex: string;
   country: string;
+  /**
+   * Collected only where the state list means something (Nigeria today). Omitted
+   * rather than sent empty — the API treats absent as "not recorded", and the
+   * coverage map counts those patients in its Unspecified bucket.
+   */
+  locationState?: string;
   conditions: string;
   primaryLanguage: string;
   termsConsent: boolean;

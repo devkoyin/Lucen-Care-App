@@ -18,7 +18,8 @@ export type AuditAction =
   | 'consent_changed'
   | 'login'
   | 'cross_org_attempt'
-  | 'refill_requested';
+  | 'refill_requested'
+  | 'program_updated';
 
 /** Drives the existing badge CSS classes, which only understand these four. */
 export type AuditTone = 'pending' | 'approved' | 'rejected' | 'neutral';
@@ -34,6 +35,7 @@ export const AUDIT_ACTION_MAP: Record<string, AuditAction> = {
   login: 'login',
   cross_org_attempt: 'cross_org_attempt',
   medication_refill_requested: 'refill_requested',
+  program_updated: 'program_updated',
 };
 
 export const AUDIT_ACTION_LABEL: Record<AuditAction, string> = {
@@ -46,6 +48,7 @@ export const AUDIT_ACTION_LABEL: Record<AuditAction, string> = {
   login: 'Signed in',
   cross_org_attempt: 'Cross-org attempt',
   refill_requested: 'Refill requested',
+  program_updated: 'Programme edited',
 };
 
 const AUDIT_ACTION_TONE: Record<AuditAction, AuditTone> = {
@@ -60,6 +63,7 @@ const AUDIT_ACTION_TONE: Record<AuditAction, AuditTone> = {
   consent_changed: 'neutral',
   login: 'neutral',
   refill_requested: 'neutral',
+  program_updated: 'neutral',
 };
 
 /** What an audit row is about. Organisations resolve to ngo/hmo via resourceSubtype. */

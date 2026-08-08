@@ -47,4 +47,32 @@ describe('SidebarShellComponent', () => {
     const shell: HTMLElement = fixture.nativeElement.querySelector('.shell');
     expect(shell.classList).toContain('portal-patient');
   });
+
+  // The shell wraps every routed page, so anything it does to a click it does to
+  // the whole app. `(click)="menuOpen() && closeMenu()"` evaluated to false with
+  // the menu shut, and Angular preventDefault()s a listener that returns false —
+  // which silently cancelled form submits on every page inside the portal.
+  describe('clicks in the routed page area', () => {
+    function clickInMain(): Event {
+      const main: HTMLElement = fixture.nativeElement.querySelector('.shell__main');
+      const event = new MouseEvent('click', { bubbles: true, cancelable: true });
+      main.dispatchEvent(event);
+      return event;
+    }
+
+    it('does not preventDefault when the mobile menu is closed', () => {
+      expect(component.menuOpen()).toBeFalse();
+      expect(clickInMain().defaultPrevented).toBeFalse();
+    });
+
+    it('still does not preventDefault while closing an open menu', () => {
+      component.toggleMenu();
+      fixture.detectChanges();
+
+      const event = clickInMain();
+
+      expect(component.menuOpen()).toBeFalse();
+      expect(event.defaultPrevented).toBeFalse();
+    });
+  });
 });

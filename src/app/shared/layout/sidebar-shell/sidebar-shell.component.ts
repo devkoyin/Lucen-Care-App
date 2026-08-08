@@ -30,4 +30,13 @@ export class SidebarShellComponent {
 
   toggleMenu(): void { this.menuOpen.update(v => !v); }
   closeMenu(): void  { this.menuOpen.set(false); }
+
+  /**
+   * Tapping the page closes the mobile menu. Declared `void` on purpose — an
+   * expression that returns false in a template listener makes Angular call
+   * preventDefault(), which would kill every click in the routed page.
+   */
+  handleMainClick(): void {
+    if (this.menuOpen()) this.closeMenu();
+  }
 }
