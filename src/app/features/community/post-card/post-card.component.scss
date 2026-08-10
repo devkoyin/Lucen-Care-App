@@ -1,0 +1,180 @@
+// The card's styling, extracted once. The feed and the group page each carried
+// their own near-identical copy of this block before.
+.post-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-5) var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  transition: border-color 0.15s;
+
+  &:hover { border-color: rgba(var(--color-role-accent-rgb, 14, 165, 137), 0.4); }
+
+  // The author's own view of moderated content — muted, not hidden.
+  &--hidden {
+    border-color: rgba(220, 38, 38, 0.28);
+    background: rgba(220, 38, 38, 0.02);
+  }
+
+  &__meta { display: flex; align-items: center; gap: var(--space-3); }
+
+  &__avatar {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--color-role-accent);
+    color: #ffffff;
+    font-size: var(--text-sm);
+    font-weight: var(--font-extrabold);
+    flex-shrink: 0;
+  }
+
+  &__author-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__author { font-size: var(--text-sm); font-weight: var(--font-bold); color: var(--color-text); }
+  &__time   { font-size: var(--text-xs); color: var(--color-text-muted); }
+
+  &__group-badge {
+    font-size: 11px;
+    font-weight: var(--font-bold);
+    padding: 3px var(--space-3);
+    border-radius: var(--radius-full);
+    border: 1px solid;
+    white-space: nowrap;
+    flex-shrink: 0;
+    text-decoration: none;
+    transition: opacity 0.15s;
+
+    &:hover { opacity: 0.75; }
+  }
+
+  // A bare "Report" button on every card is loud on a support forum, so it sits
+  // behind an overflow trigger.
+  &__more {
+    border: none;
+    background: none;
+    color: var(--color-text-muted);
+    font-size: var(--text-base);
+    line-height: 1;
+    padding: 4px 8px;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.15s, color 0.15s;
+
+    &:hover { background: var(--color-bg); color: var(--color-text-secondary); }
+  }
+
+  &__pro-badge,
+  &__benefactor-badge {
+    align-self: flex-start;
+    font-size: 10px;
+    font-weight: var(--font-bold);
+    padding: 2px 8px;
+    border-radius: var(--radius-full);
+    border: 1px solid;
+    margin-top: 2px;
+  }
+
+  &__pro-badge {
+    background: rgba(22, 163, 74, 0.10);
+    color: #15803D;
+    border-color: rgba(22, 163, 74, 0.25);
+  }
+
+  &__benefactor-badge {
+    background: rgba(217, 119, 6, 0.10);
+    color: #92400E;
+    border-color: rgba(217, 119, 6, 0.25);
+  }
+
+  &__removed {
+    margin: 0;
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-md);
+    background: rgba(220, 38, 38, 0.06);
+    border: 1px solid rgba(220, 38, 38, 0.2);
+    color: #B91C1C;
+    font-size: var(--text-xs);
+    line-height: 1.6;
+
+    strong { display: block; }
+    span { display: block; margin-top: 2px; }
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    text-decoration: none;
+    color: inherit;
+  }
+
+  &__title {
+    font-size: var(--text-base);
+    font-weight: var(--font-extrabold);
+    color: var(--color-text);
+    letter-spacing: var(--tracking-tight);
+    line-height: 1.35;
+    margin: 0;
+  }
+
+  &__excerpt {
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    line-height: 1.65;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin: 0;
+  }
+
+  &__tags { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding-top: var(--space-2);
+    border-top: 1px solid var(--color-border);
+  }
+}
+
+.post-tag {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  padding: 2px var(--space-2);
+}
+
+.post-action-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px var(--space-3);
+  border: none;
+  border-radius: var(--radius-md);
+  background: none;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  font-family: var(--font-family);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+
+  &:hover { background: var(--color-bg); color: var(--color-text-secondary); }
+  &:disabled { opacity: 0.6; cursor: default; }
+
+  &--liked { color: #DC2626; &:hover { color: #DC2626; background: rgba(220, 38, 38, 0.06); } }
+}

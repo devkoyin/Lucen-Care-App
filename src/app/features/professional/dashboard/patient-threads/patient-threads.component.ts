@@ -1,26 +1,40 @@
-import { Component, signal, computed } from '@angular/core';
-import { SEED_PATIENT_THREADS, PatientThread } from '../../professional.data';
+import { Component, OnInit, inject, signal } from '@angular/core';
 
-type Filter = 'all' | 'urgent';
+import { CommunityPostsService } from '../../../../core/community/community-posts.service';
+import { CommunityPost } from '../../../../core/community/community.models';
+import { PostSummaryListComponent } from '../../../community/post-summary-list/post-summary-list.component';
 
+/**
+ * Questions nobody has answered yet.
+ *
+ * The seed data this replaces carried an `urgent` flag with no server-side
+ * definition — nothing in the platform records urgency, so the filter sorted by a
+ * fabricated field. The real distinction the API can make is answered or not.
+ */
 @Component({
   selector: 'lc-pro-patient-threads',
   standalone: true,
-  imports: [],
+  imports: [PostSummaryListComponent],
   templateUrl: './patient-threads.component.html',
   styleUrl: './patient-threads.component.scss',
 })
-export class ProPatientThreadsComponent {
-  readonly allThreads: PatientThread[] = SEED_PATIENT_THREADS;
-  readonly filter = signal<Filter>('all');
+export class ProPatientThreadsComponent implements OnInit {
+  private readonly posts$ = inject(CommunityPostsService);
 
-  readonly filtered = computed(() =>
-    this.filter() === 'urgent'
-      ? this.allThreads.filter(t => t.urgent)
-      : this.allThreads
-  );
+  readonly threads = signal<CommunityPost[]>([]);
+  readonly loading = signal(true);
+  readonly loadError = signal(false);
 
-  readonly urgentCount = computed(() => this.allThreads.filter(t => t.urgent).length);
-
-  setFilter(f: Filter) { this.filter.set(f); }
+  ngOnInit(): void {
+    this.posts$.loadUnanswered().subscribe({
+      next: rows => {
+        this.threads.set(rows);
+        this.loading.set(false);
+      },
+      error: () => {
+        this.loading.set(false);
+        this.loadError.set(true);
+      },
+    });
+  }
 }

@@ -5,6 +5,7 @@ import { of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { SidebarShellComponent, NavItem } from '../../shared/layout/sidebar-shell/sidebar-shell.component';
 import { AuthService } from '../../core/auth/auth.service';
+import { CommunityNavService } from '../community/community-nav.service';
 
 const NAV_ITEMS: NavItem[] = [
   { icon: '🏠', label: 'Dashboard',  route: '/professional/dashboard' },
@@ -31,6 +32,14 @@ const NAV_ITEMS: NavItem[] = [
 export class ProfessionalPortalComponent {
   private readonly auth   = inject(AuthService);
   private readonly router = inject(Router);
+  // The community feature is shared by three portals. Setting the base here rather
+  // than only on the community route means links rendered OUTSIDE it — the
+  // dashboard's thread lists — resolve under this role too.
+  private readonly communityNav = inject(CommunityNavService);
+
+  constructor() {
+    this.communityNav.setBase('/professional/community');
+  }
 
   private readonly me = toSignal(this.auth.me().pipe(catchError(() => of(null))), {
     initialValue: null,

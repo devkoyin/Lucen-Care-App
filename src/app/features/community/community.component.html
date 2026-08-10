@@ -1,0 +1,91 @@
+<div class="community-feed">
+
+  <!-- Actions bar -->
+  <div class="feed-bar">
+    <div class="community-filters">
+      @for (f of filters(); track f.key) {
+        <button
+          class="filter-chip"
+          [class.filter-chip--active]="activeFilter() === f.key"
+          type="button"
+          (click)="setFilter(f.key)">
+          {{ f.label }}
+        </button>
+      }
+    </div>
+    <button class="community-primary-btn" type="button"
+            (click)="showNewPost.set(true)">+ New Post</button>
+  </div>
+
+  @if (activeTag()) {
+    <p class="feed-tag-note">Showing posts tagged <strong>#{{ activeTag() }}</strong></p>
+  }
+
+  @if (actionError()) {
+    <p class="feed-error" role="alert">{{ actionError() }}</p>
+  }
+
+  @if (loading()) {
+    <div class="feed-state">
+      <span class="feed-state__icon" aria-hidden="true">⏳</span>
+      <p class="feed-state__title">Loading posts…</p>
+    </div>
+  } @else if (loadError()) {
+    <div class="feed-state">
+      <span class="feed-state__icon" aria-hidden="true">⚠️</span>
+      <p class="feed-state__title">Could not load the community feed</p>
+      <p class="feed-state__sub">Check your connection and try again.</p>
+      <button class="community-primary-btn" type="button" (click)="reload()">Retry</button>
+    </div>
+  } @else {
+    <div class="post-list">
+      @for (post of posts(); track post.id) {
+        <lc-post-card
+          [post]="post"
+          [reactionPending]="isPending(post)"
+          (react)="react($event)"
+          (report)="openReport($event)" />
+      } @empty {
+        <div class="feed-state">
+          <span class="feed-state__icon" aria-hidden="true">🌿</span>
+          @if (activeFilter() || activeTag()) {
+            <p class="feed-state__title">Nothing here yet</p>
+            <p class="feed-state__sub">No posts match this filter. Try another, or start the conversation.</p>
+          } @else {
+            <p class="feed-state__title">The community is quiet right now</p>
+            <p class="feed-state__sub">Join a group and be the first to share.</p>
+          }
+          <button class="community-primary-btn" type="button" (click)="showNewPost.set(true)">+ New Post</button>
+        </div>
+      }
+    </div>
+
+    @if (hasMore()) {
+      <button class="feed-more-btn" type="button" [disabled]="loadingMore()" (click)="loadMore()">
+        {{ loadingMore() ? 'Loading…' : 'Load more posts' }}
+      </button>
+    }
+  }
+
+</div>
+
+@if (showNewPost()) {
+  <lc-new-post-modal
+    [groups]="postableGroups()"
+    [anyCommunityExists]="anyCommunityExists()"
+    [canCreate]="isPatient()"
+    [submitting]="posting()"
+    [error]="postError()"
+    (close)="showNewPost.set(false)"
+    (posted)="addPost($event)" />
+}
+
+@if (reportTarget()) {
+  <lc-report-modal
+    targetType="post"
+    [submitting]="reporting()"
+    [error]="reportError()"
+    [done]="reportDone()"
+    (submitReport)="submitReport($event)"
+    (close)="closeReport()" />
+}

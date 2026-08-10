@@ -1,0 +1,148 @@
+<div class="thread-page">
+
+  <a class="thread-back" [routerLink]="nav.link('feed')">← Back to the feed</a>
+
+  @if (loading()) {
+    <div class="thread-state">
+      <span class="thread-state__icon" aria-hidden="true">⏳</span>
+      <p class="thread-state__title">Loading…</p>
+    </div>
+  } @else if (notFound()) {
+    <div class="thread-state">
+      <span class="thread-state__icon" aria-hidden="true">🔍</span>
+      <p class="thread-state__title">This post is not available</p>
+      <p class="thread-state__sub">It may have been deleted, or removed by a moderator.</p>
+      <a class="thread-state__link" [routerLink]="nav.link('feed')">Back to the feed</a>
+    </div>
+  } @else {
+  @if (post(); as p) {
+
+    <lc-post-card
+      [post]="p"
+      [reactionPending]="isPending(p.id)"
+      (react)="reactToPost($event)"
+      (report)="openPostReport($event)" />
+
+    @if (actionError()) {
+      <p class="thread-error" role="alert">{{ actionError() }}</p>
+    }
+
+    <!-- Composer. The Comment button used to have no (click) at all, so the count
+         on the card pointed at a thread that did not exist. -->
+    <div class="thread-composer">
+      @if (replyingTo(); as parent) {
+        <p class="thread-composer__context">
+          Replying to <strong>{{ parent.author.displayName }}</strong>
+          <button type="button" class="thread-composer__cancel" (click)="cancelReply()">Cancel</button>
+        </p>
+      }
+      <textarea
+        class="thread-composer__input"
+        rows="3"
+        maxlength="2000"
+        [value]="draft()"
+        (input)="draft.set($any($event.target).value)"
+        [placeholder]="replyingTo() ? 'Write your reply…' : 'Share something helpful…'"></textarea>
+      @if (composerError()) {
+        <p class="thread-error" role="alert">{{ composerError() }}</p>
+      }
+      <div class="thread-composer__actions">
+        <button class="thread-send-btn" type="button" [disabled]="!draft().trim() || sending()" (click)="send()">
+          {{ sending() ? 'Posting…' : (replyingTo() ? 'Post reply' : 'Post comment') }}
+        </button>
+      </div>
+    </div>
+
+    <h2 class="thread-heading">
+      {{ p.commentCount }} {{ p.commentCount === 1 ? 'reply' : 'replies' }}
+    </h2>
+
+    <div class="thread-list">
+      @for (node of thread(); track node.comment.id) {
+        <div class="thread-node">
+
+          <article class="comment">
+            <span class="comment__avatar" aria-hidden="true">{{ node.comment.author.initial }}</span>
+            <div class="comment__main">
+              <div class="comment__head">
+                <span class="comment__author">{{ node.comment.author.displayName }}</span>
+                @if (node.comment.author.badge === 'verified-professional') {
+                  <span class="comment__badge comment__badge--pro">✓ Verified Health Professional</span>
+                }
+                @if (node.comment.author.badge === 'verified-benefactor') {
+                  <span class="comment__badge comment__badge--ben">★ Verified Benefactor</span>
+                }
+                <span class="comment__time">{{ when(node.comment.createdAt) }}</span>
+              </div>
+              <p class="comment__body">{{ node.comment.body }}</p>
+              <div class="comment__actions">
+                <button class="comment__action" type="button"
+                        [class.comment__action--liked]="node.comment.reactedByMe"
+                        [disabled]="isPending(node.comment.id)"
+                        (click)="reactToComment(node.comment)">
+                  <span aria-hidden="true">{{ node.comment.reactedByMe ? '❤️' : '🤍' }}</span>
+                  <span>{{ node.comment.reactionCount }}</span>
+                </button>
+                <button class="comment__action" type="button" (click)="startReply(node.comment)">Reply</button>
+                <button class="comment__action" type="button" (click)="openCommentReport(node.comment)">Report</button>
+              </div>
+            </div>
+          </article>
+
+          <!-- Exactly one level. A reply to a reply is re-parented here by the
+               server, so this list can never nest further. -->
+          @for (reply of node.replies; track reply.id) {
+            <article class="comment comment--reply">
+              <span class="comment__avatar" aria-hidden="true">{{ reply.author.initial }}</span>
+              <div class="comment__main">
+                <div class="comment__head">
+                  <span class="comment__author">{{ reply.author.displayName }}</span>
+                  @if (reply.author.badge === 'verified-professional') {
+                    <span class="comment__badge comment__badge--pro">✓ Verified Health Professional</span>
+                  }
+                  @if (reply.author.badge === 'verified-benefactor') {
+                    <span class="comment__badge comment__badge--ben">★ Verified Benefactor</span>
+                  }
+                  <span class="comment__time">{{ when(reply.createdAt) }}</span>
+                </div>
+                <p class="comment__body">{{ reply.body }}</p>
+                <div class="comment__actions">
+                  <button class="comment__action" type="button"
+                          [class.comment__action--liked]="reply.reactedByMe"
+                          [disabled]="isPending(reply.id)"
+                          (click)="reactToComment(reply)">
+                    <span aria-hidden="true">{{ reply.reactedByMe ? '❤️' : '🤍' }}</span>
+                    <span>{{ reply.reactionCount }}</span>
+                  </button>
+                  <button class="comment__action" type="button" (click)="startReply(node.comment)">Reply</button>
+                  <button class="comment__action" type="button" (click)="openCommentReport(reply)">Report</button>
+                </div>
+              </div>
+            </article>
+          }
+
+        </div>
+      } @empty {
+        <p class="thread-empty">No replies yet. Be the first to help.</p>
+      }
+    </div>
+
+    @if (hasMoreComments()) {
+      <button class="thread-more-btn" type="button" [disabled]="loadingMore()" (click)="loadMoreComments()">
+        {{ loadingMore() ? 'Loading…' : 'Load more replies' }}
+      </button>
+    }
+  }
+  }
+
+</div>
+
+@if (reportPost() || reportComment()) {
+  <lc-report-modal
+    [targetType]="reportTargetType()"
+    [submitting]="reporting()"
+    [error]="reportError()"
+    [done]="reportDone()"
+    (submitReport)="submitReport($event)"
+    (close)="closeReport()" />
+}

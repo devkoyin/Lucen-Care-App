@@ -1,0 +1,60 @@
+<div class="community-portal">
+
+  <!-- Header -->
+  <div class="community-portal__topbar">
+    <div>
+      <h1 class="community-portal__title">Community</h1>
+      <p class="community-portal__sub">Connect with others managing similar health journeys</p>
+    </div>
+    <button class="community-portal__guidelines-btn" type="button" (click)="showGuidelines.set(true)">
+      🛡️ Community Guidelines
+    </button>
+  </div>
+
+  <!-- Real counters. On failure the strip is dropped entirely rather than stacking
+       a warning above a feed that is working perfectly well. -->
+  @if (!statsFailed()) {
+    <div class="community-portal__stats">
+      @for (tile of tiles(); track tile.label) {
+        <div class="comm-stat">
+          <span class="comm-stat__icon" aria-hidden="true">{{ tile.icon }}</span>
+          <span class="comm-stat__value">{{ tile.value }}</span>
+          <span class="comm-stat__label">{{ tile.label }}</span>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Tab nav. Every link resolves under whichever portal is hosting the feature. -->
+  <nav class="community-nav">
+    <a
+      class="community-nav__tab"
+      [routerLink]="nav.link('feed')"
+      routerLinkActive="community-nav__tab--active"
+      [routerLinkActiveOptions]="{ exact: true }">
+      📰 Feed
+    </a>
+    <a
+      class="community-nav__tab"
+      [routerLink]="nav.link('groups')"
+      routerLinkActive="community-nav__tab--active"
+      [routerLinkActiveOptions]="{ exact: false }">
+      👥 Groups
+    </a>
+    <a
+      class="community-nav__tab"
+      [routerLink]="nav.link('trending')"
+      routerLinkActive="community-nav__tab--active"
+      [routerLinkActiveOptions]="{ exact: true }">
+      🔥 Trending
+    </a>
+  </nav>
+
+  <!-- Child page content -->
+  <router-outlet />
+
+</div>
+
+@if (showGuidelines()) {
+  <lc-guidelines-modal (close)="showGuidelines.set(false)" />
+}

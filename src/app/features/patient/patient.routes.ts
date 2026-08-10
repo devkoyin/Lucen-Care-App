@@ -68,32 +68,11 @@ export const PATIENT_ROUTES: Routes = [
       },
       {
         path: 'community',
-        data: { label: 'Community' },
-        loadComponent: () =>
-          import('./community/community-portal.component').then(m => m.CommunityPortalComponent),
-        children: [
-          { path: '', redirectTo: 'feed', pathMatch: 'full' },
-          {
-            path: 'feed',
-            loadComponent: () =>
-              import('./community/community.component').then(m => m.CommunityComponent),
-          },
-          {
-            path: 'groups',
-            loadComponent: () =>
-              import('./community/groups-list/groups-list.component').then(m => m.GroupsListComponent),
-          },
-          {
-            path: 'trending',
-            loadComponent: () =>
-              import('./community/trending/trending.component').then(m => m.TrendingComponent),
-          },
-          {
-            path: 'group/:id',
-            loadComponent: () =>
-              import('./community/group/community-group.component').then(m => m.CommunityGroupComponent),
-          },
-        ],
+        // The community is role-neutral and shared with the professional and
+        // benefactor portals — see features/community/community.routes.ts.
+        data: { label: 'Community', communityBase: '/patient/community' },
+        loadChildren: () =>
+          import('../community/community.routes').then(m => m.COMMUNITY_ROUTES),
       },
       {
         path: 'funding',

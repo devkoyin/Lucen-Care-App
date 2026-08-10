@@ -1,0 +1,105 @@
+@if (loading()) {
+  <div class="group-state">
+    <span class="group-state__icon" aria-hidden="true">⏳</span>
+    <p class="group-state__title">Loading…</p>
+  </div>
+} @else if (notFound()) {
+  <div class="group-not-found">
+    <p>This community does not exist, or it has been archived.</p>
+    <a [routerLink]="nav.link('groups')">← Back to Communities</a>
+  </div>
+} @else {
+@if (group(); as g) {
+<div class="group-page">
+
+  <!-- Header -->
+  <div class="group-header" [style.border-color]="accent() + '33'">
+    <a class="group-header__back" [routerLink]="nav.link('groups')">← Communities</a>
+    <div class="group-header__info">
+      <span class="group-header__icon">{{ g.icon || '🤝' }}</span>
+      <div>
+        <h1 class="group-header__name">{{ g.name }}</h1>
+        <span class="group-header__members">{{ g.memberCount.toLocaleString() }} members</span>
+        @if (g.description) {
+          <p class="group-header__desc">{{ g.description }}</p>
+        }
+      </div>
+    </div>
+
+    <div class="group-header__actions">
+      <button class="group-header__join-btn" type="button"
+              [disabled]="joinBusy()" (click)="toggleJoin()">
+        {{ joinBusy() ? '…' : (g.joined ? 'Leave' : 'Join') }}
+      </button>
+      @if (g.joined) {
+        <button class="group-header__post-btn" [style.background]="accent()" type="button"
+                (click)="showNewPost.set(true)">
+          + New Post
+        </button>
+      }
+    </div>
+  </div>
+
+  @if (g.disclaimer) {
+    <p class="group-disclaimer">{{ g.disclaimer }}</p>
+  }
+
+  @if (actionError()) {
+    <p class="group-error" role="alert">{{ actionError() }}</p>
+  }
+
+  <!-- Posts. The card is shared with the feed, so the two can no longer drift. -->
+  <div class="group-feed">
+    @for (post of posts(); track post.id) {
+      <lc-post-card
+        [post]="post"
+        [showCommunityBadge]="false"
+        [reactionPending]="isPending(post)"
+        (react)="react($event)"
+        (report)="openReport($event)" />
+    } @empty {
+      <div class="group-state">
+        <span class="group-state__icon" aria-hidden="true">{{ g.icon || '🌿' }}</span>
+        <p class="group-state__title">No posts in {{ g.name }} yet</p>
+        <p class="group-state__sub">
+          @if (g.joined) { Be the first to share. } @else { Join to start the conversation. }
+        </p>
+        @if (g.joined) {
+          <button class="group-header__post-btn" [style.background]="accent()" type="button"
+                  (click)="showNewPost.set(true)">+ New Post</button>
+        }
+      </div>
+    }
+  </div>
+
+  @if (hasMore()) {
+    <button class="group-more-btn" type="button" [disabled]="loadingMore()" (click)="loadMore()">
+      {{ loadingMore() ? 'Loading…' : 'Load more posts' }}
+    </button>
+  }
+
+</div>
+}
+}
+
+@if (showNewPost()) {
+  @if (group(); as g) {
+  <lc-new-post-modal
+    [groups]="[g]"
+    [defaultCommunityId]="g.id"
+    [submitting]="posting()"
+    [error]="postError()"
+    (close)="showNewPost.set(false)"
+    (posted)="addPost($event)" />
+  }
+}
+
+@if (reportTarget()) {
+  <lc-report-modal
+    targetType="post"
+    [submitting]="reporting()"
+    [error]="reportError()"
+    [done]="reportDone()"
+    (submitReport)="submitReport($event)"
+    (close)="closeReport()" />
+}

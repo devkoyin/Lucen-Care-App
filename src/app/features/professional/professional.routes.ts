@@ -21,16 +21,6 @@ export const PROFESSIONAL_ROUTES: Routes = [
               import('./dashboard/patient-threads/patient-threads.component').then(m => m.ProPatientThreadsComponent),
           },
           {
-            path: 'impact',
-            loadComponent: () =>
-              import('./dashboard/impact/impact.component').then(m => m.ProImpactComponent),
-          },
-          {
-            path: 'expertise',
-            loadComponent: () =>
-              import('./dashboard/expertise/expertise.component').then(m => m.ProExpertiseComponent),
-          },
-          {
             path: 'posts',
             loadComponent: () =>
               import('./dashboard/my-posts/my-posts.component').then(m => m.ProMyPostsComponent),
@@ -47,8 +37,11 @@ export const PROFESSIONAL_ROUTES: Routes = [
       {
         path: 'community',
         canActivate: [verifiedGuard('professional', '/professional/pending')],
-        loadComponent: () =>
-          import('../patient/community/community.component').then(m => m.CommunityComponent),
+        // The full portal — feed, groups, trending, threads — not the bare feed
+        // component this used to load out of the patient feature.
+        data: { communityBase: '/professional/community' },
+        loadChildren: () =>
+          import('../community/community.routes').then(m => m.COMMUNITY_ROUTES),
       },
       {
         path: 'profile',

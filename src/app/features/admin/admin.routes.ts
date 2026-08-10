@@ -52,6 +52,13 @@ export const ADMIN_ROUTES: Routes = [
           import('./program-approvals/program-approvals.component').then(m => m.ProgramApprovalsComponent),
       },
       {
+        // Reporting existed on the client with nowhere for a report to land. This
+        // is where they land.
+        path: 'community-reports',
+        loadComponent: () =>
+          import('./community-moderation/community-moderation.component').then(m => m.CommunityModerationComponent),
+      },
+      {
         path: 'audit-log',
         loadComponent: () =>
           import('./audit-log/audit-log.component').then(m => m.AuditLogComponent),

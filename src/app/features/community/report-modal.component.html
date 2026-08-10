@@ -1,0 +1,40 @@
+@if (submitted()) {
+  <lc-confirm-modal
+    title="Thank you"
+    message="A moderator will review this. The author is not told who reported them."
+    confirmLabel="Done"
+    cancelLabel="Close"
+    (confirm)="close.emit()"
+    (cancel)="close.emit()" />
+} @else {
+  <lc-confirm-modal
+    [title]="'Report this ' + targetType"
+    message="Tell us what is wrong. A moderator reviews every report, and the author is never told who reported them."
+    confirmLabel="Submit report"
+    [danger]="true"
+    [submitting]="submitting"
+    [error]="error"
+    (confirm)="submit()"
+    (cancel)="close.emit()">
+
+    <fieldset class="report-reasons">
+      <legend class="report-reasons__legend">Reason</legend>
+      @for (r of reasons; track r[0]) {
+        <label class="report-reason">
+          <input type="radio" name="report-reason" [value]="r[0]"
+                 [checked]="reason() === r[0]" (change)="reason.set(r[0])" />
+          <span>{{ r[1] }}</span>
+        </label>
+      }
+    </fieldset>
+
+    @if (detailsRequired()) {
+      <label class="report-details">
+        <span class="report-details__label">What happened? <em>Required</em></span>
+        <textarea rows="3" maxlength="500" [ngModel]="details()"
+                  (ngModelChange)="details.set($event)" name="report-details"
+                  placeholder="Describe the problem so a moderator can act on it."></textarea>
+      </label>
+    }
+  </lc-confirm-modal>
+}

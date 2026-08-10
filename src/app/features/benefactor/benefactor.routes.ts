@@ -21,16 +21,6 @@ export const BENEFACTOR_ROUTES: Routes = [
               import('./dashboard/community-threads/community-threads.component').then(m => m.BenCommunityThreadsComponent),
           },
           {
-            path: 'impact',
-            loadComponent: () =>
-              import('./dashboard/impact/impact.component').then(m => m.BenImpactComponent),
-          },
-          {
-            path: 'contributions',
-            loadComponent: () =>
-              import('./dashboard/contributions/contributions.component').then(m => m.BenContributionsComponent),
-          },
-          {
             path: 'posts',
             loadComponent: () =>
               import('./dashboard/my-posts/my-posts.component').then(m => m.BenMyPostsComponent),
@@ -47,8 +37,11 @@ export const BENEFACTOR_ROUTES: Routes = [
       {
         path: 'community',
         canActivate: [verifiedGuard('benefactor', '/benefactor/pending')],
-        loadComponent: () =>
-          import('../patient/community/community.component').then(m => m.CommunityComponent),
+        // The full portal — feed, groups, trending, threads — not the bare feed
+        // component this used to load out of the patient feature.
+        data: { communityBase: '/benefactor/community' },
+        loadChildren: () =>
+          import('../community/community.routes').then(m => m.COMMUNITY_ROUTES),
       },
       {
         path: 'profile',
