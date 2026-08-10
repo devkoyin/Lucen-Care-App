@@ -1,3 +1,4 @@
+import { NgTemplateOutlet } from '@angular/common';
 import { Component, computed, effect, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -9,11 +10,20 @@ import { CommunityNavService } from '../community-nav.service';
 import { PostCardComponent } from '../post-card/post-card.component';
 import { ReportModalComponent, ReportSubmission } from '../report-modal.component';
 
-/** One top-level comment plus its replies, so the template renders two levels. */
+/**
+ * One top-level comment plus whatever replies have been fetched for it.
+ *
+ * `replies` is empty until the reader expands the node — the count on the toggle comes
+ * from `comment.replyCount`, which the server computes, so a collapsed thread costs no
+ * request at all.
+ */
 export interface CommentThreadNode {
   comment: CommunityComment;
   replies: CommunityComment[];
 }
+
+/** Which composer is open. `'root'` is the new-comment box at the foot of the thread. */
+type ComposerTarget = 'root' | string | null;
 
 /**
  * The thread behind a post.
@@ -26,7 +36,7 @@ export interface CommentThreadNode {
 @Component({
   selector: 'lc-post-detail',
   standalone: true,
-  imports: [RouterLink, PostCardComponent, ReportModalComponent],
+  imports: [NgTemplateOutlet, RouterLink, PostCardComponent, ReportModalComponent],
   templateUrl: './post-detail.component.html',
   styleUrl: './post-detail.component.scss',
 })
@@ -46,10 +56,20 @@ export class PostDetailComponent {
   readonly loadingMore = signal(false);
   readonly actionError = signal<string | null>(null);
 
-  readonly draft = signal('');
-  readonly replyingTo = signal<CommunityComment | null>(null);
+  /**
+   * Which composer is open, and the text in each.
+   *
+   * Drafts are keyed by target rather than held in one string so that opening a second
+   * reply box never silently discards what was typed in the first. Only one box is open
+   * at a time, but the text of the others survives until it is sent.
+   */
+  readonly openComposer = signal<ComposerTarget>(null);
+  readonly drafts = signal<Record<string, string>>({});
   readonly sending = signal(false);
   readonly composerError = signal<string | null>(null);
+
+  /** Which top-level comments the reader has expanded. */
+  readonly expanded = signal<ReadonlySet<string>>(new Set());
 
   readonly reportComment = signal<CommunityComment | null>(null);
   readonly reportPost = signal<CommunityPost | null>(null);
@@ -57,13 +77,18 @@ export class PostDetailComponent {
   readonly reportError = signal<string | null>(null);
   readonly reportDone = signal(false);
 
-  /** Nesting is one level. The server enforces it; this just renders it. */
+  /**
+   * Nesting is one level. The server enforces it; this just renders it.
+   *
+   * The top-level list and the replies are two separate stores, so this no longer has
+   * to reconstruct the tree by scanning one flat array for matching parents — which
+   * dropped any reply whose parent happened to fall on an earlier page.
+   */
   readonly thread = computed<CommentThreadNode[]>(() => {
-    const all = this.posts$.comments();
-    const tops = all.filter(c => !c.parentCommentId);
-    return tops.map(comment => ({
+    const replies = this.posts$.replies();
+    return this.posts$.comments().map(comment => ({
       comment,
-      replies: all.filter(c => c.parentCommentId === comment.id),
+      replies: replies[comment.id] ?? [],
     }));
   });
 
@@ -129,26 +154,105 @@ export class PostDetailComponent {
     });
   }
 
+  // ── Replies ──────────────────────────────────────────────────────────────
+
+  isExpanded(commentId: string): boolean {
+    return this.expanded().has(commentId);
+  }
+
+  isLoadingReplies(commentId: string): boolean {
+    return this.posts$.isLoadingReplies(commentId);
+  }
+
+  hasMoreReplies(commentId: string): boolean {
+    return this.posts$.hasMoreReplies(commentId);
+  }
+
+  /**
+   * Expanding fetches once and then re-shows what is held — collapsing and reopening
+   * must not re-hit the API.
+   */
+  toggleReplies(commentId: string): void {
+    const open = this.isExpanded(commentId);
+    this.expanded.update(set => {
+      const next = new Set(set);
+      if (open) next.delete(commentId);
+      else next.add(commentId);
+      return next;
+    });
+    if (open) return;
+
+    this.posts$.loadReplies(commentId).subscribe({
+      error: err => this.actionError.set(apiErrorMessage(err)),
+    });
+  }
+
+  loadMoreReplies(commentId: string): void {
+    this.posts$.loadMoreReplies(commentId).subscribe({
+      error: err => this.actionError.set(apiErrorMessage(err)),
+    });
+  }
+
+  // ── Composers ────────────────────────────────────────────────────────────
+
+  isComposerOpen(target: ComposerTarget): boolean {
+    return this.openComposer() === target;
+  }
+
+  draftFor(target: string): string {
+    return this.drafts()[target] ?? '';
+  }
+
+  setDraft(target: string, value: string): void {
+    this.drafts.update(d => ({ ...d, [target]: value }));
+  }
+
+  openRootComposer(): void {
+    this.composerError.set(null);
+    this.openComposer.set('root');
+  }
+
+  /**
+   * Opens a composer directly beneath the comment being replied to, so the reader can
+   * still see what they are answering. `comment` is whichever node was clicked — a
+   * reply is a valid target, and the server re-parents it onto the top-level ancestor.
+   *
+   * Expands the node too: a reply the author cannot see land reads as a failure.
+   */
   startReply(comment: CommunityComment): void {
-    this.replyingTo.set(comment);
+    this.composerError.set(null);
+    this.openComposer.set(comment.id);
+
+    const thread = comment.parentCommentId ?? comment.id;
+    if (!this.isExpanded(thread)) this.toggleReplies(thread);
   }
 
-  cancelReply(): void {
-    this.replyingTo.set(null);
+  closeComposer(): void {
+    this.openComposer.set(null);
+    this.composerError.set(null);
   }
 
-  send(): void {
-    const body = this.draft().trim();
-    if (!body || this.sending()) return;
+  send(target: ComposerTarget): void {
+    if (!target || this.sending()) return;
+    const body = this.draftFor(target).trim();
+    if (!body) return;
 
     this.sending.set(true);
     this.composerError.set(null);
-    this.posts$.addComment(this.postId(), body, this.replyingTo()?.id).subscribe({
+    const parentCommentId = target === 'root' ? undefined : target;
+
+    this.posts$.addComment(this.postId(), body, parentCommentId).subscribe({
       next: () => {
         this.sending.set(false);
-        this.draft.set('');
-        this.replyingTo.set(null);
+        this.drafts.update(d => {
+          const next = { ...d };
+          delete next[target];
+          return next;
+        });
+        this.openComposer.set(null);
       },
+      // The box stays open on failure so a rejected comment does not take the text
+      // with it.
       error: err => {
         this.sending.set(false);
         this.composerError.set(apiErrorMessage(err));

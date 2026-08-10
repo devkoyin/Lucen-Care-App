@@ -17,8 +17,15 @@
             (click)="showNewPost.set(true)">+ New Post</button>
   </div>
 
+  <!-- Trending is computed platform-wide, so a tag deep-link deliberately steps
+       outside the joined-only default. Saying so stops the count on the Trending row
+       looking like it disagrees with the feed. -->
   @if (activeTag()) {
-    <p class="feed-tag-note">Showing posts tagged <strong>#{{ activeTag() }}</strong></p>
+    <p class="feed-tag-note">
+      Showing posts tagged <strong>#{{ activeTag() }}</strong> across all communities
+    </p>
+  } @else if (activeFilter()) {
+    <p class="feed-tag-note">Showing one community, including posts from communities you have not joined</p>
   }
 
   @if (actionError()) {
@@ -48,14 +55,24 @@
       } @empty {
         <div class="feed-state">
           <span class="feed-state__icon" aria-hidden="true">🌿</span>
-          @if (activeFilter() || activeTag()) {
+          @if (browsingWidely()) {
             <p class="feed-state__title">Nothing here yet</p>
             <p class="feed-state__sub">No posts match this filter. Try another, or start the conversation.</p>
+            <button class="community-primary-btn" type="button" (click)="showNewPost.set(true)">+ New Post</button>
+          } @else if (joinedCount() === 0) {
+            <!-- The feed is scoped to joined communities, so this is the only way out.
+                 Offering "New Post" here would be a dead end: posting also requires a
+                 membership. -->
+            <p class="feed-state__title">Your feed is empty because you have not joined a community yet</p>
+            <p class="feed-state__sub">
+              Communities are where posts live. Join one and its conversations show up here.
+            </p>
+            <a class="community-primary-btn" [routerLink]="nav.link('groups')">Browse communities</a>
           } @else {
-            <p class="feed-state__title">The community is quiet right now</p>
-            <p class="feed-state__sub">Join a group and be the first to share.</p>
+            <p class="feed-state__title">Your communities are quiet right now</p>
+            <p class="feed-state__sub">Be the first to share something today.</p>
+            <button class="community-primary-btn" type="button" (click)="showNewPost.set(true)">+ New Post</button>
           }
-          <button class="community-primary-btn" type="button" (click)="showNewPost.set(true)">+ New Post</button>
         </div>
       }
     </div>

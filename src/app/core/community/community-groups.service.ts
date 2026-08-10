@@ -1,6 +1,6 @@
 import { HttpParams } from '@angular/common/http';
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { Observable, forkJoin } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
 import { ApiService } from '../api/api.service';
@@ -22,10 +22,17 @@ export class CommunityGroupsService {
   readonly joinedGroups = computed(() => this._groups().filter(g => g.joined));
   readonly otherGroups = computed(() => this._groups().filter(g => !g.joined));
 
-  /** The portal shell needs the tiles and the tabs need the groups, so fetch both. */
-  loadAll(): Observable<[CommunityGroup[], CommunityOverview]> {
+  /**
+   * The groups every tab under the portal needs — the feed's filter chips, the groups
+   * list, and the new-post modal's target picker.
+   *
+   * This used to be `loadAll()`, which also fetched `GET /community/overview` for the
+   * portal's stat strip. That strip now renders the caller's own numbers from
+   * `GET /community/stats`, so the overview call was pure waste on every portal load.
+   */
+  loadGroups(limit = 50): Observable<CommunityGroup[]> {
     this._loading.set(true);
-    return forkJoin([this.load(), this.loadOverview()]).pipe(
+    return this.load(limit).pipe(
       tap({
         next: () => this._loading.set(false),
         error: () => this._loading.set(false),
@@ -42,6 +49,11 @@ export class CommunityGroupsService {
       );
   }
 
+  /**
+   * Platform-wide counters. Nothing renders these today — the portal strip moved to
+   * per-user stats. Kept because the endpoint still exists and a discovery surface is
+   * the obvious consumer; delete both if none appears.
+   */
   loadOverview(): Observable<CommunityOverview> {
     return this.api
       .getData<CommunityOverview>('/community/overview')

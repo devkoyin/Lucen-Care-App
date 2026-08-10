@@ -1,6 +1,6 @@
 import { HttpParams } from '@angular/common/http';
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { EMPTY, Observable, throwError } from 'rxjs';
+import { EMPTY, Observable, of, throwError } from 'rxjs';
 import { catchError, finalize, map, tap } from 'rxjs/operators';
 
 import { ApiService } from '../api/api.service';
@@ -35,6 +35,18 @@ export class CommunityPostsService {
   private readonly _commentsCursor = signal<string | undefined>(undefined);
 
   /**
+   * Replies keyed by their top-level parent, fetched only when a reader expands that
+   * comment. Nesting is one level, so this is a map of arrays rather than a tree.
+   *
+   * Kept separate from `_comments` rather than derived from one flat list: the flat
+   * version paged both kinds together, so a reply whose parent fell on an earlier page
+   * had nothing to nest under and the thread silently dropped it.
+   */
+  private readonly _replies = signal<Record<string, CommunityComment[]>>({});
+  private readonly _repliesCursor = signal<Record<string, string | undefined>>({});
+  private readonly _repliesLoading = signal<ReadonlySet<string>>(new Set());
+
+  /**
    * Reactions already in flight, by target id. A second click while one is pending
    * is dropped rather than queued: two racing toggles land the count on whichever
    * response happens to return last, and a double-tap would otherwise show +2.
@@ -44,12 +56,30 @@ export class CommunityPostsService {
   readonly posts = this._posts.asReadonly();
   readonly post = this._post.asReadonly();
   readonly comments = this._comments.asReadonly();
+  readonly replies = this._replies.asReadonly();
   readonly scope = this._scope.asReadonly();
   readonly hasMore = computed(() => this._nextCursor() !== undefined);
   readonly hasMoreComments = computed(() => this._commentsCursor() !== undefined);
 
   isPending(id: string): boolean {
     return this._pending().has(id);
+  }
+
+  repliesFor(commentId: string): CommunityComment[] {
+    return this._replies()[commentId] ?? [];
+  }
+
+  /** True once this comment's replies have been fetched, even if there were none. */
+  hasLoadedReplies(commentId: string): boolean {
+    return this._replies()[commentId] !== undefined;
+  }
+
+  isLoadingReplies(commentId: string): boolean {
+    return this._repliesLoading().has(commentId);
+  }
+
+  hasMoreReplies(commentId: string): boolean {
+    return this._repliesCursor()[commentId] !== undefined;
   }
 
   // ── Feed ─────────────────────────────────────────────────────────────────
@@ -193,6 +223,7 @@ export class CommunityPostsService {
 
   // ── Comments ─────────────────────────────────────────────────────────────
 
+  /** Top-level comments only. Replies come from `loadReplies` on expand. */
   loadComments(postId: string, limit = 30): Observable<CommunityComment[]> {
     return this.api
       .get<WrappedResponse<CommunityComment[]>>(
@@ -203,6 +234,9 @@ export class CommunityPostsService {
         tap(r => {
           this._comments.set(r.data);
           this._commentsCursor.set(r.meta?.cursor);
+          // A new thread must not inherit the last one's expanded replies.
+          this._replies.set({});
+          this._repliesCursor.set({});
         }),
         map(r => r.data),
       );
@@ -226,12 +260,72 @@ export class CommunityPostsService {
       );
   }
 
+  /**
+   * The replies under one comment. Idempotent per comment unless `force` is set —
+   * collapsing and re-expanding must not re-fetch what is already held.
+   */
+  loadReplies(commentId: string, limit = 30, force = false): Observable<CommunityComment[]> {
+    if (!force && this.hasLoadedReplies(commentId)) {
+      return of(this.repliesFor(commentId));
+    }
+    this.setRepliesLoading(commentId, true);
+    return this.api
+      .get<WrappedResponse<CommunityComment[]>>(
+        `/community/comments/${commentId}/replies`,
+        new HttpParams().set('limit', limit),
+      )
+      .pipe(
+        tap(r => {
+          this._replies.update(map => ({ ...map, [commentId]: r.data }));
+          this._repliesCursor.update(map => ({ ...map, [commentId]: r.meta?.cursor }));
+        }),
+        map(r => r.data),
+        finalize(() => this.setRepliesLoading(commentId, false)),
+      );
+  }
+
+  loadMoreReplies(commentId: string, limit = 30): Observable<CommunityComment[]> {
+    const cursor = this._repliesCursor()[commentId];
+    if (!cursor) return of(this.repliesFor(commentId));
+
+    this.setRepliesLoading(commentId, true);
+    return this.api
+      .get<WrappedResponse<CommunityComment[]>>(
+        `/community/comments/${commentId}/replies`,
+        new HttpParams().set('limit', limit).set('cursor', cursor),
+      )
+      .pipe(
+        tap(r => {
+          this._replies.update(map => ({ ...map, [commentId]: [...(map[commentId] ?? []), ...r.data] }));
+          this._repliesCursor.update(map => ({ ...map, [commentId]: r.meta?.cursor }));
+        }),
+        map(r => r.data),
+        finalize(() => this.setRepliesLoading(commentId, false)),
+      );
+  }
+
+  /**
+   * `parentCommentId` is the comment the reader clicked Reply on, which may itself be
+   * a reply. The server re-parents anything deeper onto its top-level ancestor, so the
+   * row that comes back tells us where it actually belongs — always trust the response
+   * over the request here, or a reply-to-a-reply lands under the wrong node.
+   */
   addComment(postId: string, body: string, parentCommentId?: string): Observable<CommunityComment> {
     return this.api
       .postData<CommunityComment>(`/community/posts/${postId}/comments`, { body, parentCommentId })
       .pipe(
         tap(comment => {
-          this._comments.update(list => [...list, comment]);
+          const parent = comment.parentCommentId;
+          if (parent) {
+            // Only append if this thread is already expanded; otherwise the count bump
+            // alone is right and the reply arrives whenever the reader opens it.
+            if (this.hasLoadedReplies(parent)) {
+              this._replies.update(map => ({ ...map, [parent]: [...(map[parent] ?? []), comment] }));
+            }
+            this.patchComment(parent, c => ({ ...c, replyCount: c.replyCount + 1 }));
+          } else {
+            this._comments.update(list => [...list, comment]);
+          }
           this.patchPost(postId, p => ({ ...p, commentCount: p.commentCount + 1 }));
         }),
       );
@@ -274,8 +368,15 @@ export class CommunityPostsService {
     return this._posts().find(p => p.id === id) ?? (this._post()?.id === id ? this._post()! : undefined);
   }
 
+  /** Searches top-level comments first, then every expanded reply list. */
   private findComment(id: string): CommunityComment | undefined {
-    return this._comments().find(c => c.id === id);
+    const top = this._comments().find(c => c.id === id);
+    if (top) return top;
+    for (const list of Object.values(this._replies())) {
+      const hit = list.find(c => c.id === id);
+      if (hit) return hit;
+    }
+    return undefined;
   }
 
   /**
@@ -287,8 +388,34 @@ export class CommunityPostsService {
     this._post.update(p => (p?.id === id ? fn(p) : p));
   }
 
+  /**
+   * A comment lives in exactly one of the two stores, but reacting to a reply has to
+   * work as well as reacting to a top-level comment, so both are patched.
+   */
   private patchComment(id: string, fn: (c: CommunityComment) => CommunityComment): void {
     this._comments.update(list => list.map(c => (c.id === id ? fn(c) : c)));
+    this._replies.update(map => {
+      let touched = false;
+      const next: Record<string, CommunityComment[]> = {};
+      for (const [parent, list] of Object.entries(map)) {
+        if (list.some(c => c.id === id)) {
+          touched = true;
+          next[parent] = list.map(c => (c.id === id ? fn(c) : c));
+        } else {
+          next[parent] = list;
+        }
+      }
+      return touched ? next : map;
+    });
+  }
+
+  private setRepliesLoading(id: string, on: boolean): void {
+    this._repliesLoading.update(set => {
+      const next = new Set(set);
+      if (on) next.add(id);
+      else next.delete(id);
+      return next;
+    });
   }
 
   private setPending(id: string, on: boolean): void {

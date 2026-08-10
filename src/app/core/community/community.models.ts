@@ -73,8 +73,20 @@ export interface CommunityComment {
   reactedByMe: boolean;
   createdAt: string;
   status: ContentStatus;
+  /**
+   * False once a moderator has hidden it. A comment can arrive hidden in two very
+   * different ways: to its own author, in full with `hiddenReason`; or to everyone
+   * else as a tombstone, with `body` blanked and the author anonymised, kept in the
+   * thread only so its still-published replies have somewhere to hang.
+   */
   visibleToOthers: boolean;
   hiddenReason?: string | null;
+  /**
+   * Live replies under this comment. Always 0 on a reply — nesting is one level.
+   * Drives the collapsed "View N replies" affordance, so a thread never fetches
+   * replies it has not been asked to show.
+   */
+  replyCount: number;
 }
 
 export type ReportReason =
@@ -124,16 +136,24 @@ export interface TrendingTag {
   count: number;
 }
 
-/** GET /community/stats — drives both the professional and benefactor dashboards. */
+/**
+ * GET /community/stats — the portal's stat strip and both role dashboards.
+ *
+ * Every field is the caller's own number. The strip used to render `CommunityOverview`
+ * instead, which is platform-wide, so every user of every role saw the same four
+ * figures and none of them said anything about that user.
+ */
 export interface CommunityStats {
   /** Professional: "Questions answered". */
   questionsAnswered: number;
-  /** Benefactor: "Communities joined". */
+  /** Benefactor and the portal strip: "Communities joined". */
   communitiesJoined: number;
   /** Both: reactions received. Replaces the fabricated "96% helpful rating". */
   helpfulMarks: number;
   postsWritten: number;
   postsThisMonth: number;
+  /** Comments other people have left on this user's posts. */
+  repliesReceived: number;
 }
 
 export interface ReactionResult {

@@ -1,5 +1,5 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 
 import { apiErrorMessage } from '../../core/api/wrapped-response.model';
@@ -7,6 +7,7 @@ import { CommunityGroupsService } from '../../core/community/community-groups.se
 import { CommunityPostsService } from '../../core/community/community-posts.service';
 import { CommunityPost } from '../../core/community/community.models';
 import { AuthService } from '../../core/auth/auth.service';
+import { CommunityNavService } from './community-nav.service';
 import { NewPostData, NewPostModalComponent } from './new-post-modal.component';
 import { PostCardComponent } from './post-card/post-card.component';
 import { ReportModalComponent, ReportSubmission } from './report-modal.component';
@@ -14,7 +15,7 @@ import { ReportModalComponent, ReportSubmission } from './report-modal.component
 @Component({
   selector: 'lc-community',
   standalone: true,
-  imports: [NewPostModalComponent, PostCardComponent, ReportModalComponent],
+  imports: [NewPostModalComponent, PostCardComponent, ReportModalComponent, RouterLink],
   templateUrl: './community.component.html',
   styleUrl: './community.component.scss',
 })
@@ -26,6 +27,7 @@ export class CommunityComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   readonly posts$ = inject(CommunityPostsService);
   readonly groups$ = inject(CommunityGroupsService);
+  readonly nav = inject(CommunityNavService);
 
   readonly posts = this.posts$.posts;
   readonly hasMore = this.posts$.hasMore;
@@ -59,15 +61,25 @@ export class CommunityComponent implements OnInit {
   readonly anyCommunityExists = computed(() => this.groups$.groups().length > 0);
 
   /**
-   * Built from the real group list rather than six hardcoded ids, so a community
-   * created today can be filtered to today. Joined groups first — they are the ones
-   * this person actually reads.
+   * Built from the groups this person has actually joined, matching what the feed
+   * shows. Offering a chip for a community whose posts the default feed excludes
+   * would make the chip look broken.
    */
   readonly filters = computed(() => {
-    const groups = this.groups$.groups();
-    const ordered = [...groups.filter(g => g.joined), ...groups.filter(g => !g.joined)];
-    return [{ label: 'All', key: null as string | null }, ...ordered.slice(0, 8).map(g => ({ label: g.name, key: g.id }))];
+    const joined = this.groups$.joinedGroups();
+    return [
+      { label: 'All', key: null as string | null },
+      ...joined.slice(0, 8).map(g => ({ label: g.name, key: g.id })),
+    ];
   });
+
+  readonly joinedCount = computed(() => this.groups$.joinedGroups().length);
+
+  /**
+   * True when the feed is deliberately showing posts from outside the user's
+   * communities — an explicit community filter, or a tag deep-link from Trending.
+   */
+  readonly browsingWidely = computed(() => this.activeFilter() !== null || this.activeTag() !== null);
 
   readonly postableGroups = computed(() => this.groups$.joinedGroups());
 
@@ -79,12 +91,22 @@ export class CommunityComponent implements OnInit {
   reload(): void {
     this.loading.set(true);
     this.loadError.set(false);
+    const communityId = this.activeFilter() ?? undefined;
+    const tag = this.activeTag() ?? undefined;
+
     // Server-side filtering. A client-side filter over a paginated list narrows one
     // page and presents it as the whole result.
+    //
+    // The default feed is the user's own communities — joining is what shapes it, and
+    // a platform-wide default made the Groups tab decorative. An explicit filter opts
+    // back out: browsing a community you have not joined must not come back empty, and
+    // a #tag arriving from Trending (which is computed platform-wide) must not show a
+    // fraction of the count that tag advertised.
     this.posts$
       .loadFeed({
-        communityId: this.activeFilter() ?? undefined,
-        tag: this.activeTag() ?? undefined,
+        communityId,
+        tag,
+        joinedOnly: !communityId && !tag,
       })
       .subscribe({
         next: () => this.loading.set(false),
