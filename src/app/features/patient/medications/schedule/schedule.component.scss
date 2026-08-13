@@ -89,7 +89,31 @@
   flex-shrink: 0;
 
   &--taken   { background: rgba(10,110,82,0.10);  color: #065F46; border: 1px solid rgba(10,110,82,0.20); }
-  &--pending { background: rgba(180,83,9,0.10);   color: #92400E; border: 1px solid rgba(180,83,9,0.20); }
+  &--pending { background: rgba(37,99,235,0.08);  color: #1D4ED8; border: 1px solid rgba(37,99,235,0.18); }
+  &--due_now { background: rgba(180,83,9,0.10);   color: #92400E; border: 1px solid rgba(180,83,9,0.20); }
   &--later   { background: rgba(15,45,74,0.05);   color: var(--color-text-muted); border: 1px solid var(--color-border); }
   &--skipped { background: rgba(220,38,38,0.08);  color: #991B1B; border: 1px solid rgba(220,38,38,0.18); }
+
+  &--clickable { font: inherit; cursor: pointer; }
+}
+
+.schedule-page__error,
+.schedule-page__empty {
+  margin: 0;
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  text-align: center;
+}
+
+.schedule-page__error {
+  background: rgba(220, 38, 38, 0.06);
+  border: 1px solid rgba(220, 38, 38, 0.2);
+  color: #DC2626;
+}
+
+.schedule-page__empty {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
 }

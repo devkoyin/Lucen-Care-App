@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Router, provideRouter } from '@angular/router';
 import { of } from 'rxjs';
 import { LoginComponent } from './login.component';
@@ -16,7 +17,7 @@ describe('LoginComponent', () => {
     authSpy.login.and.returnValue(of(mockUser));
 
     await TestBed.configureTestingModule({
-      imports: [LoginComponent],
+      imports: [HttpClientTestingModule, LoginComponent],
       providers: [
         provideRouter([]),
         { provide: AuthService, useValue: authSpy },
@@ -30,9 +31,9 @@ describe('LoginComponent', () => {
 
   it('creates', () => expect(fixture.componentInstance).toBeTruthy());
 
-  it('shows the role badge', () => {
-    const badge = fixture.nativeElement.querySelector('.auth-card__role-badge');
-    expect(badge.textContent.trim()).toBe('Patient & Caregiver');
+  it('names the role on the submit button', () => {
+    expect(fixture.componentInstance.roleName).toBe('Patient & Caregiver');
+    expect(fixture.nativeElement.textContent).toContain('Sign in as Patient & Caregiver');
   });
 
   it('shows email error when touched and empty', () => {
@@ -50,6 +51,21 @@ describe('LoginComponent', () => {
   it('does not call auth.login when form is invalid', () => {
     fixture.componentInstance.submit();
     expect(authSpy.login).not.toHaveBeenCalled();
+  });
+
+  it('does not offer admin in the role switcher', () => {
+    expect(fixture.componentInstance.roles.some(r => r.id === 'admin')).toBeFalse();
+  });
+
+  it('falls back to patient when the URL asks for the admin portal', () => {
+    // /auth/admin/login must not become a second admin door — the portal has its
+    // own login at /admin/login.
+    const f = TestBed.createComponent(LoginComponent);
+    f.componentInstance.role = 'admin';
+    f.detectChanges();
+
+    expect(f.componentInstance.selectedRole()).toBe('patient');
+    expect(f.nativeElement.textContent).not.toContain('Sign in as Admin');
   });
 
   it('navigates professionals to the community page instead of dashboard', () => {

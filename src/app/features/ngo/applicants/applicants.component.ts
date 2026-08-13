@@ -1,131 +1,234 @@
-import { Component, computed, signal } from '@angular/core';
+import { DatePipe } from '@angular/common';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { ActivatedRoute } from '@angular/router';
+import { of } from 'rxjs';
+import { catchError, switchMap } from 'rxjs/operators';
 
-export type AppStatus = 'New' | 'In Review' | 'Selected' | 'Waitlisted' | 'Rejected';
+import { apiErrorMessage } from '../../../core/api/wrapped-response.model';
+import { AuthService } from '../../../core/auth/auth.service';
+import {
+  Applicant,
+  ApplicantsService,
+  EnrollmentStatus,
+  ReviewableStatus,
+  applicantStatusLabel,
+  applicantStatusTone,
+  isReviewable,
+} from '../../../core/programs/applicants.service';
+import { NgoProgram, NgoProgramsService } from '../../../core/programs/ngo-programs.service';
+import { BadgeComponent } from '../../../shared/components/badge/badge.component';
+import { ConfirmModalComponent } from '../../../shared/components/modal/confirm-modal.component';
 
-export interface Applicant {
-  id: string;
-  name: string;
-  initial: string;
-  age: number;
-  gender: 'M' | 'F';
-  state: string;
-  condition: string;
-  programId: string;
-  programName: string;
-  appliedDate: string;
-  status: AppStatus;
-  monthlyCost: number;
-  note?: string;
-}
+type FilterTab = 'all' | EnrollmentStatus;
 
-const SEED: Applicant[] = [
-  { id: 'APP-0087', name: 'Fatima Yusuf',       initial: 'F', age: 42, gender: 'F', state: 'Kano',    condition: 'Type 2 Diabetes',     programId: 'PRG-001', programName: 'Chronic Care Fund',         appliedDate: '3 Jun 2026',  status: 'New',        monthlyCost: 18500 },
-  { id: 'APP-0086', name: 'Emmanuel Okafor',     initial: 'E', age: 58, gender: 'M', state: 'Lagos',   condition: 'Hypertension',        programId: 'PRG-001', programName: 'Chronic Care Fund',         appliedDate: '1 Jun 2026',  status: 'In Review',  monthlyCost: 12000 },
-  { id: 'APP-0085', name: 'Kwame Asante',        initial: 'K', age: 24, gender: 'M', state: 'Abuja',   condition: 'Sickle Cell Disease', programId: 'PRG-005', programName: 'Sickle Cell Support Fund',  appliedDate: '31 May 2026', status: 'New',        monthlyCost: 32000, note: 'HbSS genotype confirmed. Two crisis admissions in the last 12 months.' },
-  { id: 'APP-0084', name: 'Amara Diallo',        initial: 'A', age: 3,  gender: 'F', state: 'Kaduna',  condition: 'Severe Acute Malnutrition', programId: 'PRG-004', programName: 'Child Nutrition Fund', appliedDate: '30 May 2026', status: 'Waitlisted', monthlyCost: 8200 },
-  { id: 'APP-0083', name: 'Chidinma Obi',        initial: 'C', age: 31, gender: 'F', state: 'Enugu',   condition: 'Asthma',              programId: 'PRG-003', programName: 'Respiratory Aid Initiative',appliedDate: '28 May 2026', status: 'In Review',  monthlyCost: 9500 },
-  { id: 'APP-0082', name: 'Musa Ibrahim',        initial: 'M', age: 67, gender: 'M', state: 'Kano',    condition: 'Coronary Artery Disease', programId: 'PRG-002', programName: 'Cardiac Support Program', appliedDate: '25 May 2026', status: 'Selected',   monthlyCost: 45000, note: 'Referred by Dr. Garba Musa, ABUTH. Post-CABG rehab required.' },
-  { id: 'APP-0081', name: 'Ngozi Eze',           initial: 'N', age: 28, gender: 'F', state: 'Rivers',  condition: 'Gestational Diabetes', programId: 'PRG-001', programName: 'Chronic Care Fund',        appliedDate: '22 May 2026', status: 'Selected',   monthlyCost: 14000 },
-  { id: 'APP-0080', name: 'Adebayo Afolabi',     initial: 'A', age: 52, gender: 'M', state: 'Oyo',     condition: 'COPD',                programId: 'PRG-003', programName: 'Respiratory Aid Initiative', appliedDate: '20 May 2026', status: 'Selected',   monthlyCost: 11500 },
-  { id: 'APP-0079', name: 'Blessing Nwachukwu',  initial: 'B', age: 26, gender: 'F', state: 'Imo',     condition: 'Hypertension',        programId: 'PRG-001', programName: 'Chronic Care Fund',         appliedDate: '15 May 2026', status: 'Rejected',   monthlyCost: 10000, note: 'Household income assessment above threshold (₦120,000/month).' },
-  { id: 'APP-0078', name: 'Taiwo Adeleke',       initial: 'T', age: 45, gender: 'M', state: 'Osun',    condition: 'Heart Failure',       programId: 'PRG-002', programName: 'Cardiac Support Program',   appliedDate: '10 May 2026', status: 'Selected',   monthlyCost: 38000 },
-  { id: 'APP-0077', name: 'Halima Abdullahi',    initial: 'H', age: 22, gender: 'F', state: 'Bauchi',  condition: 'Sickle Cell Disease', programId: 'PRG-005', programName: 'Sickle Cell Support Fund',  appliedDate: '5 May 2026',  status: 'In Review',  monthlyCost: 28000, note: 'HbSS confirmed. Enrolled in UATH transfusion program.' },
-  { id: 'APP-0076', name: 'Emeka Nwosu',         initial: 'E', age: 7,  gender: 'M', state: 'Anambra', condition: 'Moderate Malnutrition', programId: 'PRG-004', programName: 'Child Nutrition Fund',   appliedDate: '1 May 2026',  status: 'Waitlisted', monthlyCost: 7000 },
-  { id: 'APP-0075', name: 'Aisha Mohammed',      initial: 'A', age: 34, gender: 'F', state: 'Abuja',   condition: 'Pre-eclampsia risk',  programId: 'PRG-006', programName: 'Maternal Health Initiative', appliedDate: '28 Apr 2026', status: 'Selected',   monthlyCost: 16000 },
-  { id: 'APP-0074', name: 'Olumide Johnson',     initial: 'O', age: 60, gender: 'M', state: 'Lagos',   condition: 'Type 2 Diabetes',     programId: 'PRG-001', programName: 'Chronic Care Fund',         appliedDate: '20 Apr 2026', status: 'Rejected',   monthlyCost: 22000, note: 'Ineligible — duplicate application detected. Referred to partner NGO.' },
+const TABS: { label: string; key: FilterTab }[] = [
+  { label: 'All',              key: 'all' },
+  { label: 'Awaiting review',  key: 'active' },
+  { label: 'Selected',         key: 'selected' },
+  { label: 'Waitlisted',       key: 'waitlisted' },
+  { label: 'Not selected',     key: 'rejected' },
 ];
-
-type StatusFilter = 'all' | AppStatus;
 
 @Component({
   selector: 'lc-applicants',
   standalone: true,
-  imports: [],
+  imports: [DatePipe, BadgeComponent, ConfirmModalComponent],
   templateUrl: './applicants.component.html',
   styleUrl: './applicants.component.scss',
 })
-export class ApplicantsComponent {
-  readonly applicants = signal<Applicant[]>(SEED);
-  readonly statusFilter = signal<StatusFilter>('all');
-  readonly programFilter = signal<string>('all');
-  readonly searchQuery = signal('');
+export class ApplicantsComponent implements OnInit {
+  private readonly svc = inject(ApplicantsService);
+  private readonly programsSvc = inject(NgoProgramsService);
+  private readonly auth = inject(AuthService);
+  private readonly route = inject(ActivatedRoute);
 
-  readonly statusTabs: { label: string; key: StatusFilter }[] = [
-    { label: 'All',         key: 'all'        },
-    { label: 'New',         key: 'New'        },
-    { label: 'In Review',   key: 'In Review'  },
-    { label: 'Selected',    key: 'Selected'   },
-    { label: 'Waitlisted',  key: 'Waitlisted' },
-    { label: 'Rejected',    key: 'Rejected'   },
-  ];
+  readonly tabs = TABS;
+  readonly applicants = this.svc.applicants;
+  readonly programs = this.programsSvc.programs;
 
-  readonly programOptions: { label: string; value: string }[] = [
-    { label: 'All Programs',               value: 'all'    },
-    { label: 'Chronic Care Fund',          value: 'PRG-001'},
-    { label: 'Cardiac Support Program',    value: 'PRG-002'},
-    { label: 'Respiratory Aid Initiative', value: 'PRG-003'},
-    { label: 'Child Nutrition Fund',       value: 'PRG-004'},
-    { label: 'Sickle Cell Support Fund',   value: 'PRG-005'},
-    { label: 'Maternal Health Initiative', value: 'PRG-006'},
-  ];
+  readonly activeTab = signal<FilterTab>('all');
+  readonly search = signal('');
+  readonly loading = signal(true);
+  readonly loadError = signal(false);
+  readonly busyId = signal<string | null>(null);
+  readonly actionError = signal<string | null>(null);
+
+  /** Deep-linked from the Programs screen's "Applicants" button. */
+  private readonly queryProgramId = toSignal(
+    this.route.queryParamMap.pipe(catchError(() => of(null))),
+    { initialValue: null },
+  );
+  readonly selectedProgramId = signal<string | null>(null);
+
+  // Rejection needs a reason, so it goes through a prompt rather than firing blind.
+  readonly rejecting = signal<Applicant | null>(null);
+  readonly rejectReason = signal('');
 
   readonly filtered = computed(() => {
-    let list = this.applicants();
-    const s = this.statusFilter();
-    const p = this.programFilter();
-    const q = this.searchQuery().toLowerCase();
-    if (s !== 'all') list = list.filter(a => a.status === s);
-    if (p !== 'all') list = list.filter(a => a.programId === p);
-    if (q) list = list.filter(a =>
-      a.name.toLowerCase().includes(q) || a.condition.toLowerCase().includes(q)
-    );
-    return list;
+    const tab = this.activeTab();
+    const q = this.search().toLowerCase().trim();
+    let rows = this.applicants();
+
+    if (tab !== 'all') rows = rows.filter(a => a.status === tab);
+    if (q) {
+      rows = rows.filter(a => {
+        const s = a.sharedDataSnapshot;
+        return (
+          (s.name ?? '').toLowerCase().includes(q) ||
+          (s.conditionTags ?? []).some(t => t.toLowerCase().includes(q))
+        );
+      });
+    }
+    return rows;
   });
 
-  readonly pendingCount = computed(() =>
-    this.applicants().filter(a => a.status === 'New' || a.status === 'In Review').length
+  readonly selectedProgram = computed(() =>
+    this.programs().find(p => p.id === this.selectedProgramId()),
   );
 
-  setStatus(f: StatusFilter): void { this.statusFilter.set(f); }
-  setProgram(e: Event): void { this.programFilter.set((e.target as HTMLSelectElement).value); }
-  setSearch(e: Event): void { this.searchQuery.set((e.target as HTMLInputElement).value); }
-
-  select(id: string): void {
-    this.applicants.update(list =>
-      list.map(a => a.id === id ? { ...a, status: 'Selected' as AppStatus } : a)
-    );
+  ngOnInit(): void {
+    this.loadPrograms();
   }
 
-  waitlist(id: string): void {
-    this.applicants.update(list =>
-      list.map(a => a.id === id ? { ...a, status: 'Waitlisted' as AppStatus } : a)
-    );
+  /** The queue is per-programme, so the programme list comes first. */
+  private loadPrograms(): void {
+    this.loading.set(true);
+    this.auth
+      .me()
+      .pipe(
+        switchMap(me => (me.orgId ? this.programsSvc.load(me.orgId) : of(null))),
+        catchError(() => of(null)),
+      )
+      .subscribe(programs => {
+        if (programs === null) {
+          this.loadError.set(true);
+          this.loading.set(false);
+          return;
+        }
+        const fromQuery = this.queryProgramId()?.get('programId');
+        const initial = programs.find(p => p.id === fromQuery) ?? programs[0];
+        if (!initial) {
+          this.loading.set(false);
+          return;
+        }
+        this.selectProgram(initial.id);
+      });
   }
 
-  reject(id: string): void {
-    this.applicants.update(list =>
-      list.map(a => a.id === id ? { ...a, status: 'Rejected' as AppStatus } : a)
-    );
+  selectProgram(programId: string): void {
+    this.selectedProgramId.set(programId);
+    this.loading.set(true);
+    this.actionError.set(null);
+    this.svc.load(programId).subscribe({
+      next: () => {
+        this.loadError.set(false);
+        this.loading.set(false);
+      },
+      error: () => {
+        this.loadError.set(true);
+        this.loading.set(false);
+      },
+    });
   }
 
-  review(id: string): void {
-    this.applicants.update(list =>
-      list.map(a => a.id === id ? { ...a, status: 'In Review' as AppStatus } : a)
-    );
+  setTab(tab: FilterTab): void {
+    this.activeTab.set(tab);
   }
 
-  formatAmount(n: number): string {
-    return '₦' + n.toLocaleString('en-NG');
+  select(applicant: Applicant): void {
+    this.review(applicant, 'selected');
   }
 
-  statusColor(s: AppStatus): string {
-    const map: Record<AppStatus, string> = {
-      'New':        '#2563EB',
-      'In Review':  '#D97706',
-      'Selected':   '#059669',
-      'Waitlisted': '#7C3AED',
-      'Rejected':   '#DC2626',
-    };
-    return map[s];
+  waitlist(applicant: Applicant): void {
+    this.review(applicant, 'waitlisted');
+  }
+
+  /** Step one of rejecting: capture the reason the patient will be shown. */
+  startReject(applicant: Applicant): void {
+    this.rejectReason.set('');
+    this.actionError.set(null);
+    this.rejecting.set(applicant);
+  }
+
+  confirmReject(): void {
+    const applicant = this.rejecting();
+    const reason = this.rejectReason().trim();
+    // The API rejects an empty reason with a 422; don't spend a round-trip on it.
+    if (!applicant || !reason) return;
+
+    this.review(applicant, 'rejected', reason, () => this.rejecting.set(null));
+  }
+
+  cancelReject(): void {
+    this.rejecting.set(null);
+    this.rejectReason.set('');
+  }
+
+  private review(
+    applicant: Applicant,
+    status: ReviewableStatus,
+    reason?: string,
+    onDone?: () => void,
+  ): void {
+    const programId = this.selectedProgramId();
+    if (!programId || this.busyId()) return;
+
+    this.busyId.set(applicant.id);
+    this.actionError.set(null);
+
+    this.svc.review(programId, applicant.id, status, reason).subscribe({
+      next: () => {
+        this.busyId.set(null);
+        onDone?.();
+        // Selecting consumes a place, so the programme's counters have moved.
+        this.refreshProgramCounters();
+      },
+      error: (err: unknown) => {
+        this.busyId.set(null);
+        this.actionError.set(apiErrorMessage(err, 'Could not record that decision.'));
+      },
+    });
+  }
+
+  private refreshProgramCounters(): void {
+    this.auth
+      .me()
+      .pipe(switchMap(me => (me.orgId ? this.programsSvc.load(me.orgId) : of(null))))
+      .subscribe({ error: () => {} });
+  }
+
+  isBusy(applicant: Applicant): boolean {
+    return this.busyId() === applicant.id;
+  }
+
+  canReview(applicant: Applicant): boolean {
+    return isReviewable(applicant.status);
+  }
+
+  /** A full programme cannot take another selection — the API returns 409. */
+  isFull(): boolean {
+    return this.selectedProgram()?.lifecycle === 'Full';
+  }
+
+  countFor(tab: FilterTab): number {
+    const rows = this.applicants();
+    return tab === 'all' ? rows.length : rows.filter(a => a.status === tab).length;
+  }
+
+  statusLabel(status: EnrollmentStatus): string {
+    return applicantStatusLabel(status);
+  }
+
+  statusTone(status: EnrollmentStatus): 'success' | 'warning' | 'error' | 'neutral' {
+    return applicantStatusTone(status);
+  }
+
+  initialFor(applicant: Applicant): string {
+    return (applicant.sharedDataSnapshot.name ?? '?')[0].toUpperCase();
+  }
+
+  programLabel(p: NgoProgram): string {
+    return `${p.title} (${p.slotsFilled}${p.slotsTotal ? '/' + p.slotsTotal : ''})`;
   }
 }

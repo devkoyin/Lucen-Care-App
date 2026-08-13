@@ -1,0 +1,82 @@
+<div class="prof-page">
+
+  <div class="prof-header">
+    <div>
+      <h1 class="prof-header__title">My Profile</h1>
+      <p class="prof-header__sub">The details we hold about you. Change them any time.</p>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="prof-state">
+      <span class="prof-state__icon" aria-hidden="true">⏳</span>
+      <p class="prof-state__title">Loading your profile…</p>
+    </div>
+  } @else if (loadError()) {
+    <div class="prof-state">
+      <span class="prof-state__icon" aria-hidden="true">⚠️</span>
+      <p class="prof-state__title">Could not load your profile</p>
+      <p class="prof-state__sub">Check your connection and try again.</p>
+      <button class="prof-btn" type="button" (click)="load()">Retry</button>
+    </div>
+  } @else {
+    <form class="prof-card" [formGroup]="form" (ngSubmit)="save()">
+
+      <div class="prof-card__section">
+        <h2 class="prof-card__section-title">About you</h2>
+
+        <lc-form-field label="Full name" id="pf-name">
+          <input id="pf-name" type="text" formControlName="name" />
+        </lc-form-field>
+
+        <lc-form-field label="Phone" id="pf-phone" hint="Only shared with an organisation if you choose to">
+          <input id="pf-phone" type="tel" formControlName="phone" />
+        </lc-form-field>
+
+        <lc-form-field label="Date of birth" id="pf-dob">
+          <input id="pf-dob" type="date" formControlName="dateOfBirth" />
+        </lc-form-field>
+      </div>
+
+      <div class="prof-card__section">
+        <h2 class="prof-card__section-title">Where you live</h2>
+        <p class="prof-card__note">
+          Your state is used to match you with programmes running in your area. Organisations
+          only ever see how many applicants come from each state — never your own location.
+        </p>
+
+        <lc-form-field label="State" id="pf-state">
+          <select id="pf-state" formControlName="locationState">
+            <option value="">Not set</option>
+            @for (state of states; track state) {
+              <option [value]="state">{{ state }}</option>
+            }
+          </select>
+        </lc-form-field>
+
+        <lc-form-field label="Local government area (optional)" id="pf-lga">
+          <input id="pf-lga" type="text" formControlName="locationLga" />
+        </lc-form-field>
+
+        <lc-form-field label="Address (optional)" id="pf-address">
+          <input id="pf-address" type="text" formControlName="address" />
+        </lc-form-field>
+      </div>
+
+      @if (saveError()) {
+        <p class="prof-error" role="alert">{{ saveError() }}</p>
+      }
+      @if (saved()) {
+        <p class="prof-success" role="status">Your details have been saved.</p>
+      }
+
+      <div class="prof-card__actions">
+        <button class="prof-btn prof-btn--primary" type="submit" [disabled]="saving()">
+          {{ saving() ? 'Saving…' : 'Save changes' }}
+        </button>
+      </div>
+
+    </form>
+  }
+
+</div>

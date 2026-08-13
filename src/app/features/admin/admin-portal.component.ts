@@ -29,6 +29,8 @@ export class AdminPortalComponent {
     { icon: '🏥', label: 'HMO Approvals',            route: '/admin/hmo-approvals' },
     { icon: '⚕️', label: 'Professional Approvals',  route: '/admin/professional-approvals' },
     { icon: '💛', label: 'Benefactor Approvals',    route: '/admin/benefactor-approvals' },
+    { icon: '🤝', label: 'Programme Approvals',     route: '/admin/program-approvals' },
+    { icon: '🚩', label: 'Community Reports',       route: '/admin/community-reports' },
     { icon: '📋', label: 'Audit Log',               route: '/admin/audit-log' },
   ];
 

@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { provideRouter } from '@angular/router';
 import { signal } from '@angular/core';
 import { HmoDashboardComponent } from './hmo-dashboard.component';
@@ -14,7 +15,7 @@ describe('HmoDashboardComponent', () => {
       user: signal(mockUser),
     });
     await TestBed.configureTestingModule({
-      imports: [HmoDashboardComponent],
+      imports: [HttpClientTestingModule, HmoDashboardComponent],
       providers: [provideRouter([]), { provide: AuthService, useValue: authSpy }],
     }).compileComponents();
     fixture = TestBed.createComponent(HmoDashboardComponent);
@@ -23,7 +24,9 @@ describe('HmoDashboardComponent', () => {
 
   it('creates', () => expect(fixture.componentInstance).toBeTruthy());
   it('shows org name', () => expect(fixture.componentInstance.orgName).toBe('HealthCo HMO'));
-  it('renders 4 stat cards', () => expect(fixture.nativeElement.querySelectorAll('.stat-card').length).toBe(4));
+  // The stats grid was replaced by a coming-soon placeholder.
+  it('renders the coming-soon placeholder', () =>
+    expect(fixture.nativeElement.querySelector('.coming-soon__desc')).toBeTruthy());
   it('utilisationColor returns red for >=80', () => expect(fixture.componentInstance.utilisationColor(85)).toBe('#DC2626'));
   it('utilisationColor returns amber for 50-79', () => expect(fixture.componentInstance.utilisationColor(65)).toBe('#D97706'));
   it('utilisationColor returns green for <50', () => expect(fixture.componentInstance.utilisationColor(30)).toBe('#059669'));

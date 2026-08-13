@@ -11,6 +11,12 @@
     text-transform: uppercase;
   }
 
+  &__required {
+    margin-left: 2px;
+    color: var(--color-error);
+    font-weight: var(--font-bold);
+  }
+
   &__error {
     color: var(--color-error);
     font-size: var(--text-xs);

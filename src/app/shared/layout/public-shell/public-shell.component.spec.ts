@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { provideRouter } from '@angular/router';
 import { PublicShellComponent } from './public-shell.component';
 
@@ -7,7 +8,7 @@ describe('PublicShellComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PublicShellComponent],
+      imports: [HttpClientTestingModule, PublicShellComponent],
       providers: [provideRouter([])],
     }).compileComponents();
     fixture = TestBed.createComponent(PublicShellComponent);

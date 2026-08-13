@@ -12,9 +12,13 @@ const ROLE_LABELS: Record<string, string> = {
   hmo: 'HMO',
   professional: 'Healthcare Professional',
   benefactor: 'Benefactor',
-  admin: 'Admin',
 };
 
+/**
+ * The portals reachable through the public sign-in. Admin is absent on purpose —
+ * it has its own login at /admin/login and must not be offered here, nor be
+ * reachable by typing /auth/admin/login.
+ */
 const ROLES: { id: Role; label: string; emoji: string }[] = [
   { id: 'patient',      label: 'Patient',      emoji: '🏥' },
   { id: 'ngo',          label: 'NGO',          emoji: '🤝' },
@@ -49,7 +53,10 @@ export class LoginComponent implements OnInit {
   serverError = '';
 
   ngOnInit(): void {
-    this.selectedRole.set(this.role);
+    // `:role` comes straight off the URL, so it has to be checked against the
+    // portals this screen actually serves rather than trusted as given.
+    const requested = this.role;
+    this.selectedRole.set(ROLES.some(r => r.id === requested) ? requested : 'patient');
   }
 
   get roleName(): string {
@@ -83,7 +90,10 @@ export class LoginComponent implements OnInit {
     const role = this.selectedRole();
     const landing = (role === 'professional' || role === 'benefactor') ? 'community' : 'dashboard';
     this.auth.login(role, this.form.getRawValue() as LoginPayload).subscribe({
-      next: () => this.router.navigate(['/', role, landing]),
+      next: () => {
+        this.loading = false;
+        this.router.navigate(['/', role, landing]);
+      },
       error: (e: { error?: { message?: string } }) => {
         this.loading = false;
         this.serverError = e?.error?.message ?? 'Something went wrong. Please try again.';

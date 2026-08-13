@@ -1,0 +1,140 @@
+<div class="groups-page">
+
+  @if (actionError()) {
+    <p class="groups-error" role="alert">{{ actionError() }}</p>
+  }
+
+  @if (loading()) {
+    <div class="groups-state">
+      <span class="groups-state__icon" aria-hidden="true">⏳</span>
+      <p class="groups-state__title">Loading communities…</p>
+    </div>
+  } @else if (loadError()) {
+    <div class="groups-state">
+      <span class="groups-state__icon" aria-hidden="true">⚠️</span>
+      <p class="groups-state__title">Could not load communities</p>
+      <p class="groups-state__sub">Check your connection and try again.</p>
+      <button class="groups-create-btn" type="button" (click)="reload()">Retry</button>
+    </div>
+  } @else {
+
+    <!-- Your Groups (joined) -->
+    @if (joinedGroups().length > 0) {
+      <section class="groups-section">
+        <div class="groups-section__header">
+          <div>
+            <h2 class="groups-section__title">Your Communities</h2>
+            <p class="groups-section__sub">{{ joinedGroups().length }} joined</p>
+          </div>
+          @if (canCreate()) {
+            <button class="groups-create-btn" type="button" (click)="showCreateCommunity.set(true)">+ Create Community</button>
+          }
+        </div>
+        <div class="groups-grid">
+          @for (group of joinedGroups(); track group.id) {
+            <div class="group-card group-card--joined" [style.border-color]="(group.accent || '#0EA589') + '55'">
+              <div class="group-card__icon-wrap" [style.background]="(group.accent || '#0EA589') + '18'">
+                <span class="group-card__icon" aria-hidden="true">{{ group.icon || '🤝' }}</span>
+              </div>
+              <div class="group-card__body">
+                <h3 class="group-card__name">{{ group.name }}</h3>
+                <span class="group-card__members">{{ group.memberCount.toLocaleString() }} members</span>
+                @if (group.description) {
+                  <p class="group-card__desc">{{ group.description }}</p>
+                }
+                <span class="group-card__joined-badge"
+                      [style.color]="group.accent || '#0EA589'"
+                      [style.background]="(group.accent || '#0EA589') + '14'"
+                      [style.border-color]="(group.accent || '#0EA589') + '40'">✓ Joined</span>
+              </div>
+              <div class="group-card__actions">
+                <a class="group-card__manage-btn"
+                   [routerLink]="nav.link('group', group.id)"
+                   [style.background]="group.accent || '#0EA589'">
+                  Open →
+                </a>
+                <button class="group-card__leave-btn" type="button"
+                        [disabled]="busyId() === group.id"
+                        (click)="toggleJoin(group.id, true)">
+                  {{ busyId() === group.id ? '…' : 'Leave' }}
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+      </section>
+    }
+
+    <!-- Discover -->
+    <section class="groups-section">
+      <div class="groups-section__header">
+        <div>
+          <h2 class="groups-section__title">
+            {{ joinedGroups().length > 0 ? 'Discover More' : 'All Communities' }}
+          </h2>
+          <p class="groups-section__sub">{{ otherGroups().length }} available to join</p>
+        </div>
+        @if (joinedGroups().length === 0 && canCreate()) {
+          <button class="groups-create-btn" type="button" (click)="showCreateCommunity.set(true)">+ Create Community</button>
+        }
+      </div>
+
+      @if (otherGroups().length > 0) {
+        <div class="groups-grid">
+          @for (group of otherGroups(); track group.id) {
+            <div class="group-card">
+              <div class="group-card__icon-wrap" [style.background]="(group.accent || '#0EA589') + '18'">
+                <span class="group-card__icon" aria-hidden="true">{{ group.icon || '🤝' }}</span>
+              </div>
+              <div class="group-card__body">
+                <h3 class="group-card__name">{{ group.name }}</h3>
+                <span class="group-card__members">{{ group.memberCount.toLocaleString() }} members</span>
+                @if (group.description) {
+                  <p class="group-card__desc">{{ group.description }}</p>
+                }
+              </div>
+              <div class="group-card__actions">
+                <a class="group-card__view-btn"
+                   [routerLink]="nav.link('group', group.id)"
+                   [style.border-color]="group.accent || '#0EA589'"
+                   [style.color]="group.accent || '#0EA589'">
+                  View →
+                </a>
+                <button class="group-card__join-btn" type="button"
+                        [disabled]="busyId() === group.id"
+                        (click)="toggleJoin(group.id, false)"
+                        [style.border-color]="group.accent || '#0EA589'"
+                        [style.color]="group.accent || '#0EA589'">
+                  {{ busyId() === group.id ? '…' : 'Join' }}
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+      } @else if (joinedGroups().length > 0) {
+        <p class="groups-all-joined">You've joined every community there is.</p>
+      } @else {
+        <div class="groups-state">
+          <span class="groups-state__icon" aria-hidden="true">🤝</span>
+          <p class="groups-state__title">No communities yet</p>
+          <p class="groups-state__sub">
+            @if (canCreate()) { Start the first one. } @else { Check back soon — patients create these. }
+          </p>
+          @if (canCreate()) {
+            <button class="groups-create-btn" type="button" (click)="showCreateCommunity.set(true)">+ Create Community</button>
+          }
+        </div>
+      }
+    </section>
+
+  }
+
+</div>
+
+@if (showCreateCommunity()) {
+  <lc-create-community-modal
+    [submitting]="creating()"
+    [error]="createError()"
+    (close)="showCreateCommunity.set(false)"
+    (created)="createCommunity($event)" />
+}

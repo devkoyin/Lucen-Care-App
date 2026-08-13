@@ -1,17 +1,39 @@
-import { Injectable, signal } from '@angular/core';
-import { Observable, of, throwError } from 'rxjs';
-import { LoginPayload, Role, SignupPayload, User } from './auth.models';
+import { Injectable, inject, signal } from '@angular/core';
+import { Observable, throwError } from 'rxjs';
+import { map, catchError, shareReplay, tap } from 'rxjs/operators';
+import {
+  LoginPayload,
+  MeResponse,
+  PatientOnboardingPayload,
+  Role,
+  SignupPayload,
+  User,
+} from './auth.models';
+import { ApiService } from '../api/api.service';
+import { WrappedResponse } from '../api/wrapped-response.model';
 
-// Swap these for a real API call when the backend is ready
-const ADMIN_EMAIL    = 'admin@lucencare.com';
-const ADMIN_PASSWORD = 'Admin@1234';
-const STORAGE_KEY    = 'lc_auth_user';
+interface AuthApiResponse {
+  accessToken: string;
+  user: User;
+}
+
+const USER_KEY       = 'lc_auth_user';
+const TOKEN_KEY      = 'lc_auth_token';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private readonly _user = signal<User | null>(this.rehydrate());
+  private readonly api = inject(ApiService);
+
+  private readonly _user         = signal<User | null>(this.rehydrateUser());
+  private readonly _accessToken  = signal<string | null>(this.rehydrateToken());
 
   readonly user = this._user.asReadonly();
+
+  // GET /auth/me is hit by route guards, which can fire several times during a
+  // single navigation. Share one in-flight/most-recent result until invalidated.
+  private me$?: Observable<MeResponse>;
+  private readonly _me = signal<MeResponse | null>(null);
+  readonly meState = this._me.asReadonly();
 
   isAuthenticated(): boolean {
     return this._user() !== null;
@@ -21,49 +43,123 @@ export class AuthService {
     return this._user()?.role ?? null;
   }
 
-  login(role: Role, payload: LoginPayload): Observable<User> {
-    if (role === 'admin') {
-      if (payload.email !== ADMIN_EMAIL || payload.password !== ADMIN_PASSWORD) {
-        return throwError(() => new Error('Invalid email or password.'));
-      }
-      const user: User = { id: 'admin-1', role: 'admin', name: 'Lucen Admin', email: payload.email, status: 'active' };
-      this.persist(user);
-      return of(user);
-    }
+  getAccessToken(): string | null {
+    return this._accessToken();
+  }
 
-    const user: User = { id: 'stub-1', role, name: 'Demo User', email: payload.email, status: 'active' };
-    this.persist(user);
-    return of(user);
+  /**
+   * `role` is sent as part of the credential, not as a hint — the API rejects an
+   * account signing in from a portal that is not its own with the same generic
+   * 401 as a wrong password.
+   */
+  login(role: Role, payload: LoginPayload): Observable<User> {
+    return this.api.post<WrappedResponse<AuthApiResponse>>('/auth/login', { ...payload, role }).pipe(
+      map(res => {
+        const { accessToken, user } = res.data;
+        this.persistToken(accessToken);
+        this.persistUser(user);
+        this.invalidateMe();
+        return user;
+      }),
+      catchError(err => throwError(() => err)),
+    );
   }
 
   signup(role: Role, payload: SignupPayload): Observable<User> {
-    const user: User = {
-      id: 'stub-' + Date.now(),
-      role,
-      name: payload.name,
-      email: payload.email,
-      status: role === 'patient' ? 'active' : 'pending',
-    };
-    this.persist(user);
-    return of(user);
+    return this.api.post<WrappedResponse<AuthApiResponse>>('/auth/signup', { ...payload, role }).pipe(
+      map(res => {
+        const { accessToken, user } = res.data;
+        this.persistToken(accessToken);
+        this.persistUser(user);
+        this.invalidateMe();
+        return user;
+      }),
+      catchError(err => throwError(() => err)),
+    );
+  }
+
+  /**
+   * Live account state — status, plus the application or organisation for this
+   * role. The access token carries no status claim, so this is how the client
+   * learns an admin has approved (or rejected) the account.
+   */
+  me(forceRefresh = false): Observable<MeResponse> {
+    if (forceRefresh) this.invalidateMe();
+
+    this.me$ ??= this.api.getData<MeResponse>('/auth/me').pipe(
+      tap(me => {
+        this._me.set(me);
+        // Keep the cached user in step with the server's view of it.
+        this.persistUser({
+          id: me.id,
+          role: me.role,
+          name: me.name ?? this._user()?.name ?? '',
+          email: me.email,
+          status: me.status,
+        });
+      }),
+      shareReplay({ bufferSize: 1, refCount: false }),
+      catchError(err => {
+        this.me$ = undefined; // never cache a failure
+        return throwError(() => err);
+      }),
+    );
+
+    return this.me$;
+  }
+
+  invalidateMe(): void {
+    this.me$ = undefined;
+    this._me.set(null);
+  }
+
+  submitPatientOnboarding(payload: PatientOnboardingPayload): Observable<unknown> {
+    return this.api.postData<unknown>('/auth/onboarding/patient', payload);
+  }
+
+  refreshToken(): Observable<string> {
+    return this.api.post<WrappedResponse<AuthApiResponse>>('/auth/refresh', {}).pipe(
+      map(res => {
+        const { accessToken, user } = res.data;
+        this.persistToken(accessToken);
+        this.persistUser(user);
+        return accessToken;
+      }),
+    );
   }
 
   signOut(): void {
+    const token = this._accessToken();
+    if (token) {
+      this.api.post('/auth/logout', {}).subscribe({ error: () => {} });
+    }
     this._user.set(null);
-    localStorage.removeItem(STORAGE_KEY);
+    this._accessToken.set(null);
+    this.invalidateMe();
+    localStorage.removeItem(USER_KEY);
+    localStorage.removeItem(TOKEN_KEY);
   }
 
-  private persist(user: User): void {
+  private persistUser(user: User): void {
     this._user.set(user);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(user));
+    localStorage.setItem(USER_KEY, JSON.stringify(user));
   }
 
-  private rehydrate(): User | null {
+  private persistToken(token: string): void {
+    this._accessToken.set(token);
+    localStorage.setItem(TOKEN_KEY, token);
+  }
+
+  private rehydrateUser(): User | null {
     try {
-      const raw = localStorage.getItem(STORAGE_KEY);
+      const raw = localStorage.getItem(USER_KEY);
       return raw ? (JSON.parse(raw) as User) : null;
     } catch {
       return null;
     }
+  }
+
+  private rehydrateToken(): string | null {
+    return localStorage.getItem(TOKEN_KEY);
   }
 }

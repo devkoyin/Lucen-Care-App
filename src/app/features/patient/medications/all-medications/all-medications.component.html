@@ -8,6 +8,28 @@
     <button class="meds-add-btn" type="button" (click)="openAdd()">+ Add Medication</button>
   </div>
 
+  <!-- A failed load used to render an empty list under "0 active prescriptions",
+       indistinguishable from having none. -->
+  @if (loading()) {
+    <div class="med-list__state">
+      <span class="med-list__state-icon" aria-hidden="true">⏳</span>
+      <p class="med-list__state-title">Loading your medications…</p>
+    </div>
+  } @else if (loadError()) {
+    <div class="med-list__state">
+      <span class="med-list__state-icon" aria-hidden="true">⚠️</span>
+      <p class="med-list__state-title">Could not load your medications</p>
+      <p class="med-list__state-sub">Check your connection and try again.</p>
+      <button class="meds-add-btn" type="button" (click)="retry()">Retry</button>
+    </div>
+  } @else if (medications().length === 0) {
+    <div class="med-list__state">
+      <span class="med-list__state-icon" aria-hidden="true">💊</span>
+      <p class="med-list__state-title">No medications yet</p>
+      <p class="med-list__state-sub">Add your first prescription to start tracking doses and refills.</p>
+      <button class="meds-add-btn" type="button" (click)="openAdd()">+ Add Medication</button>
+    </div>
+  } @else {
   <div class="med-list">
     @for (med of medications(); track med.id) {
       <div class="med-card">
@@ -43,6 +65,7 @@
       </div>
     }
   </div>
+  }
 
 </div>
 
@@ -50,5 +73,5 @@
   <lc-add-medication-modal
     [editMed]="editingMed()"
     (close)="closeModal()"
-    (saved)="saveMedication($event)" />
+    (saved)="onSaved()" />
 }

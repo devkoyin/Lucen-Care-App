@@ -2,64 +2,136 @@
 
   <div class="plans-page__header">
     <div>
-      <h2 class="plans-page__title">Active Plans</h2>
-      <p class="plans-page__sub">{{ appliedPrograms().length }} programme{{ appliedPrograms().length === 1 ? '' : 's' }} you have applied to</p>
+      <h2 class="plans-page__title">My Applications</h2>
+      <p class="plans-page__sub">
+        {{ applications().length }} programme{{ applications().length === 1 ? '' : 's' }} you have applied to
+      </p>
     </div>
   </div>
 
-  <div class="program-list">
-    @for (prog of appliedPrograms(); track prog.id) {
-      <div class="program-card program-card--enrolled">
+  @if (actionError()) {
+    <p class="plans-error" role="alert">{{ actionError() }}</p>
+  }
 
-        <div class="program-card__header">
-          <div>
-            <div class="program-card__name-row">
-              <h3 class="program-card__name">{{ prog.name }}</h3>
-              <span class="program-card__enrolled-badge">Applied</span>
+  @if (loading()) {
+    <div class="plans-state">
+      <span class="plans-state__icon" aria-hidden="true">⏳</span>
+      <p class="plans-state__title">Loading your applications…</p>
+    </div>
+  } @else if (loadError()) {
+    <div class="plans-state">
+      <span class="plans-state__icon" aria-hidden="true">⚠️</span>
+      <p class="plans-state__title">Could not load your applications</p>
+      <p class="plans-state__sub">Check your connection and try again.</p>
+      <button class="program-enroll-btn" type="button" (click)="reload()">Retry</button>
+    </div>
+  } @else if (applications().length === 0) {
+    <div class="plans-empty">
+      <p class="plans-empty__text">You have not applied to any programmes yet.</p>
+      <p class="plans-empty__hint">
+        Browse <a routerLink="/patient/funding/available"><strong>Available Plans</strong></a>
+        to find programmes you qualify for.
+      </p>
+    </div>
+  } @else {
+    @for (group of groups(); track group.status) {
+      <section class="plans-group">
+        <div class="plans-group__header">
+          <h3 class="plans-group__title">
+            {{ group.label }} <span class="plans-group__count">{{ group.rows.length }}</span>
+          </h3>
+          <p class="plans-group__hint">{{ group.hint }}</p>
+        </div>
+
+        <div class="program-list">
+          @for (app of group.rows; track app.id) {
+            <div class="program-card program-card--enrolled">
+
+              <div class="program-card__header">
+                <div>
+                  <div class="program-card__name-row">
+                    <h3 class="program-card__name">{{ app.programTitle }}</h3>
+                    <span class="program-card__enrolled-badge program-card__enrolled-badge--{{ statusTone(app.status) }}">
+                      {{ statusLabel(app.status) }}
+                    </span>
+                  </div>
+                  @if (app.orgName) {
+                    <p class="program-card__org">{{ app.orgName }}</p>
+                  }
+                  @if (app.programFocus) {
+                    <span class="program-card__focus-badge">Supports {{ app.programFocus }}</span>
+                  }
+                </div>
+              </div>
+
+              <!-- The same detail the patient read before applying — otherwise the
+                   application they are reviewing is a title and two dates. -->
+              @if (app.programDescription) {
+                <div class="program-card__section">
+                  <span class="program-card__section-label">What this covers</span>
+                  <p class="program-card__desc">{{ app.programDescription }}</p>
+                </div>
+              }
+
+              <div class="program-card__meta">
+                <div class="program-meta-item">
+                  <span class="program-meta-item__label">Applied</span>
+                  <span class="program-meta-item__value">{{ app.createdAt | date: 'd MMM y' }}</span>
+                </div>
+                @if (app.reviewedAt) {
+                  <div class="program-meta-item">
+                    <span class="program-meta-item__label">Decision</span>
+                    <span class="program-meta-item__value">{{ app.reviewedAt | date: 'd MMM y' }}</span>
+                  </div>
+                }
+                <div class="program-meta-item">
+                  <span class="program-meta-item__label">Programme closes</span>
+                  <span class="program-meta-item__value">{{ app.programExpiresAt | date: 'd MMM y' }}</span>
+                </div>
+                @if (app.programDonor) {
+                  <div class="program-meta-item">
+                    <span class="program-meta-item__label">Funded by</span>
+                    <span class="program-meta-item__value">{{ app.programDonor }}</span>
+                  </div>
+                }
+                @if (app.programCoordinator) {
+                  <div class="program-meta-item">
+                    <span class="program-meta-item__label">Coordinator</span>
+                    <span class="program-meta-item__value">{{ app.programCoordinator }}</span>
+                  </div>
+                }
+              </div>
+
+              @if (app.status === 'rejected' && app.rejectionReason) {
+                <lc-reason-note>{{ app.rejectionReason }}</lc-reason-note>
+              }
+
+              @if (canWithdraw(app)) {
+                <div class="program-card__actions">
+                  <button class="plans-withdraw-btn" type="button"
+                          [disabled]="isWithdrawing(app)" (click)="askWithdraw(app)">
+                    Withdraw application
+                  </button>
+                </div>
+              }
+
             </div>
-            <span class="program-card__focus-badge"
-                  [style.background]="statusColor(prog.status) + '18'"
-                  [style.color]="statusColor(prog.status)"
-                  [style.border-color]="statusColor(prog.status) + '33'">
-              {{ prog.status }} · {{ prog.focus }}
-            </span>
-          </div>
-
-          <button class="program-enroll-btn program-enroll-btn--enrolled"
-                  type="button"
-                  (click)="withdraw(prog.id)">
-            Withdraw
-          </button>
+          }
         </div>
-
-        <p class="program-card__desc">{{ prog.description }}</p>
-
-        <div class="program-card__meta">
-          <div class="program-meta-item">
-            <span class="program-meta-item__label">Eligibility</span>
-            <span class="program-meta-item__value">{{ prog.eligibility }}</span>
-          </div>
-          <div class="program-meta-item">
-            <span class="program-meta-item__label">Slots available</span>
-            <span class="program-meta-item__value">{{ slotsAvailable(prog) }} of {{ prog.slotsTotal }}</span>
-          </div>
-          <div class="program-meta-item">
-            <span class="program-meta-item__label">Deadline</span>
-            <span class="program-meta-item__value">{{ prog.deadline }}</span>
-          </div>
-          <div class="program-meta-item">
-            <span class="program-meta-item__label">Coordinator</span>
-            <span class="program-meta-item__value">{{ prog.coordinator }}</span>
-          </div>
-        </div>
-
-      </div>
-    } @empty {
-      <div class="plans-empty">
-        <p class="plans-empty__text">You have not applied to any programmes yet.</p>
-        <p class="plans-empty__hint">Browse <strong>Available Plans</strong> to find programmes you qualify for.</p>
-      </div>
+      </section>
     }
-  </div>
+  }
 
 </div>
+
+@if (withdrawTarget(); as target) {
+  <lc-confirm-modal
+    title="Withdraw this application?"
+    [message]="'You will be removed from ' + target.programTitle + '. Your other applications are unaffected, and you can apply again while the programme is open.'"
+    confirmLabel="Withdraw"
+    [danger]="true"
+    [submitting]="isWithdrawing(target)"
+    [error]="actionError()"
+    (confirm)="confirmWithdraw()"
+    (cancel)="cancelWithdraw()" />
+}

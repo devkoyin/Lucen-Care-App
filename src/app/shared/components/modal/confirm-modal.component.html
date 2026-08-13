@@ -1,0 +1,31 @@
+<div class="cm-overlay" (click)="onOverlayClick($event)">
+  <div class="cm-card" role="dialog" aria-modal="true" aria-labelledby="cm-title">
+
+    <!-- Header -->
+    <div class="cm-card__header">
+      <span class="cm-card__title" id="cm-title">{{ title }}</span>
+      <button class="cm-card__close" type="button" (click)="cancel.emit()" aria-label="Close">&#x2715;</button>
+    </div>
+
+    <!-- Body -->
+    <div class="cm-card__body">
+      <p class="cm-message">{{ message }}</p>
+      <!-- Optional: lets a caller collect input alongside the confirmation, e.g. the
+           reason an NGO must give when rejecting. Existing callers project nothing. -->
+      <ng-content />
+      @if (error) {
+        <p class="cm-error">{{ error }}</p>
+      }
+    </div>
+
+    <!-- Footer -->
+    <div class="cm-card__footer">
+      <button type="button" class="cm-cancel-btn" (click)="cancel.emit()">{{ cancelLabel }}</button>
+      <button type="button" class="cm-confirm-btn" [class.cm-confirm-btn--danger]="danger"
+              [disabled]="submitting" (click)="confirm.emit()">
+        {{ submitting ? 'Please wait…' : confirmLabel }}
+      </button>
+    </div>
+
+  </div>
+</div>

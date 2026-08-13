@@ -1,7 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 
-type Role = 'patient' | 'ngo' | 'hmo' | 'admin' | 'professional' | 'benefactor';
+/** Public portals only — admin is internal and is not offered here. */
+type Role = 'patient' | 'ngo' | 'hmo' | 'professional' | 'benefactor';
 
 interface RoleOption {
   id: Role;
@@ -26,7 +27,6 @@ export class RoleSelectionComponent {
     { id: 'hmo',          emoji: '🏦', label: 'HMO',                      description: 'Longitudinal care management' },
     { id: 'professional', emoji: '⚕️', label: 'Healthcare Professional', description: 'Verified volunteer support in patient communities' },
     { id: 'benefactor',   emoji: '💛', label: 'Benefactor',              description: 'Support patients through individual funding & community' },
-    { id: 'admin',        emoji: '🛡️', label: 'Admin',                   description: 'Approve & manage organisation accounts' },
   ];
 
   selectedRole: Role | null = null;
@@ -43,10 +43,6 @@ export class RoleSelectionComponent {
 
   continue(): void {
     if (!this.selectedRole) return;
-    if (this.selectedRole === 'admin') {
-      this.router.navigate(['/admin']);
-    } else {
-      this.router.navigate(['/auth', this.selectedRole, 'signup']);
-    }
+    this.router.navigate(['/auth', this.selectedRole, 'signup']);
   }
 }

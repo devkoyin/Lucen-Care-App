@@ -1,0 +1,44 @@
+<div class="trending-page">
+
+  <div class="trending-page__header">
+    <h2 class="trending-page__title">Trending Topics</h2>
+    <p class="trending-page__sub">What the community is talking about most this week</p>
+  </div>
+
+  @if (loading()) {
+    <div class="trending-state">
+      <span class="trending-state__icon" aria-hidden="true">⏳</span>
+      <p class="trending-state__title">Loading…</p>
+    </div>
+  } @else if (loadError()) {
+    <div class="trending-state">
+      <span class="trending-state__icon" aria-hidden="true">⚠️</span>
+      <p class="trending-state__title">Could not load trending topics</p>
+      <button class="trending-retry-btn" type="button" (click)="reload()">Retry</button>
+    </div>
+  } @else {
+    <div class="trending-list">
+      @for (t of trending(); track t.tag; let i = $index) {
+        <!-- A link, not a label. This list was a dead end: it named tags you could
+             not then go and read. -->
+        <a class="trending-row" [routerLink]="feedLink()" [queryParams]="{ tag: t.tag }">
+          <span class="trending-row__rank">{{ i + 1 }}</span>
+          <div class="trending-row__content">
+            <span class="trending-row__tag">#{{ t.tag }}</span>
+            <span class="trending-row__count">{{ t.count }} post{{ t.count === 1 ? '' : 's' }} this week</span>
+          </div>
+          <div class="trending-row__bar-wrap" aria-hidden="true">
+            <div class="trending-row__bar" [style.width.%]="width(t.count)"></div>
+          </div>
+        </a>
+      } @empty {
+        <div class="trending-state">
+          <span class="trending-state__icon" aria-hidden="true">🌿</span>
+          <p class="trending-state__title">Nothing trending yet</p>
+          <p class="trending-state__sub">Tags appear here once people start posting with them.</p>
+        </div>
+      }
+    </div>
+  }
+
+</div>

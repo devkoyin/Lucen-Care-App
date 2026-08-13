@@ -48,9 +48,9 @@ export class AdminLoginComponent {
 
     this.auth.login('admin', this.form.getRawValue() as LoginPayload).subscribe({
       next: () => this.router.navigate(['/admin/dashboard']),
-      error: (e: Error) => {
+      error: (e: { error?: { message?: string; } }) => {
         this.loading     = false;
-        this.serverError = e?.message ?? 'Something went wrong. Please try again.';
+        this.serverError = e?.error?.message ?? 'Something went wrong. Please try again.';
       },
     });
   }

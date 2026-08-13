@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { ProfessionalPortalComponent } from './professional-portal.component';
-import { professionalApprovedGuard } from '../../core/auth/professional-approved.guard';
+import { verifiedGuard } from '../../core/auth/verified.guard';
 
 export const PROFESSIONAL_ROUTES: Routes = [
   {
@@ -10,7 +10,7 @@ export const PROFESSIONAL_ROUTES: Routes = [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       {
         path: 'dashboard',
-        canActivate: [professionalApprovedGuard],
+        canActivate: [verifiedGuard('professional', '/professional/pending')],
         loadComponent: () =>
           import('./dashboard/professional-dashboard.component').then(m => m.ProfessionalDashboardComponent),
         children: [
@@ -19,16 +19,6 @@ export const PROFESSIONAL_ROUTES: Routes = [
             path: 'threads',
             loadComponent: () =>
               import('./dashboard/patient-threads/patient-threads.component').then(m => m.ProPatientThreadsComponent),
-          },
-          {
-            path: 'impact',
-            loadComponent: () =>
-              import('./dashboard/impact/impact.component').then(m => m.ProImpactComponent),
-          },
-          {
-            path: 'expertise',
-            loadComponent: () =>
-              import('./dashboard/expertise/expertise.component').then(m => m.ProExpertiseComponent),
           },
           {
             path: 'posts',
@@ -40,17 +30,22 @@ export const PROFESSIONAL_ROUTES: Routes = [
       {
         path: 'pending',
         loadComponent: () =>
-          import('./pending/professional-pending.component').then(m => m.ProfessionalPendingComponent),
+          import('../../shared/components/pending-verification/pending-verification.component')
+            .then(m => m.PendingVerificationComponent),
+        data: { waitingMessage: "Our team is verifying your credentials. You'll receive an activation email once approved." },
       },
       {
         path: 'community',
-        canActivate: [professionalApprovedGuard],
-        loadComponent: () =>
-          import('../patient/community/community.component').then(m => m.CommunityComponent),
+        canActivate: [verifiedGuard('professional', '/professional/pending')],
+        // The full portal — feed, groups, trending, threads — not the bare feed
+        // component this used to load out of the patient feature.
+        data: { communityBase: '/professional/community' },
+        loadChildren: () =>
+          import('../community/community.routes').then(m => m.COMMUNITY_ROUTES),
       },
       {
         path: 'profile',
-        canActivate: [professionalApprovedGuard],
+        canActivate: [verifiedGuard('professional', '/professional/pending')],
         loadComponent: () =>
           import('./profile/professional-profile.component').then(m => m.ProfessionalProfileComponent),
       },

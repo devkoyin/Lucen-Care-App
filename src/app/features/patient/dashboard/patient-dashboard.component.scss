@@ -227,6 +227,12 @@
   }
 
   &--pending {
+    background: rgba(37, 99, 235, 0.08);
+    color: #1D4ED8;
+    border: 1px solid rgba(37, 99, 235, 0.18);
+  }
+
+  &--due_now {
     background: rgba(180, 83, 9, 0.1);
     color: #92400E;
     border: 1px solid rgba(180, 83, 9, 0.2);
@@ -236,6 +242,12 @@
     background: rgba(15, 45, 74, 0.05);
     color: var(--color-text-muted);
     border: 1px solid var(--color-border);
+  }
+
+  &--skipped {
+    background: rgba(220, 38, 38, 0.08);
+    color: #991B1B;
+    border: 1px solid rgba(220, 38, 38, 0.18);
   }
 }
 

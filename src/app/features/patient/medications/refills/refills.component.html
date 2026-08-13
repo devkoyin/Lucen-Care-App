@@ -2,11 +2,20 @@
 
   <div class="refills-page__header">
     <h2 class="refills-page__title">Refill Alerts</h2>
-    <span class="refills-page__badge">{{ refillAlerts.length }} pending</span>
+    <span class="refills-page__badge">{{ refillAlerts().length }} pending</span>
   </div>
 
+  @if (loadError()) {
+    <p class="refills-page__error" role="alert">
+      Could not load refill alerts. Check your connection and try again.
+    </p>
+  }
+  @if (requestError()) {
+    <p class="refills-page__error" role="alert">{{ requestError() }}</p>
+  }
+
   <div class="refills-list">
-    @for (alert of refillAlerts; track alert.name) {
+    @for (alert of refillAlerts(); track alert.medicationId) {
       <div class="refill-card refill-card--{{ alert.urgency }}">
         <div class="refill-card__left">
           <span class="refill-card__icon" aria-hidden="true">{{ alert.urgency === 'urgent' ? '🔴' : '🟡' }}</span>
@@ -16,7 +25,11 @@
             <span class="refill-card__date">Refill by {{ alert.refillDate }}</span>
           </div>
         </div>
-        <button class="refill-btn refill-btn--{{ alert.urgency }}" type="button">Request Refill</button>
+        <button class="refill-btn refill-btn--{{ alert.urgency }}" type="button"
+                [disabled]="isRequested(alert.medicationId)"
+                (click)="requestRefill(alert.medicationId)">
+          {{ isRequested(alert.medicationId) ? 'Requested' : 'Request Refill' }}
+        </button>
       </div>
     }
   </div>
@@ -24,7 +37,7 @@
   <div class="refills-ok">
     <span class="refills-ok__icon" aria-hidden="true">✓</span>
     <div>
-      <p class="refills-ok__title">{{ okCount }} medication{{ okCount === 1 ? '' : 's' }} well stocked</p>
+      <p class="refills-ok__title">{{ okCount() }} medication{{ okCount() === 1 ? '' : 's' }} well stocked</p>
       <p class="refills-ok__sub">No action needed for the rest of your prescriptions.</p>
     </div>
   </div>

@@ -200,3 +200,34 @@
   &--upcoming { color: #92400E; font-weight: var(--font-semibold); }
   &--urgent   { color: #991B1B; font-weight: var(--font-semibold); }
 }
+
+// Loading / error / empty states — a failed load previously rendered an empty
+// list, reading as "you have no medications".
+.med-list__state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-12) var(--space-6);
+  text-align: center;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+
+  &-icon { font-size: 36px; }
+
+  &-title {
+    margin: 0;
+    color: var(--color-text);
+    font-size: var(--text-base);
+    font-weight: var(--font-semibold);
+  }
+
+  &-sub {
+    margin: 0 0 var(--space-2);
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+    max-width: 380px;
+  }
+}

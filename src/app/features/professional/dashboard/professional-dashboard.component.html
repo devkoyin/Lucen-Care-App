@@ -8,37 +8,16 @@
     <a class="pro-dashboard__cta" routerLink="/professional/community">+ New Post</a>
   </div>
 
+  <!-- Real counts from GET /community/stats. The strip that used to sit below this
+       carried four figures no table could ever back. -->
   <div class="pro-dashboard__stats">
-    @for (s of stats; track s.label) {
-      <div class="pro-stat" [class.pro-stat--accent]="s.accent">
+    @for (s of stats(); track s.label) {
+      <div class="pro-stat">
         <span class="pro-stat__icon">{{ s.icon }}</span>
         <span class="pro-stat__value">{{ s.value }}</span>
         <span class="pro-stat__label">{{ s.label }}</span>
-        @if (s.trend) { <span class="pro-stat__trend">{{ s.trend }}</span> }
       </div>
     }
-  </div>
-
-  <div class="impact-strip">
-    <div class="impact-strip__item">
-      <span class="impact-strip__value">{{ impact.patientsReached }}</span>
-      <span class="impact-strip__label">Patients reached</span>
-    </div>
-    <div class="impact-strip__divider"></div>
-    <div class="impact-strip__item">
-      <span class="impact-strip__value">{{ impact.questionsAnswered }}</span>
-      <span class="impact-strip__label">Questions answered</span>
-    </div>
-    <div class="impact-strip__divider"></div>
-    <div class="impact-strip__item">
-      <span class="impact-strip__value">{{ impact.avgResponseTime }}</span>
-      <span class="impact-strip__label">Avg. response time</span>
-    </div>
-    <div class="impact-strip__divider"></div>
-    <div class="impact-strip__item">
-      <span class="impact-strip__value">{{ impact.helpfulRating }}</span>
-      <span class="impact-strip__label">Helpful rating</span>
-    </div>
   </div>
 
   <nav class="pro-nav">
@@ -47,18 +26,6 @@
        routerLinkActive="pro-nav__tab--active"
        [routerLinkActiveOptions]="{ exact: true }">
       🚨 Patient Threads
-    </a>
-    <a class="pro-nav__tab"
-       routerLink="/professional/dashboard/impact"
-       routerLinkActive="pro-nav__tab--active"
-       [routerLinkActiveOptions]="{ exact: true }">
-      ✨ Your Impact
-    </a>
-    <a class="pro-nav__tab"
-       routerLink="/professional/dashboard/expertise"
-       routerLinkActive="pro-nav__tab--active"
-       [routerLinkActiveOptions]="{ exact: true }">
-      🏅 Expertise Areas
     </a>
     <a class="pro-nav__tab"
        routerLink="/professional/dashboard/posts"

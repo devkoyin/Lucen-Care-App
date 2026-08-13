@@ -52,11 +52,16 @@
                     placeholder="Any preparation notes for the new time…"></textarea>
         </div>
 
+        @if (error()) {
+          <p class="rsm-field__error">{{ error() }}</p>
+        }
       </div>
 
       <div class="rsm-card__footer">
         <button type="button" class="rsm-cancel-btn" (click)="close.emit()">Cancel</button>
-        <button type="submit" class="rsm-save-btn" [disabled]="f.invalid">Confirm Reschedule</button>
+        <button type="submit" class="rsm-save-btn" [disabled]="f.invalid || submitting()">
+          {{ submitting() ? 'Saving…' : 'Confirm Reschedule' }}
+        </button>
       </div>
     </form>
 

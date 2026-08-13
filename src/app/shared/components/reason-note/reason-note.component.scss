@@ -1,0 +1,26 @@
+// Values are carried over verbatim from the .rejection-note block that was
+// duplicated across the four admin *-approvals.component.scss files, so adopting
+// this component is a pure de-duplication with no visual change.
+//
+// The red is hardcoded rgba rather than a token because there is no error-surface
+// or error-border token — only --color-error (#DC2626) — and every tinted red box
+// in the app hardcodes the same values.
+
+:host {
+  display: block;
+}
+
+.reason-note {
+  background: rgba(220, 38, 38, 0.05);
+  border: 1px solid rgba(220, 38, 38, 0.15);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+
+  &__label {
+    font-weight: var(--font-semibold);
+    color: #DC2626;
+    margin-right: var(--space-1);
+  }
+}

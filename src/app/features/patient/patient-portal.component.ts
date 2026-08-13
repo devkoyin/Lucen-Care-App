@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { SidebarShellComponent, NavItem } from '../../shared/layout/sidebar-shell/sidebar-shell.component';
 import { AuthService } from '../../core/auth/auth.service';
 import { MedicationNotificationService } from '../../core/notifications/medication-notification.service';
+import { CommunityNavService } from '../community/community-nav.service';
 
 @Component({
   selector: 'lc-patient-portal',
@@ -23,15 +24,25 @@ import { MedicationNotificationService } from '../../core/notifications/medicati
 export class PatientPortalComponent {
   private readonly auth   = inject(AuthService);
   private readonly router = inject(Router);
+  // The community feature is shared by three portals. Setting the base here rather
+  // than only on the community route means links rendered OUTSIDE it — the
+  // dashboard's thread lists — resolve under this role too.
+  private readonly communityNav = inject(CommunityNavService);
+
+  constructor() {
+    this.communityNav.setBase('/patient/community');
+  }
   private readonly medNotif = inject(MedicationNotificationService);
 
   readonly navItems: NavItem[] = [
     { icon: '🏠', label: 'Dashboard', route: '/patient/dashboard' },
     { icon: '💊', label: 'Medications', route: '/patient/medications' },
-    { icon: '📅', label: 'Appointments', route: '/patient/appointments' },
+    { icon: '📅', label: 'Appointments', route: '/patient/appointments', liveIcon: 'calendar' },
     { icon: '🤖', label: 'AI Health Chat', route: '/patient/ai-chat' },
     { icon: '🤝', label: 'Community', route: '/patient/community' },
     { icon: '💰', label: 'Funding', route: '/patient/funding' },
+    { icon: '🔒', label: 'Privacy', route: '/patient/privacy' },
+    { icon: '👤', label: 'My Profile', route: '/patient/profile' },
   ];
 
   get userName(): string { return this.auth.user()?.name ?? 'User'; }

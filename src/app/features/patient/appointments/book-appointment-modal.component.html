@@ -113,6 +113,9 @@
           </div>
         </div>
 
+        @if (error()) {
+          <p class="bam-field__error">{{ error() }}</p>
+        }
       </div>
 
       <!-- ── Footer ─────────────────────────────────────────── -->

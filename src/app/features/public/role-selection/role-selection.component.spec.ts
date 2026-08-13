@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Router, provideRouter } from '@angular/router';
 import { RoleSelectionComponent } from './role-selection.component';
 
@@ -8,7 +9,7 @@ describe('RoleSelectionComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RoleSelectionComponent],
+      imports: [HttpClientTestingModule, RoleSelectionComponent],
       providers: [provideRouter([])],
     }).compileComponents();
     fixture = TestBed.createComponent(RoleSelectionComponent);
@@ -18,8 +19,13 @@ describe('RoleSelectionComponent', () => {
 
   it('creates', () => expect(component).toBeTruthy());
 
-  it('renders 6 role options', () => {
-    expect(fixture.nativeElement.querySelectorAll('.role-option').length).toBe(6);
+  it('renders 5 role options', () => {
+    expect(fixture.nativeElement.querySelectorAll('.role-option').length).toBe(5);
+  });
+
+  it('does not offer the admin portal', () => {
+    expect(component.roles.some(r => r.id === ('admin' as never))).toBeFalse();
+    expect(fixture.nativeElement.textContent).not.toContain('Admin');
   });
 
   it('has no role selected initially', () => {

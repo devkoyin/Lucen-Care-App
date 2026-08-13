@@ -230,20 +230,7 @@
   &__label--missing { color: var(--color-text-muted); text-decoration: line-through; }
 }
 
-.rejection-note {
-  background: rgba(220,38,38,0.05);
-  border: 1px solid rgba(220,38,38,0.15);
-  border-radius: var(--radius-md);
-  padding: var(--space-3) var(--space-4);
-  font-size: var(--text-sm);
-  color: var(--color-text-secondary);
-
-  &__label {
-    font-weight: var(--font-semibold);
-    color: #DC2626;
-    margin-right: var(--space-1);
-  }
-}
+// The rejection note now lives in the shared lc-reason-note component.
 
 .reject-form {
   display: flex;

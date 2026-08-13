@@ -1,0 +1,88 @@
+<div class="consents-page">
+
+  <div class="consents-page__header">
+    <div>
+      <h2 class="consents-page__title">Privacy &amp; Sharing</h2>
+      <p class="consents-page__sub">
+        You decide who can see your health information. You can change any of these at any time.
+      </p>
+    </div>
+  </div>
+
+  @if (actionError()) {
+    <p class="consents-page__error" role="alert">{{ actionError() }}</p>
+  }
+
+  @if (loading()) {
+    <div class="consents-state">
+      <span class="consents-state__icon" aria-hidden="true">⏳</span>
+      <p class="consents-state__title">Loading your privacy settings…</p>
+    </div>
+  } @else if (loadError()) {
+    <div class="consents-state">
+      <span class="consents-state__icon" aria-hidden="true">⚠️</span>
+      <p class="consents-state__title">Could not load your privacy settings</p>
+      <p class="consents-state__sub">Check your connection and try again.</p>
+      <button class="consent-btn consent-btn--primary" type="button" (click)="reload()">Retry</button>
+    </div>
+  } @else {
+    <div class="consent-list">
+      @for (row of rows(); track row.purpose) {
+        <div class="consent-card">
+
+          <div class="consent-card__head">
+            <div>
+              <h3 class="consent-card__title">{{ row.title }}</h3>
+              <p class="consent-card__desc">{{ row.description }}</p>
+            </div>
+            <lc-badge [color]="row.badge">{{ row.status }}</lc-badge>
+          </div>
+
+          <div class="consent-card__scopes">
+            <span class="consent-card__scopes-label">What you share</span>
+            <ul class="consent-card__scopes-list">
+              @for (scope of row.scopes; track scope) {
+                <li>{{ scope }}</li>
+              }
+            </ul>
+          </div>
+
+          <div class="consent-card__actions">
+            @if (row.canGrant) {
+              <button class="consent-btn consent-btn--primary" type="button"
+                      [disabled]="isBusy(row)" (click)="grant(row)">
+                {{ isBusy(row) ? 'Saving…' : 'Allow sharing' }}
+              </button>
+            }
+            @if (row.canPause) {
+              <button class="consent-btn" type="button"
+                      [disabled]="isBusy(row)" (click)="pause(row)">
+                {{ isBusy(row) ? 'Saving…' : 'Pause' }}
+              </button>
+            }
+            @if (row.canRevoke) {
+              <button class="consent-btn consent-btn--danger" type="button"
+                      [disabled]="isBusy(row)" (click)="startRevoke(row)">
+                Revoke
+              </button>
+            }
+          </div>
+
+        </div>
+      }
+    </div>
+  }
+
+</div>
+
+@if (revoking(); as row) {
+  <lc-confirm-modal
+    [title]="'Revoke ' + row.title + '?'"
+    [message]="revokeMessage"
+    confirmLabel="Revoke"
+    [danger]="true"
+    [submitting]="isBusy(row)"
+    [error]="actionError()"
+    (confirm)="confirmRevoke()"
+    (cancel)="cancelRevoke()" />
+}

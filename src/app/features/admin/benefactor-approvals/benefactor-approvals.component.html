@@ -78,10 +78,7 @@
             </div>
 
             @if (app.status === 'rejected' && app.rejectionReason) {
-              <div class="rejection-note">
-                <span class="rejection-note__label">Rejection reason:</span>
-                {{ app.rejectionReason }}
-              </div>
+              <lc-reason-note>{{ app.rejectionReason }}</lc-reason-note>
             }
 
             @if (rejectingId() === app.id) {

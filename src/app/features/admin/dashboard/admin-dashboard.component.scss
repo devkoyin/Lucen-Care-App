@@ -28,7 +28,9 @@
 
 .stats-row {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  // auto-fit rather than a fixed 4, so the six cards wrap evenly instead of
+  // leaving two stranded on a second row.
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   gap: var(--space-4);
 }
 
@@ -175,6 +177,17 @@
 
   &--ngo { background: rgba(124, 58, 237, 0.10); color: #6D28D9; border: 1px solid rgba(124, 58, 237, 0.20); }
   &--hmo { background: rgba(96, 165, 250, 0.12); color: #2563EB; border: 1px solid rgba(96, 165, 250, 0.25); }
+
+  // Audit rows are not only about organisations — real events also concern
+  // applications, programs, studies and users.
+  &--professional,
+  &--benefactor { background: rgba(10, 110, 82, 0.10); color: #065F46; border: 1px solid rgba(10, 110, 82, 0.20); }
+  &--program,
+  &--study      { background: rgba(180, 83, 9, 0.10);  color: #92400E; border: 1px solid rgba(180, 83, 9, 0.20); }
+  &--user,
+  &--patient,
+  &--medication,
+  &--consent    { background: var(--color-surface-alt, rgba(100, 116, 139, 0.10)); color: var(--color-text-secondary); border: 1px solid var(--color-border); }
 }
 
 .status-badge {
@@ -186,4 +199,30 @@
   &--pending  { background: rgba(180, 83, 9, 0.10);  color: #92400E; border: 1px solid rgba(180, 83, 9, 0.20); }
   &--approved { background: rgba(10, 110, 82, 0.10); color: #065F46; border: 1px solid rgba(10, 110, 82, 0.20); }
   &--rejected { background: rgba(220, 38, 38, 0.08); color: #DC2626; border: 1px solid rgba(220, 38, 38, 0.20); }
+  // Exports, sign-ins, refill requests — informational, not an approval outcome.
+  &--neutral  { background: var(--color-surface-alt, rgba(100, 116, 139, 0.10)); color: var(--color-text-secondary); border: 1px solid var(--color-border); }
+}
+
+.activity-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-10) var(--space-5);
+  text-align: center;
+
+  &__icon { font-size: 32px; }
+
+  &__title {
+    color: var(--color-text);
+    font-size: var(--text-sm);
+    font-weight: var(--font-semibold);
+  }
+
+  &__sub {
+    color: var(--color-text-muted);
+    font-size: var(--text-xs);
+    max-width: 380px;
+  }
 }

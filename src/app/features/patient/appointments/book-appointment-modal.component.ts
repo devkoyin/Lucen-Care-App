@@ -1,8 +1,9 @@
-import { Component, EventEmitter, Output, inject } from '@angular/core';
+import { Component, EventEmitter, Output, inject, signal } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
-import { AppointmentsService, ApptType } from './appointments.service';
+import { AppointmentsService } from '../../../core/appointments/appointments.service';
+import { ApptType } from '../../../core/appointments/appointments.models';
 import { SpecialtySelectComponent } from './specialty-select.component';
-import { ColorSelectComponent, ColorSelectOption } from './color-select.component';
+import { ColorSelectComponent, ColorSelectOption } from '../../../shared/components/color-select/color-select.component';
 
 @Component({
   selector: 'lc-book-appointment-modal',
@@ -46,9 +47,14 @@ export class BookAppointmentModalComponent {
     note: '',
   };
 
+  readonly submitting = signal(false);
+  readonly error = signal<string | null>(null);
+
   submit(f: NgForm): void {
     if (f.invalid || !this.form.specialty) return;
-    this.service.add({
+    this.submitting.set(true);
+    this.error.set(null);
+    this.service.createAppointment({
       isoDate: this.form.isoDate,
       time24: this.form.time24,
       duration: this.form.duration,
@@ -57,8 +63,13 @@ export class BookAppointmentModalComponent {
       facility: this.form.facility.trim(),
       type: this.form.type,
       note: this.form.note.trim() || undefined,
+    }).subscribe({
+      next: () => this.close.emit(),
+      error: () => {
+        this.submitting.set(false);
+        this.error.set('Could not book this appointment. Please try again.');
+      },
     });
-    this.close.emit();
   }
 
   onOverlayClick(event: MouseEvent): void {

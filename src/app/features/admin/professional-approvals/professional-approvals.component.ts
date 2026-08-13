@@ -1,22 +1,28 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import {
   ProfessionalApplicationsService,
   ProfessionalApplication,
   ProfessionalAppStatus,
 } from '../../../core/applications/professional-applications.service';
-import { AuthService } from '../../../core/auth/auth.service';
+import { ReasonNoteComponent } from '../../../shared/components/reason-note/reason-note.component';
 
 type FilterTab = 'all' | ProfessionalAppStatus;
 
 @Component({
   selector: 'lc-professional-approvals',
   standalone: true,
+  imports: [ReasonNoteComponent],
   templateUrl: './professional-approvals.component.html',
   styleUrl: './professional-approvals.component.scss',
 })
-export class ProfessionalApprovalsComponent {
+export class ProfessionalApprovalsComponent implements OnInit {
   private readonly appsService = inject(ProfessionalApplicationsService);
-  private readonly auth        = inject(AuthService);
+
+  readonly loading = this.appsService.loading;
+
+  ngOnInit(): void {
+    this.appsService.load().subscribe({ error: () => {} });
+  }
 
   readonly tabs: { id: FilterTab; label: string }[] = [
     { id: 'all',      label: 'All' },
@@ -48,7 +54,7 @@ export class ProfessionalApprovalsComponent {
   }
 
   approve(id: string): void {
-    this.appsService.approve(id, this.auth.user()?.name ?? 'Admin');
+    this.appsService.approve(id).subscribe({ error: () => {} });
     this.expandedId.set(null);
   }
 
@@ -58,7 +64,10 @@ export class ProfessionalApprovalsComponent {
   }
 
   confirmReject(id: string): void {
-    this.appsService.reject(id, this.rejectReason(), this.auth.user()?.name ?? 'Admin');
+    // The API rejects a reject-without-reason with a 422.
+    const reason = this.rejectReason().trim();
+    if (!reason) return;
+    this.appsService.reject(id, reason).subscribe({ error: () => {} });
     this.rejectingId.set(null);
     this.expandedId.set(null);
   }

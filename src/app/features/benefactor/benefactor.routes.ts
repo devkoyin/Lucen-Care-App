@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { BenefactorPortalComponent } from './benefactor-portal.component';
-import { benefactorApprovedGuard } from '../../core/auth/benefactor-approved.guard';
+import { verifiedGuard } from '../../core/auth/verified.guard';
 
 export const BENEFACTOR_ROUTES: Routes = [
   {
@@ -10,7 +10,7 @@ export const BENEFACTOR_ROUTES: Routes = [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       {
         path: 'dashboard',
-        canActivate: [benefactorApprovedGuard],
+        canActivate: [verifiedGuard('benefactor', '/benefactor/pending')],
         loadComponent: () =>
           import('./dashboard/benefactor-dashboard.component').then(m => m.BenefactorDashboardComponent),
         children: [
@@ -19,16 +19,6 @@ export const BENEFACTOR_ROUTES: Routes = [
             path: 'threads',
             loadComponent: () =>
               import('./dashboard/community-threads/community-threads.component').then(m => m.BenCommunityThreadsComponent),
-          },
-          {
-            path: 'impact',
-            loadComponent: () =>
-              import('./dashboard/impact/impact.component').then(m => m.BenImpactComponent),
-          },
-          {
-            path: 'contributions',
-            loadComponent: () =>
-              import('./dashboard/contributions/contributions.component').then(m => m.BenContributionsComponent),
           },
           {
             path: 'posts',
@@ -40,17 +30,22 @@ export const BENEFACTOR_ROUTES: Routes = [
       {
         path: 'pending',
         loadComponent: () =>
-          import('./pending/benefactor-pending.component').then(m => m.BenefactorPendingComponent),
+          import('../../shared/components/pending-verification/pending-verification.component')
+            .then(m => m.PendingVerificationComponent),
+        data: { waitingMessage: "Our team is verifying your identity. You'll receive an activation email once your Verified Benefactor badge is granted." },
       },
       {
         path: 'community',
-        canActivate: [benefactorApprovedGuard],
-        loadComponent: () =>
-          import('../patient/community/community.component').then(m => m.CommunityComponent),
+        canActivate: [verifiedGuard('benefactor', '/benefactor/pending')],
+        // The full portal — feed, groups, trending, threads — not the bare feed
+        // component this used to load out of the patient feature.
+        data: { communityBase: '/benefactor/community' },
+        loadChildren: () =>
+          import('../community/community.routes').then(m => m.COMMUNITY_ROUTES),
       },
       {
         path: 'profile',
-        canActivate: [benefactorApprovedGuard],
+        canActivate: [verifiedGuard('benefactor', '/benefactor/pending')],
         loadComponent: () =>
           import('./profile/benefactor-profile.component').then(m => m.BenefactorProfileComponent),
       },

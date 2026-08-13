@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { provideRouter } from '@angular/router';
 import { signal } from '@angular/core';
 import { PatientOnboardingComponent } from './patient-onboarding.component';
@@ -17,7 +18,7 @@ describe('PatientOnboardingComponent', () => {
     });
 
     await TestBed.configureTestingModule({
-      imports: [PatientOnboardingComponent],
+      imports: [HttpClientTestingModule, PatientOnboardingComponent],
       providers: [
         provideRouter([]),
         { provide: AuthService, useValue: authSpy },

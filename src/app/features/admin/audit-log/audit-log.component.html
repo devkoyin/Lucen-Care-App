@@ -8,7 +8,8 @@
     </div>
     <div class="page-header__total">
       <span class="page-header__total-n">{{ countFor('all') }}</span>
-      <span class="page-header__total-l">total events</span>
+      <!-- Rows loaded so far, not the table total — the log is keyset paginated. -->
+      <span class="page-header__total-l">events loaded</span>
     </div>
   </div>
 
@@ -53,7 +54,7 @@
         </thead>
         <tbody>
           @for (entry of filtered; track entry.id) {
-            <tr class="log-row log-row--{{ entry.action }}">
+            <tr class="log-row">
               <td class="log-row__time">
                 <span class="log-row__ago">{{ timeAgo(entry.timestamp) }}</span>
                 <span class="log-row__date">{{ formatDate(entry.timestamp) }} · {{ formatTime(entry.timestamp) }}</span>
@@ -63,7 +64,7 @@
                 <span class="type-badge type-badge--{{ entry.orgType }}">{{ typeLabel(entry.orgType) }}</span>
               </td>
               <td>
-                <span class="action-badge action-badge--{{ entry.action }}">
+                <span class="action-badge action-badge--{{ actionTone(entry.action) }}">
                   <span class="action-badge__dot"></span>
                   {{ actionLabel(entry.action) }}
                 </span>
@@ -74,6 +75,19 @@
           }
         </tbody>
       </table>
+
+      @if (cursor()) {
+        <div class="log-panel__more">
+          <button class="load-more" type="button" [disabled]="loading()" (click)="loadMore()">
+            {{ loading() ? 'Loading…' : 'Load more events' }}
+          </button>
+        </div>
+      }
+    } @else if (loading()) {
+      <div class="empty-state">
+        <div class="empty-state__icon">⏳</div>
+        <p class="empty-state__title">Loading events…</p>
+      </div>
     } @else {
       <div class="empty-state">
         <div class="empty-state__icon">📋</div>

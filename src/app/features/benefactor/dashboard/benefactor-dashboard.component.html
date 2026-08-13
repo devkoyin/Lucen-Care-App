@@ -3,42 +3,20 @@
   <div class="ben-dashboard__topbar">
     <div>
       <h1 class="ben-dashboard__title">Welcome back, {{ displayName }}</h1>
-      <p class="ben-dashboard__sub">Your community activity and contribution impact</p>
+      <p class="ben-dashboard__sub">Your community activity at a glance</p>
     </div>
     <a class="ben-dashboard__cta" routerLink="/benefactor/community">+ New Post</a>
   </div>
 
+  <!-- Real counts from GET /community/stats. -->
   <div class="ben-dashboard__stats">
-    @for (s of stats; track s.label) {
-      <div class="ben-stat" [class.ben-stat--accent]="s.accent">
+    @for (s of stats(); track s.label) {
+      <div class="ben-stat">
         <span class="ben-stat__icon">{{ s.icon }}</span>
         <span class="ben-stat__value">{{ s.value }}</span>
         <span class="ben-stat__label">{{ s.label }}</span>
-        @if (s.trend) { <span class="ben-stat__trend">{{ s.trend }}</span> }
       </div>
     }
-  </div>
-
-  <div class="impact-strip">
-    <div class="impact-strip__item">
-      <span class="impact-strip__value">{{ impact.totalContributed }}</span>
-      <span class="impact-strip__label">Total contributed</span>
-    </div>
-    <div class="impact-strip__divider"></div>
-    <div class="impact-strip__item">
-      <span class="impact-strip__value">{{ impact.patientsReached }}</span>
-      <span class="impact-strip__label">Patients reached</span>
-    </div>
-    <div class="impact-strip__divider"></div>
-    <div class="impact-strip__item">
-      <span class="impact-strip__value">{{ impact.programsSupported }}</span>
-      <span class="impact-strip__label">Programmes supported</span>
-    </div>
-    <div class="impact-strip__divider"></div>
-    <div class="impact-strip__item">
-      <span class="impact-strip__value">{{ impact.communitiesJoined }}</span>
-      <span class="impact-strip__label">Communities joined</span>
-    </div>
   </div>
 
   <nav class="ben-nav">
@@ -47,18 +25,6 @@
        routerLinkActive="ben-nav__tab--active"
        [routerLinkActiveOptions]="{ exact: true }">
       💬 Community Threads
-    </a>
-    <a class="ben-nav__tab"
-       routerLink="/benefactor/dashboard/impact"
-       routerLinkActive="ben-nav__tab--active"
-       [routerLinkActiveOptions]="{ exact: true }">
-      ✨ Your Impact
-    </a>
-    <a class="ben-nav__tab"
-       routerLink="/benefactor/dashboard/contributions"
-       routerLinkActive="ben-nav__tab--active"
-       [routerLinkActiveOptions]="{ exact: true }">
-      💰 My Contributions
     </a>
     <a class="ben-nav__tab"
        routerLink="/benefactor/dashboard/posts"

@@ -32,7 +32,11 @@
   <div class="appts-stats">
     @for (s of stats(); track s.label) {
       <div class="stat-card">
-        <span class="stat-card__icon" aria-hidden="true">{{ s.icon }}</span>
+        @if (s.liveIcon === 'calendar') {
+          <lc-calendar-icon class="stat-card__icon" [size]="22" />
+        } @else {
+          <span class="stat-card__icon" aria-hidden="true">{{ s.icon }}</span>
+        }
         <span class="stat-card__value">{{ s.value }}</span>
         <span class="stat-card__label">{{ s.label }}</span>
       </div>
@@ -43,10 +47,10 @@
   <div class="widget">
     <div class="widget__header">
       <span class="widget__title">Upcoming</span>
-      <span class="widget__count">{{ service.upcoming().length }} scheduled</span>
+      <span class="widget__count">{{ upcoming().length }} scheduled</span>
     </div>
     <div class="widget__body">
-      @for (appt of service.upcoming(); track appt.id) {
+      @for (appt of upcoming(); track appt.id) {
         <div class="appt-card">
 
           <!-- Date badge -->
@@ -83,19 +87,21 @@
               <span class="appt-card__time">{{ appt.time }}</span>
               <span class="appt-card__duration">{{ appt.duration }}</span>
             </div>
-            <div class="appt-card__actions">
-              <button class="appt-action-btn appt-action-btn--ghost" type="button" (click)="reschedulingAppt.set(appt)">Reschedule</button>
-              <button class="appt-action-btn appt-action-btn--danger" type="button">Cancel</button>
-            </div>
+            @if (appt.status !== 'cancelled') {
+              <div class="appt-card__actions">
+                <button class="appt-action-btn appt-action-btn--ghost" type="button" (click)="reschedulingAppt.set(appt)">Reschedule</button>
+                <button class="appt-action-btn appt-action-btn--danger" type="button" (click)="cancellingAppt.set(appt)">Cancel</button>
+              </div>
+            }
           </div>
 
         </div>
       } @empty {
         <div class="appts-empty">
-          <span class="appts-empty__icon">📅</span>
+          <lc-calendar-icon class="appts-empty__icon" [size]="36" [muted]="true" />
           <p class="appts-empty__text">No upcoming appointments</p>
           <button class="appts-primary-btn" type="button" (click)="showModal.set(true)">
-            Book your first appointment
+            {{ hasAnyAppointments() ? 'Book another appointment' : 'Book your first appointment' }}
           </button>
         </div>
       }
@@ -109,7 +115,7 @@
       <span class="widget__count">Last 30 days</span>
     </div>
     <div class="widget__body">
-      @for (appt of service.past(); track appt.id) {
+      @for (appt of past(); track appt.id) {
         <div class="past-appt-row">
           <div class="past-appt-row__date">
             <span class="past-appt-row__daynum">{{ appt.dayNum }}</span>
@@ -119,10 +125,15 @@
           <div class="past-appt-row__info">
             <span class="past-appt-row__provider">{{ appt.provider }}</span>
             <span class="past-appt-row__meta">{{ appt.specialty }} &middot; {{ appt.time }}</span>
+            @if (appt.note && expandedNoteId() === appt.id) {
+              <span class="past-appt-row__note">💡 {{ appt.note }}</span>
+            }
           </div>
           <span class="appt-badge appt-badge--{{ appt.status }}">{{ statusLabel(appt.status) }}</span>
-          @if (appt.status === 'completed') {
-            <button class="appt-action-btn appt-action-btn--ghost" type="button">View notes</button>
+          @if (appt.status === 'completed' && appt.note) {
+            <button class="appt-action-btn appt-action-btn--ghost" type="button" (click)="toggleNotes(appt.id)">
+              {{ expandedNoteId() === appt.id ? 'Hide notes' : 'View notes' }}
+            </button>
           }
         </div>
       }
@@ -133,12 +144,26 @@
 
 <!-- ── Book appointment modal ──────────────────────────────────── -->
 @if (showModal()) {
-  <lc-book-appointment-modal (close)="showModal.set(false)" />
+  <lc-book-appointment-modal (close)="showModal.set(false); reload()" />
 }
 
 <!-- ── Reschedule modal ────────────────────────────────────────── -->
 @if (reschedulingAppt()) {
   <lc-reschedule-modal
     [appointment]="reschedulingAppt()!"
-    (close)="reschedulingAppt.set(null)" />
+    (close)="reschedulingAppt.set(null); reload()" />
+}
+
+<!-- ── Cancel appointment confirmation ─────────────────────────── -->
+@if (cancellingAppt()) {
+  <lc-confirm-modal
+    title="Cancel Appointment"
+    message="Are you sure you want to cancel this appointment? This action cannot be undone."
+    confirmLabel="Yes, Cancel Appointment"
+    cancelLabel="Back"
+    [danger]="true"
+    [submitting]="cancelSubmitting()"
+    [error]="cancelError()"
+    (confirm)="confirmCancelAppointment()"
+    (cancel)="dismissCancelModal()" />
 }

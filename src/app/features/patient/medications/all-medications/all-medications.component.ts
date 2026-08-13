@@ -1,5 +1,6 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { Medication, RefillUrgency, SEED_MEDICATIONS } from '../medications.data';
+import { Medication, RefillUrgency } from '../../../../core/medications/medications.models';
+import { MedicationsService } from '../../../../core/medications/medications.service';
 import { AddMedicationModalComponent } from '../add-medication-modal.component';
 import { MedicationNotificationService } from '../../../../core/notifications/medication-notification.service';
 
@@ -11,14 +12,38 @@ import { MedicationNotificationService } from '../../../../core/notifications/me
   styleUrl: './all-medications.component.scss',
 })
 export class AllMedicationsComponent implements OnInit {
+  private readonly medicationsService = inject(MedicationsService);
   private readonly notifService = inject(MedicationNotificationService);
 
   readonly showAddMed  = signal(false);
   readonly editingMed  = signal<Medication | null>(null);
-  readonly medications = signal<Medication[]>(SEED_MEDICATIONS);
+  readonly medications = signal<Medication[]>([]);
+  readonly loading     = signal(true);
+  readonly loadError   = signal(false);
 
   ngOnInit(): void {
-    this.notifService.register(this.medications());
+    this.loadMedications();
+    this.notifService.register();
+  }
+
+  /** Distinguishes "no medications yet" from "the request failed" in the template. */
+  private loadMedications(): void {
+    this.loading.set(true);
+    this.medicationsService.getMedications().subscribe({
+      next: meds => {
+        this.medications.set(meds);
+        this.loadError.set(false);
+        this.loading.set(false);
+      },
+      error: () => {
+        this.loadError.set(true);
+        this.loading.set(false);
+      },
+    });
+  }
+
+  retry(): void {
+    this.loadMedications();
   }
 
   openAdd(): void {
@@ -36,18 +61,19 @@ export class AllMedicationsComponent implements OnInit {
     this.editingMed.set(null);
   }
 
-  saveMedication(med: Medication): void {
-    this.medications.update(list => {
-      const idx = list.findIndex(m => m.id === med.id);
-      return idx >= 0
-        ? list.map(m => m.id === med.id ? med : m)
-        : [med, ...list];
-    });
-    this.notifService.register(this.medications());
+  /**
+   * The modal owns the request and only emits this once the API has confirmed it,
+   * so there is no error path to handle here — just refresh what the write changed.
+   */
+  onSaved(): void {
+    this.loadMedications();
+    this.medicationsService.refreshStats();
+    this.notifService.register();
   }
 
   pillPercent(med: Medication): number {
-    return Math.round((med.pillsRemaining / med.pillsTotal) * 100);
+    if (!med.pillsTotal) return 0;
+    return Math.min(100, Math.round((med.pillsRemaining / med.pillsTotal) * 100));
   }
 
   urgencyClass(u: RefillUrgency): string {

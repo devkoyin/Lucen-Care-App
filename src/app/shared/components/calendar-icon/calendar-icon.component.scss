@@ -1,0 +1,36 @@
+:host {
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+.calendar-icon {
+  position: relative;
+  border-radius: 5px;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  transition: opacity 0.15s;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 27%;
+    min-height: 4px;
+    background: #DC2626;
+  }
+
+  &--muted { opacity: 0.4; }
+}
+
+.calendar-icon__day {
+  font-weight: var(--font-extrabold);
+  line-height: 1;
+  color: var(--color-text);
+  padding-bottom: 8%;
+}

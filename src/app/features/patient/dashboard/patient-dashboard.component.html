@@ -3,7 +3,7 @@
   <!-- Header -->
   <div class="dash-header">
     <div>
-      <h1 class="dash-header__greeting">Good morning, {{ greeting }}</h1>
+      <h1 class="dash-header__greeting">Good day, {{ greeting }}</h1>
       <p class="dash-header__date">{{ today }}</p>
     </div>
   </div>
@@ -12,7 +12,11 @@
   <div class="quick-actions">
     @for (action of quickActions; track action.label) {
       <a class="quick-action" [routerLink]="action.route">
-        <span class="quick-action__icon" aria-hidden="true">{{ action.icon }}</span>
+        @if (action.liveIcon === 'calendar') {
+          <lc-calendar-icon class="quick-action__icon" [size]="24" />
+        } @else {
+          <span class="quick-action__icon" aria-hidden="true">{{ action.icon }}</span>
+        }
         <span class="quick-action__label">{{ action.label }}</span>
       </a>
     }
@@ -26,16 +30,16 @@
       <div class="widget__header">
         <span class="widget__title">Upcoming Appointments</span>
         <div class="widget__header-right">
-          @if (nextUrgency() === 'today' || nextUrgency() === 'tomorrow') {
-            <span class="dash-reminder-badge dash-reminder-badge--{{ nextUrgency() }}">
-              {{ nextUrgency() === 'today' ? 'Today!' : 'Tomorrow' }}
+          @if (nextUrgency === 'today' || nextUrgency === 'tomorrow') {
+            <span class="dash-reminder-badge dash-reminder-badge--{{ nextUrgency }}">
+              {{ nextUrgency === 'today' ? 'Today!' : 'Tomorrow' }}
             </span>
           }
           <a class="widget__link" routerLink="/patient/appointments">View all</a>
         </div>
       </div>
       <div class="widget__body">
-        @for (appt of upcomingPreview(); track appt.id) {
+        @for (appt of upcomingPreview; track appt.id) {
           <div class="appt-item">
             <div class="appt-item__date">
               <span class="appt-item__day">{{ appt.dayNum }}</span>
@@ -61,7 +65,7 @@
         <a class="widget__link" routerLink="/patient/medications">View all</a>
       </div>
       <div class="widget__body">
-        @for (med of medications; track med.name) {
+        @for (med of medications(); track med.name) {
           <div class="med-item">
             <div class="med-item__info">
               <span class="med-item__name">{{ med.name }}</span>
@@ -95,7 +99,7 @@
       <div class="nudge">
         <span class="nudge__icon" aria-hidden="true">💰</span>
         <div class="nudge__text">
-          <span class="nudge__title">{{ fundingMatches }} new funding matches</span>
+          <span class="nudge__title">{{ fundingMatches() }} new funding matches</span>
           <span class="nudge__desc">NGO programs that match your health profile are now available.</span>
         </div>
         <a class="nudge__btn" routerLink="/patient/funding">View matches</a>

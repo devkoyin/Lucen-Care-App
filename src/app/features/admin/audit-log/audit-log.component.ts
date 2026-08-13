@@ -1,7 +1,18 @@
-import { Component, inject, signal, computed } from '@angular/core';
-import { ApplicationsService, AuditEntry, AuditAction, AuditSubjectType } from '../../../core/applications/applications.service';
+import { Component, OnInit, inject, signal } from '@angular/core';
+import { ApplicationsService, AuditEntry } from '../../../core/applications/applications.service';
+import {
+  auditActionLabel,
+  auditActionTone,
+  auditDate,
+  auditSubjectLabel,
+  auditTime,
+  auditTimeAgo,
+  AuditAction,
+  AuditSubjectType,
+} from '../../../core/applications/audit-labels';
 
-type FilterTab = 'all' | AuditAction;
+/** Only the three review actions get their own tab; the rest live under "All". */
+type FilterTab = 'all' | 'submitted' | 'approved' | 'rejected';
 
 @Component({
   selector: 'lc-audit-log',
@@ -9,8 +20,12 @@ type FilterTab = 'all' | AuditAction;
   templateUrl: './audit-log.component.html',
   styleUrl: './audit-log.component.scss',
 })
-export class AuditLogComponent {
+export class AuditLogComponent implements OnInit {
   private readonly appsService = inject(ApplicationsService);
+
+  ngOnInit(): void {
+    this.appsService.loadAuditLog().subscribe({ error: () => {} });
+  }
 
   readonly tabs: { id: FilterTab; label: string }[] = [
     { id: 'all',       label: 'All Events' },
@@ -21,6 +36,8 @@ export class AuditLogComponent {
 
   readonly activeTab = signal<FilterTab>('all');
   readonly search    = signal('');
+  readonly loading   = this.appsService.auditLoading;
+  readonly cursor    = this.appsService.auditCursor;
 
   get filtered(): AuditEntry[] {
     const tab    = this.activeTab();
@@ -39,6 +56,11 @@ export class AuditLogComponent {
     return entries;
   }
 
+  /**
+   * Counts are over the rows loaded so far, not the whole table — they can only be
+   * computed from rows we hold, which is also why the tabs filter client-side rather
+   * than re-querying with the API's `action` param.
+   */
   countFor(tab: FilterTab): number {
     const all = this.appsService.auditLog();
     return tab === 'all' ? all.length : all.filter(e => e.action === tab).length;
@@ -46,38 +68,16 @@ export class AuditLogComponent {
 
   setTab(tab: FilterTab): void { this.activeTab.set(tab); }
 
-  actionLabel(action: AuditAction): string {
-    return { submitted: 'Submitted', approved: 'Approved', rejected: 'Rejected' }[action];
+  loadMore(): void {
+    const cursor = this.cursor();
+    if (!cursor || this.loading()) return;
+    this.appsService.loadAuditLog({ cursor }).subscribe({ error: () => {} });
   }
 
-  typeLabel(type: AuditSubjectType): string {
-    if (type === 'ngo') return 'NGO';
-    if (type === 'hmo') return 'HMO';
-    if (type === 'benefactor') return 'Benefactor';
-    return 'Professional';
-  }
-
-  formatDate(iso: string): string {
-    return new Date(iso).toLocaleDateString('en-GB', {
-      day: 'numeric', month: 'short', year: 'numeric',
-    });
-  }
-
-  formatTime(iso: string): string {
-    return new Date(iso).toLocaleTimeString('en-GB', {
-      hour: '2-digit', minute: '2-digit',
-    });
-  }
-
-  timeAgo(iso: string): string {
-    const diff = Date.now() - new Date(iso).getTime();
-    const mins  = Math.floor(diff / 60000);
-    const hours = Math.floor(diff / 3600000);
-    const days  = Math.floor(diff / 86400000);
-    if (mins < 1)   return 'Just now';
-    if (mins < 60)  return `${mins}m ago`;
-    if (hours < 24) return `${hours}h ago`;
-    if (days < 7)   return `${days}d ago`;
-    return this.formatDate(iso);
-  }
+  actionLabel(action: AuditAction): string { return auditActionLabel(action); }
+  actionTone(action: AuditAction): string { return auditActionTone(action); }
+  typeLabel(type: AuditSubjectType): string { return auditSubjectLabel(type); }
+  formatDate(iso: string): string { return auditDate(iso); }
+  formatTime(iso: string): string { return auditTime(iso); }
+  timeAgo(iso: string): string { return auditTimeAgo(iso); }
 }
