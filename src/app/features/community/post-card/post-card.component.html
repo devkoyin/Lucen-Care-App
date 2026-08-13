@@ -1,0 +1,77 @@
+<article class="post-card" [class.post-card--hidden]="!post().visibleToOthers">
+
+  <div class="post-card__meta">
+    <span class="post-card__avatar" aria-hidden="true">{{ post().author.initial }}</span>
+    <div class="post-card__author-info">
+      <!-- Rendered exactly as the server sent it. Patients arrive already
+           pseudonymised ("Amaka O."); the client never builds a name. -->
+      <span class="post-card__author">{{ post().author.displayName }}</span>
+      <span class="post-card__time">{{ when() }}</span>
+      @if (post().author.badge === 'verified-professional') {
+        <span class="post-card__pro-badge" [attr.title]="proTitle()">✓ Verified Health Professional</span>
+      }
+      @if (post().author.badge === 'verified-benefactor') {
+        <span class="post-card__benefactor-badge" title="Verified Benefactor">★ Verified Benefactor</span>
+      }
+    </div>
+
+    @if (showCommunityBadge()) {
+      <a
+        class="post-card__group-badge"
+        [routerLink]="communityLink()"
+        [style.background]="(post().communityAccent || '#0EA589') + '1a'"
+        [style.color]="post().communityAccent || '#0EA589'"
+        [style.border-color]="(post().communityAccent || '#0EA589') + '33'">
+        {{ post().communityName }}
+      </a>
+    }
+
+    <button class="post-card__more" type="button" aria-label="Report this post" (click)="report.emit(post())">⋯</button>
+  </div>
+
+  <!-- The author's own copy of a removed post. Silent removal teaches nobody
+       anything and generates support load, so they are told, and told why. -->
+  @if (!post().visibleToOthers) {
+    <p class="post-card__removed" role="status">
+      <strong>Removed by a moderator.</strong>
+      Only you can see this.
+      @if (post().hiddenReason) { <span>Reason: {{ post().hiddenReason }}</span> }
+    </p>
+  }
+
+  <a class="post-card__body" [routerLink]="threadLink()">
+    @if (post().title) {
+      <h3 class="post-card__title">{{ post().title }}</h3>
+    }
+    <p class="post-card__excerpt">{{ post().body }}</p>
+  </a>
+
+  @if (post().tags.length) {
+    <div class="post-card__tags">
+      @for (tag of post().tags; track tag) {
+        <span class="post-tag">#{{ tag }}</span>
+      }
+    </div>
+  }
+
+  <div class="post-card__actions">
+    <button
+      class="post-action-btn"
+      [class.post-action-btn--liked]="post().reactedByMe"
+      type="button"
+      [disabled]="reactionPending()"
+      (click)="react.emit(post())"
+      [attr.aria-label]="post().reactedByMe ? 'Remove your helpful mark' : 'Mark this helpful'">
+      <span aria-hidden="true">{{ post().reactedByMe ? '❤️' : '🤍' }}</span>
+      <span>{{ post().reactionCount }}</span>
+    </button>
+
+    <!-- Was a button with no (click) at all: the count was decorative and the
+         thread it counted did not exist. -->
+    <a class="post-action-btn" [routerLink]="threadLink()" aria-label="Read the replies">
+      <span aria-hidden="true">💬</span>
+      <span>{{ post().commentCount }}</span>
+    </a>
+  </div>
+
+</article>

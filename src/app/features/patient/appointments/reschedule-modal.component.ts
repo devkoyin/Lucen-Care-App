@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output, inject, signal } from '
 import { FormsModule, NgForm } from '@angular/forms';
 import { AppointmentsService } from '../../../core/appointments/appointments.service';
 import { Appointment } from '../../../core/appointments/appointments.models';
-import { ColorSelectComponent, ColorSelectOption } from './color-select.component';
+import { ColorSelectComponent, ColorSelectOption } from '../../../shared/components/color-select/color-select.component';
 
 function timeToInput(displayTime: string): string {
   const [time, ampm] = displayTime.split(' ');

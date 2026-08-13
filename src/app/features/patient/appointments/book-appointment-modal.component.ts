@@ -3,7 +3,7 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { AppointmentsService } from '../../../core/appointments/appointments.service';
 import { ApptType } from '../../../core/appointments/appointments.models';
 import { SpecialtySelectComponent } from './specialty-select.component';
-import { ColorSelectComponent, ColorSelectOption } from './color-select.component';
+import { ColorSelectComponent, ColorSelectOption } from '../../../shared/components/color-select/color-select.component';
 
 @Component({
   selector: 'lc-book-appointment-modal',

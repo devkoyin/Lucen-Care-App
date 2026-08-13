@@ -1,0 +1,157 @@
+<div class="approvals">
+
+  <!-- Header -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-header__title">Community Reports</h1>
+      <p class="page-header__sub">
+        Content members have flagged. Removing it hides it from everyone but its author,
+        who is told what was removed and why.
+      </p>
+    </div>
+  </div>
+
+  @if (actionError()) {
+    <p class="approvals-error" role="alert">{{ actionError() }}</p>
+  }
+
+  <!-- Filter tabs -->
+  <div class="filter-tabs">
+    @for (tab of tabs; track tab.id) {
+      <button
+        class="filter-tab"
+        [class.filter-tab--active]="activeTab() === tab.id"
+        (click)="setTab(tab.id)">
+        {{ tab.label }}
+        <span class="filter-tab__count">{{ countFor(tab.id) }}</span>
+      </button>
+    }
+  </div>
+
+  <div class="app-list">
+    @if (loading() && reports().length === 0) {
+      <div class="empty-state">Loading reports…</div>
+    } @else if (loadError()) {
+      <div class="empty-state">
+        Could not load the moderation queue.
+        <button class="btn-ghost" (click)="reload()">Retry</button>
+      </div>
+    }
+
+    @for (report of filtered(); track report.id) {
+      <div class="app-card" [class.app-card--expanded]="expandedId() === report.id">
+
+        <!-- Row summary -->
+        <div class="app-card__row" (click)="toggleExpand(report.id)">
+          <div class="app-card__main">
+            <span class="app-card__name">{{ reasonLabel(report.reason) }}</span>
+            <span class="app-card__meta">
+              {{ targetLabel(report) }} in {{ report.communityName }}
+              · by {{ report.targetAuthorDisplayName }}
+              @if (report.targetAuthorVerified) { <span class="verified-flag">✓ verified</span> }
+            </span>
+          </div>
+          <div class="app-card__meta-col">
+            <span class="app-card__reg">Reported by {{ report.reporterDisplayName }}</span>
+            <span class="app-card__date">{{ when(report.createdAt) }}</span>
+          </div>
+          <div class="app-card__docs-col">
+            <!-- Several people flagging the same thing is the signal a moderator
+                 most needs, and it is invisible if each report is just another row. -->
+            @if (report.openReportCount > 1) {
+              <span class="docs-badge docs-badge--incomplete">{{ report.openReportCount }} reports</span>
+            } @else if (report.targetHidden) {
+              <span class="docs-badge docs-badge--complete">Removed</span>
+            }
+          </div>
+          <span class="status-badge status-badge--{{ report.status }}">
+            {{ statusLabel(report.status) }}
+          </span>
+          <span class="app-card__chevron" [class.app-card__chevron--open]="expandedId() === report.id">›</span>
+        </div>
+
+        <!-- Expanded detail -->
+        @if (expandedId() === report.id) {
+          <div class="app-card__detail">
+
+            <div class="detail-grid">
+              <div class="detail-section">
+                <p class="detail-section__title">Reported {{ report.targetType }}</p>
+                <!-- A snapshot taken at report time, so this stays readable after
+                     removal — and so a moderator never has to leave the queue. -->
+                @if (report.targetTitle) {
+                  <p class="reported-title">{{ report.targetTitle }}</p>
+                }
+                <p class="reported-body">{{ report.targetBody }}</p>
+              </div>
+
+              <div class="detail-section">
+                <p class="detail-section__title">The report</p>
+                <dl class="detail-list">
+                  <dt>Reason</dt><dd>{{ reasonLabel(report.reason) }}</dd>
+                  <dt>Community</dt><dd>{{ report.communityName }}</dd>
+                  <dt>Author</dt><dd>{{ report.targetAuthorDisplayName }}</dd>
+                  <dt>Reported by</dt><dd>{{ report.reporterDisplayName }}</dd>
+                  <dt>Filed</dt><dd>{{ formatDate(report.createdAt) }}</dd>
+                  @if (report.reviewedAt) {
+                    <dt>Reviewed</dt><dd>{{ formatDate(report.reviewedAt) }}</dd>
+                  }
+                </dl>
+                @if (report.details) {
+                  <lc-reason-note>{{ report.details }}</lc-reason-note>
+                }
+              </div>
+            </div>
+
+            @if (report.status !== 'pending' && report.resolutionNote) {
+              <lc-reason-note>{{ report.resolutionNote }}</lc-reason-note>
+            }
+
+            @if (hidingId() === report.id) {
+              <div class="reject-form">
+                <label class="reject-form__label" for="note-{{ report.id }}">
+                  Why is this being removed?
+                </label>
+                <textarea
+                  id="note-{{ report.id }}"
+                  class="reject-form__textarea"
+                  rows="3"
+                  placeholder="The author reads this verbatim — say what breached the guidelines…"
+                  [value]="hideNote()"
+                  (input)="hideNote.set($any($event.target).value)">
+                </textarea>
+                <div class="reject-form__actions">
+                  <button class="btn-ghost" (click)="cancelHide()">Cancel</button>
+                  <button class="btn-danger" [disabled]="!hideNote().trim()" (click)="confirmHide(report.id)">
+                    Remove content
+                  </button>
+                </div>
+              </div>
+            }
+
+            @if (report.status === 'pending' && hidingId() !== report.id) {
+              <div class="app-card__actions">
+                <button class="btn-reject" (click)="startHide(report.id)">✕ Remove content</button>
+                <button class="btn-ghost" (click)="dismiss(report.id)">Dismiss report</button>
+              </div>
+              <p class="moderation-hint">
+                Removing closes every open report on this content. Dismissing closes only this one —
+                someone else may have flagged it for a different reason.
+              </p>
+            }
+
+          </div>
+        }
+      </div>
+    } @empty {
+      <div class="empty-state">
+        @if (activeTab() === 'pending') {
+          Nothing awaiting review.
+        } @else {
+          No reports in this view.
+        }
+      </div>
+    }
+  </div>
+
+</div>

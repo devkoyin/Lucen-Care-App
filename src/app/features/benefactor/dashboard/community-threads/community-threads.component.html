@@ -1,27 +1,13 @@
 <div class="threads-page">
   <div class="threads-page__header">
     <h2 class="threads-page__title">Active Community Threads</h2>
-    <p class="threads-page__sub">Conversations you're part of across your communities</p>
+    <p class="threads-page__sub">Recent conversations in the communities you have joined</p>
   </div>
 
-  <div class="thread-list">
-    @for (t of threads; track t.id) {
-      <div class="thread-card">
-        <div class="thread-card__top">
-          <span class="thread-card__community"
-                [style.color]="t.communityColor"
-                [style.border-color]="t.communityColor + '44'"
-                [style.background]="t.communityColor + '15'">
-            {{ t.community }}
-          </span>
-          <span class="thread-card__time">{{ t.timeAgo }}</span>
-        </div>
-        <p class="thread-card__title">{{ t.title }}</p>
-        <div class="thread-card__footer">
-          <span class="thread-card__replies">💬 {{ t.replies }} replies</span>
-          <button class="thread-card__join">View Thread</button>
-        </div>
-      </div>
-    }
-  </div>
+  <lc-post-summary-list
+    [posts]="threads()"
+    [loading]="loading()"
+    [loadError]="loadError()"
+    actionLabel="View thread"
+    emptyText="Join a community to see its conversations here." />
 </div>

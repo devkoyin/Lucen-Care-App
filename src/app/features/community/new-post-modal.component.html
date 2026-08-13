@@ -1,0 +1,105 @@
+<div class="npm-overlay" (click)="onOverlayClick($event)">
+  <div class="npm-card" role="dialog" aria-modal="true" aria-labelledby="npm-title">
+
+    <div class="npm-card__header">
+      <span class="npm-card__title" id="npm-title">New Post</span>
+      <button class="npm-card__close" type="button" (click)="close.emit()" aria-label="Close">&#x2715;</button>
+    </div>
+
+    <!-- Three distinct states, because "join a community first" is useless advice
+         when there are none to join, and worse still for someone who is not
+         allowed to create one. -->
+    @if (hasNowhereToPost()) {
+      <div class="npm-card__body">
+        <div class="npm-nowhere">
+
+          @if (anyCommunityExists()) {
+            <!-- Communities exist; this person has joined none. -->
+            <span class="npm-nowhere__icon" aria-hidden="true">🤝</span>
+            <p class="npm-nowhere__title">Join a community before posting</p>
+            <p class="npm-nowhere__sub">
+              Posts live inside a community, and you can only post where you are a member.
+              Pick one that fits what you are managing.
+            </p>
+            <a class="npm-save-btn" [routerLink]="groupsLink()" (click)="close.emit()">Browse communities</a>
+
+          } @else if (canCreate()) {
+            <!-- Nothing exists yet, and this person may found one. -->
+            <span class="npm-nowhere__icon" aria-hidden="true">🌱</span>
+            <p class="npm-nowhere__title">There are no communities yet</p>
+            <p class="npm-nowhere__sub">
+              Be the first. Create one for the condition you are managing, and your post
+              has somewhere to live.
+            </p>
+            <a class="npm-save-btn" [routerLink]="groupsLink()" (click)="close.emit()">Create the first community</a>
+
+          } @else {
+            <!-- Nothing exists, and only patients may found one. Say so plainly
+                 rather than offering an action that would 403. -->
+            <span class="npm-nowhere__icon" aria-hidden="true">🌱</span>
+            <p class="npm-nowhere__title">There are no communities yet</p>
+            <p class="npm-nowhere__sub">
+              Communities are started by patients. Once one exists you can join it and
+              share what you know.
+            </p>
+            <button class="npm-cancel-btn" type="button" (click)="close.emit()">Close</button>
+          }
+
+        </div>
+      </div>
+    } @else {
+      <form #f="ngForm" (ngSubmit)="submit(f)">
+        <div class="npm-card__body">
+
+          <div class="npm-field">
+            <label>Post in</label>
+            <lc-color-select
+              [options]="groupSelectOptions()"
+              [value]="selectedName()"
+              placeholder="Select a community…"
+              (valueChange)="selectedName.set($event)" />
+          </div>
+
+          <div class="npm-field">
+            <label for="npm-title-input">Title <span class="npm-field__optional">(optional)</span></label>
+            <input id="npm-title-input" type="text" name="title"
+                   [(ngModel)]="form.title"
+                   placeholder="What's on your mind?"
+                   maxlength="160">
+          </div>
+
+          <div class="npm-field">
+            <label for="npm-content">Your story</label>
+            <textarea id="npm-content" name="body"
+                      [(ngModel)]="form.body" required
+                      placeholder="Share your experience, question, or tip with the community…"
+                      maxlength="5000"
+                      rows="5"></textarea>
+          </div>
+
+          <div class="npm-field">
+            <label for="npm-tags">Tags <span class="npm-field__optional">(optional — comma separated)</span></label>
+            <input id="npm-tags" type="text" name="tagsRaw"
+                   [(ngModel)]="form.tagsRaw"
+                   placeholder="e.g. Metformin, BloodPressure, Tips">
+          </div>
+
+          <!-- Shown inline rather than closing the modal, so a rejected post does not
+               take everything the user typed with it. -->
+          @if (error()) {
+            <p class="npm-error" role="alert">{{ error() }}</p>
+          }
+
+        </div>
+
+        <div class="npm-card__footer">
+          <button type="button" class="npm-cancel-btn" (click)="close.emit()">Cancel</button>
+          <button type="submit" class="npm-save-btn" [disabled]="f.invalid || !selectedName() || submitting()">
+            {{ submitting() ? 'Posting…' : 'Post to Community' }}
+          </button>
+        </div>
+      </form>
+    }
+
+  </div>
+</div>

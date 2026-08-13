@@ -1,47 +1,18 @@
 <div class="threads-page">
   <div class="threads-page__header">
     <div>
-      <h2 class="threads-page__title">Patient Threads</h2>
-      <p class="threads-page__sub">Questions from patients that need a professional response</p>
+      <h2 class="threads-page__title">Unanswered Questions</h2>
+      <p class="threads-page__sub">Posts from the community nobody has replied to yet</p>
     </div>
-    @if (urgentCount() > 0) {
-      <span class="threads-page__urgent-badge">{{ urgentCount() }} urgent</span>
+    @if (threads().length > 0) {
+      <span class="threads-page__urgent-badge">{{ threads().length }} waiting</span>
     }
   </div>
 
-  <div class="filter-row">
-    <button class="filter-btn" [class.filter-btn--active]="filter() === 'all'" (click)="setFilter('all')">
-      All ({{ allThreads.length }})
-    </button>
-    <button class="filter-btn filter-btn--urgent" [class.filter-btn--active]="filter() === 'urgent'" (click)="setFilter('urgent')">
-      Urgent ({{ urgentCount() }})
-    </button>
-  </div>
-
-  <div class="thread-list">
-    @for (t of filtered(); track t.id) {
-      <div class="thread-card" [class.thread-card--urgent]="t.urgent">
-        <div class="thread-card__top">
-          <div class="thread-card__tags">
-            @if (t.urgent) {
-              <span class="thread-card__tag thread-card__tag--urgent">Urgent</span>
-            }
-            <span class="thread-card__tag">{{ t.tag }}</span>
-          </div>
-          <span class="thread-card__time">{{ t.timeAgo }}</span>
-        </div>
-        <p class="thread-card__title">{{ t.title }}</p>
-        <div class="thread-card__footer">
-          <span class="thread-card__community"
-                [style.color]="t.communityColor"
-                [style.border-color]="t.communityColor + '44'"
-                [style.background]="t.communityColor + '15'">
-            {{ t.community }}
-          </span>
-          <span class="thread-card__replies">{{ t.replies }} replies</span>
-          <button class="thread-card__reply-btn">Answer</button>
-        </div>
-      </div>
-    }
-  </div>
+  <lc-post-summary-list
+    [posts]="threads()"
+    [loading]="loading()"
+    [loadError]="loadError()"
+    actionLabel="Answer"
+    emptyText="Every question has an answer. Nothing waiting right now." />
 </div>

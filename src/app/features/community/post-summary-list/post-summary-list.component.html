@@ -1,0 +1,53 @@
+@if (loading()) {
+  <div class="summary-state">
+    <span class="summary-state__icon" aria-hidden="true">⏳</span>
+    <p class="summary-state__title">Loading…</p>
+  </div>
+} @else if (loadError()) {
+  <div class="summary-state">
+    <span class="summary-state__icon" aria-hidden="true">⚠️</span>
+    <p class="summary-state__title">Could not load these posts</p>
+  </div>
+} @else {
+  <div class="summary-list">
+    @for (row of rows(); track row.post.id) {
+      <div class="summary-card" [class.summary-card--removed]="showRemoved() && !row.post.visibleToOthers">
+        <div class="summary-card__top">
+          <div class="summary-card__tags">
+            <span class="summary-card__community"
+                  [style.color]="row.post.communityAccent || '#0EA589'"
+                  [style.border-color]="(row.post.communityAccent || '#0EA589') + '44'"
+                  [style.background]="(row.post.communityAccent || '#0EA589') + '15'">
+              {{ row.post.communityName }}
+            </span>
+            @for (tag of row.post.tags.slice(0, 2); track tag) {
+              <span class="summary-card__tag">{{ tag }}</span>
+            }
+          </div>
+          <span class="summary-card__time">{{ row.when }}</span>
+        </div>
+
+        <p class="summary-card__title">{{ row.post.title || row.post.body }}</p>
+
+        @if (showRemoved() && !row.post.visibleToOthers) {
+          <p class="summary-card__removed">
+            Removed by a moderator.
+            @if (row.post.hiddenReason) { {{ row.post.hiddenReason }} }
+          </p>
+        }
+
+        <div class="summary-card__footer">
+          <span class="summary-card__stat">❤️ {{ row.post.reactionCount }}</span>
+          <span class="summary-card__stat">💬 {{ row.post.commentCount }}</span>
+          <!-- Was a button with no handler on all four of these lists. -->
+          <a class="summary-card__btn" [routerLink]="row.link">{{ actionLabel() }}</a>
+        </div>
+      </div>
+    } @empty {
+      <div class="summary-state">
+        <span class="summary-state__icon" aria-hidden="true">🌿</span>
+        <p class="summary-state__title">{{ emptyText() }}</p>
+      </div>
+    }
+  </div>
+}

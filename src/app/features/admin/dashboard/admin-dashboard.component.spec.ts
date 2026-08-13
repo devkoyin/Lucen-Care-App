@@ -10,6 +10,7 @@ const AUDIT_URL = `${API}/admin/audit`;
 const PROF_URL = `${API}/admin/applications/professional`;
 const BEN_URL = `${API}/admin/applications/benefactor`;
 const PROGRAMS_URL = `${API}/admin/programs`;
+const REPORTS_URL = `${API}/admin/community/reports`;
 
 function auditRow(overrides: Record<string, unknown> = {}) {
   return {
@@ -75,13 +76,14 @@ describe('AdminDashboardComponent', () => {
 
   afterEach(() => http.verify());
 
-  /** Runs ngOnInit and answers all five requests it fires. */
+  /** Runs ngOnInit and answers all six requests it fires. */
   function init(opts: {
     orgs?: unknown[];
     audit?: unknown[];
     professional?: unknown[];
     benefactor?: unknown[];
     programs?: unknown[];
+    reports?: unknown[];
   } = {}) {
     fixture.detectChanges();
     http.expectOne(r => r.url === ORGS_URL).flush({ data: opts.orgs ?? [], traceId: 't' });
@@ -89,6 +91,7 @@ describe('AdminDashboardComponent', () => {
     http.expectOne(r => r.url === PROF_URL).flush({ data: opts.professional ?? [], traceId: 't' });
     http.expectOne(r => r.url === BEN_URL).flush({ data: opts.benefactor ?? [], traceId: 't' });
     http.expectOne(r => r.url === PROGRAMS_URL).flush({ data: opts.programs ?? [], traceId: 't' });
+    http.expectOne(r => r.url === REPORTS_URL).flush({ data: opts.reports ?? [], traceId: 't' });
     fixture.detectChanges();
   }
 
@@ -119,6 +122,7 @@ describe('AdminDashboardComponent', () => {
       http.expectOne(r => r.url === PROF_URL).flush({ data: [], traceId: 't' });
       http.expectOne(r => r.url === BEN_URL).flush({ data: [], traceId: 't' });
       http.expectOne(r => r.url === PROGRAMS_URL).flush({ data: [], traceId: 't' });
+      http.expectOne(r => r.url === REPORTS_URL).flush({ data: [], traceId: 't' });
     });
 
     // The mock could never be empty, so this state had no rendering at all.
@@ -183,11 +187,32 @@ describe('AdminDashboardComponent', () => {
       expect(byLabel.get('Pending Benefactors')).toBe(1);
     });
 
-    it('renders a card per queue, including programmes', () => {
+    it('renders a card per queue, including programmes and community reports', () => {
       init();
-      expect(component.stats.length).toBe(7);
-      expect(fixture.nativeElement.querySelectorAll('.stat-card').length).toBe(7);
+      expect(component.stats.length).toBe(8);
+      expect(fixture.nativeElement.querySelectorAll('.stat-card').length).toBe(8);
       expect(fixture.nativeElement.textContent).toContain('Pending Programmes');
+      expect(fixture.nativeElement.textContent).toContain('Community Reports');
+    });
+
+    // Reporting existed on the client with nowhere for a report to land; this tile
+    // is how an admin learns there is anything to look at.
+    it('counts community reports awaiting review', () => {
+      init({
+        reports: [
+          { id: 'R1', status: 'pending', targetType: 'post', targetId: 'P1', communityId: 'C1',
+            communityName: 'Diabetes Support', reason: 'spam', createdAt: new Date().toISOString(),
+            reporterDisplayName: 'Amaka O.', targetBody: 'x', targetAuthorDisplayName: 'Emeka O.',
+            targetAuthorVerified: false, targetHidden: false, openReportCount: 1 },
+          { id: 'R2', status: 'dismissed', targetType: 'post', targetId: 'P2', communityId: 'C1',
+            communityName: 'Diabetes Support', reason: 'spam', createdAt: new Date().toISOString(),
+            reporterDisplayName: 'Amaka O.', targetBody: 'y', targetAuthorDisplayName: 'Emeka O.',
+            targetAuthorVerified: false, targetHidden: false, openReportCount: 0 },
+        ],
+      });
+
+      const byLabel = new Map(component.stats.map(s => [s.label, s.value]));
+      expect(byLabel.get('Community Reports')).toBe(1);
     });
 
     // Programmes were the one reviewable thing with no admin surface at all.
@@ -218,12 +243,14 @@ describe('AdminDashboardComponent', () => {
       const ben = http.expectOne(r => r.url === BEN_URL);
       expect(ben.request.params.has('status')).toBeFalse();
       ben.flush({ data: [], traceId: 't' });
+
+      http.expectOne(r => r.url === REPORTS_URL).flush({ data: [], traceId: 't' });
     });
   });
 
   it('survives every request failing', () => {
     fixture.detectChanges();
-    for (const url of [ORGS_URL, AUDIT_URL, PROF_URL, BEN_URL, PROGRAMS_URL]) {
+    for (const url of [ORGS_URL, AUDIT_URL, PROF_URL, BEN_URL, PROGRAMS_URL, REPORTS_URL]) {
       http
         .expectOne(r => r.url === url)
         .flush({ message: 'boom' }, { status: 500, statusText: 'Server Error' });
