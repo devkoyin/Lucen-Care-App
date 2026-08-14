@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideRouter } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { BenefactorProfileComponent } from './benefactor-profile.component';
 import { AuthService } from '../../../core/auth/auth.service';
@@ -24,7 +25,8 @@ describe('BenefactorProfileComponent', () => {
     TestBed.resetTestingModule();
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, BenefactorProfileComponent],
-      providers: [{ provide: AuthService, useValue: authStub }],
+      // provideRouter: the page carries a back link to the settings landing.
+      providers: [provideRouter([]), { provide: AuthService, useValue: authStub }],
     });
     fixture = TestBed.createComponent(BenefactorProfileComponent);
     component = fixture.componentInstance;

@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { provideRouter } from '@angular/router';
 
 import { PatientConsentsComponent } from './consents.component';
 import { environment } from '../../../../environments/environment';
@@ -26,6 +27,8 @@ describe('PatientConsentsComponent', () => {
     TestBed.resetTestingModule();
     await TestBed.configureTestingModule({
       imports: [PatientConsentsComponent, HttpClientTestingModule],
+      // The page carries a back link to the settings landing, so RouterLink needs a router.
+      providers: [provideRouter([])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PatientConsentsComponent);

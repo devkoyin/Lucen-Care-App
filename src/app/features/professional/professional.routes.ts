@@ -1,6 +1,16 @@
 import { Routes } from '@angular/router';
 import { ProfessionalPortalComponent } from './professional-portal.component';
 import { verifiedGuard } from '../../core/auth/verified.guard';
+import { SettingsModule } from '../settings/settings.component';
+
+const SETTINGS_MODULES: SettingsModule[] = [
+  {
+    icon: '⚕️',
+    label: 'My Profile',
+    description: 'Your credentials, bio and verification status.',
+    route: '/professional/settings/profile',
+  },
+];
 
 export const PROFESSIONAL_ROUTES: Routes = [
   {
@@ -43,11 +53,27 @@ export const PROFESSIONAL_ROUTES: Routes = [
         loadChildren: () =>
           import('../community/community.routes').then(m => m.COMMUNITY_ROUTES),
       },
+      { path: 'profile', redirectTo: 'settings/profile', pathMatch: 'full' },
       {
-        path: 'profile',
+        // Guard sits on the parent so it covers the landing page and every module
+        // added under it later, not just the one child that exists today.
+        path: 'settings',
         canActivate: [verifiedGuard('professional', '/professional/pending')],
-        loadComponent: () =>
-          import('./profile/professional-profile.component').then(m => m.ProfessionalProfileComponent),
+        data: { label: 'Settings' },
+        children: [
+          {
+            path: '',
+            data: { modules: SETTINGS_MODULES },
+            loadComponent: () =>
+              import('../settings/settings.component').then(m => m.SettingsComponent),
+          },
+          {
+            path: 'profile',
+            data: { label: 'My Profile' },
+            loadComponent: () =>
+              import('./profile/professional-profile.component').then(m => m.ProfessionalProfileComponent),
+          },
+        ],
       },
     ],
   },

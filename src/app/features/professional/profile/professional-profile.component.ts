@@ -7,10 +7,12 @@ import {
   ProfessionalApplicationsService,
   ProfessionalApplication,
 } from '../../../core/applications/professional-applications.service';
+import { BackLinkComponent } from '../../../shared/components/back-link/back-link.component';
 
 @Component({
   selector: 'lc-professional-profile',
   standalone: true,
+  imports: [BackLinkComponent],
   templateUrl: './professional-profile.component.html',
   styleUrl: './professional-profile.component.scss',
 })

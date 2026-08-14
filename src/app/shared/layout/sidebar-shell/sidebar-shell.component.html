@@ -50,10 +50,18 @@
 
     <!-- Bottom -->
     <div class="sidebar__bottom">
-      <a class="nav-item" routerLink="./settings" aria-label="Settings" (click)="closeMenu()">
-        <span class="nav-item__icon" aria-hidden="true">⚙️</span>
-        <span class="nav-item__label">Settings</span>
-      </a>
+      @if (settingsRoute) {
+        <a
+          class="nav-item"
+          [routerLink]="settingsRoute"
+          routerLinkActive="nav-item--active"
+          aria-label="Settings"
+          (click)="closeMenu()"
+        >
+          <span class="nav-item__icon" aria-hidden="true">⚙️</span>
+          <span class="nav-item__label">Settings</span>
+        </a>
+      }
       <button class="nav-item nav-item--signout" type="button" aria-label="Sign out" (click)="signOut.emit(); closeMenu()">
         <span class="nav-item__icon" aria-hidden="true">🚪</span>
         <span class="nav-item__label">Sign out</span>

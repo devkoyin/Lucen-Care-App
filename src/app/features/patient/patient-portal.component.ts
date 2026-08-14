@@ -17,6 +17,7 @@ import { CommunityNavService } from '../community/community-nav.service';
       [userInitial]="userInitial"
       userRole="Patient & Caregiver"
       [navItems]="navItems"
+      settingsRoute="/patient/settings"
       (signOut)="handleSignOut()">
     </lc-sidebar-shell>
   `,
@@ -41,8 +42,8 @@ export class PatientPortalComponent {
     { icon: '🤖', label: 'AI Health Chat', route: '/patient/ai-chat' },
     { icon: '🤝', label: 'Community', route: '/patient/community' },
     { icon: '💰', label: 'Funding', route: '/patient/funding' },
-    { icon: '🔒', label: 'Privacy', route: '/patient/privacy' },
-    { icon: '👤', label: 'My Profile', route: '/patient/profile' },
+    // Privacy and My Profile are account settings, not care workflow — they live
+    // under Settings at the bottom of the sidebar.
   ];
 
   get userName(): string { return this.auth.user()?.name ?? 'User'; }

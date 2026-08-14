@@ -1,6 +1,16 @@
 import { Routes } from '@angular/router';
 import { BenefactorPortalComponent } from './benefactor-portal.component';
 import { verifiedGuard } from '../../core/auth/verified.guard';
+import { SettingsModule } from '../settings/settings.component';
+
+const SETTINGS_MODULES: SettingsModule[] = [
+  {
+    icon: '💛',
+    label: 'My Profile',
+    description: 'Your details and identity verification.',
+    route: '/benefactor/settings/profile',
+  },
+];
 
 export const BENEFACTOR_ROUTES: Routes = [
   {
@@ -43,11 +53,27 @@ export const BENEFACTOR_ROUTES: Routes = [
         loadChildren: () =>
           import('../community/community.routes').then(m => m.COMMUNITY_ROUTES),
       },
+      { path: 'profile', redirectTo: 'settings/profile', pathMatch: 'full' },
       {
-        path: 'profile',
+        // Guard sits on the parent so it covers the landing page and every module
+        // added under it later, not just the one child that exists today.
+        path: 'settings',
         canActivate: [verifiedGuard('benefactor', '/benefactor/pending')],
-        loadComponent: () =>
-          import('./profile/benefactor-profile.component').then(m => m.BenefactorProfileComponent),
+        data: { label: 'Settings' },
+        children: [
+          {
+            path: '',
+            data: { modules: SETTINGS_MODULES },
+            loadComponent: () =>
+              import('../settings/settings.component').then(m => m.SettingsComponent),
+          },
+          {
+            path: 'profile',
+            data: { label: 'My Profile' },
+            loadComponent: () =>
+              import('./profile/benefactor-profile.component').then(m => m.BenefactorProfileComponent),
+          },
+        ],
       },
     ],
   },

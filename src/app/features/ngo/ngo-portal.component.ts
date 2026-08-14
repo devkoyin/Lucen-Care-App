@@ -26,6 +26,7 @@ const NAV_ITEMS: NavItem[] = [
       [userInitial]="userInitial"
       userRole="NGO"
       [navItems]="navItems()"
+      [settingsRoute]="settingsRoute()"
       (signOut)="handleSignOut()">
     </lc-sidebar-shell>
   `,
@@ -42,6 +43,11 @@ export class NgoPortalComponent {
   // that verifiedGuard would bounce straight back to /ngo/pending.
   readonly navItems = computed<NavItem[]>(() =>
     this.me()?.status === 'active' ? NAV_ITEMS : [],
+  );
+
+  /** Empty hides the link — same reason the nav above is empty while pending. */
+  readonly settingsRoute = computed(() =>
+    this.me()?.status === 'active' ? '/ngo/settings' : '',
   );
 
   get userName(): string { return this.auth.user()?.name ?? 'User'; }

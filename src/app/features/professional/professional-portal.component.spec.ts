@@ -41,7 +41,22 @@ describe('ProfessionalPortalComponent', () => {
 
   it('exposes the full nav once the account is verified', () => {
     setup('active');
-    expect(component.navItems().map(i => i.label)).toEqual(['Dashboard', 'Community', 'My Profile']);
+    expect(component.navItems().map(i => i.label)).toEqual(['Dashboard', 'Community']);
+  });
+
+  it('links to settings once the account is verified', () => {
+    setup('active');
+    expect(component.settingsRoute()).toBe('/professional/settings');
+  });
+
+  // The settings route is verifiedGuard-ed, so offering the link while pending
+  // would bounce the user straight back to /professional/pending.
+  it('hides the settings link until the account is verified', () => {
+    setup('pending');
+    expect(component.settingsRoute()).toBe('');
+
+    setup(null);
+    expect(component.settingsRoute()).toBe('');
   });
 
   // A pending user would otherwise see links that verifiedGuard bounces straight back.

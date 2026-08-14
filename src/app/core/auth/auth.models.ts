@@ -125,6 +125,13 @@ export interface MeApplication {
   phone?: string;
 }
 
+/**
+ * `/auth/me` embeds the whole `organizations` row for NGO and HMO staff — the API
+ * serialises the entity with no response DTO — so every onboarding field below is
+ * already on the wire. Keys mirror the entity's property names exactly. Columns
+ * the client has no use for (verifiedBy, createdBy, the consent timestamps) are
+ * deliberately left undeclared.
+ */
 export interface MeOrganization {
   id: string;
   name: string;
@@ -132,6 +139,20 @@ export interface MeOrganization {
   status: 'pending_verification' | 'active' | 'suspended' | 'rejected';
   verifiedAt?: string;
   rejectionReason?: string;
+
+  // Shared onboarding
+  registrationNumber?: string;
+  contactEmail?: string;
+  contactPhone?: string;
+  website?: string;
+
+  // NGO onboarding
+  tin?: string;
+  scumlNumber?: string;
+  focusAreas?: string;
+  operatingRegions?: string;
+  headOfficeCountry?: string;
+  programDescription?: string;
 }
 
 /**

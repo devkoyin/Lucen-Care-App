@@ -1,0 +1,68 @@
+<div class="profile-page">
+  <lc-back-link />
+
+  @if (org(); as org) {
+    <div class="page-header">
+      <div>
+        <h1 class="page-header__title">Organisation Profile</h1>
+        <p class="page-header__sub">The details you submitted, as reviewed by Lucen Care</p>
+      </div>
+      <span class="status-badge status-badge--{{ org.status }}">{{ statusLabel() }}</span>
+    </div>
+
+    <div class="profile-card">
+      <p class="profile-card__title">Organisation</p>
+      <dl class="detail-list">
+        <dt>Name</dt><dd>{{ value(org.name) }}</dd>
+        <dt>Registration No.</dt><dd>{{ value(org.registrationNumber) }}</dd>
+        <dt>TIN</dt><dd>{{ value(org.tin) }}</dd>
+        <dt>SCUML Certificate No.</dt><dd>{{ value(org.scumlNumber) }}</dd>
+        <dt>Contact Email</dt><dd>{{ value(org.contactEmail) }}</dd>
+        <dt>Website</dt><dd>{{ value(org.website) }}</dd>
+      </dl>
+    </div>
+
+    <div class="profile-card">
+      <p class="profile-card__title">Geographic Scope</p>
+      <dl class="detail-list">
+        <dt>Operating Regions</dt><dd>{{ value(org.operatingRegions) }}</dd>
+        <dt>Head Office Country</dt><dd>{{ value(org.headOfficeCountry) }}</dd>
+      </dl>
+    </div>
+
+    <div class="profile-card">
+      <p class="profile-card__title">Focus &amp; Programme</p>
+      <dl class="detail-list">
+        <dt>Focus Areas</dt><dd>{{ value(org.focusAreas) }}</dd>
+      </dl>
+      <p class="profile-card__bio">{{ value(org.programDescription) }}</p>
+    </div>
+
+    <div class="profile-card">
+      <p class="profile-card__title">Verification</p>
+      <div class="doc-list">
+        @for (doc of docs(); track doc.label) {
+          <div class="doc-item">
+            <span class="doc-item__icon">{{ doc.submitted ? '✓' : '✕' }}</span>
+            <span class="doc-item__label" [class.doc-item__label--missing]="!doc.submitted">{{ doc.label }}</span>
+          </div>
+        }
+      </div>
+
+      @if (org.status === 'rejected' && org.rejectionReason) {
+        <lc-reason-note>{{ org.rejectionReason }}</lc-reason-note>
+      }
+    </div>
+
+    <p class="profile-page__note">
+      These details were verified at review and cannot be edited here. Contact support if any of them need to change.
+    </p>
+  } @else {
+    <div class="page-header">
+      <div>
+        <h1 class="page-header__title">Organisation Profile</h1>
+        <p class="page-header__sub">Loading your organisation details…</p>
+      </div>
+    </div>
+  }
+</div>

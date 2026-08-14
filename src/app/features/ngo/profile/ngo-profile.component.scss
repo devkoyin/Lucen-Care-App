@@ -1,0 +1,122 @@
+// Page chrome matches the professional and benefactor profile pages so all three
+// read as one screen per portal.
+.profile-page {
+  padding: var(--space-8) var(--space-10);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  max-width: 760px;
+
+  &__note {
+    color: var(--color-text-muted);
+    font-size: var(--text-xs);
+  }
+
+  @media (max-width: 640px) { padding: var(--space-6) var(--space-4); }
+}
+
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+
+  &__title {
+    color: var(--color-text);
+    font-size: var(--text-2xl);
+    font-weight: var(--font-extrabold);
+    letter-spacing: var(--tracking-tight);
+    margin-bottom: var(--space-1);
+  }
+  &__sub { color: var(--color-text-muted); font-size: var(--text-sm); }
+}
+
+.status-badge {
+  flex-shrink: 0;
+  font-size: var(--text-xs);
+  font-weight: var(--font-semibold);
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  background: var(--color-role-surface);
+  color: var(--color-role-accent);
+  border: 1px solid var(--color-role-border);
+
+  &--rejected,
+  &--suspended {
+    background: rgba(220, 38, 38, 0.08);
+    color: #DC2626;
+    border-color: rgba(220, 38, 38, 0.25);
+  }
+}
+
+.profile-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-5) var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+
+  &__title {
+    font-size: var(--text-xs);
+    font-weight: var(--font-semibold);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-text-muted);
+  }
+
+  &__bio {
+    color: var(--color-text-secondary);
+    font-size: var(--text-sm);
+    line-height: 1.6;
+    white-space: pre-wrap;
+  }
+}
+
+.detail-list {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-2) var(--space-4);
+  font-size: var(--text-sm);
+
+  dt { color: var(--color-text-muted); font-weight: var(--font-medium); }
+  dd { color: var(--color-text); font-weight: var(--font-semibold); overflow-wrap: anywhere; }
+}
+
+// Same treatment as the admin NGO approvals checklist — the organisation should
+// see its submission ticked off exactly the way a reviewer does.
+.doc-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.doc-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+
+  &__icon {
+    width: 18px;
+    height: 18px;
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: var(--font-bold);
+    flex-shrink: 0;
+    background: rgba(10, 110, 82, 0.12);
+    color: #065F46;
+  }
+
+  &:has(.doc-item__label--missing) .doc-item__icon {
+    background: rgba(220, 38, 38, 0.10);
+    color: #DC2626;
+  }
+
+  &__label { color: var(--color-text); }
+  &__label--missing { color: var(--color-text-muted); text-decoration: line-through; }
+}

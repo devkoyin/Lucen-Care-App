@@ -1,6 +1,22 @@
 import { Routes } from '@angular/router';
 import { PatientPortalComponent } from './patient-portal.component';
 import { roleGuard } from '../../core/auth/role.guard';
+import { SettingsModule } from '../settings/settings.component';
+
+const SETTINGS_MODULES: SettingsModule[] = [
+  {
+    icon: '🔒',
+    label: 'Privacy & Sharing',
+    description: 'Choose who can see your health information.',
+    route: '/patient/settings/privacy',
+  },
+  {
+    icon: '👤',
+    label: 'My Profile',
+    description: 'Your name, contact details and where you live.',
+    route: '/patient/settings/profile',
+  },
+];
 
 export const PATIENT_ROUTES: Routes = [
   {
@@ -14,21 +30,40 @@ export const PATIENT_ROUTES: Routes = [
         loadComponent: () =>
           import('./dashboard/patient-dashboard.component').then(m => m.PatientDashboardComponent),
       },
+      // Both pages moved under `settings`. Kept as redirects so bookmarks and any
+      // link still pointing at the old flat paths keep working.
+      { path: 'profile', redirectTo: 'settings/profile', pathMatch: 'full' },
+      { path: 'privacy', redirectTo: 'settings/privacy', pathMatch: 'full' },
       {
-        // Without an edit path, anything added to the patient record after someone
-        // onboarded — location, most recently — could never be filled in.
-        path: 'profile',
-        data: { label: 'My Profile' },
-        loadComponent: () =>
-          import('./profile/patient-profile.component').then(m => m.PatientProfileComponent),
-      },
-      {
-        // The only place a patient can change their mind about sharing. Without it
-        // a purpose declined at onboarding stayed declined forever.
-        path: 'privacy',
-        data: { label: 'Privacy' },
-        loadComponent: () =>
-          import('./consents/consents.component').then(m => m.PatientConsentsComponent),
+        // No component on the parent: children render straight into the portal's
+        // outlet, so the landing is a sibling of the pages it links to rather than
+        // a wrapper around them.
+        path: 'settings',
+        data: { label: 'Settings' },
+        children: [
+          {
+            path: '',
+            data: { modules: SETTINGS_MODULES },
+            loadComponent: () =>
+              import('../settings/settings.component').then(m => m.SettingsComponent),
+          },
+          {
+            // The only place a patient can change their mind about sharing. Without it
+            // a purpose declined at onboarding stayed declined forever.
+            path: 'privacy',
+            data: { label: 'Privacy' },
+            loadComponent: () =>
+              import('./consents/consents.component').then(m => m.PatientConsentsComponent),
+          },
+          {
+            // Without an edit path, anything added to the patient record after someone
+            // onboarded — location, most recently — could never be filled in.
+            path: 'profile',
+            data: { label: 'My Profile' },
+            loadComponent: () =>
+              import('./profile/patient-profile.component').then(m => m.PatientProfileComponent),
+          },
+        ],
       },
       {
         path: 'medications',

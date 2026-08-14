@@ -88,15 +88,16 @@ describe('CommunityGroupsService', () => {
     expect(svc.groups()[0].id).toBe('NEW');
   });
 
-  it('loadAll fetches the groups and the portal counters together', () => {
-    svc.loadAll().subscribe();
-    http.expectOne(r => r.url === COMMUNITIES).flush({ data: [group()], meta: {}, traceId: 't' });
-    http.expectOne(`${environment.apiUrl}/community/overview`).flush({
-      data: { memberCount: 5, postsThisWeek: 3, activeDiscussions: 1, communityCount: 2 },
-      traceId: 't',
-    });
+  // Renamed from loadAll(), which also fetched /community/overview. The portal
+  // strip now renders per-user numbers from /community/stats, so that second call
+  // is gone — http.verify() in afterEach is what proves it is not made.
+  it('loadGroups fetches the groups and clears the loading flag', () => {
+    svc.loadGroups().subscribe();
+    expect(svc.loading()).toBeTrue();
 
-    expect(svc.overview()?.memberCount).toBe(5);
+    http.expectOne(r => r.url === COMMUNITIES).flush({ data: [group()], meta: {}, traceId: 't' });
+
+    expect(svc.groups()[0].id).toBe('C1');
     expect(svc.loading()).toBeFalse();
   });
 });

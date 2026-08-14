@@ -9,6 +9,7 @@ import {
   PatientService,
 } from '../../../core/patients/patient.service';
 import { FormFieldComponent } from '../../../shared/components/form-field/form-field.component';
+import { BackLinkComponent } from '../../../shared/components/back-link/back-link.component';
 
 /**
  * The patient's own record, editable.
@@ -20,7 +21,7 @@ import { FormFieldComponent } from '../../../shared/components/form-field/form-f
 @Component({
   selector: 'lc-patient-profile',
   standalone: true,
-  imports: [ReactiveFormsModule, FormFieldComponent],
+  imports: [ReactiveFormsModule, FormFieldComponent, BackLinkComponent],
   templateUrl: './patient-profile.component.html',
   styleUrl: './patient-profile.component.scss',
 })

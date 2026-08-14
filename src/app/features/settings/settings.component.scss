@@ -1,0 +1,86 @@
+.settings-page {
+  padding: var(--space-8) var(--space-10);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  max-width: 760px;
+
+  &__title {
+    color: var(--color-text);
+    font-size: var(--text-xl);
+    font-weight: var(--font-extrabold);
+    letter-spacing: var(--tracking-tight);
+    margin-bottom: var(--space-1);
+  }
+
+  &__sub {
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+    max-width: 60ch;
+  }
+
+  @media (max-width: 640px) { padding: var(--space-6) var(--space-4); }
+}
+
+.settings-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+// The role accent comes from the portal's token file, so one rule styles the
+// row in every portal without a per-role override.
+.settings-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  transition: border-color 0.15s, background 0.15s, transform 0.2s, box-shadow 0.2s;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--color-role-border);
+    background: var(--color-role-surface);
+  }
+
+  &__icon {
+    flex-shrink: 0;
+    font-size: 22px;
+    line-height: 1;
+  }
+
+  &__text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    flex: 1;
+  }
+
+  &__label {
+    color: var(--color-text);
+    font-size: var(--text-base);
+    font-weight: var(--font-semibold);
+  }
+
+  &__desc {
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+  }
+
+  &__chevron {
+    flex-shrink: 0;
+    color: var(--color-text-muted);
+    font-size: var(--text-xl);
+    line-height: 1;
+  }
+
+  @media (max-width: 640px) {
+    padding: var(--space-4);
+    &__desc { font-size: var(--text-xs); }
+  }
+}
