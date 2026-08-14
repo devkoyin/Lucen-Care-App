@@ -1,0 +1,23 @@
+<div class="settings-page">
+
+  <div class="settings-page__header">
+    <h2 class="settings-page__title">Settings</h2>
+    <p class="settings-page__sub">
+      Manage your account and how your information is used.
+    </p>
+  </div>
+
+  <nav class="settings-list" aria-label="Settings">
+    @for (module of modules; track module.route) {
+      <a class="settings-row" [routerLink]="module.route">
+        <span class="settings-row__icon" aria-hidden="true">{{ module.icon }}</span>
+        <span class="settings-row__text">
+          <span class="settings-row__label">{{ module.label }}</span>
+          <span class="settings-row__desc">{{ module.description }}</span>
+        </span>
+        <span class="settings-row__chevron" aria-hidden="true">›</span>
+      </a>
+    }
+  </nav>
+
+</div>

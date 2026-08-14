@@ -10,7 +10,7 @@ import { CommunityNavService } from '../community/community-nav.service';
 const NAV_ITEMS: NavItem[] = [
   { icon: '🏠', label: 'Dashboard',  route: '/professional/dashboard' },
   { icon: '🤝', label: 'Community',  route: '/professional/community' },
-  { icon: '⚕️', label: 'My Profile', route: '/professional/profile' },
+  // My Profile moved under Settings at the bottom of the sidebar.
 ];
 
 @Component({
@@ -25,6 +25,7 @@ const NAV_ITEMS: NavItem[] = [
       [userInitial]="userInitial"
       userRole="Healthcare Professional"
       [navItems]="navItems()"
+      [settingsRoute]="settingsRoute()"
       (signOut)="handleSignOut()">
     </lc-sidebar-shell>
   `,
@@ -49,6 +50,11 @@ export class ProfessionalPortalComponent {
   // verifiedGuard would bounce straight back to the pending screen.
   readonly navItems = computed<NavItem[]>(() =>
     this.me()?.status === 'active' ? NAV_ITEMS : [],
+  );
+
+  /** Empty hides the link — same reason the nav above is empty while pending. */
+  readonly settingsRoute = computed(() =>
+    this.me()?.status === 'active' ? '/professional/settings' : '',
   );
 
   get userName(): string    { return this.auth.user()?.name ?? 'User'; }

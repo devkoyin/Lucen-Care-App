@@ -4,10 +4,12 @@ import { of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { AuthService } from '../../../core/auth/auth.service';
 import { BenefactorApplication } from '../../../core/applications/benefactor-applications.service';
+import { BackLinkComponent } from '../../../shared/components/back-link/back-link.component';
 
 @Component({
   selector: 'lc-benefactor-profile',
   standalone: true,
+  imports: [BackLinkComponent],
   templateUrl: './benefactor-profile.component.html',
   styleUrl: './benefactor-profile.component.scss',
 })

@@ -13,7 +13,7 @@
   @if (needsConsent()) {
     <div class="plans-consent-prompt" role="alert">
       <p class="plans-consent-prompt__text">{{ applyError() }}</p>
-      <a class="plans-consent-prompt__link" routerLink="/patient/privacy">Manage sharing settings →</a>
+      <a class="plans-consent-prompt__link" routerLink="/patient/settings/privacy">Manage sharing settings →</a>
     </div>
   } @else if (applyError()) {
     <p class="plans-page__error" role="alert">{{ applyError() }}</p>

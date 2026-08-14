@@ -24,6 +24,12 @@ export class SidebarShellComponent {
   @Input() userInitial = '';
   @Input() userRole = '';
   @Input() navItems: NavItem[] = [];
+  /**
+   * Empty hides the link entirely. A portal with no settings modules — or a user
+   * whose account is not yet verified — would otherwise be offered a link that
+   * resolves nowhere, or that verifiedGuard bounces straight back.
+   */
+  @Input() settingsRoute = '';
   @Output() signOut = new EventEmitter<void>();
 
   readonly menuOpen = signal(false);

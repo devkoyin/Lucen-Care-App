@@ -16,6 +16,7 @@ import {
 } from '../../../core/consents/consents.models';
 import { BadgeComponent } from '../../../shared/components/badge/badge.component';
 import { ConfirmModalComponent } from '../../../shared/components/modal/confirm-modal.component';
+import { BackLinkComponent } from '../../../shared/components/back-link/back-link.component';
 
 /** Every purpose is listed, whether or not the patient has a grant row for it. */
 const ALL_PURPOSES: ConsentPurpose[] = ['ngo_funding', 'clinical_research_recruitment', 'hmo_care'];
@@ -36,7 +37,7 @@ interface ConsentRow {
 @Component({
   selector: 'lc-patient-consents',
   standalone: true,
-  imports: [BadgeComponent, ConfirmModalComponent],
+  imports: [BadgeComponent, ConfirmModalComponent, BackLinkComponent],
   templateUrl: './consents.component.html',
   styleUrl: './consents.component.scss',
 })

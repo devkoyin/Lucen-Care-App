@@ -1,0 +1,22 @@
+.back-link {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  transition: color 0.15s;
+
+  &:hover {
+    color: var(--color-role-accent);
+
+    .back-link__arrow { transform: translateX(-2px); }
+  }
+
+  &__arrow {
+    font-size: var(--text-base);
+    line-height: 1;
+    transition: transform 0.15s;
+  }
+}

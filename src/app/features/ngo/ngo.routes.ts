@@ -2,6 +2,16 @@ import { Routes } from '@angular/router';
 import { NgoPortalComponent } from './ngo-portal.component';
 import { roleGuard } from '../../core/auth/role.guard';
 import { verifiedGuard } from '../../core/auth/verified.guard';
+import { SettingsModule } from '../settings/settings.component';
+
+const SETTINGS_MODULES: SettingsModule[] = [
+  {
+    icon: '🏢',
+    label: 'Organisation Profile',
+    description: 'Your registration details, focus areas and verification status.',
+    route: '/ngo/settings/profile',
+  },
+];
 
 export const NGO_ROUTES: Routes = [
   {
@@ -56,6 +66,29 @@ export const NGO_ROUTES: Routes = [
         canActivate: [verifiedGuard('ngo', '/ngo/pending')],
         loadComponent: () =>
           import('./notifications/notifications.component').then(m => m.NotificationsComponent),
+      },
+      {
+        // Guard sits on the parent so it covers the landing page and every module
+        // added under it later, not just the one child that exists today.
+        path: 'settings',
+        canActivate: [verifiedGuard('ngo', '/ngo/pending')],
+        data: { label: 'Settings' },
+        children: [
+          {
+            path: '',
+            data: { modules: SETTINGS_MODULES },
+            loadComponent: () =>
+              import('../settings/settings.component').then(m => m.SettingsComponent),
+          },
+          {
+            // Nine fields are collected at onboarding and were never shown back to
+            // the organisation afterwards. /auth/me already carries all of them.
+            path: 'profile',
+            data: { label: 'Organisation Profile' },
+            loadComponent: () =>
+              import('./profile/ngo-profile.component').then(m => m.NgoProfileComponent),
+          },
+        ],
       },
       {
         path: 'pending',
