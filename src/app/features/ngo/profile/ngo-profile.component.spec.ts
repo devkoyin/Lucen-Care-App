@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { of, throwError } from 'rxjs';
 
 import { NgoProfileComponent } from './ngo-profile.component';
@@ -36,7 +37,8 @@ describe('NgoProfileComponent', () => {
     TestBed.resetTestingModule();
     TestBed.configureTestingModule({
       imports: [NgoProfileComponent],
-      providers: [{ provide: AuthService, useValue: authStub }],
+      // provideRouter: the page carries a back link to the settings landing.
+      providers: [provideRouter([]), { provide: AuthService, useValue: authStub }],
     });
     fixture = TestBed.createComponent(NgoProfileComponent);
     component = fixture.componentInstance;

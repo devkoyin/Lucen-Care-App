@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { provideRouter } from '@angular/router';
 import { of } from 'rxjs';
 import { ProfessionalProfileComponent } from './professional-profile.component';
 import { AuthService } from '../../../core/auth/auth.service';
@@ -36,7 +37,8 @@ describe('ProfessionalProfileComponent', () => {
     TestBed.resetTestingModule();
     TestBed.configureTestingModule({
       imports: [ProfessionalProfileComponent, HttpClientTestingModule],
-      providers: [{ provide: AuthService, useValue: { me: () => of(me) } }],
+      // provideRouter: the page carries a back link to the settings landing.
+      providers: [provideRouter([]), { provide: AuthService, useValue: { me: () => of(me) } }],
     });
     fixture = TestBed.createComponent(ProfessionalProfileComponent);
     component = fixture.componentInstance;
