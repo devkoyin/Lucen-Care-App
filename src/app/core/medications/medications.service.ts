@@ -52,6 +52,7 @@ interface RawRefillAlertsResponse {
 export class MedicationsService {
   private readonly api = inject(ApiService);
   private readonly _stats = signal<MedicationStats | null>(null);
+  private readonly _changed = signal(0);
 
   getMedications(): Observable<Medication[]> {
     return this.api
@@ -139,6 +140,18 @@ export class MedicationsService {
   /** Call after any successful mutation. Failures leave the last known stats up. */
   refreshStats(): void {
     this.getStats().pipe(catchError(() => of(null))).subscribe();
+  }
+
+  /**
+   * Bumped whenever the medication list itself changes. The Add button lives on the
+   * routed shell but the list lives in a child route, so without this a medication
+   * added from the shell would not appear until the tab was left and re-entered.
+   * A counter rather than a boolean: two adds in a row must both be observable.
+   */
+  readonly changed = this._changed.asReadonly();
+
+  notifyChanged(): void {
+    this._changed.update(n => n + 1);
   }
 
   registerReminders(timezone: string): Observable<void> {

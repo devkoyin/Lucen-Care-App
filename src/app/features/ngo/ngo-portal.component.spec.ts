@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { Router, provideRouter } from '@angular/router';
 import { signal } from '@angular/core';
 import { of, throwError } from 'rxjs';
 import { NgoPortalComponent } from './ngo-portal.component';
@@ -37,6 +37,16 @@ describe('NgoPortalComponent', () => {
   it('creates', () => {
     setup('active');
     expect(component).toBeTruthy();
+  });
+
+  // The landing page offers no way back in; sign-in does.
+  it('returns to the NGO sign-in page on sign out', () => {
+    setup('active');
+    const navigate = spyOn(TestBed.inject(Router), 'navigate');
+
+    component.handleSignOut();
+
+    expect(navigate).toHaveBeenCalledWith(['/auth', 'ngo', 'login']);
   });
 
   it('links to settings once the organisation is verified', () => {

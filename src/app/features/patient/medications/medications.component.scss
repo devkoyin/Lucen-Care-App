@@ -16,6 +16,23 @@
   justify-content: space-between;
 }
 
+// Matches .appts-primary-btn on the appointments page — one primary action, top right.
+.meds-add-btn {
+  padding: 9px var(--space-5);
+  background: var(--color-role-accent);
+  color: #ffffff;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-weight: var(--font-extrabold);
+  font-family: var(--font-family);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: opacity 0.15s;
+
+  &:hover { opacity: 0.9; }
+}
+
 .meds-portal__title {
   font-size: var(--text-2xl);
   font-weight: var(--font-extrabold);
@@ -104,6 +121,11 @@
 
   .meds-portal__title { font-size: var(--text-xl); }
   .meds-portal__sub   { font-size: 12px; }
+
+  .meds-add-btn {
+    font-size: 12px;
+    padding: 7px 14px;
+  }
 }
 
 @media (max-width: 640px) {

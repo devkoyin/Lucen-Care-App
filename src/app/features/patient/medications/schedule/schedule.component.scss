@@ -93,6 +93,9 @@
   &--due_now { background: rgba(180,83,9,0.10);   color: #92400E; border: 1px solid rgba(180,83,9,0.20); }
   &--later   { background: rgba(15,45,74,0.05);   color: var(--color-text-muted); border: 1px solid var(--color-border); }
   &--skipped { background: rgba(220,38,38,0.08);  color: #991B1B; border: 1px solid rgba(220,38,38,0.18); }
+  // Skipping is a deliberate choice, so it stays muted. Missing a dose is the lapse
+  // worth noticing — same hue, heavier fill and border so the two never read alike.
+  &--missed  { background: rgba(220,38,38,0.18);  color: #7F1D1D; border: 1px solid rgba(220,38,38,0.45); font-weight: var(--font-bold); }
 
   &--clickable { font: inherit; cursor: pointer; }
 }

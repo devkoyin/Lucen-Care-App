@@ -5,7 +5,8 @@
       <h2 class="all-meds-page__title">All Medications</h2>
       <p class="all-meds-page__sub">{{ medications().length }} active prescription{{ medications().length === 1 ? '' : 's' }}</p>
     </div>
-    <button class="meds-add-btn" type="button" (click)="openAdd()">+ Add Medication</button>
+    <!-- Add moved to the shell topbar, alongside "My Medications", so it is reachable
+         from every tab. The empty state below keeps its own copy as a first-run CTA. -->
   </div>
 
   <!-- A failed load used to render an empty list under "0 active prescriptions",

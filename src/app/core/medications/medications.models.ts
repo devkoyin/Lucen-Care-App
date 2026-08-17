@@ -1,4 +1,4 @@
-export type DoseStatus = 'taken' | 'pending' | 'due_now' | 'later' | 'skipped';
+export type DoseStatus = 'taken' | 'pending' | 'due_now' | 'later' | 'skipped' | 'missed';
 
 /**
  * The subset a client may write. Mirrors LOGGABLE_DOSE_STATUSES on the backend:
@@ -130,6 +130,7 @@ const DOSE_STATUS_LABELS: Record<DoseStatus, string> = {
   due_now: 'Due now',
   later: 'Later',
   skipped: 'Skipped',
+  missed: 'Missed',
 };
 
 export function doseStatusLabel(status: DoseStatus): string {
