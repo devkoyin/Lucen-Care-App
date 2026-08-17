@@ -35,7 +35,7 @@ export class AiChatComponent implements OnInit {
 
   @ViewChild('messagesEl') private messagesEl!: ElementRef<HTMLDivElement>;
 
-  readonly hasApiKey   = !!environment.groqApiKey;
+  readonly aiChatEnabled = environment.aiChatEnabled;
   readonly messages    = signal<UiMessage[]>([]);
   readonly isTyping    = signal(false);
   readonly suggestions = SUGGESTIONS;
@@ -46,8 +46,6 @@ export class AiChatComponent implements OnInit {
     const name = this.authService.user()?.name ?? '';
     return name.split(' ')[0];
   });
-
-  // readonly nextAppt = computed(() => this.apptService.nextAppointment());
 
   readonly contextLine = computed(() => {
     const next = this.nextAppt();
@@ -78,7 +76,7 @@ export class AiChatComponent implements OnInit {
       content: m.text,
     }));
 
-    this.claude.chat(history, this.firstName()).subscribe({
+    this.claude.chat(history).subscribe({
       next: reply => {
         this.isTyping.set(false);
         this.addUiMessage('assistant', reply);

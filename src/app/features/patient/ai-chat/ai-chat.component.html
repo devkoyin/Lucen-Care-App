@@ -8,7 +8,7 @@
       <div>
         <div class="chat-header__title-group">
           <h1 class="chat-header__title">Lucy</h1>
-          @if (hasApiKey) {
+          @if (aiChatEnabled) {
             <span class="chat-header__badge">Beta</span>
           } @else {
             <span class="chat-header__badge chat-header__badge--soon">Coming Soon</span>
@@ -18,7 +18,7 @@
       </div>
     </div>
 
-    @if (hasApiKey) {
+    @if (aiChatEnabled) {
       <div class="chat-context">
         @if (contextLine()) {
           <div class="chat-context__item">
@@ -26,15 +26,11 @@
             <span>Next: {{ contextLine() }}</span>
           </div>
         }
-        <div class="chat-context__item">
-          <span class="chat-context__dot chat-context__dot--med"></span>
-          <span>5 active medications &middot; 2 due today at 8:00 PM</span>
-        </div>
       </div>
     }
   </div>
 
-  @if (hasApiKey) {
+  @if (aiChatEnabled) {
 
     <!-- ── Messages ────────────────────────────────────────────── -->
     <div class="chat-messages" #messagesEl>
