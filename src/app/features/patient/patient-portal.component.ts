@@ -52,6 +52,8 @@ export class PatientPortalComponent {
   handleSignOut(): void {
     this.medNotif.unregister();
     this.auth.signOut();
-    this.router.navigate(['/']);
+    // Same target roleGuard redirects an unauthenticated visitor to, so signing out
+    // and being bounced out land in the same place — ready to sign back in.
+    this.router.navigate(['/auth', 'patient', 'login']);
   }
 }

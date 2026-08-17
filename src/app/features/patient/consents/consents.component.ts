@@ -18,8 +18,16 @@ import { BadgeComponent } from '../../../shared/components/badge/badge.component
 import { ConfirmModalComponent } from '../../../shared/components/modal/confirm-modal.component';
 import { BackLinkComponent } from '../../../shared/components/back-link/back-link.component';
 
-/** Every purpose is listed, whether or not the patient has a grant row for it. */
-const ALL_PURPOSES: ConsentPurpose[] = ['ngo_funding', 'clinical_research_recruitment', 'hmo_care'];
+/**
+ * Every listed purpose is shown, whether or not the patient has a grant row for it.
+ *
+ * Temporarily narrowed to NGO funding: clinical research recruitment and HMO care are
+ * not built yet, and offering a consent toggle for a feature that cannot act on it
+ * asks the patient to decide something meaningless. Restore the two entries below —
+ * nothing else needs changing — once those features ship. Any grant the API already
+ * holds for them is untouched; it is simply not rendered.
+ */
+const ALL_PURPOSES: ConsentPurpose[] = ['ngo_funding'];
 
 interface ConsentRow {
   purpose: ConsentPurpose;

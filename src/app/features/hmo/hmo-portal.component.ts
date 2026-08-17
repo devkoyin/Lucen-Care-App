@@ -49,6 +49,7 @@ export class HmoPortalComponent {
 
   handleSignOut(): void {
     this.auth.signOut();
-    this.router.navigate(['/']);
+    // Same target roleGuard redirects an unauthenticated visitor to.
+    this.router.navigate(['/auth', 'hmo', 'login']);
   }
 }

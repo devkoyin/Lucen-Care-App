@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, effect, inject, signal } from '@angular/core';
 import { Medication, RefillUrgency } from '../../../../core/medications/medications.models';
 import { MedicationsService } from '../../../../core/medications/medications.service';
 import { AddMedicationModalComponent } from '../add-medication-modal.component';
@@ -20,6 +20,23 @@ export class AllMedicationsComponent implements OnInit {
   readonly medications = signal<Medication[]>([]);
   readonly loading     = signal(true);
   readonly loadError   = signal(false);
+
+  /**
+   * Seeded with the current value so the effect's first run is a no-op — ngOnInit
+   * already does the initial load, and reacting to the seed would double-fetch.
+   */
+  private lastSeenChange = this.medicationsService.changed();
+
+  constructor() {
+    // The Add button lives on the shell, which cannot reach into this route to
+    // refresh it. The counter is the channel.
+    effect(() => {
+      const change = this.medicationsService.changed();
+      if (change === this.lastSeenChange) return;
+      this.lastSeenChange = change;
+      this.loadMedications();
+    });
+  }
 
   ngOnInit(): void {
     this.loadMedications();

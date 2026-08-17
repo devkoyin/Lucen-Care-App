@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { Router, provideRouter } from '@angular/router';
 import { signal } from '@angular/core';
 import { of, throwError } from 'rxjs';
 import { ProfessionalPortalComponent } from './professional-portal.component';
@@ -42,6 +42,16 @@ describe('ProfessionalPortalComponent', () => {
   it('exposes the full nav once the account is verified', () => {
     setup('active');
     expect(component.navItems().map(i => i.label)).toEqual(['Dashboard', 'Community']);
+  });
+
+  // The landing page offers no way back in; sign-in does.
+  it('returns to the professional sign-in page on sign out', () => {
+    setup('active');
+    const navigate = spyOn(TestBed.inject(Router), 'navigate');
+
+    component.handleSignOut();
+
+    expect(navigate).toHaveBeenCalledWith(['/auth', 'professional', 'login']);
   });
 
   it('links to settings once the account is verified', () => {

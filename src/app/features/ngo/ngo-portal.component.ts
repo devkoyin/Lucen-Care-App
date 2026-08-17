@@ -55,6 +55,7 @@ export class NgoPortalComponent {
 
   handleSignOut(): void {
     this.auth.signOut();
-    this.router.navigate(['/']);
+    // Same target roleGuard redirects an unauthenticated visitor to.
+    this.router.navigate(['/auth', 'ngo', 'login']);
   }
 }

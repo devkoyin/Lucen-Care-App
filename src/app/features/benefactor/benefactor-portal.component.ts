@@ -64,6 +64,7 @@ export class BenefactorPortalComponent {
 
   handleSignOut(): void {
     this.auth.signOut();
-    this.router.navigate(['/']);
+    // Straight back to this role's sign-in rather than the public landing page.
+    this.router.navigate(['/auth', 'benefactor', 'login']);
   }
 }

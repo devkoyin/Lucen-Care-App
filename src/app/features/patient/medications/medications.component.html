@@ -6,6 +6,7 @@
       <h1 class="meds-portal__title">My Medications</h1>
       <p class="meds-portal__sub">Manage your prescriptions, schedule and refills</p>
     </div>
+    <button class="meds-add-btn" type="button" (click)="openAdd()">+ Add Medication</button>
   </div>
 
   <!-- Stats -->
@@ -45,3 +46,9 @@
   <router-outlet />
 
 </div>
+
+@if (showAddMed()) {
+  <lc-add-medication-modal
+    (close)="showAddMed.set(false)"
+    (saved)="onSaved()" />
+}

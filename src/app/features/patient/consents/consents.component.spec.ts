@@ -48,10 +48,17 @@ describe('PatientConsentsComponent', () => {
     return component.rows().find(r => r.purpose === purpose)!;
   }
 
-  it('lists every purpose, including ones the patient has no grant row for', () => {
+  // Research recruitment and HMO care are hidden until those features ship — a
+  // consent toggle nothing can act on asks the patient to decide something meaningless.
+  it('lists only the purposes that are actually implemented', () => {
     init([grant()]);
-    expect(component.rows().length).toBe(3);
-    expect(rowFor('hmo_care').grant).toBeUndefined();
+    expect(component.rows().map(r => r.purpose)).toEqual(['ngo_funding']);
+  });
+
+  it('lists a purpose the patient has no grant row for', () => {
+    init([]);
+    expect(component.rows().length).toBe(1);
+    expect(rowFor('ngo_funding').grant).toBeUndefined();
   });
 
   it('shows what would be shared even before granting', () => {
