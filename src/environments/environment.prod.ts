@@ -5,6 +5,6 @@
 // Committed, so no secrets. See environment.ts for why.
 export const environment = {
   production: true,
-  apiUrl: 'https://api.lucencare.com/api',
+  apiUrl: 'https://lucencare.onrender.com/api',
   aiChatEnabled: true,
 };
