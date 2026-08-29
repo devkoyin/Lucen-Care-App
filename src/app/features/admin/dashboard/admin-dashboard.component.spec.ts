@@ -181,7 +181,9 @@ describe('AdminDashboardComponent', () => {
 
       const byLabel = new Map(component.stats.map(s => [s.label, s.value]));
       expect(byLabel.get('Pending NGOs')).toBe(1);
-      expect(byLabel.get('Pending HMOs')).toBe(1);
+      // TEMPORARILY HIDDEN — restore alongside the HMO tile in admin.routes.ts:
+      // expect(byLabel.get('Pending HMOs')).toBe(1);
+      expect(byLabel.get('Pending HMOs')).toBeUndefined();
       // These two were never counted before, despite having their own nav items.
       expect(byLabel.get('Pending Professionals')).toBe(1);
       expect(byLabel.get('Pending Benefactors')).toBe(1);
@@ -189,8 +191,9 @@ describe('AdminDashboardComponent', () => {
 
     it('renders a card per queue, including programmes and community reports', () => {
       init();
-      expect(component.stats.length).toBe(8);
-      expect(fixture.nativeElement.querySelectorAll('.stat-card').length).toBe(8);
+      // 7, not 8: the Pending HMOs tile is temporarily hidden — see admin.routes.ts.
+      expect(component.stats.length).toBe(7);
+      expect(fixture.nativeElement.querySelectorAll('.stat-card').length).toBe(7);
       expect(fixture.nativeElement.textContent).toContain('Pending Programmes');
       expect(fixture.nativeElement.textContent).toContain('Community Reports');
     });

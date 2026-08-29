@@ -1,5 +1,13 @@
+// Fill whatever the shell leaves over instead of guessing at the chrome height
+// (the nav is 62px, and the footer stacks taller than that on a phone).
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
 .auth-page {
-  min-height: calc(100vh - 54px);
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -9,6 +17,8 @@
     linear-gradient(var(--login-grid-line) 0.1em, transparent 0.1em),
     linear-gradient(90deg, var(--login-grid-line) 0.1em, transparent 0.1em);
   background-size: 3em 3em;
+
+  @media (max-width: 600px) { padding: var(--space-5) var(--space-4); }
 }
 
 .auth-card {

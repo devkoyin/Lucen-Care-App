@@ -214,3 +214,11 @@
   font-size: var(--text-sm);
   color: var(--color-text-muted);
 }
+
+// ── Responsive page gutter ───────────────────────────────────
+// The sidebar shell no longer pads its main area, so the page owns the whole
+// gutter. 40px a side is far too much of a 360px screen.
+.claims-page {
+  @media (max-width: 1024px) { padding: var(--space-6); }
+  @media (max-width: 768px)  { padding: var(--space-4); }
+}

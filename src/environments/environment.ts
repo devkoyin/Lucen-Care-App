@@ -6,7 +6,7 @@
 // readable by every user, so a key shipped here is a published key.
 export const environment = {
   production: false,
-  apiUrl: 'https://lucencare.onrender.com/api',
+  apiUrl: 'http://localhost:3000/api',
   // Feature flag, not a credential. False renders the "Coming Soon" panel in
   // ai-chat.component.html instead of the live chat.
   aiChatEnabled: true,

@@ -119,6 +119,9 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--space-4);
+
+  // Two date/time inputs side by side stop being tappable below this.
+  @media (max-width: 480px) { grid-template-columns: 1fr; gap: var(--space-3); }
 }
 
 .rsm-field {

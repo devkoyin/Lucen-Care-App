@@ -41,40 +41,42 @@
   <!-- Log table -->
   <div class="log-panel">
     @if (filtered.length > 0) {
-      <table class="log-table">
-        <thead>
-          <tr>
-            <th>Time</th>
-            <th>Organisation</th>
-            <th>Type</th>
-            <th>Event</th>
-            <th>Actor</th>
-            <th>Notes</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (entry of filtered; track entry.id) {
-            <tr class="log-row">
-              <td class="log-row__time">
-                <span class="log-row__ago">{{ timeAgo(entry.timestamp) }}</span>
-                <span class="log-row__date">{{ formatDate(entry.timestamp) }} · {{ formatTime(entry.timestamp) }}</span>
-              </td>
-              <td class="log-row__org">{{ entry.orgName }}</td>
-              <td>
-                <span class="type-badge type-badge--{{ entry.orgType }}">{{ typeLabel(entry.orgType) }}</span>
-              </td>
-              <td>
-                <span class="action-badge action-badge--{{ actionTone(entry.action) }}">
-                  <span class="action-badge__dot"></span>
-                  {{ actionLabel(entry.action) }}
-                </span>
-              </td>
-              <td class="log-row__actor">{{ entry.actor }}</td>
-              <td class="log-row__notes">{{ entry.reason || '—' }}</td>
+      <div class="table-scroll">
+        <table class="log-table">
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>Organisation</th>
+              <th>Type</th>
+              <th>Event</th>
+              <th>Actor</th>
+              <th>Notes</th>
             </tr>
-          }
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            @for (entry of filtered; track entry.id) {
+              <tr class="log-row">
+                <td class="log-row__time">
+                  <span class="log-row__ago">{{ timeAgo(entry.timestamp) }}</span>
+                  <span class="log-row__date">{{ formatDate(entry.timestamp) }} · {{ formatTime(entry.timestamp) }}</span>
+                </td>
+                <td class="log-row__org">{{ entry.orgName }}</td>
+                <td>
+                  <span class="type-badge type-badge--{{ entry.orgType }}">{{ typeLabel(entry.orgType) }}</span>
+                </td>
+                <td>
+                  <span class="action-badge action-badge--{{ actionTone(entry.action) }}">
+                    <span class="action-badge__dot"></span>
+                    {{ actionLabel(entry.action) }}
+                  </span>
+                </td>
+                <td class="log-row__actor">{{ entry.actor }}</td>
+                <td class="log-row__notes">{{ entry.reason || '—' }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
 
       @if (cursor()) {
         <div class="log-panel__more">

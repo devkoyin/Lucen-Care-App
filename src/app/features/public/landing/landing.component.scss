@@ -40,18 +40,19 @@
 }
 
 // ══ SHARED ════════════════════════════════════════════════════
+// No `min-height: 0` and no `overflow: hidden` in this chain: they let a short
+// window (a laptop at 700px, or any phone) clip the role list with no way to
+// scroll to it. Letting the page grow past the shell is the correct fallback.
 :host {
   display: flex;
   flex-direction: column;
   flex: 1;
-  min-height: 0;
 }
 
 .landing {
   display: flex;
   flex-direction: column;
   flex: 1;
-  overflow: hidden;
 }
 
 // ══ SPLIT LAYOUT ══════════════════════════════════════════════
@@ -59,7 +60,6 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   flex: 1;
-  overflow: hidden;
 }
 
 // ══ LEFT: RADAR PANEL ════════════════════════════════════════
@@ -406,27 +406,13 @@
 
 // ── Tablet / Mobile (≤ 900px): stack panels ───────────────────
 @media (max-width: 900px) {
-  // Fill the viewport via min-height; use a flex column chain so
-  // role-panel can absorb the remaining space (no white gap at bottom)
-  :host {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    min-height: 100svh;
-  }
-
-  .landing {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    overflow: visible;
-  }
-
+  // Stack, and let the flex chain absorb the shell's leftover height. The
+  // `min-height: 100vh` that used to sit on :host here overflowed the shell by
+  // the nav + footer height, which is what made the document rubber-band.
   .split {
     display: flex;
     flex-direction: column;
     flex: 1;
-    overflow: visible;
   }
 
   // Brand panel: top-aligned content, shrinks to natural height only

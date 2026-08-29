@@ -19,6 +19,12 @@
 }
 
 .filter-tabs {
+  // Swipe rather than squash: the strip keeps one row and scrolls when the
+  // tabs no longer fit. Matches .meds-nav / .funding-nav.
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
   display: flex;
   gap: var(--space-2);
   border-bottom: 1px solid var(--color-border);
@@ -26,6 +32,8 @@
 }
 
 .filter-tab {
+  white-space: nowrap;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   gap: var(--space-2);
@@ -172,6 +180,8 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--space-5);
+
+  @media (max-width: 768px) { grid-template-columns: 1fr; gap: var(--space-4); }
 }
 
 .detail-section {
@@ -190,6 +200,14 @@
   grid-template-columns: auto 1fr;
   gap: var(--space-2) var(--space-4);
   font-size: var(--text-sm);
+
+  // Below this the label column starves the value column; stack instead.
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+    gap: var(--space-1) 0;
+
+    dd { margin-bottom: var(--space-2); }
+  }
 
   dt { color: var(--color-text-muted); font-weight: var(--font-medium); }
   dd { color: var(--color-text); font-weight: var(--font-semibold); }
@@ -327,4 +345,12 @@
   padding: var(--space-12);
   color: var(--color-text-muted);
   font-size: var(--text-sm);
+}
+
+// ── Responsive page gutter ───────────────────────────────────
+// The sidebar shell no longer pads its main area, so the page owns the whole
+// gutter. 40px a side is far too much of a 360px screen.
+.approvals {
+  @media (max-width: 1024px) { padding: var(--space-6); }
+  @media (max-width: 768px)  { padding: var(--space-4); }
 }

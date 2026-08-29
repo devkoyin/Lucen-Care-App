@@ -1,11 +1,22 @@
+// Chat owns its own inset now that the sidebar shell no longer pads its main
+// area. Margin rather than padding, so the height maths stays about the frame.
 .chat-page {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - var(--space-8) * 2);
+  height: calc(100dvh - var(--space-8) * 2);
+  margin: var(--space-8) var(--space-10);
   background: var(--color-bg);
   animation: fadeSlideUp 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
 
-  @media (max-width: 768px) { height: calc(100dvh - 56px); }
+  @media (max-width: 1024px) {
+    height: calc(100dvh - var(--space-6) * 2);
+    margin: var(--space-6);
+  }
+
+  @media (max-width: 768px) {
+    height: calc(100dvh - 56px);
+    margin: 0;
+  }
 }
 
 // ── Header ─────────────────────────────────────────────────────

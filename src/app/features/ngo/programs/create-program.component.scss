@@ -147,3 +147,11 @@
   font-size: var(--text-sm);
   line-height: 1.6;
 }
+
+// ── Responsive page gutter ───────────────────────────────────
+// The sidebar shell no longer pads its main area, so the page owns the whole
+// gutter. 40px a side is far too much of a 360px screen.
+.cp-page {
+  @media (max-width: 1024px) { padding: var(--space-6); }
+  @media (max-width: 768px)  { padding: var(--space-4); }
+}

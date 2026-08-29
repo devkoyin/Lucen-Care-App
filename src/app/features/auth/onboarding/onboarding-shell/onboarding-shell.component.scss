@@ -1,8 +1,15 @@
 .onboarding {
-  min-height: 100vh;
+  min-height: 100dvh;
   display: grid;
   grid-template-columns: 260px 1fr;
   background: var(--color-bg);
+
+  // A fixed 260px rail leaves ~100px for the form on a phone. Below this the
+  // sidebar becomes a horizontal step strip above the content instead.
+  @media (max-width: 860px) {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+  }
 
   &__sidebar {
     background: var(--color-surface);
@@ -11,6 +18,13 @@
     display: flex;
     flex-direction: column;
     gap: var(--space-6);
+
+    @media (max-width: 860px) {
+      border-right: none;
+      border-bottom: 1px solid var(--color-border);
+      padding: var(--space-5) var(--space-5) var(--space-4);
+      gap: var(--space-3);
+    }
   }
 
   &__brand {
@@ -27,6 +41,10 @@
     letter-spacing: var(--tracking-wider);
     text-transform: uppercase;
     margin-top: var(--space-2);
+
+    // The step strip already says where you are; the heading is just noise
+    // once it is horizontal.
+    @media (max-width: 860px) { display: none; }
   }
 
   &__main {
@@ -49,6 +67,9 @@
     flex: 1;
     padding: var(--space-12);
     max-width: 560px;
+
+    @media (max-width: 1024px) { padding: var(--space-8) var(--space-6); }
+    @media (max-width: 600px)  { padding: var(--space-6) var(--space-4); }
   }
 
   &__step-num {
@@ -76,6 +97,9 @@
     background: rgba(220, 38, 38, 0.06);
     color: var(--color-error);
     font-size: var(--text-sm);
+
+    @media (max-width: 1024px) { margin: 0 var(--space-6) var(--space-4); }
+    @media (max-width: 600px)  { margin: 0 var(--space-4) var(--space-4); }
   }
 
   &__nav {
@@ -84,6 +108,10 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: var(--space-3);
+
+    @media (max-width: 1024px) { padding: var(--space-5) var(--space-6); }
+    @media (max-width: 600px)  { padding: var(--space-4); }
   }
 
   &__back-btn {
@@ -117,6 +145,8 @@
       color: var(--color-text-muted);
       cursor: not-allowed;
     }
+
+    @media (max-width: 600px) { padding: 11px var(--space-5); font-size: var(--text-sm); }
   }
 }
 
@@ -125,6 +155,18 @@
   flex-direction: column;
   gap: var(--space-3);
   margin-top: var(--space-2);
+
+  @media (max-width: 860px) {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-4);
+    margin-top: 0;
+    // More steps than fit get scrolled to rather than squashed.
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    &::-webkit-scrollbar { display: none; }
+  }
 
   &__item {
     display: flex;
@@ -135,6 +177,8 @@
 
     &--active { opacity: 1; }
     &--done { opacity: 0.7; }
+
+    @media (max-width: 860px) { gap: var(--space-2); flex-shrink: 0; }
   }
 
   &__dot {
@@ -167,6 +211,13 @@
   &__label {
     font-size: var(--text-sm);
     color: var(--color-text-secondary);
+    white-space: nowrap;
+
+    // Only the step you are on is worth the width once the rail is horizontal.
+    @media (max-width: 860px) { font-size: var(--text-xs); }
+    @media (max-width: 600px) {
+      .step-list__item:not(.step-list__item--active) & { display: none; }
+    }
 
     .step-list__item--active & {
       color: var(--color-text);

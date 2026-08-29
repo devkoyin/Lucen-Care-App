@@ -2,7 +2,9 @@
 .shell {
   display: grid;
   grid-template-columns: var(--sidebar-width) 1fr;
-  min-height: 100vh;
+  // dvh, not vh: on mobile `100vh` means the viewport with the browser toolbar
+  // hidden, which left every page scrollable by the toolbar's height at rest.
+  min-height: 100dvh;
   background: var(--color-bg);
 
   @media (max-width: 768px) {
@@ -78,7 +80,7 @@
   flex-direction: column;
   position: sticky;
   top: 0;
-  height: 100vh;
+  height: 100dvh;
   overflow-y: auto;
 
   @media (max-width: 768px) {
@@ -204,18 +206,12 @@
 }
 
 // ── Main content ────────────────────────────────────────────────
+// No padding and no `overflow-y` here on purpose. Pages own their own gutter
+// (every routed page sets `padding: var(--space-8) var(--space-10)`), and
+// padding here doubled it — ~32px a side on a phone, which squeezed the cards.
+// The `overflow-y: auto` was dead too: the grid row is auto-sized, so it never
+// scrolled, it only created a BFC that would clip a `position: sticky` child.
 .shell__main {
   background: var(--color-bg);
-  overflow-y: auto;
-  padding: var(--space-8) var(--space-10);
   min-width: 0;
-
-  @media (max-width: 1024px) {
-    padding: var(--space-6) var(--space-6);
-  }
-
-  @media (max-width: 768px) {
-    padding: var(--space-4) var(--space-4);
-    overflow-y: unset;
-  }
 }

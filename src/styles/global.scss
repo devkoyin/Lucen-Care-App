@@ -5,7 +5,9 @@
 }
 
 html, body {
-  height: 100%;
+  // `height: 100%` caps the document at the viewport, which fights any shell
+  // that grows past it. A floor is what we actually want.
+  min-height: 100%;
   background-color: var(--color-bg);
   color: var(--color-text);
   font-family: var(--font-family);
@@ -13,6 +15,10 @@ html, body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+// Stops the whole-document rubber-band on iOS when an inner region is what the
+// user meant to scroll.
+body { overscroll-behavior-y: none; }
 
 a { color: inherit; text-decoration: none; }
 

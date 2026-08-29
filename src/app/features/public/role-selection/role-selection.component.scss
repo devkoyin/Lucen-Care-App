@@ -1,10 +1,19 @@
+// Fill the shell's leftover height rather than subtracting a guessed chrome height.
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
 .role-selection {
-  min-height: calc(100vh - 52px);
+  flex: 1;
   background: #E8F5F3;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: var(--space-8);
+
+  @media (max-width: 600px) { padding: var(--space-5) var(--space-4); }
 
   &__inner {
     width: 100%;
