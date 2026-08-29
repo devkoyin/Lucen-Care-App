@@ -6,8 +6,12 @@ import { catchError, filter, switchMap, take } from 'rxjs/operators';
 import { AuthService } from './auth.service';
 import { environment } from '../../../environments/environment';
 
-// Endpoints that should NOT have Authorization header (they are the auth endpoints themselves)
-const PUBLIC_PATHS = ['/auth/login', '/auth/signup', '/auth/refresh', '/auth/forgot-password', '/auth/reset-password', '/auth/request-otp'];
+// Endpoints that should NOT have Authorization header (they are the auth endpoints
+// themselves, plus the unauthenticated /public/* surface). Listing /public/ here is
+// not just an optimisation: without it, a visitor holding an expired token would
+// have the landing page's stats call trigger a refresh, and a failed refresh signs
+// them out and redirects — from a page they were only browsing.
+const PUBLIC_PATHS = ['/auth/login', '/auth/signup', '/auth/refresh', '/auth/forgot-password', '/auth/reset-password', '/auth/request-otp', '/public/'];
 
 let isRefreshing = false;
 const refreshSubject = new BehaviorSubject<string | null>(null);
