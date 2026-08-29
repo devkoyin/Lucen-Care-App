@@ -22,7 +22,10 @@ const ROLE_LABELS: Record<string, string> = {
 const ROLES: { id: Role; label: string; emoji: string }[] = [
   { id: 'patient',      label: 'Patient',      emoji: '🏥' },
   { id: 'ngo',          label: 'NGO',          emoji: '🤝' },
-  { id: 'hmo',          label: 'HMO',          emoji: '🏛' },
+  // TEMPORARILY HIDDEN — HMO sign-in. Dropping it from ROLES also makes
+  // ngOnInit's guard below fall /auth/hmo/login back to the patient tab, so
+  // there is no dangling way in. See admin.routes.ts for the admin-side pair.
+  // { id: 'hmo',          label: 'HMO',          emoji: '🏛' },
   { id: 'professional', label: 'Professional', emoji: '⚕️' },
   { id: 'benefactor',   label: 'Benefactor',   emoji: '💛' },
 ];

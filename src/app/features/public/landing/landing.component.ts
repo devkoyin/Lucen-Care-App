@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+
+import { PlatformStats, PublicStatsService } from '../../../core/public/public-stats.service';
 
 /**
  * Admin is deliberately absent: the portal is internal, reached only by typing
@@ -20,7 +22,32 @@ interface RoleCard {
   templateUrl: './landing.component.html',
   styleUrl: './landing.component.scss',
 })
-export class LandingComponent {
+export class LandingComponent implements OnInit {
+  private readonly publicStats = inject(PublicStatsService);
+
+  /**
+   * Three states, not two. `null` while the request is in flight renders the
+   * skeleton; `failed` hides the row outright rather than showing a number the
+   * platform cannot stand behind.
+   */
+  readonly stats = signal<PlatformStats | null>(null);
+  readonly statsFailed = signal(false);
+
+  ngOnInit(): void {
+    this.publicStats.getStats().subscribe({
+      next: s => this.stats.set(s),
+      error: () => this.statsFailed.set(true),
+    });
+  }
+
+  /**
+   * The tiles have always read "2,400+". Keeping the suffix on a live count
+   * means the copy does not change shape as the platform grows.
+   */
+  formatCount(value: number): string {
+    return `${value.toLocaleString('en-NG')}+`;
+  }
+
   readonly roleCards: RoleCard[] = [
     {
       role: 'patient',
@@ -36,13 +63,15 @@ export class LandingComponent {
       description: 'Post programs, select & map patients',
       signupRoute: '/auth/ngo/signup',
     },
-    {
-      role: 'hmo',
-      emoji: '🏦',
-      label: 'HMO',
-      description: 'Build & manage longitudinal care profiles',
-      signupRoute: '/auth/hmo/signup',
-    },
+    // TEMPORARILY HIDDEN — restore alongside the HMO sign-in role in
+    // features/auth/login/login.component.ts.
+    // {
+    //   role: 'hmo',
+    //   emoji: '🏦',
+    //   label: 'HMO',
+    //   description: 'Build & manage longitudinal care profiles',
+    //   signupRoute: '/auth/hmo/signup',
+    // },
     {
       role: 'professional',
       emoji: '⚕️',

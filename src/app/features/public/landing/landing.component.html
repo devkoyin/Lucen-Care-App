@@ -18,18 +18,31 @@
         </h1>
 
         <p class="brand-panel__sub">
-          Patients, NGOs and HMOs connecting for real-world health outcomes.
+          Patients, NGOs and professionals connecting for real-world health outcomes.
         </p>
 
+        <!-- Hidden entirely on failure: an empty frame reads as a broken page,
+             and a placeholder number would be a claim we cannot support. -->
+        @if (!statsFailed()) {
         <div class="brand-panel__stats">
           <div class="brand-panel__stat">
-            <span class="brand-panel__stat-n">2,400+</span>
+            @if (stats(); as s) {
+              <span class="brand-panel__stat-n">{{ formatCount(s.patients) }}</span>
+            } @else {
+              <span class="brand-panel__stat-n brand-panel__stat-n--loading" aria-hidden="true"></span>
+            }
             <span class="brand-panel__stat-l">Patients</span>
           </div>
           <div class="brand-panel__stat">
-            <span class="brand-panel__stat-n">340+</span>
+            @if (stats(); as s) {
+              <span class="brand-panel__stat-n">{{ formatCount(s.ngoPrograms) }}</span>
+            } @else {
+              <span class="brand-panel__stat-n brand-panel__stat-n--loading" aria-hidden="true"></span>
+            }
             <span class="brand-panel__stat-l">NGO Programs</span>
           </div>
+          <!-- TEMPORARILY HIDDEN — restore alongside the HMO sign-in role in
+               features/auth/login/login.component.ts.
           <div class="brand-panel__stat">
             <span class="brand-panel__stat-n">18k+</span>
             <span class="brand-panel__stat-l">HMO Profiles</span>
@@ -38,7 +51,9 @@
             <span class="brand-panel__stat-n">62</span>
             <span class="brand-panel__stat-l">Active Studies</span>
           </div>
+          -->
         </div>
+        }
 
         <div class="brand-panel__trust">
           <span class="brand-panel__trust-badge">&#10003; GDPR</span>
@@ -61,7 +76,9 @@
           <line x1="120" y1="100" x2="120" y2="50"  stroke="#2A9D8F" stroke-width="1.5" opacity="0.55" stroke-dasharray="3 2"/>
           <line x1="120" y1="124" x2="120" y2="174" stroke="#2A9D8F" stroke-width="1.5" opacity="0.55" stroke-dasharray="3 2"/>
           <line x1="108" y1="112" x2="58"  y2="112" stroke="#2A9D8F" stroke-width="1.5" opacity="0.55" stroke-dasharray="3 2"/>
+          <!-- TEMPORARILY HIDDEN — the spoke to the HMO node, below.
           <line x1="132" y1="112" x2="182" y2="112" stroke="#2A9D8F" stroke-width="1.5" opacity="0.55" stroke-dasharray="3 2"/>
+          -->
           <line x1="111" y1="103" x2="79"  y2="62"  stroke="#2A9D8F" stroke-width="1.5" opacity="0.45" stroke-dasharray="3 2"/>
           <line x1="129" y1="121" x2="161" y2="162" stroke="#2A9D8F" stroke-width="1.5" opacity="0.45" stroke-dasharray="3 2"/>
         </g>
@@ -77,12 +94,13 @@
           <circle cx="46" cy="112" r="10" fill="#7C3AED" opacity="0.85"/>
           <text x="46" cy="112" y="133" text-anchor="middle" font-size="7" fill="#6D28D9" font-weight="600" font-family="system-ui,sans-serif">NGO</text>
         </g>
-        <!-- HMO — right -->
+        <!-- TEMPORARILY HIDDEN — HMO node (right). Restore with its spoke above.
         <g class="illu-role-2">
           <circle cx="194" cy="112" r="15" fill="#BFDBFE" opacity="0.5"/>
           <circle cx="194" cy="112" r="10" fill="#60A5FA" opacity="0.9"/>
           <text x="194" y="133" text-anchor="middle" font-size="7" fill="#2563EB" font-weight="600" font-family="system-ui,sans-serif">HMO</text>
         </g>
+        -->
         <!-- Professional — top -->
         <g class="illu-role-3">
           <circle cx="120" cy="38"  r="15" fill="#BBF7D0" opacity="0.45"/>
