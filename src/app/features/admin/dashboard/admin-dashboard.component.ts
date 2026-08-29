@@ -59,7 +59,8 @@ export class AdminDashboardComponent implements OnInit {
   get stats(): StatCard[] {
     return [
       { label: 'Pending NGOs',          value: this.appsService.pendingCount('ngo'), accent: true },
-      { label: 'Pending HMOs',          value: this.appsService.pendingCount('hmo'), accent: true },
+      // TEMPORARILY HIDDEN — see admin.routes.ts
+      // { label: 'Pending HMOs',          value: this.appsService.pendingCount('hmo'), accent: true },
       { label: 'Pending Professionals', value: this.professionalPendingCount(), accent: true },
       { label: 'Pending Benefactors',   value: this.benefactorPendingCount(), accent: true },
       { label: 'Pending Programmes',    value: this.programApprovals.pendingCount(), accent: true },
@@ -70,7 +71,8 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   get ngoPendingCount(): number { return this.appsService.pendingCount('ngo'); }
-  get hmoPendingCount(): number { return this.appsService.pendingCount('hmo'); }
+  // TEMPORARILY HIDDEN — see admin.routes.ts
+  // get hmoPendingCount(): number { return this.appsService.pendingCount('hmo'); }
   get programPendingCount(): number { return this.programApprovals.pendingCount(); }
 
   trackEntry(_: number, entry: AuditEntry): string { return entry.id; }

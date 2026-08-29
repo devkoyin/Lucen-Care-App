@@ -1,5 +1,13 @@
+// Fill whatever the shell leaves over instead of guessing at the chrome height
+// (the nav is 62px, and the footer stacks taller than that on a phone).
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
 .auth-page {
-  min-height: calc(100vh - 54px);
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -9,6 +17,8 @@
     linear-gradient(var(--login-grid-line) 0.1em, transparent 0.1em),
     linear-gradient(90deg, var(--login-grid-line) 0.1em, transparent 0.1em);
   background-size: 3em 3em;
+
+  @media (max-width: 600px) { padding: var(--space-5) var(--space-4); }
 }
 
 .auth-card {
@@ -68,6 +78,15 @@
   border-radius: var(--radius-lg);
   padding: 4px;
   margin-bottom: var(--space-6);
+
+  // Five roles at equal width stop fitting around here, and the labels are
+  // nowrap so they would spill. Scroll instead, keeping the desktop look intact.
+  @media (max-width: 600px) {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    &::-webkit-scrollbar { display: none; }
+  }
 }
 
 .role-tab {
@@ -103,6 +122,12 @@
 
   &:hover:not(.role-tab--active) {
     background: rgba(255, 255, 255, 0.55);
+  }
+
+  // Sized by its label once the strip scrolls, rather than shrunk into it.
+  @media (max-width: 600px) {
+    flex: 0 0 auto;
+    padding: 8px 10px;
   }
 }
 

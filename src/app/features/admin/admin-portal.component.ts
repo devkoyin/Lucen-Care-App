@@ -26,7 +26,8 @@ export class AdminPortalComponent {
   readonly navItems: NavItem[] = [
     { icon: '🏠', label: 'Dashboard',               route: '/admin/dashboard' },
     { icon: '🏢', label: 'NGO Approvals',            route: '/admin/ngo-approvals' },
-    { icon: '🏥', label: 'HMO Approvals',            route: '/admin/hmo-approvals' },
+    // TEMPORARILY HIDDEN — see admin.routes.ts
+    // { icon: '🏥', label: 'HMO Approvals',            route: '/admin/hmo-approvals' },
     { icon: '⚕️', label: 'Professional Approvals',  route: '/admin/professional-approvals' },
     { icon: '💛', label: 'Benefactor Approvals',    route: '/admin/benefactor-approvals' },
     { icon: '🤝', label: 'Programme Approvals',     route: '/admin/program-approvals' },

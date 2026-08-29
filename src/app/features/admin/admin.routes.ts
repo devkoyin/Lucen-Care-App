@@ -29,11 +29,14 @@ export const ADMIN_ROUTES: Routes = [
         loadComponent: () =>
           import('./ngo-approvals/ngo-approvals.component').then(m => m.NgoApprovalsComponent),
       },
-      {
-        path: 'hmo-approvals',
-        loadComponent: () =>
-          import('./hmo-approvals/hmo-approvals.component').then(m => m.HmoApprovalsComponent),
-      },
+      // TEMPORARILY HIDDEN — HMO approvals. Restore this route together with the
+      // nav item in admin-portal.component.ts and the dashboard tile/action in
+      // dashboard/admin-dashboard.component.{ts,html}.
+      // {
+      //   path: 'hmo-approvals',
+      //   loadComponent: () =>
+      //     import('./hmo-approvals/hmo-approvals.component').then(m => m.HmoApprovalsComponent),
+      // },
       {
         path: 'professional-approvals',
         loadComponent: () =>

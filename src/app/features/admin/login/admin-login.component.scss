@@ -1,5 +1,5 @@
 .auth-page {
-  min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -9,6 +9,8 @@
     linear-gradient(var(--login-grid-line) 0.1em, transparent 0.1em),
     linear-gradient(90deg, var(--login-grid-line) 0.1em, transparent 0.1em);
   background-size: 3em 3em;
+
+  @media (max-width: 600px) { padding: var(--space-5) var(--space-4); }
 }
 
 .auth-card {

@@ -21,7 +21,9 @@
 // ── Stats ─────────────────────────────────────────────────────
 .stats-row {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  // auto-fit rather than a fixed 4: the row reflows to 2-up and then 1-up
+  // as it narrows, with no breakpoints to keep in sync.
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: var(--space-4);
 }
 
@@ -68,6 +70,8 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--space-5);
+
+  @media (max-width: 768px) { grid-template-columns: 1fr; gap: var(--space-4); }
 }
 
 .panel {
@@ -272,4 +276,12 @@
   border-radius: var(--radius-full);
   white-space: nowrap;
   flex-shrink: 0;
+}
+
+// ── Responsive page gutter ───────────────────────────────────
+// The sidebar shell no longer pads its main area, so the page owns the whole
+// gutter. 40px a side is far too much of a 360px screen.
+.dashboard {
+  @media (max-width: 1024px) { padding: var(--space-6); }
+  @media (max-width: 768px)  { padding: var(--space-4); }
 }

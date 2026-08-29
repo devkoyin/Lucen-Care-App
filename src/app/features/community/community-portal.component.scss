@@ -91,6 +91,11 @@
   display: flex;
   gap: 0;
   border-bottom: 2px solid var(--color-border);
+  // Swipe rather than squash. Matches .meds-nav / .funding-nav.
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
 
   &__tab {
     padding: var(--space-3) var(--space-6);
@@ -102,6 +107,7 @@
     margin-bottom: -2px;
     transition: color 0.15s, border-color 0.15s;
     white-space: nowrap;
+    flex-shrink: 0;
 
     &:hover { color: var(--color-text); }
 

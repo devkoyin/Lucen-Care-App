@@ -62,7 +62,18 @@
   grid-template-columns: 1fr 300px;
   gap: var(--space-6);
   align-items: start;
+
+  // A hard 300px zone column left the table column narrower than its own
+  // min-content width, so the whole page ran off sideways. Stack instead.
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+    gap: var(--space-5);
+  }
 }
+
+// Grid items default to min-width: auto, which would let the table's
+// min-content width blow out the column instead of scrolling inside it.
+.map-states { min-width: 0; }
 
 .map-section-title {
   font-size: var(--text-base);
@@ -76,12 +87,16 @@
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-xl);
-  overflow: hidden;
+  // overflow-x: auto still clips to the radius (overflow-y resolves to auto
+  // alongside it), so the rounded corners survive.
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .map-table {
   width: 100%;
   border-collapse: collapse;
+  min-width: 640px;
 
   thead {
     background: var(--color-bg);
@@ -130,6 +145,15 @@
 .td-muted { color: var(--color-text-muted) !important; font-size: var(--text-xs) !important; }
 
 .map-bar-cell { width: 100px; }
+
+// Purely decorative — it restates the Selected count — so it is the first
+// thing to go when width is scarce.
+@media (max-width: 768px) {
+  .map-table th:last-child,
+  .map-bar-cell { display: none; }
+
+  .map-table { min-width: 540px; }
+}
 
 .map-bar {
   height: 5px;

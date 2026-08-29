@@ -1,14 +1,15 @@
+// The shell sets a floor, not a ceiling: a fixed `height` here clipped any page
+// taller than the viewport (every auth page on a phone), so the document
+// rubber-banded instead of the content scrolling.
 .shell {
-  height: 100dvh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   background: var(--color-bg);
-  overflow: hidden;
 
   &__content {
     flex: 1;
     min-height: 0;
-    overflow: hidden;
     display: flex;
     flex-direction: column;
   }

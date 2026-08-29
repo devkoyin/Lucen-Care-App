@@ -54,11 +54,23 @@
 }
 
 .filter-tabs {
+  // Swipe rather than squash: the strip keeps one row and scrolls when the
+  // tabs no longer fit. Matches .meds-nav / .funding-nav.
+  // min-width: 0 is load-bearing here — this strip is itself a flex item of
+  // .controls, and without it the tabs' min-content width wins and the row
+  // overflows sideways instead of scrolling.
+  min-width: 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
   display: flex;
   gap: var(--space-1);
 }
 
 .filter-tab {
+  white-space: nowrap;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   gap: var(--space-2);
@@ -101,6 +113,8 @@
   min-width: 280px;
   transition: border-color 0.15s;
 
+  @media (max-width: 600px) { min-width: 0; width: 100%; }
+
   &:focus-within { border-color: var(--color-role-border); }
 
   &__icon { font-size: 13px; flex-shrink: 0; }
@@ -125,9 +139,17 @@
   overflow: hidden;
 }
 
+// A table cannot reflow, so it scrolls inside its own box rather than forcing
+// the page to scroll sideways.
+.table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 .log-table {
   width: 100%;
   border-collapse: collapse;
+  min-width: 640px;
 
   thead tr {
     background: var(--color-bg);
@@ -313,4 +335,12 @@
     margin: 0;
     max-width: 360px;
   }
+}
+
+// ── Responsive page gutter ───────────────────────────────────
+// The sidebar shell no longer pads its main area, so the page owns the whole
+// gutter. 40px a side is far too much of a 360px screen.
+.audit-log {
+  @media (max-width: 1024px) { padding: var(--space-6); }
+  @media (max-width: 768px)  { padding: var(--space-4); }
 }
