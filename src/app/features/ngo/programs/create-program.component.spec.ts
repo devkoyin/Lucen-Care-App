@@ -40,6 +40,61 @@ describe('CreateProgramComponent', () => {
     });
   }
 
+  describe('who qualifies — the value control follows the field', () => {
+    const valueEl = () => fixture.nativeElement.querySelector('#cp-value') as HTMLElement;
+    const selectField = (field: string) => {
+      component.form.controls.criterionField.setValue(field);
+      fixture.detectChanges();
+    };
+
+    it('offers a free-text box for health conditions', () => {
+      selectField('conditionTags');
+
+      expect(valueEl().tagName).toBe('INPUT');
+      expect(valueEl().getAttribute('type')).toBe('text');
+    });
+
+    // Gender is an enum compared exactly against a lower-case column, so a typed
+    // "Female" would have matched nobody.
+    it('offers a select of the gender enum, not free text', () => {
+      selectField('gender');
+
+      expect(valueEl().tagName).toBe('SELECT');
+      const values = Array.from(
+        valueEl().querySelectorAll('option'),
+        (o: HTMLOptionElement) => o.value,
+      );
+      expect(values).toContain('female');
+      expect(values).toContain('prefer_not_to_say');
+    });
+
+    it('offers a date picker for date of birth', () => {
+      selectField('dateOfBirth');
+
+      expect(valueEl().tagName).toBe('INPUT');
+      expect(valueEl().getAttribute('type')).toBe('date');
+    });
+
+    it('narrows the operator list to what the field supports', () => {
+      selectField('dateOfBirth');
+      expect(component.activeOperators().map(o => o.value)).toEqual(['gte', 'lte']);
+
+      selectField('gender');
+      expect(component.activeOperators().map(o => o.value)).toEqual(['eq']);
+    });
+
+    // Otherwise a condition list typed for conditionTags is submitted as a gender.
+    it('clears the value and re-defaults the operator when the field changes', () => {
+      component.form.patchValue({ criterionValue: 'Diabetes, Hypertension' });
+      fixture.detectChanges();
+
+      selectField('gender');
+
+      expect(component.form.controls.criterionValue.value).toBe('');
+      expect(component.form.controls.criterionOperator.value).toBe('eq');
+    });
+  });
+
   it('does not submit an incomplete form', () => {
     component.submit();
     expect(http.match(PROGRAMS).length).toBe(0);
@@ -292,6 +347,21 @@ describe('CreateProgramComponent', () => {
       expect(component.form.controls.expiresAt.value).toBe('2026-12-01');
       // A list criterion round-trips through the comma-separated input.
       expect(component.form.controls.criterionValue.value).toBe('Diabetes, Asthma');
+    });
+
+    // The field-change reset must not fire while prefill is patching: this is the
+    // case that proves it, because loading a gender criterion moves the field away
+    // from its conditionTags default and would otherwise blank the value.
+    it('keeps a non-default criterion intact when prefilling', async () => {
+      await buildEdit(
+        existing({
+          eligibilityCriteria: [{ field: 'gender', operator: 'eq', value: 'female' }],
+        }),
+      );
+
+      expect(component.form.controls.criterionField.value).toBe('gender');
+      expect(component.form.controls.criterionOperator.value).toBe('eq');
+      expect(component.form.controls.criterionValue.value).toBe('female');
     });
 
     it('PATCHes instead of creating, and returns to the list', async () => {

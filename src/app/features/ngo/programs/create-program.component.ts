@@ -1,5 +1,5 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
@@ -14,24 +14,76 @@ import {
 } from '../../../core/programs/ngo-programs.service';
 import { FormFieldComponent } from '../../../shared/components/form-field/form-field.component';
 
+/** How the Value control is rendered for a given field. */
+export type CriterionInput = 'text' | 'select' | 'date';
+
+interface CriterionField {
+  value: string;
+  label: string;
+  input: CriterionInput;
+  /** Operators that mean something for this field. Offering the rest invites a
+   *  criterion that parses but matches nobody — `contains` on a date, say. */
+  operators: string[];
+  /** Only for `input: 'select'`. */
+  choices?: Array<{ value: string; label: string }>;
+  hint: string;
+  placeholder?: string;
+}
+
 /**
  * The eligibility fields MatchingService actually understands. Anything else is
  * silently ignored server-side, which would make a programme match everyone — so
  * the form offers only fields that really filter.
+ *
+ * Each field also declares how its value is entered. A single free-text box for
+ * all three was wrong in a way that failed quietly: gender is an enum stored
+ * lower-case, so a typed "Female" matched no one, and a date typed by hand was
+ * unlikely to come out as the YYYY-MM-DD the column compares against.
  */
-const CRITERION_FIELDS = [
-  { value: 'conditionTags', label: 'Health condition' },
-  { value: 'gender', label: 'Gender' },
-  { value: 'dateOfBirth', label: 'Date of birth' },
+const CRITERION_FIELDS: CriterionField[] = [
+  {
+    value: 'conditionTags',
+    label: 'Health condition',
+    input: 'text',
+    // Only 'in'. buildCriteriaWhere short-circuits on conditionTags and does an
+    // array overlap regardless of operator, so offering 'contains' would promise
+    // a distinction the API does not make.
+    operators: ['in'],
+    hint: 'Separate multiple conditions with commas',
+    placeholder: 'e.g. Diabetes, Hypertension',
+  },
+  {
+    value: 'gender',
+    label: 'Gender',
+    input: 'select',
+    operators: ['eq'],
+    // Mirrors the Gender enum on the API. The stored values are lower-case, and
+    // the column is compared exactly, so these are not free text.
+    choices: [
+      { value: 'female', label: 'Female' },
+      { value: 'male', label: 'Male' },
+      { value: 'other', label: 'Other' },
+      { value: 'prefer_not_to_say', label: 'Prefer not to say' },
+    ],
+    hint: 'Matches the gender recorded on the patient record',
+  },
+  {
+    value: 'dateOfBirth',
+    label: 'Date of birth',
+    input: 'date',
+    operators: ['gte', 'lte'],
+    // Worth spelling out: NGOs think in ages, and the direction inverts.
+    hint: 'A later date means a younger patient',
+  },
 ];
 
-const OPERATORS = [
-  { value: 'in', label: 'is one of' },
-  { value: 'eq', label: 'is' },
-  { value: 'gte', label: 'is on or after' },
-  { value: 'lte', label: 'is on or before' },
-  { value: 'contains', label: 'contains' },
-];
+const OPERATOR_LABELS: Record<string, string> = {
+  in: 'is one of',
+  eq: 'is',
+  gte: 'is on or after',
+  lte: 'is on or before',
+  contains: 'contains',
+};
 
 /**
  * A user-facing label for EVERY control, not only the three the user types into.
@@ -68,7 +120,6 @@ export class CreateProgramComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
 
   readonly criterionFields = CRITERION_FIELDS;
-  readonly operators = OPERATORS;
 
   readonly submitting = signal(false);
   readonly error = signal<string | null>(null);
@@ -98,17 +149,32 @@ export class CreateProgramComponent implements OnInit {
     criterionValue: ['', Validators.required],
   });
 
+  // Re-evaluated on every keystroke so the "still needed" line, the button's
+  // disabled state and the criterion controls track the form rather than only
+  // reacting to a click.
+  private readonly formValue = toSignal(this.form.valueChanges, {
+    initialValue: this.form.getRawValue(),
+  });
+
+  /**
+   * The selected field, as a signal, so the Value control and the operator list
+   * re-render when it changes. Falls back to the first field rather than
+   * returning undefined: the template reads `.input` unconditionally.
+   */
+  readonly activeField = computed<CriterionField>(() => {
+    const selected = this.formValue().criterionField;
+    return CRITERION_FIELDS.find(f => f.value === selected) ?? CRITERION_FIELDS[0];
+  });
+
+  readonly activeOperators = computed(() =>
+    this.activeField().operators.map(value => ({ value, label: OPERATOR_LABELS[value] ?? value })),
+  );
+
   /** The API requires a future expiry, so the picker should not offer today. */
   readonly minExpiry = computed(() => {
     const d = new Date();
     d.setDate(d.getDate() + 1);
     return d.toISOString().split('T')[0];
-  });
-
-  // Re-evaluated on every keystroke so the "still needed" line and the button's
-  // disabled state track the form rather than only reacting to a click.
-  private readonly formValue = toSignal(this.form.valueChanges, {
-    initialValue: this.form.getRawValue(),
   });
 
   readonly missing = computed<string[]>(() => {
@@ -121,6 +187,25 @@ export class CreateProgramComponent implements OnInit {
   readonly canSubmit = computed(
     () => this.missing().length === 0 && !this.submitting() && !this.loading(),
   );
+
+  /** Suppresses the field-change reset while prefill patches the whole form at once. */
+  private prefilling = false;
+
+  constructor() {
+    // Changing the field has to clear what came with the old one. An operator
+    // valid for one field is usually meaningless for the next, and a condition
+    // list left sitting in the value box would be submitted as a gender.
+    this.form.controls.criterionField.valueChanges
+      .pipe(takeUntilDestroyed())
+      .subscribe(selected => {
+        if (this.prefilling) return;
+        const field = CRITERION_FIELDS.find(f => f.value === selected) ?? CRITERION_FIELDS[0];
+        this.form.patchValue({
+          criterionOperator: field.operators[0],
+          criterionValue: '',
+        });
+      });
+  }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -149,6 +234,9 @@ export class CreateProgramComponent implements OnInit {
       ? (criterion.value as unknown[]).join(', ')
       : String(criterion?.value ?? '');
 
+    // Patched as one unit: without the flag, setting criterionField mid-patch
+    // fires the reset above and wipes the operator and value that follow it.
+    this.prefilling = true;
     this.form.patchValue({
       title: program.title,
       focus: program.focus ?? '',
@@ -162,6 +250,7 @@ export class CreateProgramComponent implements OnInit {
       criterionOperator: criterion?.operator ?? 'in',
       criterionValue: value,
     });
+    this.prefilling = false;
 
     if (program.status === 'approved') {
       this.locked.set(true);

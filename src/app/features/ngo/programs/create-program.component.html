@@ -98,21 +98,39 @@
         </lc-form-field>
 
         <lc-form-field label="Condition" id="cp-op">
+          <!-- Only the operators the selected field actually supports. -->
           <select id="cp-op" formControlName="criterionOperator">
-            @for (o of operators; track o.value) {
+            @for (o of activeOperators(); track o.value) {
               <option [value]="o.value">{{ o.label }}</option>
             }
           </select>
         </lc-form-field>
 
+        <!-- The value control follows the field: a list of conditions, a gender
+             from the enum, or a date — never one free-text box for all three. -->
         <lc-form-field
           label="Value"
           id="cp-value"
           [required]="true"
-          hint="Separate multiple values with commas"
+          [hint]="activeField().hint"
           [error]="form.controls.criterionValue.touched && form.controls.criterionValue.invalid ? 'Enter a value to match on.' : ''">
-          <input id="cp-value" type="text" formControlName="criterionValue"
-                 placeholder="e.g. Diabetes, Hypertension">
+          @switch (activeField().input) {
+            @case ('select') {
+              <select id="cp-value" formControlName="criterionValue">
+                <option value="" disabled>Select one</option>
+                @for (c of activeField().choices ?? []; track c.value) {
+                  <option [value]="c.value">{{ c.label }}</option>
+                }
+              </select>
+            }
+            @case ('date') {
+              <input id="cp-value" type="date" formControlName="criterionValue">
+            }
+            @default {
+              <input id="cp-value" type="text" formControlName="criterionValue"
+                     [placeholder]="activeField().placeholder ?? ''">
+            }
+          }
         </lc-form-field>
       </div>
     </section>
