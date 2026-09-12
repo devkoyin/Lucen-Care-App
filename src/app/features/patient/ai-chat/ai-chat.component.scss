@@ -219,6 +219,15 @@
     line-height: 1.65;
     white-space: pre-wrap;
     word-break: break-word;
+
+    // The parser has already turned newlines into blocks, so pre-wrap here would
+    // add the source's line breaks on top of the rendered ones.
+    &--rich {
+      white-space: normal;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+    }
   }
 
   &__time {
@@ -226,6 +235,49 @@
     color: var(--color-text-muted);
     align-self: flex-end;
   }
+}
+
+// ── Rendered reply ──────────────────────────────────────────────
+// Lucy answers in light markdown; these are the elements it parses into. Sized
+// close to body text on purpose — a chat bubble is not a document, and an h1-
+// scale heading inside one reads as shouting.
+.rich-para {
+  margin: 0;
+}
+
+.rich-heading {
+  margin: 0;
+  font-weight: var(--font-bold);
+  color: var(--color-text);
+  line-height: 1.45;
+
+  &--1,
+  &--2 { font-size: var(--text-base); }
+  &--3,
+  &--4,
+  &--5,
+  &--6 { font-size: var(--text-sm); }
+}
+
+.rich-list {
+  margin: 0;
+  padding-left: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+
+  li { line-height: 1.6; }
+  li::marker { color: var(--color-text-muted); }
+}
+
+.rich-code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 1px 5px;
+  word-break: break-word;
 }
 
 // Typing dots

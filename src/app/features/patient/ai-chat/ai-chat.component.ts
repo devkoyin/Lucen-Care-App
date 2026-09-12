@@ -1,10 +1,12 @@
 import { Component, OnInit, ElementRef, ViewChild, computed, inject, signal } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AppointmentsService } from '../../../core/appointments/appointments.service';
 import { Appointment, upcomingAppointments, urgency } from '../../../core/appointments/appointments.models';
 import { ClaudeService, ChatMessage } from '../../../core/api/claude.service';
 import { AuthService } from '../../../core/auth/auth.service';
 import { environment } from '../../../../environments/environment';
+import { RichBlock, parseRichText } from './rich-text';
 
 interface UiMessage {
   id: string;
@@ -12,6 +14,15 @@ interface UiMessage {
   text: string;
   ts: Date;
   error?: boolean;
+  /**
+   * Lucy's reply, parsed for display. Parsed once on arrival rather than in a
+   * template getter, which would re-run the parser on every change detection
+   * pass for every message on screen.
+   *
+   * `text` stays the source of truth — it is what goes back to the API as
+   * conversation history, so the model sees what it actually said.
+   */
+  blocks?: RichBlock[];
 }
 
 const SUGGESTIONS = [
@@ -24,7 +35,7 @@ const SUGGESTIONS = [
 @Component({
   selector: 'lc-ai-chat',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, NgTemplateOutlet],
   templateUrl: './ai-chat.component.html',
   styleUrl: './ai-chat.component.scss',
 })
@@ -103,7 +114,14 @@ export class AiChatComponent implements OnInit {
   }
 
   private addUiMessage(role: 'user' | 'assistant', text: string, error = false): void {
-    this.messages.update(msgs => [...msgs, { id: crypto.randomUUID(), role, text, ts: new Date(), error }]);
+    // Only Lucy's successful replies are parsed. The patient's own words are shown
+    // exactly as typed, and an error notice is ours already — neither is markdown.
+    const blocks = role === 'assistant' && !error ? parseRichText(text) : undefined;
+
+    this.messages.update(msgs => [
+      ...msgs,
+      { id: crypto.randomUUID(), role, text, ts: new Date(), error, blocks },
+    ]);
     setTimeout(() => {
       const el = this.messagesEl?.nativeElement;
       if (el) el.scrollTop = el.scrollHeight;

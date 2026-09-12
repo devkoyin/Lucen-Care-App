@@ -1,4 +1,19 @@
 
+<!-- Inline runs. Every branch renders text only — model output never becomes markup. -->
+<ng-template #spans let-runs>
+  @for (r of runs; track $index) {
+    @if (r.code) {
+      <code class="rich-code">{{ r.text }}</code>
+    } @else if (r.bold) {
+      <strong>{{ r.text }}</strong>
+    } @else if (r.italic) {
+      <em>{{ r.text }}</em>
+    } @else {
+      {{ r.text }}
+    }
+  }
+</ng-template>
+
 <div class="chat-page">
 
   <!-- ── Header ─────────────────────────────────────────────── -->
@@ -55,7 +70,46 @@
               <span class="chat-msg__avatar lucy-avatar" aria-hidden="true">L</span>
             }
             <div class="chat-msg__bubble">
-              <p class="chat-msg__text">{{ msg.text }}</p>
+              <!-- Lucy's replies come back as light markdown, so they are parsed
+                   into real elements. What the patient typed is shown verbatim. -->
+              @if (msg.role === 'assistant' && !msg.error) {
+                <div class="chat-msg__text chat-msg__text--rich">
+                  @for (b of msg.blocks ?? []; track $index) {
+                    @switch (b.kind) {
+                      @case ('heading') {
+                        <p class="rich-heading rich-heading--{{ b.level }}">
+                          <ng-container [ngTemplateOutlet]="spans"
+                                        [ngTemplateOutletContext]="{ $implicit: b.spans }" />
+                        </p>
+                      }
+                      @case ('bullets') {
+                        <ul class="rich-list">
+                          @for (item of b.items; track $index) {
+                            <li><ng-container [ngTemplateOutlet]="spans"
+                                              [ngTemplateOutletContext]="{ $implicit: item }" /></li>
+                          }
+                        </ul>
+                      }
+                      @case ('numbers') {
+                        <ol class="rich-list">
+                          @for (item of b.items; track $index) {
+                            <li><ng-container [ngTemplateOutlet]="spans"
+                                              [ngTemplateOutletContext]="{ $implicit: item }" /></li>
+                          }
+                        </ol>
+                      }
+                      @default {
+                        <p class="rich-para">
+                          <ng-container [ngTemplateOutlet]="spans"
+                                        [ngTemplateOutletContext]="{ $implicit: b.spans }" />
+                        </p>
+                      }
+                    }
+                  }
+                </div>
+              } @else {
+                <p class="chat-msg__text">{{ msg.text }}</p>
+              }
               <span class="chat-msg__time">{{ formatTime(msg.ts) }}</span>
             </div>
             @if (msg.role === 'user') {
