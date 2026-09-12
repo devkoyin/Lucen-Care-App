@@ -94,15 +94,15 @@
       </div>
     </div>
 
-    <!-- Funding match -->
+    <!-- Funding applications -->
     <div class="widget widget--highlight">
       <div class="nudge">
         <span class="nudge__icon" aria-hidden="true">💰</span>
         <div class="nudge__text">
-          <span class="nudge__title">{{ fundingMatches() }} new funding matches</span>
-          <span class="nudge__desc">NGO programs that match your health profile are now available.</span>
+          <span class="nudge__title">{{ fundingTitle() }}</span>
+          <span class="nudge__desc">{{ fundingDesc() }}</span>
         </div>
-        <a class="nudge__btn" routerLink="/patient/funding">View matches</a>
+        <a class="nudge__btn" [routerLink]="fundingRoute()">{{ fundingCta() }}</a>
       </div>
     </div>
 
