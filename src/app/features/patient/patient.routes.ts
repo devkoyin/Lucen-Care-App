@@ -115,7 +115,7 @@ export const PATIENT_ROUTES: Routes = [
         loadComponent: () =>
           import('./funding/funding.component').then(m => m.FundingComponent),
         children: [
-          { path: '', redirectTo: 'available', pathMatch: 'full' },
+          { path: '', redirectTo: 'plans', pathMatch: 'full' },
           {
             path: 'available',
             loadComponent: () =>
